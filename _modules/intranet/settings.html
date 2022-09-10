@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #1269) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #1272) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -139,6 +139,43 @@
     <span class="c1"># Require Python 3.5+</span>
     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Python 3.5 or higher is required.&quot;</span><span class="p">)</span>
 
+<span class="c1"># Month (1-indexed) after which a new school year begins</span>
+<span class="c1"># July = 7</span>
+<span class="n">YEAR_TURNOVER_MONTH</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="n">start_school_year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">month</span> <span class="o">&lt;</span> <span class="n">YEAR_TURNOVER_MONTH</span> <span class="k">else</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
+<span class="n">end_school_year</span> <span class="o">=</span> <span class="n">start_school_year</span> <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">month</span> <span class="o">&lt;</span> <span class="n">YEAR_TURNOVER_MONTH</span> <span class="k">else</span> <span class="n">start_school_year</span> <span class="o">+</span> <span class="mi">1</span>
+
+
+<span class="sd">&quot;&quot;&quot; !! -------- UPDATE ANNUALLY -------- !!</span>
+<span class="sd">Update this section annually after summer school ends and before school starts.</span>
+<span class="sd">Last updated: 2022-08-30. &quot;&quot;&quot;</span>
+
+<span class="c1"># When school is scheduled to start and end</span>
+<span class="n">SCHOOL_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">start_school_year</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">22</span><span class="p">)</span>
+<span class="n">SCHOOL_END_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">end_school_year</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="c1"># Dates when hoco starts and ends</span>
+<span class="n">HOCO_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">start_school_year</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">19</span><span class="p">)</span>
+<span class="n">HOCO_END_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">start_school_year</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;  -------- END UPDATE ANNUALLY --------  &quot;&quot;&quot;</span>
+
+<span class="c1"># Default fallback time for start and end of school if no schedule is available</span>
+<span class="n">SCHOOL_START_HOUR</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Not currently used</span>
+<span class="n">SCHOOL_START_MINUTE</span> <span class="o">=</span> <span class="mi">40</span>  <span class="c1"># Not currently used</span>
+<span class="n">SCHOOL_END_HOUR</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">SCHOOL_END_MINUTE</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Adjust for summer school:</span>
+<span class="n">IS_SUMMER_SCHOOL</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">SCHOOL_START_DATE</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">IS_SUMMER_SCHOOL</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">SCHOOL_START_HOUR</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">SCHOOL_START_MINUTE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SCHOOL_END_HOUR</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">SCHOOL_END_MINUTE</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="sd">&quot;&quot;&quot; !! In production, add a file called secret.py to the settings package that</span>
 <span class="sd">defines SECRET_KEY, SECRET_DATABASE_URL. !!</span>
@@ -164,8 +201,8 @@
 <span class="n">ENABLE_WAITLIST</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># WARNING: Enabling the waitlist causes severe performance issues</span>
 <span class="n">ENABLE_BUS_APP</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="n">ENABLE_BUS_DRIVER</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">ENABLE_PRE_EIGHTH_LOCATION_REDIRECT</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Redirect to eighth signup page after login if the user isn&#39;t signed up for activities</span>
+<span class="n">ENABLE_PRE_EIGHTH_LOCATION_REDIRECT</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Redirect to eighth_location around eighth period (increase performance during peak times)</span>
 <span class="n">NOTIFY_ADMIN_EMAILS</span> <span class="o">=</span> <span class="kc">None</span>
 
 <span class="n">IOS_APP_CLIENT_IDS</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Attempting to OAuth to an application with one of these client IDs will result in a *special* error message</span>
@@ -182,13 +219,6 @@
 <span class="c1"># not done, a notification gets sent whenever someone messes with</span>
 <span class="c1"># the HTTP Host header.</span>
 <span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ion.tjhsst.edu&quot;</span><span class="p">,</span> <span class="s2">&quot;198.38.18.250&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">]</span>
-
-<span class="c1"># When school is scheduled to start</span>
-<span class="n">SCHOOL_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
-
-<span class="c1"># Dates when hoco starts and ends</span>
-<span class="n">HOCO_START_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">HOCO_END_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2017</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 
 <span class="n">PRODUCTION</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PRODUCTION&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
 <span class="n">IN_CI</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TRAVIS&quot;</span><span class="p">,</span> <span class="s2">&quot;GITHUB_ACTIONS&quot;</span><span class="p">])</span>
@@ -877,11 +907,9 @@
 <span class="c1"># Senior graduation date.</span>
 <span class="c1"># The year will be replaced as appropriate (determined in</span>
 <span class="c1"># intranet/utils/date.py based on YEAR_TURNOVER_MONTH).</span>
-<span class="n">SENIOR_GRADUATION_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
-
-<span class="c1"># Month (1-indexed) after which a new school year begins</span>
-<span class="c1"># July = 7</span>
-<span class="n">YEAR_TURNOVER_MONTH</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">SENIOR_GRADUATION_YEAR</span> <span class="o">=</span> <span class="n">end_school_year</span>
+<span class="n">SENIOR_GRADUATION_DATE</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">SENIOR_GRADUATION</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">SENIOR_GRADUATION_YEAR</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%B </span><span class="si">%d</span><span class="s1"> %Y %H:%M:%S&#39;</span><span class="p">)</span>
 
 <span class="c1"># The number of days out at which a user is deemed &quot;near graduation&quot;.</span>
 <span class="n">NEAR_GRADUATION_DAYS</span> <span class="o">=</span> <span class="mi">50</span>
