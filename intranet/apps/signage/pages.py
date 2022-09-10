@@ -25,7 +25,7 @@ def bus(page, sign, request):  # pylint: disable=unused-argument
     if day is not None and day.end_time is not None:
         end_of_day = day.end_time.date_obj(now.date())
     else:
-        end_of_day = datetime.datetime(now.year, now.month, now.day, 15, 0)
+        end_of_day = datetime.datetime(now.year, now.month, now.day, settings.SCHOOL_END_HOUR, settings.SCHOOL_END_MINUTE)
     return {
         "admin": False,
         "signage": True,

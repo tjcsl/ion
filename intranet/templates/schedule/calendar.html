@@ -2,7 +2,7 @@
 {% load static %}
 {% load pipeline %}
 {% block title %}
-    {{ block.super }} - Calendar
+    {{ block.super }} - Schedule
 {% endblock %}
 
 {% block js %}
@@ -68,8 +68,11 @@
 
 {% block main %}
     <div class="primary-content">
-        <h2>Calendar</h2>
+        <h2>Schedule</h2>
         <div class="button-container">
+            {% if request.user.is_schedule_admin %}
+            <a class="button" href="{% url 'schedule_admin' %}">Admin</a> &nbsp;
+            {% endif %}
             <a id="month-button" class="button" href="#">Month</a>
             <a id="week-button" class="button" href="#">Week</a>
         </div>
