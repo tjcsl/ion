@@ -10,6 +10,7 @@ from django.conf import settings
 from django.urls import Resolver404, resolve
 from django.utils import timezone
 
+from intranet.apps.cslapps.models import App
 from intranet.apps.notifications.models import NotificationConfig
 
 from ..utils.helpers import dark_mode_enabled
@@ -45,6 +46,7 @@ def nav_categorizer(request):
         (r"^/announcements", "dashboard"),
         (r"^/eighth/admin", "eighth_admin"),
         (r"^/eighth", "eighth"),
+        (r"^/schedule", "schedule"),
         (r"^/events", "events"),
         (r"^/files", "files"),
         (r"^/printing", "printing"),
@@ -98,6 +100,10 @@ def mobile_app(request):
         ctx["android_client_register"] = False
 
     return ctx
+
+
+def csl_apps(request):
+    return {"csl_apps": App.objects.visible_to_user(request.user).order_by("order")}
 
 
 def global_custom_theme(request):

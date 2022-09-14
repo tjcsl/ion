@@ -57,7 +57,7 @@ env:
 
       pip install -U pip setuptools==57.5.0 wheel
       pip install -U \
-        flake8 pylint pylint-django pylint-plugin-utils isort black==20.8b1 autopep8 \
+        flake8 pylint==2.14.5 pylint-django pylint-plugin-utils isort black==20.8b1 autopep8 \
         coveralls pyyaml pytest-django
       pip install -U -r requirements.txt
 
@@ -88,7 +88,7 @@ jobs:
       - name: Run pylint
         run: pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init,cyclic-import,consider-using-f-string --django-settings-module=intranet.settings intranet/
       - name: Run isort
-        run: isort --check --recursive intranet
+        run: isort --check intranet
 
   formatting:
     runs-on: ubuntu-latest
