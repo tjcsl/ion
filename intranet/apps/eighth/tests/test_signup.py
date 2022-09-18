@@ -313,7 +313,7 @@ class EighthSignupTest(EighthAbstractTest):
         user = self.make_admin()
         now = timezone.localtime()
         time_start = Time.objects.create(hour=now.time().hour, minute=now.time().minute)
-        time_end = Time.objects.create(hour=now.time().hour + 1, minute=now.time().minute)
+        time_end = Time.objects.create(hour=(now + timezone.timedelta(hours=1)).hour, minute=now.time().minute)
         block = Block.objects.create(name="8A", start=time_start, end=time_end, order=1)
         red_day = DayType.objects.create(name="red")
         red_day.blocks.add(block)
