@@ -302,7 +302,7 @@
                             </a>
                         <% } %>
 
-                        <% if (roster.count < roster.capacity || both_blocks || isEighthAdmin) { %>
+                        <% if (isEighthAdmin || !restricted_for_user && roster.count < roster.capacity || both_blocks) { %>
                         <button id="signup-button">
                             Sign Up
                         </button>
@@ -340,13 +340,15 @@
                 </div>
             </div>
             <% if (!showingRosterButton) { %>
-                <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
-                    View Roster
-                </a>
-                <% if (waitlist_count > 0 && isEighthAdmin && waitlistEnabled) { %>
-                        <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
-                            View Waitlist
-                        </a>
+                <% if(isEighthAdmin) { %>
+                    <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                        View Roster
+                    </a>
+                <% } %>
+                <% if (waitlist_count > 0 && waitlistEnabled) { %>
+                    <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
+                        View Waitlist
+                    </a>
                 <% } %>
                 <div id="signup-spinner-container">
                     <div id="signup-spinner"></div>
