@@ -291,15 +291,15 @@
                 <% if (!cancelled) {%>
                     <% if (!selected && !waitlisted) {%>
                         <% showingRosterButton = true %>
-                        <% if isEighthAdmin { %>
-                        <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
-                            View Roster
-                        </a>
-                            <% if (waitlist_count > 0 && waitlistEnabled) { %>
+                        <% if (isEighthAdmin) { %>
+                            <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                                View Roster
+                            </a>
+                        <% } %>
+                        <% if (waitlist_count > 0 && waitlistEnabled) { %>
                             <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
                                 View Waitlist
                             </a>
-                            <% } %>
                         <% } %>
 
                         <% if (roster.count < roster.capacity || both_blocks || isEighthAdmin) { %>
