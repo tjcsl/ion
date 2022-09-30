@@ -27,7 +27,7 @@ Navigate to http://localhost:8080 in the web browser of your choice. You might h
 
 ### Interacting with the application:
 
-If you need to run a Django command like ``makemigrations``, ``collectstatic`` or ``shell_plus``, run ``docker exec -it application bash`` in your terminal. That wlll give you a shell into the application container. You can also use this to run scripts like ``build_sources.sh``. If you need to view the output from or restart ``runserver``, run ``docker attach application``.
+If you need to run a Django command like ``makemigrations``, ``collectstatic`` or ``shell_plus``, run ``docker exec -it intranet bash`` in your terminal. That wlll give you a shell into the application container. You can also use this to run scripts like ``build_sources.sh``. If you need to view the output from or restart ``runserver``, run ``docker attach application``.
 
 # Vagrant
 
@@ -108,15 +108,24 @@ Currently, Ion requires that you use Argon2id to create the hash. You also must 
     h=PasswordHasher(time_cost=time_cost, memory_cost=memory_cost, parallelism=parallelism, type=low_level.Type.ID)
     print(h.hash(password))
 
-
-
 # General Post-Setup
+
+## Auto-generated development data
+
+The setup process will automatically generate data for you to use in Ion development. This data includes:
+
+- Users (students, teachers, admins, counselors)
+- Eighth period blocks
+- Eighth period activities (all types)
+- Events (sports))
+
 ## Setting up Users
-For quick creation of users, use the `create_users.py` script. To create an admin user, move `scripts/create_users.py` to the root Ion directory, then run:
 
-     $ ./create_users.py --admin <USERNAME>
+A large number of users for use in development is automatically generated for you. You may use the auto-generated users `admin`, `student`, and `teacher` for quick access to each of those types of accounts. To create other users, use the `create-users.py` script. To create an admin user, `cd` into the root Ion directory, then run:
 
-Run `./create_users.py --help` for help on using the script or for information on creating other types of users. 
+    $ ./create-users.py --admin`<USERNAME>`
+
+Run `./create-users.py --help` for help on using the script or for information on creating other types of users.
 
 ### Setting up Users using Python Shell
 
@@ -130,6 +139,10 @@ To create and add yourself to this group, run the following commands (substituti
     >>> user.groups.add(group)
     >>> user.is_superuser = True
     >>> user.save()
+
+## Logging in to your Development Environment
+
+The master password for development environments is `notfish`. Login with your username or `admin` and the master password to use your dev environment as an Intranet administrator.
 
 ## Setting up Files
 

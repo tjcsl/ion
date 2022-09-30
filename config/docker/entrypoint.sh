@@ -1,10 +1,30 @@
+#!/bin/sh
+echo "---- Running entrypoint script ----"
 cp -u config/docker/secret.py intranet/settings
 
+echo "Collecting static files..."
 python3 manage.py collectstatic --noinput
+
+echo "Running migrations..."
 python3 manage.py migrate
 
-cp config/docker/make_admin.py .
-python3 make_admin.py
-rm make_admin.py
+echo "Starting web server..."
+echo ""
+
+cat << END
+██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗
+██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝
+██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗ 
+██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝
+╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗
+ ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
+
+     ████████╗                  ██╗                   ██╗
+     ╚══██╔══╝ ██████╗          ██║ ██████╗ ███╗   ██╗██║
+        ██║   ██║   ██║         ██║██║   ██║██╔██╗ ██║██║
+        ██║   ██║   ██║         ██║██║   ██║██║╚██╗██║╚═╝
+        ██║   ╚██████╔╝         ██║╚██████╔╝██║ ╚████║██╗
+        ╚═╝    ╚═════╝          ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝
+END
 
 python3 manage.py runserver 0.0.0.0:8080
