@@ -1135,7 +1135,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if now.tzinfo is not None:
             activity_date = timezone.make_aware(activity_date, now.tzinfo)
         # Presign activities can only be signed up for 2 days in advance.
-        presign_period = datetime.timedelta(days=2)
+        presign_period = datetime.timedelta(minutes=settings.EIGHTH_PRESIGNUP_HOURS*60+settings.EIGHTH_PRESIGNUP_MINUTES)
 
         return now < (activity_date - presign_period)
 
