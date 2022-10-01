@@ -15,9 +15,9 @@ def redirect_to_app(request):
     try:
         app = App.objects.get(id=app_id)
         if app.visible_to(request.user):
-            if not app.auth_url == '' and request.COOKIES.get("accessed_csl-app_" + app_id, "") != "1":
+            if not app.auth_url == "" and request.COOKIES.get("accessed_csl-app_" + app_id, "") != "1":
                 response = redirect(app.auth_url)
-                response.set_cookie("accessed_csl-app_" + app_id, "1", max_age=60*60*24)
+                response.set_cookie("accessed_csl-app_" + app_id, "1", max_age=60 * 60 * 24)
                 return response
             else:
                 return redirect(app.url)

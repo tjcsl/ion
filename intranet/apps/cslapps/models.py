@@ -15,18 +15,18 @@ class AppManager(Manager):
 
 class App(models.Model):
     """
-        Represents an app maintained by the CSL.
-        Attributes:
-            name (str): The name of the app.
-            description (str): A description of the app.
-            order (int): The order in which the app should be displayed.
-            auth_url (str): The URL to the app's authentication page (preferably, if available, using Ion OAuth).
-            url (str): The URL to the app.
-            image_url (str): The URL to the image icon for the app.
-            html_icon (str): HTML for the icon of the app, can be used for things like font awesome icons.
-                WARNING: this is rendered as safe. Do not allow untrusted content here.
-            groups_visible (:obj:`list` of :obj:`Group`): Groups that can access this app.
-            available_to_all (bool): Whether or not this app can be seen by all users. If groups_visible is set, this is ignored.
+    Represents an app maintained by the CSL.
+    Attributes:
+        name (str): The name of the app.
+        description (str): A description of the app.
+        order (int): The order in which the app should be displayed.
+        auth_url (str): The URL to the app's authentication page (preferably, if available, using Ion OAuth).
+        url (str): The URL to the app.
+        image_url (str): The URL to the image icon for the app.
+        html_icon (str): HTML for the icon of the app, can be used for things like font awesome icons.
+            WARNING: this is rendered as safe. Do not allow untrusted content here.
+        groups_visible (:obj:`list` of :obj:`Group`): Groups that can access this app.
+        available_to_all (bool): Whether or not this app can be seen by all users. If groups_visible is set, this is ignored.
     """
 
     objects = AppManager()
