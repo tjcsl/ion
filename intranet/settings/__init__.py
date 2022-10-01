@@ -558,7 +558,7 @@ OAUTH2_PROVIDER = {
     "SCOPES": {"read": "Read scope", "write": "Write scope"},
     # OAuth refresh tokens expire in 30 days
     "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
-    "PKCE_REQUIRED": False
+    "PKCE_REQUIRED": False,
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
 
@@ -788,7 +788,7 @@ GIT = {
 # intranet/utils/date.py based on YEAR_TURNOVER_MONTH).
 SENIOR_GRADUATION_YEAR = end_school_year
 SENIOR_GRADUATION_DATE = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=3, hour=9)
-SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=3, hour=9).strftime('%B %d %Y %H:%M:%S')
+SENIOR_GRADUATION = datetime.datetime(year=SENIOR_GRADUATION_YEAR, month=6, day=3, hour=9).strftime("%B %d %Y %H:%M:%S")
 
 # The number of days out at which a user is deemed "near graduation".
 NEAR_GRADUATION_DAYS = 50

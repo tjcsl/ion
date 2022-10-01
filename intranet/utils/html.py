@@ -14,10 +14,21 @@ att = {
     "img": ["src", "alt", "title", "style"],
 }
 
-css_sanitizer = CSSSanitizer(allowed_css_properties=["width", "height", "float",
-                                                     "margin-left", "margin-right", "margin-top",
-                                                     "margin-bottom", "margin", "border",
-                                                     "border-style", "border-width"])
+css_sanitizer = CSSSanitizer(
+    allowed_css_properties=[
+        "width",
+        "height",
+        "float",
+        "margin-left",
+        "margin-right",
+        "margin-top",
+        "margin-bottom",
+        "margin",
+        "border",
+        "border-style",
+        "border-width",
+    ]
+)
 
 
 def safe_html(txt):
@@ -61,6 +72,4 @@ def safe_fcps_emerg_html(text: str, base_url: str) -> str:
 
         return attrs
 
-    return bleach.linkify(
-        bleach.clean(text, strip=True, tags=tags, attributes=att, css_sanitizer=css_sanitizer), [translate_link_attr]
-    )
+    return bleach.linkify(bleach.clean(text, strip=True, tags=tags, attributes=att, css_sanitizer=css_sanitizer), [translate_link_attr])
