@@ -7,6 +7,7 @@ from .models import App
 
 class AppsTest(IonTestCase):
     """Tests for the CSL Apps module"""
+
     def test_app_requests(self):
         # Test anonymous request
         response = self.client.get(reverse("apps"))
@@ -19,13 +20,13 @@ class AppsTest(IonTestCase):
             auth_url="http://localhost:8080/login",
             url="http://localhost:8080",
             image_url="http://localhost:8080/favicon.ico",
-            available_to_all=True
+            available_to_all=True,
         )
         response = self.client.get(reverse("apps") + "?id=" + str(app.id))
 
         # Check if redirect is done correctly and if cookie is set
         self.assertRedirects(response, "http://localhost:8080/login", status_code=302)
-        self.assertEqual(response.client.cookies['accessed_csl-app_' + str(app.id)].value, '1')
+        self.assertEqual(response.client.cookies["accessed_csl-app_" + str(app.id)].value, "1")
 
         # Test request to an app only available to specific groups
         group = Group.objects.get_or_create(name="Restricted group")[0]
@@ -35,7 +36,7 @@ class AppsTest(IonTestCase):
             auth_url="http://127.0.0.1:8080/login",
             url="http://127.0.0.1:8080",
             html_icon="<i class=fas fa-cloud></i>",
-            available_to_all=False
+            available_to_all=False,
         )
         restricted_app.groups_visible.add(group)
         response = self.client.get(reverse("apps") + "?id=" + str(restricted_app.id))
@@ -47,7 +48,7 @@ class AppsTest(IonTestCase):
         user.groups.add(group)
         response = self.client.get(reverse("apps") + "?id=" + str(restricted_app.id))
         self.assertRedirects(response, "http://127.0.0.1:8080/login", status_code=302)
-        self.assertEqual(response.client.cookies['accessed_csl-app_' + str(app.id)].value, '1')
+        self.assertEqual(response.client.cookies["accessed_csl-app_" + str(app.id)].value, "1")
 
     def test_create_app(self):
         app = App.objects.create(name="Test", url="http://localhost:8080", image_url="http://localhost:8080/favicon.ico")

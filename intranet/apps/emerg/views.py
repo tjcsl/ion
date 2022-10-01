@@ -78,19 +78,19 @@ def check_emerg():
     except json.decoder.JSONDecodeError:
         return False, None
 
-    for system in csl_status['systems']:
-        if system['status'] != 'ok':
+    for system in csl_status["systems"]:
+        if system["status"] != "ok":
             status = True
-            issues = system['unresolvedIssues']
+            issues = system["unresolvedIssues"]
             for issue in issues:
-                desc = requests.get(issue['permalink']).text
+                desc = requests.get(issue["permalink"]).text
                 soup = BeautifulSoup(desc, "html.parser")
-                desc = soup.find_all('p')[1].text
-                a = {"title": issue['title'], "body": desc}
-                if a not in announcements and issue['severity'] != 'notice':
+                desc = soup.find_all("p")[1].text
+                a = {"title": issue["title"], "body": desc}
+                if a not in announcements and issue["severity"] != "notice":
                     announcements.append(a)
 
-    message = ''.join([f"<h3>{announcement['title']}: </h3>{announcement['body']}\n" for announcement in announcements])
+    message = "".join([f"<h3>{announcement['title']}: </h3>{announcement['body']}\n" for announcement in announcements])
 
     return status, message
 
