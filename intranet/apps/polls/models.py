@@ -13,7 +13,7 @@ from ...utils.date import get_date_range_this_year
 
 class PollQuerySet(models.query.QuerySet):
     def this_year(self):
-        """Get AnnouncementRequests from this school year only."""
+        """Get Polls from this school year only."""
         start_date, end_date = get_date_range_this_year()
         return self.filter(start_time__gte=start_date, start_time__lte=end_date)
 
@@ -51,8 +51,10 @@ class Poll(models.Model):
         is_secret
             Whether the poll is a 'secret' poll. Poll admins will not be able to view individual
             user responses for secret polls.
+        is_election
+            Whether the poll is an election.
         groups
-            The Group's that can view--and vote in--the poll. Like Announcements,
+            The Groups that can view and vote in the poll. Like Announcements,
             if there are none set, then it is public to all.
 
     Access questions for the poll through poll.question_set.all()
@@ -67,6 +69,7 @@ class Poll(models.Model):
     end_time = models.DateTimeField()
     visible = models.BooleanField(default=False)
     is_secret = models.BooleanField(default=False)
+    is_election = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     # Access questions through .question_set
@@ -208,6 +211,9 @@ class Question(models.Model):
         users = Answer.objects.filter(question=self).values_list("user", flat=True)
         return get_user_model().objects.filter(id__in=users)
 
+    def get_total_votes(self):
+        return sum(a.rank for a in Answer.objects.filter(question=self)) if self.is_rank_choice() else Answer.objects.filter(question=self).count()
+
     def __str__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())
         return "Question #{}: '{}'".format(self.num, self.trunc_question())
@@ -250,9 +256,12 @@ class Choice(models.Model):  # individual answer choices
         else:
             return comp
 
+    def display_name(self):
+        return self.trunc_info().split("|", maxsplit=1)[0].strip()
+
     def __str__(self):
         # return "{} + O#{}('{}')".format(self.question, self.num, self.trunc_info())
-        return "Option #{}: '{}'".format(self.num, self.trunc_info())
+        return "Option #{}: {}".format(self.num, self.trunc_info())
 
     class Meta:
         ordering = ["num"]
@@ -266,6 +275,12 @@ class Answer(models.Model):  # individual answer choices selected
     clear_vote = models.BooleanField(default=False)
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
     rank = models.IntegerField(null=True)  # for rank choice
+
+    def display_votes(self):
+        """Convert rank to votes for displaying by assigning rank 1 the max number of votes and continuing down."""
+        if self.question.type == Question.RANK:
+            return self.question.max_choices - self.rank + 1
+        return None
 
     def __str__(self):
         if self.choice:
