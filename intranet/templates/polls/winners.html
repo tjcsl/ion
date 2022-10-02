@@ -1,0 +1,65 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dictionaries %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Election Winner: {{ poll }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'polls' %}
+    <style>
+        .title {
+            font-size: 12pt;
+        }
+
+        .subtitle {
+            font-size: 10pt;
+        }
+
+        .result {
+            font-family: monospace;
+            padding: 15px;
+            background-color: #ebe8e8;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/polls' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content polls">
+        <a href="{% url 'poll_results' poll.id %}" class="button print-hide">
+            <i class="fas fa-arrow-left"></i> Results
+        </a>
+        <h2>Election Winners: {{ poll }}</h2>
+        <p>This page shows the results of rank choice questions after processing votes for rank choice voting. This page can be printed for exporting results.</p>
+        <p>Remember that rank choice voting is a complex process that involves continuously changing ranks, especially for voters of rejected candidates. This can lead to a human thinking a result is incorrect when instead the script has taken additional variables into account.</p>
+        <p>Note: For positions that require more than one winner, view the detailed output (grey background) for additional rankings.</p>
+        <ol class="questions">
+        {% for result in results %}
+                <b class="title">{{ result.0.num }}. {{ result.0.question|safe }}</b>
+                <ul>
+                    <li>
+                        <span class="title">Winner: </span>
+                        <span class="title" style="font-weight: bold;">{{ result.2 }}</span>
+                    </li>
+                </ul>
+                <br>
+                <pre class="result"> {{ result.1 }} </pre>
+            <br>
+        {% endfor %}
+        </ol>
+    </div>
+
+{% endblock %}

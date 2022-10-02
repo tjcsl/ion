@@ -1,19 +1,29 @@
 {% extends "page_with_nav.html" %}
 {% load static %}
 {% load pipeline %}
+{% load newtab_links %}
 
 {% block title %}
-    {{ block.super }} - Vote
+    {{ block.super }} - Vote: {{ poll }}
 {% endblock %}
 
 {% block css %}
     {{ block.super }}
     {% stylesheet 'dashboard' %}
     {% stylesheet 'polls' %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    {% if poll.is_election %}
+        <style>
+            ul.rank-answers {
+                border: 2px solid #3c69b6;
+            }
+        </style>
+    {% endif %}
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
+    <script src={% static 'js/polls-vote.js' %}></script>
     <script>
     $(function() {
         $(".question-clear-action").change(function() {
@@ -28,6 +38,67 @@
                 }
             });
         })
+        {% for q in questions %}
+            {% if q.is_rank_choice %}
+                {% with ''|center:q.max_choices as range %}
+                {% for i in range %}
+                    var option = $("option#default-option-{{ q.num }}-{{ forloop.counter }}");
+                    if($(option).text() === "") {
+                        option.text("Choose an option");
+                        option.attr("value", "Choose an option");
+                    }
+
+                    {% for choice_and_value in q.choices_and_values %}
+                        option = $("option#option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}");
+                        option.html(option.html().split("|")[0]);
+                    {% endfor %}
+
+                {% endfor %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+
+        $("form").submit(function(e) {
+            var errorContainer = $("#error-container");
+            errorContainer.hide("fast");
+
+            var errorList = $("#error-list");
+            errorList.html("");
+
+            optionValues = [];
+            {% for q in questions %}
+            {% if q.is_rank_choice %}
+                {% with ''|center:q.max_choices as range %}
+                {% for i in range %}
+                    var counter = {{ forloop.counter }};
+                    var option = $("select#question-{{ q.num }}-" + counter + "-select option:selected");
+                    var optionValue = option.val();
+
+                    if(optionValue == "Choose an option") {
+                        errorList.append("<li>Select an option for Question {{ q.num }}, Choice " + counter + "</li>");
+                    }
+
+                    var option2 = $("select#question-{{ q.num }}-" + (counter + 1) + "-select option:selected").val();
+                    var option3 = $("select#question-{{ q.num }}-" + (counter + 2) + "-select option:selected").val();
+
+                    {# TODO: Better way of validating that different options are selected if max_choices > 3 #}
+                    if(optionValue == option2 && optionValue != "Choose an option") {
+                        errorList.append("<li>Select different options for Question {{ q.num }}, Choices " + counter + " and " + (counter + 1) + "</li>");
+                    }
+                    else if(optionValue == option3 && optionValue != "Choose an option") {
+                        errorList.append("<li>Select different options for Question {{ q.num }}, Choices " + counter + " and " + (counter + 2) + "</li>");
+                    }
+                {% endfor %}
+                {% endwith %}
+            {% endif %}
+            {% endfor %}
+
+            if(errorList.html() != "") {
+                $("html, body").animate({ scrollTop: 0 }, 'fast');
+                errorContainer.show("slow");
+                return false;
+            }
+        });
     })
     </script>
 {% endblock %}
@@ -60,7 +131,33 @@
                     <i class="fas fa-exclamation-triangle"></i> You have not voted in this poll.
                 </span>
             {% endif %}
+
+            {% if poll.is_election %}
+            <div>
+                <span class="material-symbols-outlined info-icon">
+                    info
+                </span>
+                <a href="https://bit.ly/TJElections" target="_blank" class="rank-choice-info">
+                    Information about elections and ranked choice voting from the SGA.
+                </a>
+                <span class="expand-collapse-all" href="#">
+                    <span>Expand All</span> &nbsp;&nbsp;&nbsp;
+                    <i class="fas fa-angle-down"></i>
+                </span>
             </div>
+            {% endif %}
+
+            <div id="error-container" style="display: none">
+                <span class="material-symbols-outlined info-icon">
+                    close
+                </span>
+                <span class="error-info">
+                    Please correct the following errors:
+                </span>
+                <ul id="error-list"></ul>
+            </div>
+
+        </div>
         </div>
 
         <form action="{% url 'poll_vote' poll.id %}{% if user != request.user %}?user={{ user.id }}{% endif %}" method="post">
@@ -70,8 +167,13 @@
             <ol class="questions">
             {% for q in questions %}
                 <li>
-                    <div class="q">{{ q.question|safe }}</div>
-                    <div class="question">
+                    <div class="q-container {% if poll.is_election %}rank-q-container{% endif %}">
+                    <div class="q {% if poll.is_election %}rank-q-header{% endif %}" id="q-{{ q.num }}">
+                        <b>{{ q.question|safe }}</b>
+                        {% if poll.is_election %}<i class="fas fa-angle-down"></i>{% endif %}
+                    </div>
+                    <div class="question" {% if poll.is_election %}style="display: none"{% endif %}>
+
                     {% if q.is_single_choice %}
                         <br>
                         <ul class="answers">
@@ -102,32 +204,73 @@
                                 </div>
                             </li>
                         </ul>
+
                     {% elif q.is_rank_choice %}
-                        <div class="directions">Rank each of the following options from 1 to {{ q.num_choices }} (1 is most desirable). You must give each choice a different rank.</div>
-                        <br>
-                        <ul class="answers">
-                        {% for choice_and_value in q.choices_and_values %}
+                    <div class="directions">Choose your top {{ q.max_choices}} choices for each position; first choice is most desirable.</div>
+                    <br>
+                        <ul class="answers rank-answers">
+                        {# ''|center:length creates a string of all spaces with the given length #}
+                        {# The for loop loops through each character in the string #}
+                        {% with ''|center:q.max_choices as range %}
+                        {% for i in range %}
                             <li class="choice-item">
-                                <div class="box">
-                                <input type="hidden"
-                                       name="helper-question-{{ q.num }}"
-                                       value="{{ choice_and_value.0.num }}">
-                                <input class="rank-input"
-                                       type="number"
-                                       id="question-{{ q.num }}-{{ choice_and_value.0.num }}"
-                                       name="question-{{ q.num }}"
-                                       value="{{ choice_and_value.1 }}"
-                                       min="1"
-                                       max="{{ q.num_choices }}">
-                                 </div>
-                                 <div class="rank-choice-desc">
-                                <label for="question-{{ q.num }}-{{ choice_and_value.0.num }}">
-                                    {{ choice_and_value.0.info|safe }}
+                            <div class="box">
+                                <label class="rank-choice-number"
+                                    for="question-{{ q.num }}-{{ forloop.counter }}-select">
+                                    Rank {{ forloop.counter }}:
                                 </label>
+                                <br>
+                                <select
+                                    id="question-{{ q.num }}-{{ forloop.counter }}-select"
+                                    name="question-{{ q.num }}">
+
+                                    {# Default option - "Choose an option" (see JS) or, if voted already, selected choice #}
+                                    <option value="Choose an option"
+                                        class="choice-option"
+                                        id="default-option-{{ q.num }}-{{ forloop.parentloop.counter }}">
+                                            Choose an option
+                                    </option>
+
+                                    {# Loop through choices #}
+                                    {% for choice_and_value in q.choices_and_values %}
+                                        <option value="{{ choice_and_value.0.num }}"
+                                            class="choice-option"
+                                            {% if choice_and_value.1 == forloop.parentloop.counter %}selected{% endif %}
+                                            id="option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+                                                {{ choice_and_value.0.info|safe }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div>
+                                {% for choice_and_value in q.choices_and_values %}
+                                    <input class="hide"
+                                        type="number"
+                                        name="helper-question-{{ q.num }}"
+                                        value="{{ choice_and_value.0.num }}">
+                                {% endfor %}
                                 </div>
+                            </div>
                             </li>
                         {% endfor %}
+                        {% endwith %}
                         </ul>
+                        <br>
+
+                        {% if poll.is_election %}
+                        <div class="candidate-info">
+                            <div class="candidate-info-header">
+                                <b>Candidate Information</b>
+                                <i class="fas fa-angle-down"></i>
+                            </div>
+                            <ul style="display: none">
+                                {% for choice_and_value in q.choices_and_values %}
+                                    <li>{{ choice_and_value.0.info|safe|replace_newtab_links }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+
                     {% elif q.is_many_choice %}
                     <div class="directions">
                         {% if q.type == "SAP" %}
@@ -136,37 +279,38 @@
                             You may select up to {{ q.max_choices }} choice{{ q.max_choices|pluralize }}:
                         {% endif %}
                     </div>
-                        <br>
-                        <ul class="answers">
-                        {% for choice in q.choices %}
-                            <li class="choice-item">
-                                <input type="checkbox"
-                                       id="question-{{ q.num }}-{{ choice.num }}"
-                                       name="question-{{ q.num }}"
-                                       value="{{ choice.num }}"
-                                       {% if choice in q.current_choices %} checked {% endif %}
-                                       {% if q.current_vote_clear %} disabled {% endif %}>
-                                <div class="choice-desc">
-                                <label for="question-{{ q.num }}-{{ choice.num }}">
-                                    {{ choice.info|safe }}
-                                </label>
-                                </div>
-                            </li>
-                        {% endfor %}
-                            <li class="choice-item">
-                                <input type="checkbox"
-                                       id="question-{{ q.num }}-clear"
-                                       class="question-clear-action"
-                                       name="question-{{ q.num }}"
-                                       value="CLEAR"
-                                       {% if q.current_vote_clear %} checked {% endif %}>
-                                <div class="choice-desc">
-                                <label for="question-{{ q.num }}-clear" class="clear-vote clear-vote">
-                                    Clear Vote
-                                </label>
-                                </div>
-                            </li>
-                        </ul>
+                    <br>
+                    <ul class="answers">
+                    {% for choice in q.choices %}
+                        <li class="choice-item">
+                            <input type="checkbox"
+                                    id="question-{{ q.num }}-{{ choice.num }}"
+                                    name="question-{{ q.num }}"
+                                    value="{{ choice.num }}"
+                                    {% if choice in q.current_choices %} checked {% endif %}
+                                    {% if q.current_vote_clear %} disabled {% endif %}>
+                            <div class="choice-desc">
+                            <label for="question-{{ q.num }}-{{ choice.num }}">
+                                {{ choice.info|safe }}
+                            </label>
+                            </div>
+                        </li>
+                    {% endfor %}
+                        <li class="choice-item">
+                            <input type="checkbox"
+                                    id="question-{{ q.num }}-clear"
+                                    class="question-clear-action"
+                                    name="question-{{ q.num }}"
+                                    value="CLEAR"
+                                    {% if q.current_vote_clear %} checked {% endif %}>
+                            <div class="choice-desc">
+                            <label for="question-{{ q.num }}-clear" class="clear-vote clear-vote">
+                                Clear Vote
+                            </label>
+                            </div>
+                        </li>
+                    </ul>
+
                     {% elif q.is_writing %}
                         {% if q.type == "FRE" %}
                             <textarea id="question-{{ q.num }}-writing"
@@ -182,14 +326,16 @@
                                       placeholder="Answer here..."
                                       value="{% if q.current_vote %}{{ q.current_vote.answer|escape }}{% endif %}">
                         {% endif %}
+
                     {% else %}
                         Question type {{ q.type }} unsupported.
-                    {% endif %}
+                    {% endif %} {# endif for question types #}
                     </div>
                     <br>
                 </li>
             {% endfor %}
             </ol>
+
             {% if can_vote %}
                 <input class="vote-button" type="submit" value="Vote!">
             {% else %}
