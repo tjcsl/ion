@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -94,16 +95,113 @@
 <li><a class="reference internal" href="#">intranet.apps.auth package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.apps">intranet.apps.auth.apps module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.backends">intranet.apps.auth.backends module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.decorators">intranet.apps.auth.decorators module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.forms">intranet.apps.auth.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.helpers">intranet.apps.auth.helpers module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.rest_permissions">intranet.apps.auth.rest_permissions module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.signals">intranet.apps.auth.signals module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.tests">intranet.apps.auth.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.apps">intranet.apps.auth.apps module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.apps.AuthConfig"><code class="docutils literal notranslate"><span class="pre">AuthConfig</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.apps.AuthConfig.label"><code class="docutils literal notranslate"><span class="pre">AuthConfig.label</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.apps.AuthConfig.name"><code class="docutils literal notranslate"><span class="pre">AuthConfig.name</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.backends">intranet.apps.auth.backends module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.authenticate()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.get_kerberos_ticket()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.get_user()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.kinit_timeout_handle()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.try_single_kinit"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.try_single_kinit()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.EXPIRED"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult.EXPIRED</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.FAILURE"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult.FAILURE</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.SUCCESS"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult.SUCCESS</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend"><code class="docutils literal notranslate"><span class="pre">MasterPasswordAuthenticationBackend</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate"><code class="docutils literal notranslate"><span class="pre">MasterPasswordAuthenticationBackend.authenticate()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user"><code class="docutils literal notranslate"><span class="pre">MasterPasswordAuthenticationBackend.get_user()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.decorators">intranet.apps.auth.decorators module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.admin_required"><code class="docutils literal notranslate"><span class="pre">admin_required()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.announcements_admin_required"><code class="docutils literal notranslate"><span class="pre">announcements_admin_required()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.attendance_taker_required"><code class="docutils literal notranslate"><span class="pre">attendance_taker_required()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.board_admin_required"><code class="docutils literal notranslate"><span class="pre">board_admin_required()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.deny_restricted"><code class="docutils literal notranslate"><span class="pre">deny_restricted()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.eighth_admin_required"><code class="docutils literal notranslate"><span class="pre">eighth_admin_required()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.events_admin_required"><code class="docutils literal notranslate"><span class="pre">events_admin_required()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.decorators.reauthentication_required"><code class="docutils literal notranslate"><span class="pre">reauthentication_required()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.forms">intranet.apps.auth.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.forms.AuthenticateForm"><code class="docutils literal notranslate"><span class="pre">AuthenticateForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.forms.AuthenticateForm.username"><code class="docutils literal notranslate"><span class="pre">AuthenticateForm.username</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.forms.AuthenticateForm.password"><code class="docutils literal notranslate"><span class="pre">AuthenticateForm.password</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.forms.AuthenticateForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">AuthenticateForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.forms.AuthenticateForm.is_valid"><code class="docutils literal notranslate"><span class="pre">AuthenticateForm.is_valid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.helpers">intranet.apps.auth.helpers module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.helpers.change_password"><code class="docutils literal notranslate"><span class="pre">change_password()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.helpers.get_login_theme"><code class="docutils literal notranslate"><span class="pre">get_login_theme()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.helpers.get_login_theme_name"><code class="docutils literal notranslate"><span class="pre">get_login_theme_name()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.rest_permissions">intranet.apps.auth.rest_permissions module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.rest_permissions.DenyRestrictedPermission"><code class="docutils literal notranslate"><span class="pre">DenyRestrictedPermission</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.rest_permissions.DenyRestrictedPermission.has_permission"><code class="docutils literal notranslate"><span class="pre">DenyRestrictedPermission.has_permission()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.signals">intranet.apps.auth.signals module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.signals.user_login"><code class="docutils literal notranslate"><span class="pre">user_login()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.signals.user_logout"><code class="docutils literal notranslate"><span class="pre">user_logout()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.tests">intranet.apps.auth.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.GrantAdminTest"><code class="docutils literal notranslate"><span class="pre">GrantAdminTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.GrantAdminTest.test_grant_admin"><code class="docutils literal notranslate"><span class="pre">GrantAdminTest.test_grant_admin()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest"><code class="docutils literal notranslate"><span class="pre">LoginViewTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.create_block_by_signup_datetime"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.create_block_by_signup_datetime()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.does_login_redirect_to"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.does_login_redirect_to()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.login_student"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.login_student()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_authentication"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_authentication()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_eighth_login_redirect"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_eighth_login_redirect()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_login"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_login()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_login_page"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_login_page()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_logout_view"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_logout_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_reauthentication_view"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_reauthentication_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.tests.LoginViewTest.test_reset_password_view"><code class="docutils literal notranslate"><span class="pre">LoginViewTest.test_reset_password_view()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.urls">intranet.apps.auth.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.auth.views">intranet.apps.auth.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.auth.views">intranet.apps.auth.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.views.LoginView"><code class="docutils literal notranslate"><span class="pre">LoginView</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.views.LoginView.get"><code class="docutils literal notranslate"><span class="pre">LoginView.get()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.LoginView.post"><code class="docutils literal notranslate"><span class="pre">LoginView.post()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.about_view"><code class="docutils literal notranslate"><span class="pre">about_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.do_logout"><code class="docutils literal notranslate"><span class="pre">do_logout()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.get_bg_pattern"><code class="docutils literal notranslate"><span class="pre">get_bg_pattern()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.get_week_sports_school_events"><code class="docutils literal notranslate"><span class="pre">get_week_sports_school_events()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.index_view"><code class="docutils literal notranslate"><span class="pre">index_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.log_auth"><code class="docutils literal notranslate"><span class="pre">log_auth()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.logout_view"><code class="docutils literal notranslate"><span class="pre">logout_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.reauthentication_view"><code class="docutils literal notranslate"><span class="pre">reauthentication_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.views.reset_password_view"><code class="docutils literal notranslate"><span class="pre">reset_password_view()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.auth">Module contents</a></li>
 </ul>
 </li>

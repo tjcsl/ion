@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,12 +94,81 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.printing package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.printing.admin">intranet.apps.printing.admin module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.printing.forms">intranet.apps.printing.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.printing.models">intranet.apps.printing.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.printing.tests">intranet.apps.printing.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.printing.admin">intranet.apps.printing.admin module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.admin.PrintJobAdmin"><code class="docutils literal notranslate"><span class="pre">PrintJobAdmin</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.admin.PrintJobAdmin.formatted_page_range"><code class="docutils literal notranslate"><span class="pre">PrintJobAdmin.formatted_page_range()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.admin.PrintJobAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">PrintJobAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.admin.PrintJobAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">PrintJobAdmin.list_filter</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.admin.PrintJobAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">PrintJobAdmin.ordering</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.admin.PrintJobAdmin.raw_id_fields"><code class="docutils literal notranslate"><span class="pre">PrintJobAdmin.raw_id_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.printing.forms">intranet.apps.printing.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.forms.PrintJobForm"><code class="docutils literal notranslate"><span class="pre">PrintJobForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.forms.PrintJobForm.Meta"><code class="docutils literal notranslate"><span class="pre">PrintJobForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.forms.PrintJobForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">PrintJobForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.forms.PrintJobForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">PrintJobForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.printing.forms.PrintJobForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">PrintJobForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.forms.PrintJobForm.validate_size"><code class="docutils literal notranslate"><span class="pre">PrintJobForm.validate_size()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.printing.models">intranet.apps.printing.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob"><code class="docutils literal notranslate"><span class="pre">PrintJob</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.user"><code class="docutils literal notranslate"><span class="pre">PrintJob.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.printer"><code class="docutils literal notranslate"><span class="pre">PrintJob.printer</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.file"><code class="docutils literal notranslate"><span class="pre">PrintJob.file</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.page_range"><code class="docutils literal notranslate"><span class="pre">PrintJob.page_range</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.time"><code class="docutils literal notranslate"><span class="pre">PrintJob.time</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.printed"><code class="docutils literal notranslate"><span class="pre">PrintJob.printed</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.num_pages"><code class="docutils literal notranslate"><span class="pre">PrintJob.num_pages</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.duplex"><code class="docutils literal notranslate"><span class="pre">PrintJob.duplex</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.fit"><code class="docutils literal notranslate"><span class="pre">PrintJob.fit</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">PrintJob.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">PrintJob.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">PrintJob.duplex</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">PrintJob.file</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">PrintJob.fit</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.get_next_by_time"><code class="docutils literal notranslate"><span class="pre">PrintJob.get_next_by_time()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.get_previous_by_time"><code class="docutils literal notranslate"><span class="pre">PrintJob.get_previous_by_time()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.id"><code class="docutils literal notranslate"><span class="pre">PrintJob.id</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">PrintJob.num_pages</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.objects"><code class="docutils literal notranslate"><span class="pre">PrintJob.objects</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">PrintJob.page_range</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">PrintJob.printed</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">PrintJob.printer</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">PrintJob.time</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">PrintJob.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.models.PrintJob.user_id"><code class="docutils literal notranslate"><span class="pre">PrintJob.user_id</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.printing.tests">intranet.apps.printing.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.tests.PrintingTest"><code class="docutils literal notranslate"><span class="pre">PrintingTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.tests.PrintingTest.test_printing_view"><code class="docutils literal notranslate"><span class="pre">PrintingTest.test_printing_view()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.printing.urls">intranet.apps.printing.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.printing.views">intranet.apps.printing.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.printing.views">intranet.apps.printing.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.printing.views.InvalidInputPrintingError"><code class="docutils literal notranslate"><span class="pre">InvalidInputPrintingError</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.check_page_range"><code class="docutils literal notranslate"><span class="pre">check_page_range()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.convert_file"><code class="docutils literal notranslate"><span class="pre">convert_file()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.convert_pdf"><code class="docutils literal notranslate"><span class="pre">convert_pdf()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.convert_soffice"><code class="docutils literal notranslate"><span class="pre">convert_soffice()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.get_mimetype"><code class="docutils literal notranslate"><span class="pre">get_mimetype()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.get_numpages"><code class="docutils literal notranslate"><span class="pre">get_numpages()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.get_printers"><code class="docutils literal notranslate"><span class="pre">get_printers()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.print_job"><code class="docutils literal notranslate"><span class="pre">print_job()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.printing">Module contents</a></li>
 </ul>
 </li>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.notifications package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.notifications package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,11 +94,69 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.notifications package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.notifications.emails">intranet.apps.notifications.emails module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.notifications.models">intranet.apps.notifications.models module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.notifications.emails">intranet.apps.notifications.emails module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.notifications.emails.email_send"><code class="docutils literal notranslate"><span class="pre">email_send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.notifications.models">intranet.apps.notifications.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification"><code class="docutils literal notranslate"><span class="pre">GCMNotification</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">GCMNotification.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">GCMNotification.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.data"><code class="docutils literal notranslate"><span class="pre">GCMNotification.data</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.get_next_by_time"><code class="docutils literal notranslate"><span class="pre">GCMNotification.get_next_by_time()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.get_previous_by_time"><code class="docutils literal notranslate"><span class="pre">GCMNotification.get_previous_by_time()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.id"><code class="docutils literal notranslate"><span class="pre">GCMNotification.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.multicast_id"><code class="docutils literal notranslate"><span class="pre">GCMNotification.multicast_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.num_failure"><code class="docutils literal notranslate"><span class="pre">GCMNotification.num_failure</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.num_success"><code class="docutils literal notranslate"><span class="pre">GCMNotification.num_success</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.objects"><code class="docutils literal notranslate"><span class="pre">GCMNotification.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.sent_data"><code class="docutils literal notranslate"><span class="pre">GCMNotification.sent_data</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.sent_to"><code class="docutils literal notranslate"><span class="pre">GCMNotification.sent_to</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.time"><code class="docutils literal notranslate"><span class="pre">GCMNotification.time</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.user"><code class="docutils literal notranslate"><span class="pre">GCMNotification.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification.user_id"><code class="docutils literal notranslate"><span class="pre">GCMNotification.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.gcmnotification"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.gcmnotification</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.gcmnotification_id"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.gcmnotification_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.id"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.notificationconfig"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.notificationconfig</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.notificationconfig_id"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.notificationconfig_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.GCMNotification_sent_to.objects"><code class="docutils literal notranslate"><span class="pre">GCMNotification_sent_to.objects</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig"><code class="docutils literal notranslate"><span class="pre">NotificationConfig</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.android_gcm_rand"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.android_gcm_rand</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.gcm_optout"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.gcm_optout</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.gcm_time"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.gcm_time</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.gcm_token"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.gcm_token</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.gcm_token_sha256"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.gcm_token_sha256</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.gcmnotification_set"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.gcmnotification_set</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.id"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.objects"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.user"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.models.NotificationConfig.user_id"><code class="docutils literal notranslate"><span class="pre">NotificationConfig.user_id</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.notifications.tasks">intranet.apps.notifications.tasks module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.notifications.urls">intranet.apps.notifications.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.notifications.views">intranet.apps.notifications.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.notifications.views">intranet.apps.notifications.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.android_setup_view"><code class="docutils literal notranslate"><span class="pre">android_setup_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.chrome_getdata_view"><code class="docutils literal notranslate"><span class="pre">chrome_getdata_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.chrome_setup_view"><code class="docutils literal notranslate"><span class="pre">chrome_setup_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.gcm_list_view"><code class="docutils literal notranslate"><span class="pre">gcm_list_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.gcm_post"><code class="docutils literal notranslate"><span class="pre">gcm_post()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.gcm_post_view"><code class="docutils literal notranslate"><span class="pre">gcm_post_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.notifications.views.get_gcm_schedule_uids"><code class="docutils literal notranslate"><span class="pre">get_gcm_schedule_uids()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.notifications">Module contents</a></li>
 </ul>
 </li>

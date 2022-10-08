@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.eighth.views package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.eighth.views package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -94,13 +95,128 @@
 <li><a class="reference internal" href="#">intranet.apps.eighth.views package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.activities">intranet.apps.eighth.views.activities module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.api">intranet.apps.eighth.views.api module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.attendance">intranet.apps.eighth.views.attendance module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.monitoring">intranet.apps.eighth.views.monitoring module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.profile">intranet.apps.eighth.views.profile module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.routers">intranet.apps.eighth.views.routers module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.eighth.views.signup">intranet.apps.eighth.views.signup module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.activities">intranet.apps.eighth.views.activities module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.activities.calculate_statistics"><code class="docutils literal notranslate"><span class="pre">calculate_statistics()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.activities.chunks"><code class="docutils literal notranslate"><span class="pre">chunks()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.activities.current_school_year"><code class="docutils literal notranslate"><span class="pre">current_school_year()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.activities.generate_statistics_pdf"><code class="docutils literal notranslate"><span class="pre">generate_statistics_pdf()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.api">intranet.apps.eighth.views.api module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.BlockPagination"><code class="docutils literal notranslate"><span class="pre">BlockPagination</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.BlockPagination.max_page_size"><code class="docutils literal notranslate"><span class="pre">BlockPagination.max_page_size</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.BlockPagination.page_size"><code class="docutils literal notranslate"><span class="pre">BlockPagination.page_size</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.BlockPagination.page_size_query_param"><code class="docutils literal notranslate"><span class="pre">BlockPagination.page_size_query_param</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityDetail"><code class="docutils literal notranslate"><span class="pre">EighthActivityDetail</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityDetail.permission_classes"><code class="docutils literal notranslate"><span class="pre">EighthActivityDetail.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityDetail.queryset"><code class="docutils literal notranslate"><span class="pre">EighthActivityDetail.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityDetail.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthActivityDetail.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityList"><code class="docutils literal notranslate"><span class="pre">EighthActivityList</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityList.permission_classes"><code class="docutils literal notranslate"><span class="pre">EighthActivityList.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityList.queryset"><code class="docutils literal notranslate"><span class="pre">EighthActivityList.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthActivityList.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthActivityList.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockDetail"><code class="docutils literal notranslate"><span class="pre">EighthBlockDetail</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockDetail.get"><code class="docutils literal notranslate"><span class="pre">EighthBlockDetail.get()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockDetail.permission_classes"><code class="docutils literal notranslate"><span class="pre">EighthBlockDetail.permission_classes</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockList"><code class="docutils literal notranslate"><span class="pre">EighthBlockList</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockList.get_queryset"><code class="docutils literal notranslate"><span class="pre">EighthBlockList.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockList.is_valid_date"><code class="docutils literal notranslate"><span class="pre">EighthBlockList.is_valid_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockList.pagination_class"><code class="docutils literal notranslate"><span class="pre">EighthBlockList.pagination_class</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockList.permission_classes"><code class="docutils literal notranslate"><span class="pre">EighthBlockList.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthBlockList.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthBlockList.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthScheduledActivitySignupList"><code class="docutils literal notranslate"><span class="pre">EighthScheduledActivitySignupList</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthScheduledActivitySignupList.get"><code class="docutils literal notranslate"><span class="pre">EighthScheduledActivitySignupList.get()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthSignupDetail"><code class="docutils literal notranslate"><span class="pre">EighthSignupDetail</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthSignupDetail.queryset"><code class="docutils literal notranslate"><span class="pre">EighthSignupDetail.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthSignupDetail.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthSignupDetail.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesAdd"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesAdd</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.create"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesAdd.create()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.get_queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesAdd.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesAdd.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesAdd.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesListToggle</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.create"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesListToggle.create()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.get_queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesListToggle.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.list"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesListToggle.list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesListToggle.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesListToggle.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesRemove"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesRemove</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesRemove.create"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesRemove.create()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesRemove.get_queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesRemove.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesRemove.list"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesRemove.list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesRemove.queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesRemove.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserFavoritesRemove.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthUserFavoritesRemove.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserSignupListAdd"><code class="docutils literal notranslate"><span class="pre">EighthUserSignupListAdd</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserSignupListAdd.create"><code class="docutils literal notranslate"><span class="pre">EighthUserSignupListAdd.create()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserSignupListAdd.is_valid_date"><code class="docutils literal notranslate"><span class="pre">EighthUserSignupListAdd.is_valid_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserSignupListAdd.list"><code class="docutils literal notranslate"><span class="pre">EighthUserSignupListAdd.list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserSignupListAdd.queryset"><code class="docutils literal notranslate"><span class="pre">EighthUserSignupListAdd.queryset</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.EighthUserSignupListAdd.serializer_class"><code class="docutils literal notranslate"><span class="pre">EighthUserSignupListAdd.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.IsAuthenticatedOrClientCredentials"><code class="docutils literal notranslate"><span class="pre">IsAuthenticatedOrClientCredentials</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.api.IsAuthenticatedOrClientCredentials.has_permission"><code class="docutils literal notranslate"><span class="pre">IsAuthenticatedOrClientCredentials.has_permission()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.attendance">intranet.apps.eighth.views.attendance module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard.FORMS</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard.TEMPLATES</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard.done()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard.get_context_data()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAttendanceSelectScheduledActivityWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.accept_all_passes_view"><code class="docutils literal notranslate"><span class="pre">accept_all_passes_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.accept_pass_view"><code class="docutils literal notranslate"><span class="pre">accept_pass_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.admin_choose_scheduled_activity_view"><code class="docutils literal notranslate"><span class="pre">admin_choose_scheduled_activity_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.generate_roster_pdf"><code class="docutils literal notranslate"><span class="pre">generate_roster_pdf()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.raw_roster_view"><code class="docutils literal notranslate"><span class="pre">raw_roster_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.should_show_activity_list"><code class="docutils literal notranslate"><span class="pre">should_show_activity_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.take_attendance_view"><code class="docutils literal notranslate"><span class="pre">take_attendance_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.attendance.teacher_choose_scheduled_activity_view"><code class="docutils literal notranslate"><span class="pre">teacher_choose_scheduled_activity_view()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.monitoring">intranet.apps.eighth.views.monitoring module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.monitoring.metrics_view"><code class="docutils literal notranslate"><span class="pre">metrics_view()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.profile">intranet.apps.eighth.views.profile module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.profile.date_fmt"><code class="docutils literal notranslate"><span class="pre">date_fmt()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.profile.get_profile_context"><code class="docutils literal notranslate"><span class="pre">get_profile_context()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.routers">intranet.apps.eighth.views.routers module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.routers.eighth_redirect_view"><code class="docutils literal notranslate"><span class="pre">eighth_redirect_view()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.eighth.views.signup">intranet.apps.eighth.views.signup module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.eighth.views.signup.eighth_location"><code class="docutils literal notranslate"><span class="pre">eighth_location()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.eighth.views">Module contents</a></li>
 </ul>
 </li>
@@ -145,17 +261,160 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="intranet.apps.eighth.views.admin.html">intranet.apps.eighth.views.admin package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.activities">intranet.apps.eighth.views.admin.activities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.attendance">intranet.apps.eighth.views.admin.attendance module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.blocks">intranet.apps.eighth.views.admin.blocks module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.general">intranet.apps.eighth.views.admin.general module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.groups">intranet.apps.eighth.views.admin.groups module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.hybrid">intranet.apps.eighth.views.admin.hybrid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.activities">intranet.apps.eighth.views.admin.activities module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.activities.add_activity_view"><code class="docutils literal notranslate"><span class="pre">add_activity_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.activities.delete_activity_view"><code class="docutils literal notranslate"><span class="pre">delete_activity_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.activities.edit_activity_view"><code class="docutils literal notranslate"><span class="pre">edit_activity_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.attendance">intranet.apps.eighth.views.admin.attendance module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.activities_without_attendance_view"><code class="docutils literal notranslate"><span class="pre">activities_without_attendance_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.after_deadline_signup_view"><code class="docutils literal notranslate"><span class="pre">after_deadline_signup_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.clear_absence_view"><code class="docutils literal notranslate"><span class="pre">clear_absence_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.delinquent_students_view"><code class="docutils literal notranslate"><span class="pre">delinquent_students_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.migrate_outstanding_passes_view"><code class="docutils literal notranslate"><span class="pre">migrate_outstanding_passes_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.no_signups_roster"><code class="docutils literal notranslate"><span class="pre">no_signups_roster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.open_passes_view"><code class="docutils literal notranslate"><span class="pre">open_passes_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.attendance.out_of_building_schedules_view"><code class="docutils literal notranslate"><span class="pre">out_of_building_schedules_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.blocks">intranet.apps.eighth.views.admin.blocks module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.blocks.add_block_view"><code class="docutils literal notranslate"><span class="pre">add_block_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.blocks.copy_block_view"><code class="docutils literal notranslate"><span class="pre">copy_block_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.blocks.delete_block_view"><code class="docutils literal notranslate"><span class="pre">delete_block_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.blocks.edit_block_view"><code class="docutils literal notranslate"><span class="pre">edit_block_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.blocks.perform_hybrid_block_signup"><code class="docutils literal notranslate"><span class="pre">perform_hybrid_block_signup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.blocks.print_block_rosters_view"><code class="docutils literal notranslate"><span class="pre">print_block_rosters_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.general">intranet.apps.eighth.views.admin.general module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.cache_view"><code class="docutils literal notranslate"><span class="pre">cache_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.edit_start_date_view"><code class="docutils literal notranslate"><span class="pre">edit_start_date_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.eighth_admin_dashboard_view"><code class="docutils literal notranslate"><span class="pre">eighth_admin_dashboard_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.general.history_view"><code class="docutils literal notranslate"><span class="pre">history_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.groups">intranet.apps.eighth.views.admin.groups module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.FORMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.TEMPLATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.dispatch"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.dispatch()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.get_context_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.get_form_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAdminDistributeGroupWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.FORMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.TEMPLATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.get_context_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.get_form_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.add_group_view"><code class="docutils literal notranslate"><span class="pre">add_group_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.add_member_to_group_view"><code class="docutils literal notranslate"><span class="pre">add_member_to_group_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.delete_empty_groups_view"><code class="docutils literal notranslate"><span class="pre">delete_empty_groups_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.delete_group_view"><code class="docutils literal notranslate"><span class="pre">delete_group_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.download_group_csv_view"><code class="docutils literal notranslate"><span class="pre">download_group_csv_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.edit_group_view"><code class="docutils literal notranslate"><span class="pre">edit_group_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_action"><code class="docutils literal notranslate"><span class="pre">eighth_admin_distribute_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_group"><code class="docutils literal notranslate"><span class="pre">eighth_admin_distribute_group()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_unsigned"><code class="docutils literal notranslate"><span class="pre">eighth_admin_distribute_unsigned()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_perform_group_signup"><code class="docutils literal notranslate"><span class="pre">eighth_admin_perform_group_signup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group"><code class="docutils literal notranslate"><span class="pre">eighth_admin_signup_group()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.eighth_admin_signup_group_action"><code class="docutils literal notranslate"><span class="pre">eighth_admin_signup_group_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.find_users_input"><code class="docutils literal notranslate"><span class="pre">find_users_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.get_file_string"><code class="docutils literal notranslate"><span class="pre">get_file_string()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.get_user_info"><code class="docutils literal notranslate"><span class="pre">get_user_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.handle_group_input"><code class="docutils literal notranslate"><span class="pre">handle_group_input()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.remove_member_from_group_view"><code class="docutils literal notranslate"><span class="pre">remove_member_from_group_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.groups.upload_group_members_view"><code class="docutils literal notranslate"><span class="pre">upload_group_members_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.hybrid">intranet.apps.eighth.views.admin.hybrid module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.FORMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.TEMPLATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.get_context_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.get_form_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.EighthAdminSignUpGroupWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAdminSignUpGroupWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.activities_without_attendance_view"><code class="docutils literal notranslate"><span class="pre">activities_without_attendance_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.eighth_admin_perform_group_signup"><code class="docutils literal notranslate"><span class="pre">eighth_admin_perform_group_signup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.eighth_admin_signup_group_action_hybrid"><code class="docutils literal notranslate"><span class="pre">eighth_admin_signup_group_action_hybrid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.eighth_admin_signup_group_hybrid_view"><code class="docutils literal notranslate"><span class="pre">eighth_admin_signup_group_hybrid_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.hybrid.list_sponsor_view"><code class="docutils literal notranslate"><span class="pre">list_sponsor_view()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.maintenance">intranet.apps.eighth.views.admin.maintenance module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.rooms">intranet.apps.eighth.views.admin.rooms module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.scheduling">intranet.apps.eighth.views.admin.scheduling module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.sponsors">intranet.apps.eighth.views.admin.sponsors module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.users">intranet.apps.eighth.views.admin.users module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.rooms">intranet.apps.eighth.views.admin.rooms module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard.FORMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard.TEMPLATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard.done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard.get_context_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard.get_form_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.EighthAdminRoomUtilizationWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAdminRoomUtilizationWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.add_room_view"><code class="docutils literal notranslate"><span class="pre">add_room_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.delete_room_view"><code class="docutils literal notranslate"><span class="pre">delete_room_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.edit_room_view"><code class="docutils literal notranslate"><span class="pre">edit_room_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_sanity_check_view"><code class="docutils literal notranslate"><span class="pre">room_sanity_check_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_utilization_action"><code class="docutils literal notranslate"><span class="pre">room_utilization_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_utilization_for_block_view"><code class="docutils literal notranslate"><span class="pre">room_utilization_for_block_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.rooms.room_utilization_view"><code class="docutils literal notranslate"><span class="pre">room_utilization_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.scheduling">intranet.apps.eighth.views.admin.scheduling module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard.FORMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard.TEMPLATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard.done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard.get_context_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard.get_form_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminTransferStudentsWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAdminTransferStudentsWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.FORMS"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard.FORMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.TEMPLATES"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard.TEMPLATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.done"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard.done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_context_data"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard.get_context_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_form_kwargs"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard.get_form_kwargs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.EighthAdminUnsignupStudentsWizard.get_template_names"><code class="docutils literal notranslate"><span class="pre">EighthAdminUnsignupStudentsWizard.get_template_names()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.distribute_students_view"><code class="docutils literal notranslate"><span class="pre">distribute_students_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.remove_duplicates_view"><code class="docutils literal notranslate"><span class="pre">remove_duplicates_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.schedule_activity_view"><code class="docutils literal notranslate"><span class="pre">schedule_activity_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view"><code class="docutils literal notranslate"><span class="pre">show_activity_schedule_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_action"><code class="docutils literal notranslate"><span class="pre">transfer_students_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.transfer_students_view"><code class="docutils literal notranslate"><span class="pre">transfer_students_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.scheduling.unsignup_students_view"><code class="docutils literal notranslate"><span class="pre">unsignup_students_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.sponsors">intranet.apps.eighth.views.admin.sponsors module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.add_sponsor_view"><code class="docutils literal notranslate"><span class="pre">add_sponsor_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.delete_sponsor_view"><code class="docutils literal notranslate"><span class="pre">delete_sponsor_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.edit_sponsor_view"><code class="docutils literal notranslate"><span class="pre">edit_sponsor_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.list_sponsor_activity_view"><code class="docutils literal notranslate"><span class="pre">list_sponsor_activity_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.list_sponsor_view"><code class="docutils literal notranslate"><span class="pre">list_sponsor_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.sponsor_sanity_check_view"><code class="docutils literal notranslate"><span class="pre">sponsor_sanity_check_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.sponsors.sponsor_schedule_view"><code class="docutils literal notranslate"><span class="pre">sponsor_schedule_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin.users">intranet.apps.eighth.views.admin.users module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.users.add_user_view"><code class="docutils literal notranslate"><span class="pre">add_user_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.users.delete_user_view"><code class="docutils literal notranslate"><span class="pre">delete_user_view()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#intranet.apps.eighth.views.admin.users.list_user_view"><code class="docutils literal notranslate"><span class="pre">list_user_view()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.eighth.views.admin.html#module-intranet.apps.eighth.views.admin">Module contents</a></li>
 </ul>
 </li>

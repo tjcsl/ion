@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.announcements package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.announcements package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,15 +94,300 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.announcements package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.admin">intranet.apps.announcements.admin module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.api">intranet.apps.announcements.api module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.forms">intranet.apps.announcements.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.models">intranet.apps.announcements.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.notifications">intranet.apps.announcements.notifications module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.serializers">intranet.apps.announcements.serializers module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.tests">intranet.apps.announcements.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.admin">intranet.apps.announcements.admin module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.admin.AnnouncementAdmin"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdmin</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.admin.AnnouncementAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.admin.AnnouncementAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdmin.list_filter</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.admin.AnnouncementAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdmin.ordering</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.admin.AnnouncementAdmin.raw_id_fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdmin.raw_id_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.api">intranet.apps.announcements.api module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.IsAnnouncementAdminOrReadOnly"><code class="docutils literal notranslate"><span class="pre">IsAnnouncementAdminOrReadOnly</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.IsAnnouncementAdminOrReadOnly.has_permission"><code class="docutils literal notranslate"><span class="pre">IsAnnouncementAdminOrReadOnly.has_permission()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.ListCreateAnnouncement"><code class="docutils literal notranslate"><span class="pre">ListCreateAnnouncement</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.ListCreateAnnouncement.get_queryset"><code class="docutils literal notranslate"><span class="pre">ListCreateAnnouncement.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.ListCreateAnnouncement.permission_classes"><code class="docutils literal notranslate"><span class="pre">ListCreateAnnouncement.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.ListCreateAnnouncement.serializer_class"><code class="docutils literal notranslate"><span class="pre">ListCreateAnnouncement.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement"><code class="docutils literal notranslate"><span class="pre">RetrieveUpdateDestroyAnnouncement</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement.get_queryset"><code class="docutils literal notranslate"><span class="pre">RetrieveUpdateDestroyAnnouncement.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement.permission_classes"><code class="docutils literal notranslate"><span class="pre">RetrieveUpdateDestroyAnnouncement.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement.serializer_class"><code class="docutils literal notranslate"><span class="pre">RetrieveUpdateDestroyAnnouncement.serializer_class</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.forms">intranet.apps.announcements.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementAdminForm"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdminForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementAdminForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementAdminForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementEditForm"><code class="docutils literal notranslate"><span class="pre">AnnouncementEditForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementEditForm.Meta"><code class="docutils literal notranslate"><span class="pre">AnnouncementEditForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementEditForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementEditForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementEditForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">AnnouncementEditForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementEditForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementEditForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementEditForm.expiration_date"><code class="docutils literal notranslate"><span class="pre">AnnouncementEditForm.expiration_date</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementForm"><code class="docutils literal notranslate"><span class="pre">AnnouncementForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementForm.Meta"><code class="docutils literal notranslate"><span class="pre">AnnouncementForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">AnnouncementForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementForm.expiration_date"><code class="docutils literal notranslate"><span class="pre">AnnouncementForm.expiration_date</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementRequestForm"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementRequestForm.Meta"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementRequestForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementRequestForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.forms.AnnouncementRequestForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.models">intranet.apps.announcements.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement"><code class="docutils literal notranslate"><span class="pre">Announcement</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.title"><code class="docutils literal notranslate"><span class="pre">Announcement.title</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.content"><code class="docutils literal notranslate"><span class="pre">Announcement.content</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.authors"><code class="docutils literal notranslate"><span class="pre">Announcement.authors</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.added"><code class="docutils literal notranslate"><span class="pre">Announcement.added</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.updated"><code class="docutils literal notranslate"><span class="pre">Announcement.updated</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.user_map"><code class="docutils literal notranslate"><span class="pre">Announcement.user_map</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Announcement.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Announcement.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Announcement.added</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.announcementrequest"><code class="docutils literal notranslate"><span class="pre">Announcement.announcementrequest</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.announcementrequest_set"><code class="docutils literal notranslate"><span class="pre">Announcement.announcementrequest_set</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.author"><code class="docutils literal notranslate"><span class="pre">Announcement.author</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Announcement.content</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.content_no_links"><code class="docutils literal notranslate"><span class="pre">Announcement.content_no_links</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.dashboard_type"><code class="docutils literal notranslate"><span class="pre">Announcement.dashboard_type</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.event"><code class="docutils literal notranslate"><span class="pre">Announcement.event</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.expiration_date"><code class="docutils literal notranslate"><span class="pre">Announcement.expiration_date</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_author"><code class="docutils literal notranslate"><span class="pre">Announcement.get_author()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_next_by_added"><code class="docutils literal notranslate"><span class="pre">Announcement.get_next_by_added()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_next_by_expiration_date"><code class="docutils literal notranslate"><span class="pre">Announcement.get_next_by_expiration_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_next_by_updated"><code class="docutils literal notranslate"><span class="pre">Announcement.get_next_by_updated()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_previous_by_added"><code class="docutils literal notranslate"><span class="pre">Announcement.get_previous_by_added()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_previous_by_expiration_date"><code class="docutils literal notranslate"><span class="pre">Announcement.get_previous_by_expiration_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.get_previous_by_updated"><code class="docutils literal notranslate"><span class="pre">Announcement.get_previous_by_updated()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.groups"><code class="docutils literal notranslate"><span class="pre">Announcement.groups</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.id"><code class="docutils literal notranslate"><span class="pre">Announcement.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.is_this_year"><code class="docutils literal notranslate"><span class="pre">Announcement.is_this_year</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.is_visible"><code class="docutils literal notranslate"><span class="pre">Announcement.is_visible()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.is_visible_requester"><code class="docutils literal notranslate"><span class="pre">Announcement.is_visible_requester()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.is_visible_submitter"><code class="docutils literal notranslate"><span class="pre">Announcement.is_visible_submitter()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.notify_email_all"><code class="docutils literal notranslate"><span class="pre">Announcement.notify_email_all</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.notify_post"><code class="docutils literal notranslate"><span class="pre">Announcement.notify_post</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.objects"><code class="docutils literal notranslate"><span class="pre">Announcement.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.pinned"><code class="docutils literal notranslate"><span class="pre">Announcement.pinned</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Announcement.title</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Announcement.updated</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.user"><code class="docutils literal notranslate"><span class="pre">Announcement.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.user_id"><code class="docutils literal notranslate"><span class="pre">Announcement.user_id</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Announcement.user_map</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementManager"><code class="docutils literal notranslate"><span class="pre">AnnouncementManager</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementManager.hidden_announcements"><code class="docutils literal notranslate"><span class="pre">AnnouncementManager.hidden_announcements()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementManager.this_year"><code class="docutils literal notranslate"><span class="pre">AnnouncementManager.this_year()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementManager.visible_to_user"><code class="docutils literal notranslate"><span class="pre">AnnouncementManager.visible_to_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.title"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.title</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.content"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.content</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.notes"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.notes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.added"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.added</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.updated"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.updated</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.user"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.teachers_requested"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.teachers_requested</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.teachers_approved"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.teachers_approved</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.posted"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.posted</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.posted_by"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.posted_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.rejected"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.rejected</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.admin_email_sent"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.admin_email_sent</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.added</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.admin_email_sent</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.author"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.author</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.content</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.expiration_date"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.expiration_date</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.get_next_by_added"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.get_next_by_added()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.get_next_by_expiration_date"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.get_next_by_expiration_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.get_next_by_updated"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.get_next_by_updated()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.get_previous_by_added"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.get_previous_by_added()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.get_previous_by_expiration_date"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.get_previous_by_expiration_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.get_previous_by_updated"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.get_previous_by_updated()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.id</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.notes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.objects"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.objects</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.posted</span></code></a></li>
+<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.posted_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.posted_by_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.posted_by_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.posted_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.posted_id</span></code></a></li>
+<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.rejected</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.rejected_by"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.rejected_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.rejected_by_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.rejected_by_id</span></code></a></li>
+<li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.teachers_approved</span></code></a></li>
+<li><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.teachers_requested</span></code></a></li>
+<li><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.title</span></code></a></li>
+<li><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.updated</span></code></a></li>
+<li><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest.user_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequestManager"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestManager</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequestManager.get_queryset"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestManager.get_queryset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequestQuerySet"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestQuerySet</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequestQuerySet.this_year"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequestQuerySet.this_year()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.announcementrequest"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.announcementrequest</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.announcementrequest_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.announcementrequest_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.objects"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.user"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_approved.user_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_approved.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.announcementrequest"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.announcementrequest</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.announcementrequest_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.announcementrequest_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.objects"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.user"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementRequest_teachers_requested.user_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementRequest_teachers_requested.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.announcement"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.announcement</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.users_hidden"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.users_hidden</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.users_seen"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.users_seen</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.announcement</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.announcement_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.announcement_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap.objects"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.objects</span></code></a></li>
+<li><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.users_hidden</span></code></a></li>
+<li><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap.users_seen</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.announcementusermap"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.announcementusermap</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.announcementusermap_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.announcementusermap_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.objects"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.user"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_hidden.user_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_hidden.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.announcementusermap"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.announcementusermap</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.announcementusermap_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.announcementusermap_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.objects"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.user"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementUserMap_users_seen.user_id"><code class="docutils literal notranslate"><span class="pre">AnnouncementUserMap_users_seen.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups"><code class="docutils literal notranslate"><span class="pre">Announcement_groups</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.announcement"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.announcement</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.announcement_id"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.announcement_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.group"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.group</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.group_id"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.group_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.id"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement_groups.objects"><code class="docutils literal notranslate"><span class="pre">Announcement_groups.objects</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.notifications">intranet.apps.announcements.notifications module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.notifications.admin_request_announcement_email"><code class="docutils literal notranslate"><span class="pre">admin_request_announcement_email()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.notifications.announcement_approved_email"><code class="docutils literal notranslate"><span class="pre">announcement_approved_email()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.notifications.announcement_posted_email"><code class="docutils literal notranslate"><span class="pre">announcement_posted_email()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.notifications.announcement_posted_twitter"><code class="docutils literal notranslate"><span class="pre">announcement_posted_twitter()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.notifications.notify_twitter"><code class="docutils literal notranslate"><span class="pre">notify_twitter()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.notifications.request_announcement_email"><code class="docutils literal notranslate"><span class="pre">request_announcement_email()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.serializers">intranet.apps.announcements.serializers module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.serializers.AnnouncementSerializer"><code class="docutils literal notranslate"><span class="pre">AnnouncementSerializer</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.serializers.AnnouncementSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">AnnouncementSerializer.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.serializers.AnnouncementSerializer.Meta.fields"><code class="docutils literal notranslate"><span class="pre">AnnouncementSerializer.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.serializers.AnnouncementSerializer.Meta.model"><code class="docutils literal notranslate"><span class="pre">AnnouncementSerializer.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.serializers.AnnouncementSerializer.get_author"><code class="docutils literal notranslate"><span class="pre">AnnouncementSerializer.get_author()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.tests">intranet.apps.announcements.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.setUp"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_add_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_add_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_admin_approve_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_admin_approve_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_admin_request_status_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_admin_request_status_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_announcement_approval_allowed_users"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_announcement_approval_allowed_users()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_announcement_request"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_announcement_request()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_approve_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_approve_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_change_announcements"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_change_announcements()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_delete_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_delete_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_get_announcements"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_get_announcements()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_hide_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_hide_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_modify_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_modify_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_request_announcement_success_self_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_request_announcement_success_self_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_request_announcement_success_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_request_announcement_success_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_show_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_show_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_view_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_view_announcement_view()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.ApiTest"><code class="docutils literal notranslate"><span class="pre">ApiTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.ApiTest.test_api_announcements_detail"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_announcements_detail()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.ApiTest.test_api_announcements_list"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_announcements_list()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.announcements.urls">intranet.apps.announcements.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.announcements.views">intranet.apps.announcements.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.announcements.views">intranet.apps.announcements.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.announcements.views.announcement_approved_hook"><code class="docutils literal notranslate"><span class="pre">announcement_approved_hook()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.views.announcement_posted_hook"><code class="docutils literal notranslate"><span class="pre">announcement_posted_hook()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.views.request_announcement_success_self_view"><code class="docutils literal notranslate"><span class="pre">request_announcement_success_self_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.views.request_announcement_success_view"><code class="docutils literal notranslate"><span class="pre">request_announcement_success_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.views.request_announcement_view"><code class="docutils literal notranslate"><span class="pre">request_announcement_view()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.announcements">Module contents</a></li>
 </ul>
 </li>

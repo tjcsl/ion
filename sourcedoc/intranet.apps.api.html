@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.api package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.api package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,11 +94,51 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.api package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.api.authentication">intranet.apps.api.authentication module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.api.tests">intranet.apps.api.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.api.authentication">intranet.apps.api.authentication module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.authentication.ApiBasicAuthentication"><code class="docutils literal notranslate"><span class="pre">ApiBasicAuthentication</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.authentication.ApiBasicAuthentication.authenticate_credentials"><code class="docutils literal notranslate"><span class="pre">ApiBasicAuthentication.authenticate_credentials()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.api.authentication.CsrfExemptSessionAuthentication"><code class="docutils literal notranslate"><span class="pre">CsrfExemptSessionAuthentication</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.authentication.CsrfExemptSessionAuthentication.enforce_csrf"><code class="docutils literal notranslate"><span class="pre">CsrfExemptSessionAuthentication.enforce_csrf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.api.tests">intranet.apps.api.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest"><code class="docutils literal notranslate"><span class="pre">ApiTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.get_api_eighth_block_list"><code class="docutils literal notranslate"><span class="pre">ApiTest.get_api_eighth_block_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.get_api_eighth_signup_list"><code class="docutils literal notranslate"><span class="pre">ApiTest.get_api_eighth_signup_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.make_token"><code class="docutils literal notranslate"><span class="pre">ApiTest.make_token()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.setUp"><code class="docutils literal notranslate"><span class="pre">ApiTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_api_bus_detail"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_bus_detail()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_api_bus_list"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_bus_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_api_eighth_block_list"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_eighth_block_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_api_eighth_signup_list"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_eighth_signup_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_api_root"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_root()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_api_schedule_detail"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_api_schedule_detail()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_get_announcements"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_get_announcements()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_get_emerg"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_get_emerg()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_get_profile"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_get_profile()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_no_credentials_read"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_no_credentials_read()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_oauth_client_credentials_read"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_oauth_client_credentials_read()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_oauth_client_credentials_read_anonymous"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_oauth_client_credentials_read_anonymous()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_oauth_read"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_oauth_read()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.tests.ApiTest.test_oauth_write"><code class="docutils literal notranslate"><span class="pre">ApiTest.test_oauth_write()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.api.urls">intranet.apps.api.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.api.utils">intranet.apps.api.utils module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.api.views">intranet.apps.api.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.api.utils">intranet.apps.api.utils module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.utils.custom_exception_handler"><code class="docutils literal notranslate"><span class="pre">custom_exception_handler()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.api.views">intranet.apps.api.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.api.views.api_root"><code class="docutils literal notranslate"><span class="pre">api_root()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.api.views.perma_reverse"><code class="docutils literal notranslate"><span class="pre">perma_reverse()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.api">Module contents</a></li>
 </ul>
 </li>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.sessionmgmt package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.sessionmgmt package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -94,11 +95,47 @@
 <li><a class="reference internal" href="#">intranet.apps.sessionmgmt package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.admin">intranet.apps.sessionmgmt.admin module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.helpers">intranet.apps.sessionmgmt.helpers module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.models">intranet.apps.sessionmgmt.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.tests">intranet.apps.sessionmgmt.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.helpers">intranet.apps.sessionmgmt.helpers module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.helpers.trust_session"><code class="docutils literal notranslate"><span class="pre">trust_session()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.models">intranet.apps.sessionmgmt.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession"><code class="docutils literal notranslate"><span class="pre">TrustedSession</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.DEVICE_TYPES"><code class="docutils literal notranslate"><span class="pre">TrustedSession.DEVICE_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">TrustedSession.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">TrustedSession.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.delete_expired_sessions"><code class="docutils literal notranslate"><span class="pre">TrustedSession.delete_expired_sessions()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.description"><code class="docutils literal notranslate"><span class="pre">TrustedSession.description</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.device_type"><code class="docutils literal notranslate"><span class="pre">TrustedSession.device_type</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.first_trusted_date"><code class="docutils literal notranslate"><span class="pre">TrustedSession.first_trusted_date</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.get_device_type_display"><code class="docutils literal notranslate"><span class="pre">TrustedSession.get_device_type_display()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.get_next_by_first_trusted_date"><code class="docutils literal notranslate"><span class="pre">TrustedSession.get_next_by_first_trusted_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.get_previous_by_first_trusted_date"><code class="docutils literal notranslate"><span class="pre">TrustedSession.get_previous_by_first_trusted_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.id"><code class="docutils literal notranslate"><span class="pre">TrustedSession.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.objects"><code class="docutils literal notranslate"><span class="pre">TrustedSession.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.session_key"><code class="docutils literal notranslate"><span class="pre">TrustedSession.session_key</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.user"><code class="docutils literal notranslate"><span class="pre">TrustedSession.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.models.TrustedSession.user_id"><code class="docutils literal notranslate"><span class="pre">TrustedSession.user_id</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.tests">intranet.apps.sessionmgmt.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.tests.SessionMgmtTestCase"><code class="docutils literal notranslate"><span class="pre">SessionMgmtTestCase</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.tests.SessionMgmtTestCase.test_global_logout_view"><code class="docutils literal notranslate"><span class="pre">SessionMgmtTestCase.test_global_logout_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.tests.SessionMgmtTestCase.test_index_view"><code class="docutils literal notranslate"><span class="pre">SessionMgmtTestCase.test_index_view()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.urls">intranet.apps.sessionmgmt.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.views">intranet.apps.sessionmgmt.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.sessionmgmt.views">intranet.apps.sessionmgmt.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.views.global_logout_view"><code class="docutils literal notranslate"><span class="pre">global_logout_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.views.index_view"><code class="docutils literal notranslate"><span class="pre">index_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.views.revoke_session_view"><code class="docutils literal notranslate"><span class="pre">revoke_session_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.sessionmgmt.views.trust_session_view"><code class="docutils literal notranslate"><span class="pre">trust_session_view()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.sessionmgmt">Module contents</a></li>
 </ul>
 </li>

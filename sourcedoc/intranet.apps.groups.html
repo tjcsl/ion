@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.groups package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.groups package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,9 +94,50 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.groups package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.groups.forms">intranet.apps.groups.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.groups.models">intranet.apps.groups.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.groups.tests">intranet.apps.groups.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.groups.forms">intranet.apps.groups.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.forms.GroupForm"><code class="docutils literal notranslate"><span class="pre">GroupForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.forms.GroupForm.Meta"><code class="docutils literal notranslate"><span class="pre">GroupForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.forms.GroupForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">GroupForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.forms.GroupForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">GroupForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.groups.forms.GroupForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">GroupForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.groups.models">intranet.apps.groups.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.models.Group"><code class="docutils literal notranslate"><span class="pre">Group</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.models.Group.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Group.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.Group.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Group.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.Group.objects"><code class="docutils literal notranslate"><span class="pre">Group.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.Group.properties"><code class="docutils literal notranslate"><span class="pre">Group.properties</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupManager"><code class="docutils literal notranslate"><span class="pre">GroupManager</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupManager.student_visible"><code class="docutils literal notranslate"><span class="pre">GroupManager.student_visible()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties"><code class="docutils literal notranslate"><span class="pre">GroupProperties</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">GroupProperties.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">GroupProperties.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.group"><code class="docutils literal notranslate"><span class="pre">GroupProperties.group</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.group_id"><code class="docutils literal notranslate"><span class="pre">GroupProperties.group_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.id"><code class="docutils literal notranslate"><span class="pre">GroupProperties.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.objects"><code class="docutils literal notranslate"><span class="pre">GroupProperties.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.models.GroupProperties.student_visible"><code class="docutils literal notranslate"><span class="pre">GroupProperties.student_visible</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.groups.tests">intranet.apps.groups.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.tests.GroupsTest"><code class="docutils literal notranslate"><span class="pre">GroupsTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.groups.tests.GroupsTest.test_add_group_view"><code class="docutils literal notranslate"><span class="pre">GroupsTest.test_add_group_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.groups.tests.GroupsTest.test_groups_view"><code class="docutils literal notranslate"><span class="pre">GroupsTest.test_groups_view()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.groups.urls">intranet.apps.groups.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.groups.views">intranet.apps.groups.views module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.groups">Module contents</a></li>

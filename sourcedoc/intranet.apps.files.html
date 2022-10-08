@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.files package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.files package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,11 +94,63 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.files package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.files.forms">intranet.apps.files.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.files.models">intranet.apps.files.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.files.tests">intranet.apps.files.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.files.forms">intranet.apps.files.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.forms.UploadFileForm"><code class="docutils literal notranslate"><span class="pre">UploadFileForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.forms.UploadFileForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">UploadFileForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.forms.UploadFileForm.validate_size"><code class="docutils literal notranslate"><span class="pre">UploadFileForm.validate_size()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.files.models">intranet.apps.files.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host"><code class="docutils literal notranslate"><span class="pre">Host</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Host.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Host.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.address"><code class="docutils literal notranslate"><span class="pre">Host.address</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.available_to_all"><code class="docutils literal notranslate"><span class="pre">Host.available_to_all</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.code"><code class="docutils literal notranslate"><span class="pre">Host.code</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.directory"><code class="docutils literal notranslate"><span class="pre">Host.directory</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.groups_visible"><code class="docutils literal notranslate"><span class="pre">Host.groups_visible</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.id"><code class="docutils literal notranslate"><span class="pre">Host.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.linux"><code class="docutils literal notranslate"><span class="pre">Host.linux</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.name"><code class="docutils literal notranslate"><span class="pre">Host.name</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.objects"><code class="docutils literal notranslate"><span class="pre">Host.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.visible_to"><code class="docutils literal notranslate"><span class="pre">Host.visible_to()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host.windows"><code class="docutils literal notranslate"><span class="pre">Host.windows</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.files.models.HostManager"><code class="docutils literal notranslate"><span class="pre">HostManager</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.models.HostManager.visible_to_user"><code class="docutils literal notranslate"><span class="pre">HostManager.visible_to_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.group"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.group</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.group_id"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.group_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.host"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.host</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.host_id"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.host_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.id"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.models.Host_groups_visible.objects"><code class="docutils literal notranslate"><span class="pre">Host_groups_visible.objects</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.files.tests">intranet.apps.files.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.tests.FilesTest"><code class="docutils literal notranslate"><span class="pre">FilesTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.tests.FilesTest.test_delete_file"><code class="docutils literal notranslate"><span class="pre">FilesTest.test_delete_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.files.urls">intranet.apps.files.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.files.views">intranet.apps.files.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.files.views">intranet.apps.files.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.files.views.create_session"><code class="docutils literal notranslate"><span class="pre">create_session()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.views.get_authinfo"><code class="docutils literal notranslate"><span class="pre">get_authinfo()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.views.handle_file_upload"><code class="docutils literal notranslate"><span class="pre">handle_file_upload()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.files.views.windows_dir_format"><code class="docutils literal notranslate"><span class="pre">windows_dir_format()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.files">Module contents</a></li>
 </ul>
 </li>

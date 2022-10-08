@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.events package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -95,13 +96,225 @@
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.events.admin">intranet.apps.events.admin module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.events.forms">intranet.apps.events.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.events.models">intranet.apps.events.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.events.notifications">intranet.apps.events.notifications module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.forms">intranet.apps.events.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm"><code class="docutils literal notranslate"><span class="pre">AdminEventForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm.Meta"><code class="docutils literal notranslate"><span class="pre">AdminEventForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">AdminEventForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm.Meta.help_texts"><code class="docutils literal notranslate"><span class="pre">AdminEventForm.Meta.help_texts</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">AdminEventForm.Meta.model</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm.Meta.widgets"><code class="docutils literal notranslate"><span class="pre">AdminEventForm.Meta.widgets</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.AdminEventForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">AdminEventForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.EventForm"><code class="docutils literal notranslate"><span class="pre">EventForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.forms.EventForm.Meta"><code class="docutils literal notranslate"><span class="pre">EventForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.forms.EventForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">EventForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.EventForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">EventForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.EventForm.clean_time"><code class="docutils literal notranslate"><span class="pre">EventForm.clean_time()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.forms.EventForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">EventForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.events.models">intranet.apps.events.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.title"><code class="docutils literal notranslate"><span class="pre">Event.title</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.description"><code class="docutils literal notranslate"><span class="pre">Event.description</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.links"><code class="docutils literal notranslate"><span class="pre">Event.links</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.added"><code class="docutils literal notranslate"><span class="pre">Event.added</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.updated"><code class="docutils literal notranslate"><span class="pre">Event.updated</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.time"><code class="docutils literal notranslate"><span class="pre">Event.time</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.location"><code class="docutils literal notranslate"><span class="pre">Event.location</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.user"><code class="docutils literal notranslate"><span class="pre">Event.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.scheduled_activity"><code class="docutils literal notranslate"><span class="pre">Event.scheduled_activity</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.announcement"><code class="docutils literal notranslate"><span class="pre">Event.announcement</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.groups"><code class="docutils literal notranslate"><span class="pre">Event.groups</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.attending"><code class="docutils literal notranslate"><span class="pre">Event.attending</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.show_attending"><code class="docutils literal notranslate"><span class="pre">Event.show_attending</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.show_on_dashboard"><code class="docutils literal notranslate"><span class="pre">Event.show_on_dashboard</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.approved"><code class="docutils literal notranslate"><span class="pre">Event.approved</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.approved_by"><code class="docutils literal notranslate"><span class="pre">Event.approved_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.rejected"><code class="docutils literal notranslate"><span class="pre">Event.rejected</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.rejected_by"><code class="docutils literal notranslate"><span class="pre">Event.rejected_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.public"><code class="docutils literal notranslate"><span class="pre">Event.public</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.category"><code class="docutils literal notranslate"><span class="pre">Event.category</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.open_to"><code class="docutils literal notranslate"><span class="pre">Event.open_to</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Event.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Event.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Event.added</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Event.announcement</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.announcement_id"><code class="docutils literal notranslate"><span class="pre">Event.announcement_id</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Event.approved</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Event.approved_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.approved_by_id"><code class="docutils literal notranslate"><span class="pre">Event.approved_by_id</span></code></a></li>
+<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Event.attending</span></code></a></li>
+<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Event.category</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.created_hook"><code class="docutils literal notranslate"><span class="pre">Event.created_hook()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.dashboard_type"><code class="docutils literal notranslate"><span class="pre">Event.dashboard_type</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">Event.description</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.get_category_display"><code class="docutils literal notranslate"><span class="pre">Event.get_category_display()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.get_next_by_added"><code class="docutils literal notranslate"><span class="pre">Event.get_next_by_added()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.get_next_by_updated"><code class="docutils literal notranslate"><span class="pre">Event.get_next_by_updated()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.get_open_to_display"><code class="docutils literal notranslate"><span class="pre">Event.get_open_to_display()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.get_previous_by_added"><code class="docutils literal notranslate"><span class="pre">Event.get_previous_by_added()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.get_previous_by_updated"><code class="docutils literal notranslate"><span class="pre">Event.get_previous_by_updated()</span></code></a></li>
+<li><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">Event.groups</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.happened"><code class="docutils literal notranslate"><span class="pre">Event.happened</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.id"><code class="docutils literal notranslate"><span class="pre">Event.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.is_this_year"><code class="docutils literal notranslate"><span class="pre">Event.is_this_year</span></code></a></li>
+<li><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">Event.links</span></code></a></li>
+<li><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">Event.location</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.objects"><code class="docutils literal notranslate"><span class="pre">Event.objects</span></code></a></li>
+<li><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">Event.open_to</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.pinned"><code class="docutils literal notranslate"><span class="pre">Event.pinned</span></code></a></li>
+<li><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">Event.public</span></code></a></li>
+<li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">Event.rejected</span></code></a></li>
+<li><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">Event.rejected_by</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.rejected_by_id"><code class="docutils literal notranslate"><span class="pre">Event.rejected_by_id</span></code></a></li>
+<li><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">Event.scheduled_activity</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.scheduled_activity_id"><code class="docutils literal notranslate"><span class="pre">Event.scheduled_activity_id</span></code></a></li>
+<li><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">Event.show_attending</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.show_fuzzy_date"><code class="docutils literal notranslate"><span class="pre">Event.show_fuzzy_date()</span></code></a></li>
+<li><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">Event.show_on_dashboard</span></code></a></li>
+<li><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">Event.time</span></code></a></li>
+<li><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">Event.title</span></code></a></li>
+<li><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">Event.updated</span></code></a></li>
+<li><a class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">Event.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.user_id"><code class="docutils literal notranslate"><span class="pre">Event.user_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event.user_map"><code class="docutils literal notranslate"><span class="pre">Event.user_map</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventManager"><code class="docutils literal notranslate"><span class="pre">EventManager</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventManager.get_queryset"><code class="docutils literal notranslate"><span class="pre">EventManager.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventManager.hidden_events"><code class="docutils literal notranslate"><span class="pre">EventManager.hidden_events()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventManager.visible_to_user"><code class="docutils literal notranslate"><span class="pre">EventManager.visible_to_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventQuerySet"><code class="docutils literal notranslate"><span class="pre">EventQuerySet</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventQuerySet.this_year"><code class="docutils literal notranslate"><span class="pre">EventQuerySet.this_year()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap"><code class="docutils literal notranslate"><span class="pre">EventUserMap</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.event"><code class="docutils literal notranslate"><span class="pre">EventUserMap.event</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.users_hidden"><code class="docutils literal notranslate"><span class="pre">EventUserMap.users_hidden</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">EventUserMap.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">EventUserMap.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">EventUserMap.event</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.event_id"><code class="docutils literal notranslate"><span class="pre">EventUserMap.event_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.id"><code class="docutils literal notranslate"><span class="pre">EventUserMap.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap.objects"><code class="docutils literal notranslate"><span class="pre">EventUserMap.objects</span></code></a></li>
+<li><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">EventUserMap.users_hidden</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.eventusermap"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.eventusermap</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.eventusermap_id"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.eventusermap_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.id"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.objects"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.user"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.EventUserMap_users_hidden.user_id"><code class="docutils literal notranslate"><span class="pre">EventUserMap_users_hidden.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending"><code class="docutils literal notranslate"><span class="pre">Event_attending</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Event_attending.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Event_attending.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.event"><code class="docutils literal notranslate"><span class="pre">Event_attending.event</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.event_id"><code class="docutils literal notranslate"><span class="pre">Event_attending.event_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.id"><code class="docutils literal notranslate"><span class="pre">Event_attending.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.objects"><code class="docutils literal notranslate"><span class="pre">Event_attending.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.user"><code class="docutils literal notranslate"><span class="pre">Event_attending.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_attending.user_id"><code class="docutils literal notranslate"><span class="pre">Event_attending.user_id</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups"><code class="docutils literal notranslate"><span class="pre">Event_groups</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Event_groups.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Event_groups.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.event"><code class="docutils literal notranslate"><span class="pre">Event_groups.event</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.event_id"><code class="docutils literal notranslate"><span class="pre">Event_groups.event_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.group"><code class="docutils literal notranslate"><span class="pre">Event_groups.group</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.group_id"><code class="docutils literal notranslate"><span class="pre">Event_groups.group_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.id"><code class="docutils literal notranslate"><span class="pre">Event_groups.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_groups.objects"><code class="docutils literal notranslate"><span class="pre">Event_groups.objects</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links"><code class="docutils literal notranslate"><span class="pre">Event_links</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Event_links.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Event_links.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.event"><code class="docutils literal notranslate"><span class="pre">Event_links.event</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.event_id"><code class="docutils literal notranslate"><span class="pre">Event_links.event_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.id"><code class="docutils literal notranslate"><span class="pre">Event_links.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.link"><code class="docutils literal notranslate"><span class="pre">Event_links.link</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.link_id"><code class="docutils literal notranslate"><span class="pre">Event_links.link_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Event_links.objects"><code class="docutils literal notranslate"><span class="pre">Event_links.objects</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link"><code class="docutils literal notranslate"><span class="pre">Link</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.url"><code class="docutils literal notranslate"><span class="pre">Link.url</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.title"><code class="docutils literal notranslate"><span class="pre">Link.title</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Link.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Link.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.event_set"><code class="docutils literal notranslate"><span class="pre">Link.event_set</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.id"><code class="docutils literal notranslate"><span class="pre">Link.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.Link.objects"><code class="docutils literal notranslate"><span class="pre">Link.objects</span></code></a></li>
+<li><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">Link.title</span></code></a></li>
+<li><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">Link.url</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.user"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.uuid"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.uuid</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.id"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.objects"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.objects</span></code></a></li>
+<li><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.user</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.models.TJStarUUIDMap.user_id"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.user_id</span></code></a></li>
+<li><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">TJStarUUIDMap.uuid</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.events.models.clear_event_cache"><code class="docutils literal notranslate"><span class="pre">clear_event_cache()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.events.notifications">intranet.apps.events.notifications module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.notifications.event_approval_request"><code class="docutils literal notranslate"><span class="pre">event_approval_request()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.events.tasks">intranet.apps.events.tasks module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.events.tests">intranet.apps.events.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.tests">intranet.apps.events.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest"><code class="docutils literal notranslate"><span class="pre">EventsTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.create_random_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.create_random_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_add_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_add_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_approve_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_approve_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_delete_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_delete_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_event_model"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_event_model()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_events_root_non_admin"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_events_root_non_admin()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_join_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_join_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_modify_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_modify_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_reject_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_reject_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_request_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_request_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_show_hide_event"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_show_hide_event()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_show_hide_event_no_auth"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_show_hide_event_no_auth()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.tests.EventsTest.test_view_roster"><code class="docutils literal notranslate"><span class="pre">EventsTest.test_view_roster()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.events.urls">intranet.apps.events.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.events.views">intranet.apps.events.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.events.views">intranet.apps.events.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.events.views.date_format"><code class="docutils literal notranslate"><span class="pre">date_format()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.views.decode_date"><code class="docutils literal notranslate"><span class="pre">decode_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.views.events_context"><code class="docutils literal notranslate"><span class="pre">events_context()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.views.is_weekday"><code class="docutils literal notranslate"><span class="pre">is_weekday()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.views.month_data"><code class="docutils literal notranslate"><span class="pre">month_data()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.events.views.week_data"><code class="docutils literal notranslate"><span class="pre">week_data()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.events">Module contents</a></li>
 </ul>
 </li>
@@ -1413,7 +1626,7 @@ object the first time, the query is executed.</p>
 <p>Tests for the events module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="intranet.apps.events.tests.EventsTest.create_random_event">
-<span class="sig-name descname"><span class="pre">create_random_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=datetime.datetime(2022</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">19</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">23</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">43</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">131301</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tzinfo=&lt;UTC&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_attending=True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#EventsTest.create_random_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.events.tests.EventsTest.create_random_event" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">create_random_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approved=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=datetime.datetime(2022</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">31</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">623101</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tzinfo=&lt;UTC&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_attending=True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/events/tests.html#EventsTest.create_random_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.events.tests.EventsTest.create_random_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

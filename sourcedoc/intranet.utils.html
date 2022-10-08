@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.utils package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.utils package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -92,15 +93,79 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.utils package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.admin_helpers">intranet.utils.admin_helpers module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.cache">intranet.utils.cache module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.date">intranet.utils.date module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.deletion">intranet.utils.deletion module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.helpers">intranet.utils.helpers module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.html">intranet.utils.html module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.locking">intranet.utils.locking module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.serialization">intranet.utils.serialization module</a></li>
-<li><a class="reference internal" href="#module-intranet.utils.session">intranet.utils.session module</a></li>
+<li><a class="reference internal" href="#module-intranet.utils.admin_helpers">intranet.utils.admin_helpers module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.admin_helpers.export_csv_action"><code class="docutils literal notranslate"><span class="pre">export_csv_action()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.cache">intranet.utils.cache module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.cache.DummyCache"><code class="docutils literal notranslate"><span class="pre">DummyCache</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.utils.cache.DummyCache.delete_pattern"><code class="docutils literal notranslate"><span class="pre">DummyCache.delete_pattern()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.date">intranet.utils.date module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.date.get_date_range_this_year"><code class="docutils literal notranslate"><span class="pre">get_date_range_this_year()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.date.get_senior_graduation_date"><code class="docutils literal notranslate"><span class="pre">get_senior_graduation_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.date.get_senior_graduation_year"><code class="docutils literal notranslate"><span class="pre">get_senior_graduation_year()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.date.is_current_year"><code class="docutils literal notranslate"><span class="pre">is_current_year()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.deletion">intranet.utils.deletion module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.deletion.handle_eighth_sponsor_deletion"><code class="docutils literal notranslate"><span class="pre">handle_eighth_sponsor_deletion()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.deletion.set_historical_user"><code class="docutils literal notranslate"><span class="pre">set_historical_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.helpers">intranet.utils.helpers module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.helpers.GlobList"><code class="docutils literal notranslate"><span class="pre">GlobList</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.utils.helpers.GlobList.__contains__"><code class="docutils literal notranslate"><span class="pre">GlobList.__contains__()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.utils.helpers.InvalidString"><code class="docutils literal notranslate"><span class="pre">InvalidString</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.MigrationMock"><code class="docutils literal notranslate"><span class="pre">MigrationMock</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.utils.helpers.MigrationMock.seen"><code class="docutils literal notranslate"><span class="pre">MigrationMock.seen</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.utils.helpers.awaredate"><code class="docutils literal notranslate"><span class="pre">awaredate()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.dark_mode_enabled"><code class="docutils literal notranslate"><span class="pre">dark_mode_enabled()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.debug_toolbar_callback"><code class="docutils literal notranslate"><span class="pre">debug_toolbar_callback()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_ap_week_warning"><code class="docutils literal notranslate"><span class="pre">get_ap_week_warning()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_current_commit_date"><code class="docutils literal notranslate"><span class="pre">get_current_commit_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_current_commit_github_url"><code class="docutils literal notranslate"><span class="pre">get_current_commit_github_url()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_current_commit_info"><code class="docutils literal notranslate"><span class="pre">get_current_commit_info()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_current_commit_long_hash"><code class="docutils literal notranslate"><span class="pre">get_current_commit_long_hash()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_current_commit_short_hash"><code class="docutils literal notranslate"><span class="pre">get_current_commit_short_hash()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_fcps_emerg"><code class="docutils literal notranslate"><span class="pre">get_fcps_emerg()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.get_id"><code class="docutils literal notranslate"><span class="pre">get_id()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.is_april_fools_day"><code class="docutils literal notranslate"><span class="pre">is_april_fools_day()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.is_entirely_digit"><code class="docutils literal notranslate"><span class="pre">is_entirely_digit()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.join_nicely"><code class="docutils literal notranslate"><span class="pre">join_nicely()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.parse_db_url"><code class="docutils literal notranslate"><span class="pre">parse_db_url()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.helpers.single_css_map"><code class="docutils literal notranslate"><span class="pre">single_css_map()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.html">intranet.utils.html module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.html.link_removal_callback"><code class="docutils literal notranslate"><span class="pre">link_removal_callback()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.html.nullify_links"><code class="docutils literal notranslate"><span class="pre">nullify_links()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.html.safe_fcps_emerg_html"><code class="docutils literal notranslate"><span class="pre">safe_fcps_emerg_html()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.utils.html.safe_html"><code class="docutils literal notranslate"><span class="pre">safe_html()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.locking">intranet.utils.locking module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.locking.lock_on"><code class="docutils literal notranslate"><span class="pre">lock_on()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.serialization">intranet.utils.serialization module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.serialization.safe_json"><code class="docutils literal notranslate"><span class="pre">safe_json()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.utils.session">intranet.utils.session module</a><ul>
+<li><a class="reference internal" href="#intranet.utils.session.SessionStore"><code class="docutils literal notranslate"><span class="pre">SessionStore</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.utils.session.SessionStore.load"><code class="docutils literal notranslate"><span class="pre">SessionStore.load()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.utils">Module contents</a></li>
 </ul>
 </li>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.templatetags package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.templatetags package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,14 +94,51 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.templatetags package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.dates">intranet.apps.templatetags.dates module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.dictionaries">intranet.apps.templatetags.dictionaries module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.form_field">intranet.apps.templatetags.form_field module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.forms">intranet.apps.templatetags.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.math">intranet.apps.templatetags.math module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.newtab_links">intranet.apps.templatetags.newtab_links module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.strings">intranet.apps.templatetags.strings module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.templatetags.tests">intranet.apps.templatetags.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.dates">intranet.apps.templatetags.dates module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.dates.fuzzy_date"><code class="docutils literal notranslate"><span class="pre">fuzzy_date()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.dates.fuzzy_time"><code class="docutils literal notranslate"><span class="pre">fuzzy_time()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.dates.time_to_date"><code class="docutils literal notranslate"><span class="pre">time_to_date()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.dictionaries">intranet.apps.templatetags.dictionaries module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.dictionaries.lookup"><code class="docutils literal notranslate"><span class="pre">lookup()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.form_field">intranet.apps.templatetags.form_field module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.form_field.field_"><code class="docutils literal notranslate"><span class="pre">field_()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.forms">intranet.apps.templatetags.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.forms.field_array_index"><code class="docutils literal notranslate"><span class="pre">field_array_index()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.forms.field_array_size"><code class="docutils literal notranslate"><span class="pre">field_array_size()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.forms.is_array_field"><code class="docutils literal notranslate"><span class="pre">is_array_field()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.math">intranet.apps.templatetags.math module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.math.divide"><code class="docutils literal notranslate"><span class="pre">divide()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.math.maximum"><code class="docutils literal notranslate"><span class="pre">maximum()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.math.minimum"><code class="docutils literal notranslate"><span class="pre">minimum()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.math.multiply"><code class="docutils literal notranslate"><span class="pre">multiply()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.math.round_num"><code class="docutils literal notranslate"><span class="pre">round_num()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.math.to_int"><code class="docutils literal notranslate"><span class="pre">to_int()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.newtab_links">intranet.apps.templatetags.newtab_links module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.newtab_links.replace_newtab_links"><code class="docutils literal notranslate"><span class="pre">replace_newtab_links()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.strings">intranet.apps.templatetags.strings module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.strings.contains_digit"><code class="docutils literal notranslate"><span class="pre">contains_digit()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.templatetags.strings.endswith"><code class="docutils literal notranslate"><span class="pre">endswith()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.templatetags.tests">intranet.apps.templatetags.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.tests.TemplateTest"><code class="docutils literal notranslate"><span class="pre">TemplateTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.templatetags.tests.TemplateTest.test_validate_templates"><code class="docutils literal notranslate"><span class="pre">TemplateTest.test_validate_templates()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.templatetags">Module contents</a></li>
 </ul>
 </li>

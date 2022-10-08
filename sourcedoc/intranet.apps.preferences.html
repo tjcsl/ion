@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.preferences package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.preferences package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,11 +94,109 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.preferences package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.preferences.fields">intranet.apps.preferences.fields module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.preferences.forms">intranet.apps.preferences.forms module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.preferences.tests">intranet.apps.preferences.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.fields">intranet.apps.preferences.fields module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneField"><code class="docutils literal notranslate"><span class="pre">PhoneField</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneField.deconstruct"><code class="docutils literal notranslate"><span class="pre">PhoneField.deconstruct()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneField.formfield"><code class="docutils literal notranslate"><span class="pre">PhoneField.formfield()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneField.get_internal_type"><code class="docutils literal notranslate"><span class="pre">PhoneField.get_internal_type()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneFormField"><code class="docutils literal notranslate"><span class="pre">PhoneFormField</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneFormField.default_error_messages"><code class="docutils literal notranslate"><span class="pre">PhoneFormField.default_error_messages</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneFormField.prepare_value"><code class="docutils literal notranslate"><span class="pre">PhoneFormField.prepare_value()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneFormField.to_python"><code class="docutils literal notranslate"><span class="pre">PhoneFormField.to_python()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneFormField.widget"><code class="docutils literal notranslate"><span class="pre">PhoneFormField.widget</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.fields.PhoneFormField.widget_attrs"><code class="docutils literal notranslate"><span class="pre">PhoneFormField.widget_attrs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.forms">intranet.apps.preferences.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.BusRouteForm"><code class="docutils literal notranslate"><span class="pre">BusRouteForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.BusRouteForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">BusRouteForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.DarkModeForm"><code class="docutils literal notranslate"><span class="pre">DarkModeForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.DarkModeForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">DarkModeForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.EmailForm"><code class="docutils literal notranslate"><span class="pre">EmailForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.EmailForm.Meta"><code class="docutils literal notranslate"><span class="pre">EmailForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.EmailForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">EmailForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.EmailForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">EmailForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.EmailForm.clean_address"><code class="docutils literal notranslate"><span class="pre">EmailForm.clean_address()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.EmailForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">EmailForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.NotificationOptionsForm"><code class="docutils literal notranslate"><span class="pre">NotificationOptionsForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.NotificationOptionsForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">NotificationOptionsForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PhoneForm"><code class="docutils literal notranslate"><span class="pre">PhoneForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PhoneForm.Meta"><code class="docutils literal notranslate"><span class="pre">PhoneForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PhoneForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">PhoneForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PhoneForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">PhoneForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PhoneForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">PhoneForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PreferredPictureForm"><code class="docutils literal notranslate"><span class="pre">PreferredPictureForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PreferredPictureForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">PreferredPictureForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PrivacyOptionsForm"><code class="docutils literal notranslate"><span class="pre">PrivacyOptionsForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.PrivacyOptionsForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">PrivacyOptionsForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.WebsiteForm"><code class="docutils literal notranslate"><span class="pre">WebsiteForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.WebsiteForm.Meta"><code class="docutils literal notranslate"><span class="pre">WebsiteForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.WebsiteForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">WebsiteForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.WebsiteForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">WebsiteForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.forms.WebsiteForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">WebsiteForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.tests">intranet.apps.preferences.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesFormTest"><code class="docutils literal notranslate"><span class="pre">PreferencesFormTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesFormTest.test_email_form"><code class="docutils literal notranslate"><span class="pre">PreferencesFormTest.test_email_form()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest"><code class="docutils literal notranslate"><span class="pre">PreferencesTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.setUp"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.test_clear_preferences"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.test_clear_preferences()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.test_get_personal_info"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.test_get_personal_info()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.test_get_preferences"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.test_get_preferences()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.test_privacy_options_view"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.test_privacy_options_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.test_save_bus_route"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.test_save_bus_route()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.tests.PreferencesTest.test_set_preferences"><code class="docutils literal notranslate"><span class="pre">PreferencesTest.test_set_preferences()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.preferences.urls">intranet.apps.preferences.urls module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.preferences.views">intranet.apps.preferences.views module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.preferences.views">intranet.apps.preferences.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.get_bus_route"><code class="docutils literal notranslate"><span class="pre">get_bus_route()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.get_notification_options"><code class="docutils literal notranslate"><span class="pre">get_notification_options()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.get_personal_info"><code class="docutils literal notranslate"><span class="pre">get_personal_info()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.get_preferred_pic"><code class="docutils literal notranslate"><span class="pre">get_preferred_pic()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.get_privacy_options"><code class="docutils literal notranslate"><span class="pre">get_privacy_options()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.preferences_view"><code class="docutils literal notranslate"><span class="pre">preferences_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.privacy_options_view"><code class="docutils literal notranslate"><span class="pre">privacy_options_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_bus_route"><code class="docutils literal notranslate"><span class="pre">save_bus_route()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_dark_mode_settings"><code class="docutils literal notranslate"><span class="pre">save_dark_mode_settings()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_gcm_options"><code class="docutils literal notranslate"><span class="pre">save_gcm_options()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_notification_options"><code class="docutils literal notranslate"><span class="pre">save_notification_options()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_personal_info"><code class="docutils literal notranslate"><span class="pre">save_personal_info()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_preferred_pic"><code class="docutils literal notranslate"><span class="pre">save_preferred_pic()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.preferences.views.save_privacy_options"><code class="docutils literal notranslate"><span class="pre">save_privacy_options()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.preferences">Module contents</a></li>
 </ul>
 </li>

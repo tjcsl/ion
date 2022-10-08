@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.middleware package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.middleware package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -93,17 +94,72 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.middleware package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.access_log">intranet.middleware.access_log module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.ajax">intranet.middleware.ajax module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.dark_mode">intranet.middleware.dark_mode module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.monitoring">intranet.middleware.monitoring module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.profiler">intranet.middleware.profiler module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.same_origin">intranet.middleware.same_origin module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.session_management">intranet.middleware.session_management module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.templates">intranet.middleware.templates module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.threadlocals">intranet.middleware.threadlocals module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.traceback">intranet.middleware.traceback module</a></li>
-<li><a class="reference internal" href="#module-intranet.middleware.url_slashes">intranet.middleware.url_slashes module</a></li>
+<li><a class="reference internal" href="#module-intranet.middleware.access_log">intranet.middleware.access_log module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.access_log.AccessLogMiddleWare"><code class="docutils literal notranslate"><span class="pre">AccessLogMiddleWare</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.ajax">intranet.middleware.ajax module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.ajax.AjaxNotAuthenticatedMiddleWare"><code class="docutils literal notranslate"><span class="pre">AjaxNotAuthenticatedMiddleWare</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.dark_mode">intranet.middleware.dark_mode module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.dark_mode.DarkModeMiddleware"><code class="docutils literal notranslate"><span class="pre">DarkModeMiddleware</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.monitoring">intranet.middleware.monitoring module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.monitoring.PrometheusAccessMiddleware"><code class="docutils literal notranslate"><span class="pre">PrometheusAccessMiddleware</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.profiler">intranet.middleware.profiler module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.profiler.ProfileMiddleware"><code class="docutils literal notranslate"><span class="pre">ProfileMiddleware</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.middleware.profiler.ProfileMiddleware.process_request"><code class="docutils literal notranslate"><span class="pre">ProfileMiddleware.process_request()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.middleware.profiler.ProfileMiddleware.process_response"><code class="docutils literal notranslate"><span class="pre">ProfileMiddleware.process_response()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.middleware.profiler.ProfileMiddleware.process_view"><code class="docutils literal notranslate"><span class="pre">ProfileMiddleware.process_view()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.middleware.profiler.get_log_file_path"><code class="docutils literal notranslate"><span class="pre">get_log_file_path()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.middleware.profiler.stdev"><code class="docutils literal notranslate"><span class="pre">stdev()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.same_origin">intranet.middleware.same_origin module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.same_origin.SameOriginMiddleware"><code class="docutils literal notranslate"><span class="pre">SameOriginMiddleware</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.session_management">intranet.middleware.session_management module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.session_management.SessionManagementMiddleware"><code class="docutils literal notranslate"><span class="pre">SessionManagementMiddleware</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.templates">intranet.middleware.templates module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware"><code class="docutils literal notranslate"><span class="pre">AdminSelectizeLoadingIndicatorMiddleware</span></code></a></li>
+<li><a class="reference internal" href="#intranet.middleware.templates.NoReferrerMiddleware"><code class="docutils literal notranslate"><span class="pre">NoReferrerMiddleware</span></code></a></li>
+<li><a class="reference internal" href="#intranet.middleware.templates.StripNewlinesMiddleware"><code class="docutils literal notranslate"><span class="pre">StripNewlinesMiddleware</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.middleware.templates.StripNewlinesMiddleware.__call__"><code class="docutils literal notranslate"><span class="pre">StripNewlinesMiddleware.__call__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.threadlocals">intranet.middleware.threadlocals module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware"><code class="docutils literal notranslate"><span class="pre">ThreadLocalsMiddleware</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.middleware.threadlocals.ThreadLocalsMiddleware.process_view"><code class="docutils literal notranslate"><span class="pre">ThreadLocalsMiddleware.process_view()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.middleware.threadlocals.request"><code class="docutils literal notranslate"><span class="pre">request()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.traceback">intranet.middleware.traceback module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.traceback.UserTracebackMiddleware"><code class="docutils literal notranslate"><span class="pre">UserTracebackMiddleware</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.middleware.traceback.UserTracebackMiddleware.process_exception"><code class="docutils literal notranslate"><span class="pre">UserTracebackMiddleware.process_exception()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.middleware.url_slashes">intranet.middleware.url_slashes module</a><ul>
+<li><a class="reference internal" href="#intranet.middleware.url_slashes.FixSlashes"><code class="docutils literal notranslate"><span class="pre">FixSlashes</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.middleware.url_slashes.FixSlashes.__call__"><code class="docutils literal notranslate"><span class="pre">FixSlashes.__call__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.middleware">Module contents</a></li>
 </ul>
 </li>

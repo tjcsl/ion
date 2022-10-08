@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.bus package &#8212; TJ Intranet v3 (Build #1353) documentation</title>
+    <title>intranet.apps.bus package &#8212; TJ Intranet v3 (Build #1356) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -13,6 +13,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -95,12 +96,71 @@
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.admin">intranet.apps.bus.admin module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.bus.api">intranet.apps.bus.api module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.bus.consumers">intranet.apps.bus.consumers module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.bus.models">intranet.apps.bus.models module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.bus.serializers">intranet.apps.bus.serializers module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.api">intranet.apps.bus.api module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteDetail"><code class="docutils literal notranslate"><span class="pre">RouteDetail</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteDetail.get_queryset"><code class="docutils literal notranslate"><span class="pre">RouteDetail.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteDetail.permission_classes"><code class="docutils literal notranslate"><span class="pre">RouteDetail.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteDetail.serializer_class"><code class="docutils literal notranslate"><span class="pre">RouteDetail.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteList"><code class="docutils literal notranslate"><span class="pre">RouteList</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteList.get_queryset"><code class="docutils literal notranslate"><span class="pre">RouteList.get_queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteList.permission_classes"><code class="docutils literal notranslate"><span class="pre">RouteList.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.api.RouteList.serializer_class"><code class="docutils literal notranslate"><span class="pre">RouteList.serializer_class</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.consumers">intranet.apps.bus.consumers module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.consumers.BusConsumer"><code class="docutils literal notranslate"><span class="pre">BusConsumer</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.consumers.BusConsumer.bus_update"><code class="docutils literal notranslate"><span class="pre">BusConsumer.bus_update()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.consumers.BusConsumer.connect"><code class="docutils literal notranslate"><span class="pre">BusConsumer.connect()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.consumers.BusConsumer.groups"><code class="docutils literal notranslate"><span class="pre">BusConsumer.groups</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.consumers.BusConsumer.receive_json"><code class="docutils literal notranslate"><span class="pre">BusConsumer.receive_json()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.consumers.BusConsumer.within_time_range"><code class="docutils literal notranslate"><span class="pre">BusConsumer.within_time_range()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.models">intranet.apps.bus.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.ARRIVAL_STATUSES"><code class="docutils literal notranslate"><span class="pre">Route.ARRIVAL_STATUSES</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Route.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Route.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.bus_number"><code class="docutils literal notranslate"><span class="pre">Route.bus_number</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.get_status_display"><code class="docutils literal notranslate"><span class="pre">Route.get_status_display()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.id"><code class="docutils literal notranslate"><span class="pre">Route.id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.objects"><code class="docutils literal notranslate"><span class="pre">Route.objects</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.reset_status"><code class="docutils literal notranslate"><span class="pre">Route.reset_status()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.route_name"><code class="docutils literal notranslate"><span class="pre">Route.route_name</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.space"><code class="docutils literal notranslate"><span class="pre">Route.space</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.status"><code class="docutils literal notranslate"><span class="pre">Route.status</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.models.Route.user_set"><code class="docutils literal notranslate"><span class="pre">Route.user_set</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.serializers">intranet.apps.bus.serializers module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.serializers.RouteSerializer"><code class="docutils literal notranslate"><span class="pre">RouteSerializer</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.serializers.RouteSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">RouteSerializer.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.serializers.RouteSerializer.Meta.fields"><code class="docutils literal notranslate"><span class="pre">RouteSerializer.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.serializers.RouteSerializer.Meta.model"><code class="docutils literal notranslate"><span class="pre">RouteSerializer.Meta.model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.tasks">intranet.apps.bus.tasks module</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.bus.tests">intranet.apps.bus.tests module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.bus.tests">intranet.apps.bus.tests module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.tests.BusTest"><code class="docutils literal notranslate"><span class="pre">BusTest</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.bus.tests.BusTest.test_bus"><code class="docutils literal notranslate"><span class="pre">BusTest.test_bus()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.tests.BusTest.test_route_representation"><code class="docutils literal notranslate"><span class="pre">BusTest.test_route_representation()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.bus.tests.BusTest.test_routes"><code class="docutils literal notranslate"><span class="pre">BusTest.test_routes()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.urls">intranet.apps.bus.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus.views">intranet.apps.bus.views module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.bus">Module contents</a></li>
