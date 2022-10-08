@@ -148,6 +148,10 @@ To create and add yourself to this group, run the following commands (substituti
 
 The master password for development environments is `notfish`. Login with your username or `admin` and the master password to use your dev environment as an Intranet administrator.
 
+### Kerberos Authentication
+
+To authenticate using Kerberos, connect to CSL VPN and then login using your CSL Kerberos credentials (same username and password as on production Ion).
+
 ## Setting up Files
 
 You can find a list of file systems at ``intranet/apps/files/models.py``. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:
