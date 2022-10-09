@@ -82,23 +82,12 @@ class KerberosAuthenticationBackend:
             username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT, krb5ccname=krb5ccname
         )
 
-        authenticated_through_AD = False
-
-        if result == KerberosAuthenticationResult.FAILURE:
-            # Attempt to authenticate against the Active Directory Kerberos realm
-            authenticated_through_AD = True
-
-            realm = settings.AD_REALM
-            result = KerberosAuthenticationBackend.try_single_kinit(
-                username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT, krb5ccname=krb5ccname
-            )
-
         if result == KerberosAuthenticationResult.SUCCESS:
-            logger.debug("Kerberos authorized %s@%s - %r", username, realm, authenticated_through_AD)
+            logger.debug("Kerberos authorized %s@%s", username, realm)
         else:
-            logger.debug("Kerberos failed to authorize %s - %r", username, authenticated_through_AD)
+            logger.debug("Kerberos failed to authorize %s", username)
 
-        return result, authenticated_through_AD
+        return result
 
     @staticmethod
     def try_single_kinit(*, username: str, realm: str, password: str, krb5ccname: str, timeout: Union[int, float]) -> KerberosAuthenticationResult:
@@ -140,7 +129,7 @@ class KerberosAuthenticationBackend:
         # remove all non-alphanumerics
         username = username.lower()
 
-        result, ad_auth = self.get_kerberos_ticket(username, password)
+        result = self.get_kerberos_ticket(username, password)
 
         if result == KerberosAuthenticationResult.SUCCESS:
             logger.debug("Authentication successful")
@@ -152,13 +141,8 @@ class KerberosAuthenticationBackend:
                 kerberos_authenticate_post_failures.inc()
                 return None
 
-            if user.user_type == "student" and ad_auth:
-                kerberos_authenticate_failures.inc()
-                kerberos_authenticate_post_failures.inc()
-                # Block authentication for students who authenticated via AD
-                return None
-
             return user
+
         elif result == KerberosAuthenticationResult.EXPIRED:
             user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             return user
