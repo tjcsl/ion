@@ -15,9 +15,17 @@ The Git repository on the host computer is synced with ``~/intranet`` on the vir
 
 1. Create your own fork of the [``tjcsl/ion`` repository](https://github.com/tjcsl/ion.git).
 2. Clone the Ion repositiory from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
-3. Inside the Ion repository, edit the ``config/docker/make_admin.py`` file, replacing "\<YOUR_USERNAME\>" with your Ion username.
-4. Run ``cd config/docker``.
-5. Run ``docker-compose up -d``.
+3. Run ``cd config/docker``
+4. Run `docker compose build ` (or use `docker-compose build` if this doesn't work)
+5. Run ``docker compose up``
+6. If setting up on school wifi, add
+
+```
+https://mirror.math.princeton.edu/pub/alpinelinux/v3.16/main
+https://mirror.math.princeton.edu/pub/alpinelinux/v3.16/community
+```
+
+or another Alpine mirror to `/etc/apk/repositories` because `alpinelinux.org` may be blocked.
 
 ## Docker Post Set-Up
 
@@ -188,7 +196,7 @@ Warning: you are likely to see errors that you will have to Google and solve you
 Because you have copied over old configuration files to a new machine, the new postgres instance may think certain files are corrupted and not start. To correct this, do the following:
 
 3. Create a container with the volume mounted:
-   ``docker run -it -v /docker_pgdata:/var/lib/postgresql/data postgres:latest /bin/bash``
+   ``docker run -it -v docker_pgdata:/var/lib/postgresql/data postgres:latest /bin/bash``
 4. Run `apt update && apt install sudo`
 5. Run `sudo -u postgres pg_resetwal /var/lib/postgresql/data`
 6. Run `dd if=/dev/zero bs=1 count=8192 >> data/pg_xact/0000`

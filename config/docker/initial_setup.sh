@@ -1,8 +1,17 @@
 #!/bin/sh
-echo "Generating development data..."
+echo "Copying secret.py to settings..."
+cp -u config/docker/secret.py intranet/settings
 
-echo "Copying create user script..."
+echo "Copying create-users.py script..."
 cp config/create-users.py .
+
+echo "Collecting static files..."
+python3 manage.py collectstatic --noinput
+
+echo "Running migrations..."
+python3 manage.py migrate
+
+echo "Generating development data..."
 
 echo "Creating development users..."
 echo ""

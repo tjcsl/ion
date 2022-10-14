@@ -19,7 +19,7 @@ def help():
     print()
     print("Command line utility for creating Intranet users.")
     print()
-    print("SYNTAX: python create_user.py [USER TYPE] [USERNAMES]")
+    print("SYNTAX: python create-users.py [USER TYPE] [USERNAMES]")
     print()
     print("USER TYPES:")
     print("-s  --student | Create normal (student) user.")
