@@ -3,35 +3,38 @@ import logging
 import time
 
 import requests
-from bs4 import BeautifulSoup, CData
+from bs4 import BeautifulSoup
 
 from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
 
-from ...utils.html import safe_fcps_emerg_html
+from ...utils.html import get_domain_name, safe_fcps_emerg_html
 
 logger = logging.getLogger(__name__)
 
 
 def check_emerg():
-    """Fetch from FCPS' and CSL emergency announcement page.
+    """Fetch from FCPS and CSL emergency announcement pages.
 
-    URL defined in settings.FCPS_EMERGENCY_PAGE
+    URLs defined in settings.FCPS_EMERGENCY_PAGE and settings.CSL_STATUS_PAGE
 
     Request timeout defined in settings.FCPS_EMERGENCY_TIMEOUT
 
     """
+    fcps_page = settings.FCPS_EMERGENCY_PAGE
+    csl_page = settings.CSL_STATUS_PAGE
     announcements = []
+
     if settings.EMERGENCY_MESSAGE:
         return True, settings.EMERGENCY_MESSAGE
-    if not settings.FCPS_EMERGENCY_PAGE or not settings.CSL_STATUS_PAGE:
+    if not fcps_page or not csl_page:
         return None, None
 
     timeout = settings.EMERGENCY_TIMEOUT
 
     try:
-        r = requests.get("{}?{}".format(settings.FCPS_EMERGENCY_PAGE, int(time.time() // 60)), timeout=timeout)
+        r = requests.get("{}?{}".format(fcps_page, int(time.time() // 60)), timeout=timeout)
     except requests.exceptions.Timeout:
         return False, None
 
@@ -56,20 +59,17 @@ def check_emerg():
             break
 
     soup = BeautifulSoup(res, "xml")
-    if soup.title and status is True:
+    if soup.title and status:
         title = soup.title.text
-        body = ""
-        for cd in soup.findAll(text=True):
-            if isinstance(cd, CData):
-                body += cd
+        body = soup.find("content").text
 
-        title = safe_fcps_emerg_html(title, settings.FCPS_EMERGENCY_PAGE)
-        body = safe_fcps_emerg_html(body, settings.FCPS_EMERGENCY_PAGE)
+        title = safe_fcps_emerg_html(title, fcps_page)
+        body = safe_fcps_emerg_html(body, fcps_page)
 
-        announcements.append({"title": title, "body": body})
+        announcements.append({"title": f"<a target='_blank' href=\"{get_domain_name(fcps_page)}\">{title}</a>", "body": body})
 
     try:
-        r = requests.get(settings.CSL_STATUS_PAGE, timeout=timeout)
+        r = requests.get(csl_page, timeout=timeout)
     except requests.exceptions.Timeout:
         pass
 
@@ -83,14 +83,31 @@ def check_emerg():
             status = True
             issues = system["unresolvedIssues"]
             for issue in issues:
-                desc = requests.get(issue["permalink"]).text
+                desc = requests.get(issue["permalink"], timeout=timeout).text
                 soup = BeautifulSoup(desc, "html.parser")
-                desc = soup.find_all("p")[1].text
-                a = {"title": issue["title"], "body": desc}
+
+                text = soup.find_all(["p", "hr"])
+                desc = text[2: len(text) - 5]
+                a = {
+                    "title": f"<a target='_blank' href=\"{get_domain_name(csl_page)}\">{issue['title']}</a>",
+                    "body": "".join(d.prettify() for d in desc),
+                }
                 if a not in announcements and issue["severity"] != "notice":
                     announcements.append(a)
 
-    message = "".join([f"<h3>{announcement['title']}: </h3>{announcement['body']}\n" for announcement in announcements])
+    # Not needed due to the filtering of "p" elements, but as a backup:
+    bad_text = [
+        '<p><strong class="bold">© tjCSL Status, 2022</strong>&nbsp; • &nbsp; <a href="#">Back to top</a></p>',
+        "<p>We continuously monitor the status of our services and if there are any interruptions, a note will be posted here.</p>",
+    ]
+
+    message = "".join(
+        [
+            f"<h3><i class='fas fa-exclamation-triangle'></i>&nbsp; {announcement['title']}</h3><hr />{announcement['body']}\n"
+            for announcement in announcements
+            if announcement not in bad_text
+        ]
+    )
 
     return status, message
 

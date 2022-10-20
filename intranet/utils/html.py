@@ -73,3 +73,7 @@ def safe_fcps_emerg_html(text: str, base_url: str) -> str:
         return attrs
 
     return bleach.linkify(bleach.clean(text, strip=True, tags=tags, attributes=att, css_sanitizer=css_sanitizer), [translate_link_attr])
+
+
+def get_domain_name(url):
+    return "https://" + urllib.parse.urlparse(url).netloc
