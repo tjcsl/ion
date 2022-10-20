@@ -42,7 +42,7 @@ $(function() {
         $("select[name=" + name +"]").not(this).find("option[value='" + value + "'][class='choice-option']").hide();
     });
 
-    $(".candidate-info ul li a").each(function() {
-        $(this).text($(this).text().replace("|", "—"));
+    $(".candidate-info ul li").each(function() {
+        $(this).html($(this).html().replace("|", "—"));
     });
 });
