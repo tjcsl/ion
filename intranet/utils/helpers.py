@@ -158,8 +158,8 @@ def get_fcps_emerg(request):
     """Return FCPS emergency information."""
     try:
         emerg = get_emerg()
-    except Exception:
-        logger.info("Unable to fetch FCPS emergency info")
+    except Exception as e:
+        logger.info("Unable to fetch FCPS emergency info: %s", e)
         emerg = {"status": False}
 
     if emerg["status"] or ("show_emerg" in request.GET):
