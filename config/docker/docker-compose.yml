@@ -29,7 +29,7 @@ services:
     image: application
     networks:
     - intranet_net
-    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && chmod +x config/docker/entrypoint.sh && config/docker/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && python3 -u config/docker/entrypoint.py && chmod +x config/docker/entrypoint.sh && config/docker/entrypoint.sh"]
     ports:
     - 8080:8080
     build:

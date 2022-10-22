@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 import os
 import sys
+
 import django
 
-from intranet.apps.groups.models import Group
-from intranet.apps.users.models import User
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
+django.setup()
+
+from intranet.apps.groups.models import Group  # noqa: E402
+from intranet.apps.users.models import User  # noqa: E402
 
 """
     This script creates users based on command line arguments.
 """
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
-django.setup()
 
 
 def help():
@@ -32,18 +33,18 @@ def help():
     sys.exit(0)
 
 
-def success_message(type):
-    length = len(sys.argv)-2
+def success_message(user_type):
+    length = len(sys.argv) - 2
 
     if length > 1:  # plural
-        type = type + 's'
+        user_type = user_type + "s"
 
-    print('Successfully created ' + str(length) + ' ' + type + ':')
+    print("Successfully created " + str(length) + " " + user_type + ":")
     for name in sys.argv[2:]:
         if sys.argv.index(name) == len(sys.argv) - 1:
             print(name)
         else:
-            print(name, end=', ')
+            print(name, end=", ")
 
     sys.exit(0)
 
@@ -78,11 +79,11 @@ if len(sys.argv) == 1:
 
 option = sys.argv[1]
 
-if option == "-s" or "--student":
+if option in ("-s", "--student"):
     create_students()
-elif option == "-t" or "--teacher":
+elif option in ("-t", "--teacher"):
     create_teachers()
-elif option == "-a" or "--admin":
+elif option in ("-a", "--admin"):
     create_admins()
 
 help()

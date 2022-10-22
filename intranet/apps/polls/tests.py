@@ -198,11 +198,6 @@ class ApiTest(IonTestCase):
         poll.is_secret = False
         poll.save()
 
-        # This should fail because we are still within the poll's active window
-        response = self.client.get(reverse("poll_csv_results", kwargs={"poll_id": poll.id}), follow=True)
-        self.assertEqual(200, response.status_code)
-        self.assertIn("Poll results cannot be viewed while the poll is running.", list(map(str, list(response.context["messages"]))))
-
         # End the poll
         poll.end_time = timezone.localtime()
 
