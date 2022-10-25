@@ -1125,7 +1125,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             now: A datetime object to use for the check instead of the current time.
 
         Returns:
-            Whether it is too early to sign up for this scheduled activity.
+            Whether it is too early to sign up for this scheduled activity 
+            and when the activity opens for signups.
 
         """
         if now is None:
@@ -1134,10 +1135,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         activity_date = datetime.datetime.combine(self.block.date, datetime.time(0, 0, 0))
         if now.tzinfo is not None:
             activity_date = timezone.make_aware(activity_date, now.tzinfo)
-        # Presign activities can only be signed up for 2 days in advance.
+        # Presign activities can only be signed up for a set time in advance.
         presign_period = datetime.timedelta(minutes=settings.EIGHTH_PRESIGNUP_HOURS*60+settings.EIGHTH_PRESIGNUP_MINUTES)
 
-        return now < (activity_date - presign_period)
+        return (now < (activity_date - presign_period), activity_date - presign_period)
 
     def has_open_passes(self) -> bool:
         """Returns whether there are passes that have not been acknowledged.
@@ -1361,9 +1362,13 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
-                if self.is_too_early_to_signup():
+                early = self.is_too_early_to_signup()
+                
+                if early[0]:
                     exception.Presign = True
 
+                    exception.desc_errors["Presign"] = [early[1].strftime("%A, %B %-d at %-I:%M %p")]
+                  
             # Check if signup would violate one-a-day constraint
             if not self.is_both_blocks() and self.activity.one_a_day:
                 in_act = (
@@ -1392,6 +1397,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # If we've collected any errors, raise the exception and abort
         # the signup attempt
         if exception.errors:
+            print(exception)
+            logger.debug(exception)
+            logger.debug("test")
             raise exception
 
         # Everything's good to go - complete the signup. If we've gotten to
