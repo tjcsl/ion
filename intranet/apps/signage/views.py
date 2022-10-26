@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
+from ...utils.date import get_senior_graduation_year
 from ...utils.serialization import safe_json
 from ..eighth.models import EighthBlock
 from ..eighth.serializers import EighthBlockDetailSerializer
@@ -53,6 +54,7 @@ def signage_display(request, display_id: str) -> HttpResponse:
     context["sign"] = sign
     context["page_args"] = (sign, request)
     context["end_switch_page_time"] = end_of_day - datetime.timedelta(minutes=sign.day_end_switch_minutes)
+    context["senior_graduation_year"] = get_senior_graduation_year()
     return render(request, "signage/base.html", context)
 
 
