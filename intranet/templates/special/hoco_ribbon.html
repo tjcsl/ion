@@ -3,33 +3,61 @@
 {% load cacheops %}
 {% load pipeline %}
 {% stylesheet 'hoco_ribbon' %}
-    <div class="ribbon">
-      <div class="medallion"></div>
+<script src="{% static 'js/hoco_scores.js' %}"></script>
+<div class="ribbon">
+    <div class="medallion"></div>
 
-      <div class="ribbon-1">
+    <div class="ribbon-1">
         <span class="inner">
           <span class="fadeLeft">It's</span>
         </span>
-      </div>
+    </div>
 
-      <div class="ribbon-2">
+    <div class="ribbon-2">
         <span class="inner">
           <span class="fadeRight">Homecoming!</span>
         </span>
-      </div>
+    </div>
 
-      <div class="ribbon-3">
+    <div class="ribbon-3">
         <span class="inner">
-          <span class="fadeLeft"><a href="https://homecoming.tjhsst.edu/" target="_blank" rel="noopener noreferrer">homecoming.tjhsst.edu</a></span>
+          <span class="fadeLeft"><a href="https://homecoming.tjhsst.edu/" target="_blank"
+                                    rel="noopener noreferrer">homecoming.tjhsst.edu</a></span>
         </span>
-      </div>
+    </div>
 
-      <div class="ball fadeIn">
+    <div class="ball fadeIn">
         <span class="ball-text">
           <strong>Gooooo</strong>
           Colonials!
         </span>
-      </div>
     </div>
-    <br>
-    <script src="{% static 'js/hoco_ribbon.js' %}"></script>
+</div>
+<div id="hoco-scores">
+    <div class="box">
+        <div class="class">{{ senior_graduation_year }}</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-senior">0</div>
+        points
+    </div>
+    <div class="box">
+        <div class="class">{{ senior_graduation_year|add:"1" }}</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-junior">0</div>
+        points
+    </div>
+    <div class="box">
+        <div class="class">{{ senior_graduation_year|add:"2" }}</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-sophomore">0</div>
+        points
+    </div>
+    <div class="box">
+        <div class="class">{{ senior_graduation_year|add:"3" }}</div>
+        <div class="corner-ribbon"></div>
+        <div class="score" id="score-freshman">0</div>
+        points
+    </div>
+</div>
+<br>
+<script src="{% static 'js/hoco_ribbon.js' %}"></script>

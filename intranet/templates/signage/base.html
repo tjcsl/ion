@@ -68,6 +68,9 @@
                         {% endwith %}
                     </div>
                 </div>
+                {% if show_homecoming %}
+                {% include "special/hoco_scores.html" %}
+                {% endif %}
             </section>
             {% for page in sign.pages.order_properly %}
             <section class="signage-section signage-page page{% if page.iframe %} iframe{% else %} server{% endif %} {{ page.strip_links | yesno:"strip-links," }}" id="{{ page.pk }}">
