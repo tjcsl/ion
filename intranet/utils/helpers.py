@@ -3,13 +3,12 @@ import ipaddress
 import logging
 import string
 import subprocess
-from typing import Collection, Set  # noqa
+from typing import Collection, Dict, Set  # noqa
 from urllib import parse
 
 from django.conf import settings
 from django.utils import timezone
 
-from ..apps.auth.helpers import get_login_theme_name
 from ..apps.emerg.views import get_emerg
 
 logger = logging.getLogger("intranet.settings")
@@ -186,23 +185,50 @@ def get_ap_week_warning(request):
     return False
 
 
+def is_april_fools_day():
+    today = timezone.localdate()
+    return (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and today.day == 1)
+
+
+def get_theme_name() -> str:
+    """Get the name of the currently active login theme (e.g. "snow", "halloween" or "piday").
+
+    Returns:
+        The name of the currently active login theme.
+
+    """
+    today = timezone.localdate()
+    if today.month in (12, 1):
+        # Snow
+        return "snow"
+    elif today.month == 3 and (14 <= today.day <= 16):
+        return "piday"
+    elif (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
+        return "halloween"
+
+    return None
+
+
+LOGIN_THEMES = {
+    "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
+    "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
+    "halloween": {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"},
+}
+
+
+def get_theme() -> Dict[str, Dict[str, str]]:
+    """Load a custom login theme (e.g. snow)"""
+    return LOGIN_THEMES.get(get_theme_name(), {})
+
+
 def dark_mode_enabled(request):
     if request.GET.get("dark", None):
         return request.GET["dark"] in ["1", "True"]
 
-    if request.resolver_match is not None and (
-        request.resolver_match.url_name == "login" or (request.resolver_match.url_name == "index" and not request.user.is_authenticated)
-    ):
-        theme_name = get_login_theme_name()
-        if theme_name == "halloween":
-            return True
+    if get_theme_name() == "halloween" and request.COOKIES.get("disable-halloween", None) != "1":
+        return True
 
     if request.user.is_authenticated:
         return request.user.dark_mode_properties.dark_mode_enabled
     else:
         return request.COOKIES.get("dark-mode-enabled", "") == "1"
-
-
-def is_april_fools_day():
-    today = timezone.localdate()
-    return (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and today.day == 1)

@@ -2,24 +2,103 @@ body, input[type="text"], ::placeholder, a, a:active, a:visited, body.login-page
     color: orange !important;
 }
 
-
-.login-page .sidebar-trigger {
-    border-color: orange;
+body {
+    /*background-image: url('/static/themes/halloween/background.jpg');*/
+    background-size: cover;
+    background-attachment: fixed;
+    animation: fade-in-out 2s ease-out infinite alternate;
 }
 
-.login-page {
-    animation: fade-in-out 1.5s ease-out infinite alternate;
+body.login-page .day-name {
+    color: orange !important;
 }
 
-.login-page .logo {
+.footer, .sidebar-trigger, .sidebar {
+    display: none !important;
+}
+
+body.login-page input[type="text"], body.login-page input[type="password"], body.login-page input[type="submit"] {
+    color: orange;
+    background-color: #181a18;
+    border: none;
+}
+
+body.login-page input[type="text"]::placeholder, body.login-page input[type="password"]::placeholder {
+    opacity: 0.7;
+}
+
+body.login-page .logo {
     background-image: url(/static/img/logos/Login-Logo-halloween.svg);
 }
 
-body.login-page input[type="text"], body.login-page input[type="password"] {
-    color: orange;
+body.login-page .center {
+    background-color: rgba(0,0,0,0.8);
+    padding: 23px 15px 0 15px;
+    border-radius: 10px;
+    position: relative;
+    right: 15px;
 }
-body.login-page input[type="text"]::placeholder, body.login-page input[type="password"]::placeholder {
+
+.widget, .widget-title, .widget-content, .announcement, .event, .button, .btn-link, ul.nav {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.header {
+    background-color: orange;
+    opacity: 0.8;
+    z-index: 999;  /* set the z-index because opacity will set it to 0 */
+}
+
+ul.nav .selected {
+    background-color: orange !important;
     opacity: 0.7;
+}
+
+ul.nav .selected a {
+    color: white !important;
+}
+
+.logout-button {
+    color: rgb(242,242,244) !important;
+}
+
+.btn-link {
+    text-decoration: none;
+    color: rgb(72, 72, 72);
+    display: inline-block;
+    line-height: 18px;
+    padding: 0 3px;
+    margin: 5px 0;
+    font-size: 9px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgb(255 255 255 / 90%);
+    white-space: nowrap;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #f7f7f4;
+    background: -moz-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
+    background: -webkit-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
+    background: linear-gradient(to bottom, #f7f7f4 0%, #eaeaea 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7f7f4", endColorstr="#eaeaea", GradientType=0);
+    border: 1px solid rgb(221, 221, 221);
+    border-bottom-color: rgb(197, 197, 197);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    behavior: url(/static/js/vendor/PIE/PIE.htc);
+    font-size: 8pt;
+    margin-right: 10px;
+    border: none;
 }
 
 @keyframes fade-in-out {
@@ -27,7 +106,7 @@ body.login-page input[type="text"]::placeholder, body.login-page input[type="pas
         opacity: 1;
     }
     100% {
-        opacity: 0.5;
+        opacity: 0.7;
     }
 }
 
@@ -145,4 +224,18 @@ body.login-page input[type="text"]::placeholder, body.login-page input[type="pas
     animation-iteration-count: infinite;
     animation-direction: normal;
     animation-delay: 2s;
+}
+
+@media (max-width: 550px) {
+    .toggle-halloween-theme {
+        position: fixed;
+        bottom: 5px;
+        right: 15px;
+        font-size: 8pt;
+        padding: 10px;
+    }
+
+    body.login-page .center {
+        top: 360px;
+    }
 }
