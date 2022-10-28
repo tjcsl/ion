@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1401) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1413) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -145,7 +145,7 @@
 <span class="kn">from</span> <span class="nn">django.views.generic.base</span> <span class="kn">import</span> <span class="n">View</span>
 
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_date</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
-<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">awaredate</span><span class="p">,</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span>
+<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">awaredate</span><span class="p">,</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span><span class="p">,</span> <span class="n">get_theme</span>
 <span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
@@ -154,7 +154,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">backends</span>  <span class="c1"># pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">signals</span>  <span class="c1"># pylint: disable=unused-import # noqa # Load it so the signals get registered</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">AuthenticateForm</span>
-<span class="kn">from</span> <span class="nn">.helpers</span> <span class="kn">import</span> <span class="n">change_password</span><span class="p">,</span> <span class="n">get_login_theme</span>
+<span class="kn">from</span> <span class="nn">.helpers</span> <span class="kn">import</span> <span class="n">change_password</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">auth_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;intranet_auth&quot;</span><span class="p">)</span>
@@ -257,7 +257,7 @@
             <span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span>
             <span class="s2">&quot;git_info&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">GIT</span><span class="p">,</span>
             <span class="s2">&quot;bg_pattern&quot;</span><span class="p">:</span> <span class="n">get_bg_pattern</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
-            <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">get_login_theme</span><span class="p">(),</span>
+            <span class="s2">&quot;theme&quot;</span><span class="p">:</span> <span class="n">get_theme</span><span class="p">(),</span>
             <span class="s2">&quot;login_warning&quot;</span><span class="p">:</span> <span class="n">login_warning</span><span class="p">,</span>
             <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">),</span>
             <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
