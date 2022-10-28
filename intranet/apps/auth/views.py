@@ -22,7 +22,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
-from ...utils.helpers import awaredate, dark_mode_enabled, get_ap_week_warning
+from ...utils.helpers import awaredate, dark_mode_enabled, get_ap_week_warning, get_theme
 from ..dashboard.views import dashboard_view, get_fcps_emerg
 from ..eighth.models import EighthBlock
 from ..events.models import Event
@@ -31,7 +31,7 @@ from ..sessionmgmt.helpers import trust_session
 from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
 from . import signals  # pylint: disable=unused-import # noqa # Load it so the signals get registered
 from .forms import AuthenticateForm
-from .helpers import change_password, get_login_theme
+from .helpers import change_password
 
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
@@ -134,7 +134,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "request": request,
             "git_info": settings.GIT,
             "bg_pattern": get_bg_pattern(request),
-            "theme": get_login_theme(),
+            "theme": get_theme(),
             "login_warning": login_warning,
             "senior_graduation": get_senior_graduation_date().strftime("%B %d %Y %H:%M:%S"),
             "senior_graduation_year": get_senior_graduation_year(),

@@ -13,7 +13,7 @@ from django.utils import timezone
 from intranet.apps.cslapps.models import App
 from intranet.apps.notifications.models import NotificationConfig
 
-from ..utils.helpers import dark_mode_enabled
+from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_name
 from .schedule.models import Day
 
 logger = logging.getLogger(__name__)
@@ -111,7 +111,11 @@ def global_custom_theme(request):
     Add custom theme javascript and css.
     """
     today = timezone.localdate()
-    theme = {}
+    theme = get_theme()
+
+    if get_theme_name() == "halloween" and request.COOKIES.get("disable-halloween", None) == "1":
+        # Allow option to re-enable halloween theme
+        theme = {"js": "themes/halloween/halloween-cookie.js", "css": "themes/halloween/halloween-button.css"}
 
     if today.month == 3 and (14 <= today.day <= 16):
         theme = {"css": "themes/piday/piday.css"}
