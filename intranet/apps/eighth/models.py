@@ -31,7 +31,6 @@ logger = logging.getLogger(__name__)
 class AbstractBaseEighthModel(models.Model):
     """Abstract base model that includes created
     and last modified times.
-
     Attributes:
         created_time (datetime): The time the model was created
         last_modified_time (datetime): The time the model was
@@ -47,9 +46,7 @@ class AbstractBaseEighthModel(models.Model):
 
 class EighthSponsor(AbstractBaseEighthModel):
     """Represents a sponsor for an eighth period activity.
-
     A sponsor could be linked to an actual user or just a name.
-
     Attributes:
         first_name (str): The first name of the sponsor.
         last_name (str): The last name of the sponsor.
@@ -94,10 +91,8 @@ class EighthSponsor(AbstractBaseEighthModel):
     @property
     def name(self) -> str:
         """If show_full_name is set, returns "last name, first name". Otherwise, returns last name only.
-
         Returns:
             The name to display for the sponsor, omitting the first name unless explicitly requested.
-
         """
         if self.show_full_name and self.first_name:
             return self.last_name + ", " + self.first_name
@@ -107,10 +102,8 @@ class EighthSponsor(AbstractBaseEighthModel):
     @property
     def to_be_assigned(self) -> bool:
         """Returns True if the sponsor's name contains "to be assigned" or similar.
-
         Returns:
             Whether the sponsor is a "to be assigned" sponsor.
-
         """
         return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
 
@@ -120,12 +113,10 @@ class EighthSponsor(AbstractBaseEighthModel):
 
 class EighthRoom(AbstractBaseEighthModel):
     """Represents a room in which an eighth period activity can be held.
-
     Attributes:
         name (str): The name of the room.
         capacity (int): The maximum capacity of the room (-1 for unlimited, 0 to prevent student signup)
         available_for_eighth (bool): Whether the room is available for eighth period signups.
-
     """
 
     name = models.CharField(max_length=100)
@@ -139,13 +130,10 @@ class EighthRoom(AbstractBaseEighthModel):
     @staticmethod
     def total_capacity_of_rooms(rooms: Iterable["EighthRoom"]) -> int:
         """Returns the total capacity of the provided rooms.
-
         Args:
             rooms: Rooms to determine total capacity for.
-
         Returns:
             The total capacity of the provided rooms.
-
         """
 
         capacity = 0
@@ -158,13 +146,10 @@ class EighthRoom(AbstractBaseEighthModel):
     @property
     def formatted_name(self) -> str:
         """The formatted name of the room.
-
         If it looks like the room is a numbered room -- the name starts with either a number or with
         the text "Room" -- returns "Rm. <room number>."
-
         Returns:
             The formatted name of the Room.
-
         """
         if self.name[0] in string.digits:
             # All rooms starting with an integer will be prefixed
@@ -193,7 +178,6 @@ class EighthActivityExcludeDeletedManager(models.Manager):
 
 class EighthActivity(AbstractBaseEighthModel):
     """Represents an eighth period activity.
-
     Attributes:
         name(str): The name of the activity, max length 100 characters.
         description (str): The description of the activity, shown on the signup page below
@@ -249,7 +233,6 @@ class EighthActivity(AbstractBaseEighthModel):
         similarities (:obj:`list` of :obj:`EighthActivitySimilarity`): A ManyToManyField of EighthActivitySimilarity
             objects which are similar to this activity.
         deleted (bool): Whether the activity still technically exists in the system, but was marked to be deleted.
-
     """
 
     objects = models.Manager()
@@ -298,10 +281,8 @@ class EighthActivity(AbstractBaseEighthModel):
 
     def capacity(self) -> int:
         """Returns 'default_capacity' if it is set. Otherwise, returns the total capacity of all the activity's rooms.
-
         Returns:
             The activity's capacity.
-
         """
         # Note that this is the default capacity if the
         # rooms/capacity are not overridden for a particular block.
@@ -310,10 +291,8 @@ class EighthActivity(AbstractBaseEighthModel):
     @property
     def aid(self) -> int:
         """The publicly visible activity ID.
-
         Returns:
             The public activity ID.
-
         """
         return self.id
 
@@ -321,10 +300,8 @@ class EighthActivity(AbstractBaseEighthModel):
     def name_with_flags(self) -> str:
         """Return the activity name with special, both blocks, restricted, administrative, sticky,
         and deleted flags.
-
         Returns:
             The activity name with all flags.
-
         """
         return self._name_with_flags(True)
 
@@ -332,23 +309,18 @@ class EighthActivity(AbstractBaseEighthModel):
     def name_with_flags_no_restricted(self) -> str:
         """Returns the activity's name with flags.
         These flags indicate whether the activity is special, both blocks, administrative, sticky, and/or cancelled.
-
          Returns:
              The activity name with all flags except the "restricted" flag.
-
         """
         return self._name_with_flags(False)
 
     def _name_with_flags(self, include_restricted: bool, title: Optional[str] = None) -> str:
         """Generates the activity's name with flags.
-
         Args:
             include_restricted: Whether to include the "restricted" flag.
             title: An optional title to add after the activity name (but before the flags)
-
         Returns:
             The activity name with all the appropriate flags.
-
         """
         name = "Special: " if self.special else ""
         name += self.name
@@ -365,13 +337,10 @@ class EighthActivity(AbstractBaseEighthModel):
     @classmethod
     def restricted_activities_available_to_user(cls, user: "get_user_model()") -> List[int]:
         """Finds the restricted activities available to the given user.
-
         Args:
             user: The User to find the restricted activities for.
-
         Returns:
             The restricted activities available to the user.
-
         """
         if not user:
             return []
@@ -386,10 +355,8 @@ class EighthActivity(AbstractBaseEighthModel):
     @classmethod
     def available_ids(cls) -> List[int]:
         """Returns all available IDs not used by an EighthActivity.
-
         Returns:
             A list of the available activity IDs.
-
         """
         id_min = 1
         id_max = 3200
@@ -400,10 +367,8 @@ class EighthActivity(AbstractBaseEighthModel):
 
     def get_active_schedulings(self) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
         """Returns all EighthScheduledActivitys scheduled this year for this activity.
-
         Returns:
             EighthScheduledActivitys of this activity occurring this year.
-
         """
         date_start, date_end = get_date_range_this_year()
 
@@ -415,7 +380,6 @@ class EighthActivity(AbstractBaseEighthModel):
         An activity is considered to be active if it has been scheduled at all this year.
                Returns:
                    Whether the activity is active.
-
         """
         return self.get_active_schedulings().exists()
 
@@ -423,12 +387,9 @@ class EighthActivity(AbstractBaseEighthModel):
     def frequent_users(self) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Return a QuerySet of user id's and counts that have signed up for this activity more than
         `settings.SIMILAR_THRESHOLD` times.
-
         This is used for suggesting activities to users.
-
         Returns:
             A QuerySet of users who attend this activity frequently.
-
         """
         key = "eighthactivity_{}:frequent_users".format(self.id)
         cached = cache.get(key)
@@ -447,10 +408,8 @@ class EighthActivity(AbstractBaseEighthModel):
     @property
     def is_popular(self) -> bool:
         """Returns whether this activity has more than ``settings.SIMILAR_THRESHOLD * 2`` frequent_users.
-
         Returns:
             Whether this activity has more than ``settings.SIMILAR_THRESHOLD * 2`` frequent_users.
-
         """
         return self.frequent_users.count() > (settings.SIMILAR_THRESHOLD * 2)
 
@@ -464,20 +423,16 @@ class EighthActivity(AbstractBaseEighthModel):
 class EighthBlockQuerySet(models.query.QuerySet):
     def this_year(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Get EighthBlocks from this school year only.
-
         Returns:
             A QuerySet containing all of the blocks selected by this QuerySet that occur during this school year.
-
         """
         start_date, end_date = get_date_range_this_year()
         return self.filter(date__gte=start_date, date__lte=end_date)
 
     def filter_today(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets EighthBlocks that occur today.
-
         Returns:
             A QuerySet containing all of the blocks selected by this QuerySet that occur today.
-
         """
         return self.filter(date=timezone.localdate())
 
@@ -488,12 +443,9 @@ class EighthBlockManager(models.Manager):
 
     def get_upcoming_blocks(self, max_number: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets the given number of upcoming blocks that will take place in the future.
-
         If there is no block in the future, the most recent block will be returned.
-
         Returns:
             A QuerySet of the X upcoming ``EighthBlock`` objects.
-
         """
 
         now = timezone.localtime()
@@ -511,23 +463,18 @@ class EighthBlockManager(models.Manager):
 
     def get_first_upcoming_block(self) -> "EighthBlock":
         """Gets the first upcoming block (the first block that will take place in the future).
-
         Returns:
             The first upcoming ``EighthBlock`` object, or ``None`` if there are none upcoming.
-
         """
 
         return self.get_upcoming_blocks().first()
 
     def get_next_upcoming_blocks(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets the next upccoming blocks.
-
         It finds the other blocks that are occurring on the day of the
         first upcoming block.
-
         Returns:
             A QuerySet of the next upcoming ``EighthBlock`` objects.
-
         """
 
         next_block = EighthBlock.objects.get_first_upcoming_block()
@@ -540,10 +487,8 @@ class EighthBlockManager(models.Manager):
 
     def get_blocks_this_year(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets a QuerySet of blocks that occur this school year.
-
         Returns:
             A QuerySet of all the blocks that occur during this school year.
-
         """
 
         date_start, date_end = get_date_range_this_year()
@@ -552,17 +497,14 @@ class EighthBlockManager(models.Manager):
 
     def get_blocks_today(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets a QuerySet of blocks that occur today.
-
         Returns:
             A QuerySet of all the blocks that occur today.
-
         """
         return self.filter(date=timezone.localdate())
 
 
 class EighthBlock(AbstractBaseEighthModel):
     r"""Represents an eighth period block.
-
     Attributes:
         date
             The date of the block.
@@ -580,7 +522,6 @@ class EighthBlock(AbstractBaseEighthModel):
             List of :class:`EighthScheduledActivity`\s for the block.
         override_blocks
             List of :class:`EighthBlock`\s that the block overrides.
-
             This allows the half-blocks used during Techlab visits to be
             easily managed. If a student should only be allowed to sign up
             for either only block A or both blocks A1 and A2, then block A
@@ -588,7 +529,6 @@ class EighthBlock(AbstractBaseEighthModel):
             override block A.
         comments
             A short comments field displayed next to the block letter.
-
     """
 
     objects = EighthBlockManager()
@@ -614,14 +554,11 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def next_blocks(self, quantity: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets future blocks this school year in order.
-
         Args:
             quantity: The number of blocks to list after this block, or -1 for all following blocks.
-
         Returns:
             A QuerySet with the specified number of future blocks this school year.
             If ``quantity`` is passed, then the QuerySet will not be filter()-able.
-
         """
         blocks = (
             EighthBlock.objects.get_blocks_this_year()
@@ -634,17 +571,13 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def previous_blocks(self, quantity: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
         """Gets the previous blocks this school year in order.
-
         Args:
             quantity: The number of blocks to list before this block, or -1 for all previous blocks.
-
         Returns:
             If `quantity` is not passed, retuns a QuerySet with all the blocks this school year
             before this block.
-
             If `quantity` is passed, returns a list with the specified number of blocks this
             school year before this block.
-
         """
         blocks = (
             EighthBlock.objects.get_blocks_this_year()
@@ -657,29 +590,23 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def is_today(self) -> bool:
         """Returns whether the block occurs today.
-
         Returns:
             Whether the block occurs today.
-
         """
         return timezone.localdate() == self.date
 
     def signup_time_future(self) -> bool:
         """Returns whether the block closes in the future.
-
         Returns:
             Whether the block's signup time is in the future.
-
         """
         now = timezone.localtime()
         return now.date() < self.date or (self.date == now.date() and self.signup_time > now.time())
 
     def date_in_past(self) -> bool:
         """Returns whether the block has already happened.
-
         Returns:
             Whether the block's date is in the past.
-
         """
         return timezone.localdate() > self.date
 
@@ -687,10 +614,8 @@ class EighthBlock(AbstractBaseEighthModel):
         """Returns whether today's date  is within the block's clear absence period.
         This determines whether the option to clear an eighth period absence should be shown.
         If the block is not within the clear absence period, an absence cannot be cleared.
-
         Returns:
             Whether the current date is in the block's clear absence period.
-
         """
         now = timezone.localtime()
         two_weeks = self.date + datetime.timedelta(days=settings.CLEAR_ABSENCE_DAYS)
@@ -698,13 +623,10 @@ class EighthBlock(AbstractBaseEighthModel):
 
     def attendance_locked(self) -> bool:
         """Returns whether the block's attendance is locked.
-
         If the block's attendance is locked, non-eighth admins cannot
         change attendance.
-
         Returns:
             Whether the block's attendance is locked.
-
         """
         now = timezone.localtime()
         return now.date() > self.date or (now.date() == self.date and now.time() > datetime.time(settings.ATTENDANCE_LOCK_HOUR, 0))
@@ -712,20 +634,16 @@ class EighthBlock(AbstractBaseEighthModel):
     def num_signups(self) -> int:
         """Gets how many people have signed up for
         an activity this block.
-
         Returns:
             The number of people who have signed up for an activity during this block.
-
         """
         return EighthSignup.objects.filter(scheduled_activity__block=self, user__in=get_user_model().objects.get_students()).count()
 
     def num_no_signups(self) -> int:
         """Gets how many people have not signed up
         for an activity this block.
-
         Returns:
             The number of people who have not signed up for an activity during this block.
-
         """
         signup_users_count = get_user_model().objects.get_students().count()
         return signup_users_count - self.num_signups()
@@ -733,44 +651,34 @@ class EighthBlock(AbstractBaseEighthModel):
     def get_unsigned_students(self) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Return a QuerySet of people who haven't signed up for an
         activity during this block.
-
         Returns:
             The users who have not signed up for an activity during this block.
-
         """
         return get_user_model().objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
 
     def get_hidden_signups(self) -> Union[QuerySet, Collection["EighthSignup"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of EighthSignups whose users are not students
         but have signed up for an activity.
-
         This is usually a list of signups for the z-Withdrawn from TJ activity.
-
         Returns:
             A QuerySet of users who are not current students but have signed up for an activity this block.
-
         """
         return EighthSignup.objects.filter(scheduled_activity__block=self).exclude(user__in=get_user_model().objects.get_students())
 
     @property
     def letter_width(self) -> int:
         """Returns the width in pixels that should be allocated for the block_letter on the signup page.
-
         Return:
             The width in pixels of the block letter.
-
         """
         return (len(self.block_letter) - 1) * 6 + 15
 
     @property
     def short_text(self) -> str:
         """Returns the date and block letter for this block.
-
          It is returned in the format of  MM/DD B, like "9/1 B"
-
         Returns:
             The date and block letter.
-
         """
         return "{} {}".format(self.date.strftime("%m/%d"), self.block_letter)
 
@@ -778,14 +686,11 @@ class EighthBlock(AbstractBaseEighthModel):
     @property
     def hybrid_text(self) -> str:
         """Returns the user friendly name of a hybrid block. See Hybrid-README.rst.
-
          * - P1 and * - P2 are returned as * (In-Person)
          * - Virt is returned as * (Virtual)
          Any other names are returned as themselves.
-
         Returns:
             The user friendly name of a hybrid block.
-
         """
         name = self.block_letter
         if "Virt" in name:
@@ -799,20 +704,16 @@ class EighthBlock(AbstractBaseEighthModel):
     @property
     def is_this_year(self) -> bool:
         """Return whether the block occurs during this school year.
-
         Returns:
             Whether the block occurs during this school year.
-
         """
         return is_current_year(datetime.datetime.combine(self.date, datetime.time()))
 
     @property
     def formatted_date(self) -> str:
         """Returns the block date, formatted according to ``settings.EIGHTH_BLOCK_DATE_FORMAT``.
-
         Returns:
             The formatted block date.
-
         """
         return formats.date_format(self.date, settings.EIGHTH_BLOCK_DATE_FORMAT)
 
@@ -837,23 +738,18 @@ class EighthScheduledActivityManager(Manager):
     ) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of EighthScheduledActivities where the given EighthSponsor is
         sponsoring.
-
         If a sponsorship is defined in an EighthActivity, it may be overridden
         on a block by block basis in an EighthScheduledActivity. Sponsors from
         the EighthActivity do not carry over.
-
         EighthScheduledActivities that are deleted or cancelled are also not
         counted.
-
         Args:
             sponsor: The sponsor to search for.
             include_cancelled: Whether to include cancelled activities. Deleted
                 activities are always excluded.
-
         Returns:
             A QuerySet of EighthScheduledActivities where the given EighthSponsor
                 is sponsoring.
-
         """
         sponsoring_filter = Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor))
         sched_acts = EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(sponsoring_filter).distinct()
@@ -865,7 +761,6 @@ class EighthScheduledActivityManager(Manager):
 
 class EighthScheduledActivity(AbstractBaseEighthModel):
     r"""Represents the relationship between an activity and a block in which it has been scheduled.
-
     Attributes:
         block : :class:`EighthBlock`
             The :class:`EighthBlock` during which an
@@ -897,7 +792,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             not set, falls back on the EighthActivity's special setting.
         cancelled
             whether the :class:`EighthScheduledActivity` has been cancelled
-
     """
 
     # Use model manager
@@ -931,10 +825,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def get_all_associated_rooms(self) -> Union[QuerySet, Collection["EighthRoom"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.
-
         Returns:
             A QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.
-
         """
         return (self.rooms.all() | self.activity.rooms.all()).distinct()
 
@@ -942,10 +834,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def full_title(self) -> str:
         """Gets the full title for the activity, appending the title of the scheduled activity to
         the activity's name.
-
         Returns:
             The full title for the scheduled activity, without flags.
-
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         act_name = self.activity.name + cancelled_str
@@ -957,10 +847,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def title_with_flags(self) -> str:
         """Gets the title for the activity, appending the title of the
         scheduled activity to the activity's name and flags.
-
         Returns:
             The full title for the scheduled activity, with flags.
-
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str  # pylint: disable=protected-access
@@ -971,42 +859,33 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_true_sponsors(self) -> Union[QuerySet, Collection[EighthSponsor]]:  # pylint: disable=unsubscriptable-object
         """Retrieves the sponsors for the scheduled activity, taking into account activity defaults and
         overrides.
-
         Returns:
             The sponsors for this scheduled activity.
-
         """
         return self.sponsors.all() or self.activity.sponsors.all()
 
     def user_is_sponsor(self, user: "get_user_model()") -> bool:
         """Returns whether the given user is a sponsor of the activity.
-
         Args:
             user: The user to check for sponsorship of this activity.
-
         Returns:
             Whether the given user is a sponsor of the activity.
-
         """
         return self.get_true_sponsors().filter(user=user).exists()
 
     def get_true_rooms(self) -> Union[QuerySet, Collection[EighthRoom]]:  # pylint: disable=unsubscriptable-object
         """Retrieves the rooms for the scheduled activity, taking into account
         activity defaults and overrides.
-
         Returns:
             The true room list of the scheduled activity.
-
         """
         return self.rooms.all() or self.activity.rooms.all()
 
     def get_true_capacity(self) -> int:
         """Retrieves the capacity for the scheduled activity, taking into
         account activity defaults and overrides.
-
         Returns:
             The true capacity of the scheduled activity.
-
         """
         if self.capacity is not None:
             return self.capacity
@@ -1023,69 +902,54 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def is_both_blocks(self) -> bool:
         """Gets whether this scheduled activity runs both blocks.
-
         Returns:
             Whether this scheduled activity runs both blocks.
-
         """
         return self.both_blocks or self.activity.both_blocks
 
     def get_restricted(self) -> bool:
         """Gets whether this scheduled activity is restricted.
-
         Returns:
             Whether this scheduled activity is restricted.
-
         """
         return self.restricted or self.activity.restricted
 
     def get_sticky(self) -> bool:
         """Gets whether this scheduled activity is sticky.
-
         Returns:
             Whether this scheduled activity is sticky.
-
         """
         return self.sticky or self.activity.sticky
 
     def get_finance(self) -> str:
         """Retrieves the name of this activity's account with the
         finance office, if any.
-
         Returns:
             The name of this activity's account with the finance office.
-
         """
         return self.activity.finance
 
     def get_administrative(self) -> bool:
         """Returns whether this scheduled activity is administrative.
-
         Returns:
             Whether this activity is administrative
-
         """
         return self.administrative or self.activity.administrative
 
     def get_special(self) -> bool:
         """Returns whether this scheduled activity is special.
-
         Returns:
             Whether this scheduled activity is special.
-
         """
         return self.special or self.activity.special
 
     def is_full(self, nocache: bool = False) -> bool:
         """Returns whether the scheduled activity is full.
-
         Args:
             nocache: Whether to disable caching for the query that checks the scheduled activity's
                 current capacity.
-
         Returns:
             Whether this scheduled activity is full.
-
         """
         capacity = self.get_true_capacity()  # We don't disable caching because this changes much less frequently
 
@@ -1097,36 +961,29 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def is_almost_full(self) -> bool:
         """Returns whether the scheduled activity is almost full (>=90%).
-
         Returns:
             Whether this scheduled activity is at least 90% full.
-
         """
         capacity = self.get_true_capacity()
         return capacity != -1 and self.eighthsignup_set.count() >= (0.9 * capacity)
 
     def is_overbooked(self) -> bool:
         """Returns whether the activity is overbooked (>100%) capacity.
-
         Returns:
             Whether this scheduled activity is overbooked.
-
         """
         capacity = self.get_true_capacity()
         return capacity != -1 and self.eighthsignup_set.count() > capacity
 
-    def is_too_early_to_signup(self, now: Optional[datetime.datetime] = None) -> bool:
+    def is_too_early_to_signup(self, now: Optional[datetime.datetime] = None) -> (bool, datetime):
         """Returns whether it is too early to sign up for the activity
         if it is a presign.
-
         This contains the 48 hour presign logic.
-
         Args:
             now: A datetime object to use for the check instead of the current time.
-
         Returns:
-            Whether it is too early to sign up for this scheduled activity.
-
+            Whether it is too early to sign up for this scheduled activity
+            and when the activity opens for signups.
         """
         if now is None:
             now = timezone.localtime()
@@ -1134,17 +991,15 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         activity_date = datetime.datetime.combine(self.block.date, datetime.time(0, 0, 0))
         if now.tzinfo is not None:
             activity_date = timezone.make_aware(activity_date, now.tzinfo)
-        # Presign activities can only be signed up for 2 days in advance.
-        presign_period = datetime.timedelta(days=2)
+        # Presign activities can only be signed up for a set time in advance.
+        presign_period = datetime.timedelta(minutes=settings.EIGHTH_PRESIGNUP_HOURS * 60 + settings.EIGHTH_PRESIGNUP_MINUTES)
 
-        return now < (activity_date - presign_period)
+        return (now < (activity_date - presign_period), activity_date - presign_period)
 
     def has_open_passes(self) -> bool:
         """Returns whether there are passes that have not been acknowledged.
-
         Returns:
             Whether this activity has open passes.
-
         """
         return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False).exists()
 
@@ -1152,13 +1007,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         self, user: "get_user_model()"
     ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Get an unsorted QuerySet of the members that you have permission to view.
-
         Args:
             user: The user who is attempting to view the member list.
-
         Returns:
             Unsorted QuerySet of the members that you have permssion to view.
-
         """
         if user and (user.is_eighth_admin or user.is_eighthoffice or user.is_teacher):
             return self.members.all()
@@ -1172,26 +1024,20 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         self, user: "get_user_model()" = None
     ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you have permission to view, sorted alphabetically.
-
         Args:
             user: The user who is attempting to view the member list.
-
         Returns:
             QuerySet of the members that you have permission to view, sorted alphabetically.
-
         """
         return self._get_viewable_members(user).order_by("last_name", "first_name")
 
     def get_viewable_members_serializer(self, request) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Given a request, returns an unsorted QuerySet of the members that the requesting user
         has permission to view.
-
         Args:
             request: The request object associated with the member list query.
-
         Returns:
             Unsorted QuerySet of the members that you have permssion to view.
-
         """
         return self._get_viewable_members(request.user)
 
@@ -1199,13 +1045,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         self, user: "get_user_model()" = None
     ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you do not have permission to view.
-
         Args:
             user: The user who is attempting to view the member list.
-
         Returns:
             Unsorted QuerySet of the members that you do not have permission to view.
-
         """
         if user and (user.is_eighth_admin or user.is_eighthoffice or user.is_teacher):
             return get_user_model().objects.none()
@@ -1219,13 +1062,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def get_both_blocks_sibling(self) -> Optional["EighthScheduledActivity"]:
         """If this is a both-blocks activity, get the other EighthScheduledActivity
         object that occurs on the other block.
-
         both_blocks means A and B block, NOT all of the blocks on that day.
-
         Returns:
             EighthScheduledActivity object if found.
             ``None``, if the activity cannot have a sibling.
-
         """
         if not self.is_both_blocks():
             return None
@@ -1245,10 +1085,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def notify_waitlist(self, waitlists: Iterable["EighthWaitlist"]):
         """Notifies all users on the given EighthWaitlist objects that the activity they are on the waitlist for has an open spot.
-
         Args:
             waitlists: The EighthWaitlist objects whose users should be notified that the activity has an open slot.
-
         """
         for waitlist in waitlists:
             email_send_task.delay(
@@ -1269,10 +1107,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         add_to_waitlist: bool = False,
     ):
         """Signs up a user to this scheduled activity if possible. This is where the magic happens.
-
         Raises an exception if there's a problem signing the user up
         unless the signup is forced and the requesting user has permission.
-
         Args:
             user: The user to add to the scheduled activity.
             request: The request object associated with the signup action. Should always be passed if applicable,
@@ -1281,7 +1117,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             no_after_deadline: Whether to mark the user as not having signed up after the deadline, regardless of
                 whether they did or not.
             add_to_waitlist: Explicitly add the user to the waitlist.
-
         """
         if request is not None:
             force = (force or ("force" in request.GET)) and request.user.is_eighth_admin
@@ -1361,8 +1196,12 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
             # Check if it's too early to sign up for the activity
             if self.activity.presign:
-                if self.is_too_early_to_signup():
+                early = self.is_too_early_to_signup()
+
+                if early[0]:
                     exception.Presign = True
+
+                    exception.desc_errors["Presign"] = [early[1].strftime("%A, %B %-d at %-I:%M %p")]
 
             # Check if signup would violate one-a-day constraint
             if not self.is_both_blocks() and self.activity.one_a_day:
@@ -1392,6 +1231,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         # If we've collected any errors, raise the exception and abort
         # the signup attempt
         if exception.errors:
+            print(exception)
+            logger.debug(exception)
+            logger.debug("test")
             raise exception
 
         # Everything's good to go - complete the signup. If we've gotten to
@@ -1669,7 +1511,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         This method should be always be called instead of setting the 'cancelled' flag manually.
         (Note: To avoid spamming students signed up for both-block activities, an email is not sent
         for the B-block activity in both-block activities.)
-
         """
 
         if not self.cancelled:
@@ -1683,10 +1524,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def uncancel(self):
         """Uncancel an EighthScheduledActivity.
-
         This does nothing besides unset the cancelled flag and save the
         object.
-
         """
 
         if self.cancelled:
@@ -1711,13 +1550,10 @@ class EighthSignupManager(Manager):
 
     def create_signup(self, user: "get_user_model()", scheduled_activity: "EighthScheduledActivity", **kwargs) -> "EighthSignup":
         """Creates an EighthSignup for the given user in the given activity after checking for duplicate signups.
-
         This raises an error if there are duplicate signups.
-
         Args:
             user: The user to create the EighthSignup for.
             scheduled_activity: The EighthScheduledActivity to sign the user up for.
-
         """
         if EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).nocache().exists():
             logger.error(
@@ -1747,17 +1583,14 @@ class EighthSignupManager(Manager):
 
     def get_absences(self) -> Union[QuerySet, Collection["EighthSignup"]]:  # pylint: disable=unsubscriptable-object
         """Returns all EighthSignups for which the student was marked as absent.
-
         Returns:
             A QuerySet of all the EighthSignups for which the student was marked as absent.
-
         """
         return EighthSignup.objects.filter(was_absent=True, scheduled_activity__attendance_taken=True)
 
 
 class EighthSignup(AbstractBaseEighthModel):
     """Represents a signup/membership in an eighth period activity.
-
     Attributes:
         user
             The :class:`User<intranet.apps.users.models.User>` who has
@@ -1781,7 +1614,6 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the student has dismissed the absence notification.
         absence_emailed
             Whether the student has been emailed about the absence.
-
     """
 
     objects = EighthSignupManager()
@@ -1831,13 +1663,10 @@ class EighthSignup(AbstractBaseEighthModel):
 
     def has_conflict(self, nocache: bool = False) -> bool:
         """Returns True if another EighthSignup object exists for the same user in the same block.
-
         Args:
             nocache: Whether to explicitly disable caching for this check.
-
         Returns:
             Whether there is another EighthSignup for the same user in the same block.
-
         """
         q = EighthSignup.objects.exclude(pk=self.pk).filter(user=self.user, scheduled_activity__block=self.scheduled_activity.block)
         if nocache:
@@ -1847,15 +1676,12 @@ class EighthSignup(AbstractBaseEighthModel):
 
     def remove_signup(self, user: "get_user_model()" = None, force: bool = False, dont_run_waitlist: bool = False) -> str:
         """Attempts to remove the EighthSignup if the user has permission to do so.
-
         Args:
             user: The user who is attempting to remove the EighthSignup.
             force: Whether to force removal.
             dont_run_waitlist: Whether to skip notifying users on the activity's waitlist.
-
         Returns:
             A message to be displayed to the user indicating successful removal.
-
         """
 
         exception = eighth_exceptions.SignupException()
@@ -1905,10 +1731,8 @@ class EighthSignup(AbstractBaseEighthModel):
 
     def in_clear_absence_period(self) -> bool:
         """Returns whether the block for this signup is in the clear absence period.
-
         Returns:
             Whether the block for this signup is in the clear absence period.
-
         """
         return self.scheduled_activity.block.in_clear_absence_period()
 
@@ -1934,41 +1758,32 @@ class EighthWaitlistManager(Manager):
     ) -> Union[QuerySet, Collection["EighthWaitlist"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of all the EighthWaitlist objects for the given
         activity, ordered by signup time.
-
         Args:
             activity: The activity to list the EighthWaitlist objects for.
-
         Returns:
             A QuerySet of all the EighthWaitlist objects for the given activity,
             ordered by signup time.
-
         """
         return self.filter(scheduled_activity_id=activity.id).order_by("time")
 
     def check_for_prescence(self, activity: EighthScheduledActivity, user: "get_user_model()") -> bool:
         """Returns whether the given user is in a waitlist for the given activity.
-
         Args:
             activity: The activity for which the waitlist should be queried.
             user: The user who should be searched for in the activity's waitlist.
-
         Returns:
             Whether the given user is in a waitlist for the given activity.
-
         """
         return self.filter(scheduled_activity_id=activity.id, user=user).exists()
 
     def position_in_waitlist(self, aid: int, uid: int) -> int:
         """Given an activity ID and a user ID, returns the user's position in the waitlist (starting at 1).
         If the user is not in the waitlist, returns 0.
-
         Args:
             aid: The ID of the EighthScheduledActivity for which the waitlist should be queried.
             uid: The ID of the user whose position in the waitlist should be found.
-
         Returns:
             The user's position in the waitlist, starting at 1, or 0 if the user is not in the waitlist.
-
         """
         try:
             return self.filter(scheduled_activity_id=aid, time__lt=self.get(scheduled_activity_id=aid, user_id=uid).time).count() + 1

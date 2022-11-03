@@ -39,7 +39,7 @@ class Command(BaseCommand):
             if not a_activity.is_both_blocks():
                 while b_activity.get_restricted():
                     b_activity = b_activities_list[random.randint(0, len(b_activities_list) - 1)]
-            if not a_activity.is_too_early_to_signup():
+            if not a_activity.is_too_early_to_signup()[0]:
                 a_activity.add_user(student)
-            if not a_activity.is_too_early_to_signup():
+            if not a_activity.is_too_early_to_signup()[0]:
                 b_activity.add_user(student)
