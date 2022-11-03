@@ -19,9 +19,7 @@ class SignupException(Exception):
         ),
         "ActivityFull": m("This activity is full. You may not sign up for it at this time.", "This activity is full."),
         "BlockLocked": m("This block has been locked. Signup is not allowed at this time.", "This block has been locked."),
-        "Presign": m(
-            "You may not sign up for this activity more than two days in advance.", "This activity can't be signed up for more two days in advance."
-        ),
+        "Presign": m("You may not sign up for this activity until {0}", "This activity can't be signed up for until {0}."),
         "Sticky": m(
             "You may not switch out of a sticky activity.",
             "<strong style='font-size: 32px'><u>This student is already in a sticky activity.</u></strong>",
