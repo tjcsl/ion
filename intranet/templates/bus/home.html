@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
     {{ block.super }}
     {% stylesheet 'bus' %}
-    {% stylesheet 'polls' %}
     {% stylesheet 'dashboard' %}
 {% endblock %}
 
@@ -66,7 +65,6 @@
         <% } %>
     </script>
     <script type="text/template" id="status-group-view">
-        <% console.log(name, empty_text, collection)%>
         <h2 class="status"> <%= name %> </h2>
         <% if (collection.length === 0) { %>
             <h3 class="empty"> <%= empty_text %> </h3>
@@ -87,8 +85,8 @@
     {% endverbatim %}
     <script type="text/template" id="map-view">
         {% if enable_bus_driver %}
-        <div id='map' class='busdriver-map'></div>
-        <div id='bd-bus' class='busdriver-bus'></div>
+            <div id='map' class='busdriver-map'></div>
+            <div id='bd-bus' class='busdriver-bus'></div>
         {% endif %}
         {% svg 'optimized_bus_map_v2' %}
     </script>
