@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.signage.views &#8212; TJ Intranet v3 (Build #1434) documentation</title>
+    <title>intranet.apps.signage.views &#8212; TJ Intranet v3 (Build #1436) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -131,6 +131,7 @@
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 
+<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.serialization</span> <span class="kn">import</span> <span class="n">safe_json</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..eighth.serializers</span> <span class="kn">import</span> <span class="n">EighthBlockDetailSerializer</span>
@@ -176,6 +177,7 @@
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sign&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span>
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;page_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;end_switch_page_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">end_of_day</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">sign</span><span class="o">.</span><span class="n">day_end_switch_minutes</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/base.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
