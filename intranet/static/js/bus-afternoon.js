@@ -162,7 +162,6 @@ $(function() {
                     route_name = e.target.value;
                     st = 'a';
                 }
-                console.log(bus);
                 let route = this.model.findWhere({route_name: route_name}).attributes;
                 route.status = st;
                 bus.sendUpdate(route);
@@ -526,7 +525,6 @@ $(function() {
 
         animateBus: function (time) {
             if (document.hidden || time - this.busDriver.lastFrame > 2000) {
-                console.log('hidden');
                 this.busDriverBus.lastFrame = time;
                 return;
             }

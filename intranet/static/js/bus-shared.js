@@ -78,7 +78,6 @@ export function getSocket(base_url, location, document, window, time) {
     };
 
     socket.onclose = () => {
-        console.log('Disconnected');
         if(window.Messenger) {
             disconnected_msg = Messenger().error({
                 message: 'No connection',
