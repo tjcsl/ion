@@ -200,7 +200,9 @@ def get_theme_name() -> str:
     today = timezone.localdate()
     if today.month in (12, 1):
         # Snow
-        return "snow"
+        # Temporarily disable due to bug, 12/01/2022        
+        # return "snow"
+        pass
     elif today.month == 3 and (14 <= today.day <= 16):
         return "piday"
     elif (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
