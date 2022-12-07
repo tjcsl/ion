@@ -1,4 +1,4 @@
-# import datetime
+import datetime
 import ipaddress
 import logging
 import string
@@ -191,18 +191,17 @@ def is_april_fools_day():
 
 
 def get_theme_name() -> str:
-    """Get the name of the currently active login theme (e.g. "snow", "halloween" or "piday").
+    """Get the name of the currently active special event theme (e.g. "snow", "halloween" or "piday").
 
     Returns:
-        The name of the currently active login theme.
+        The name of the currently active theme.
 
     """
     today = timezone.localdate()
     if today.month in (12, 1):
-        # Snow
-        # Temporarily disable due to bug, 12/01/2022        
-        # return "snow"
-        pass
+        first_monday_of_month = (8 - datetime.date(today.year, today.month, 1).weekday()) % 7
+        if (today.month == 12 and today.day >= first_monday_of_month) or (today.month == 1 and today.day < first_monday_of_month + 7):
+            return "snow"
     elif today.month == 3 and (14 <= today.day <= 16):
         return "piday"
     elif (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
@@ -211,7 +210,7 @@ def get_theme_name() -> str:
     return None
 
 
-LOGIN_THEMES = {
+GLOBAL_THEMES = {
     "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
     "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
     "halloween": {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"},
@@ -220,7 +219,7 @@ LOGIN_THEMES = {
 
 def get_theme() -> Dict[str, Dict[str, str]]:
     """Load a custom login theme (e.g. snow)"""
-    return LOGIN_THEMES.get(get_theme_name(), {})
+    return GLOBAL_THEMES.get(get_theme_name(), {})
 
 
 def dark_mode_enabled(request):
