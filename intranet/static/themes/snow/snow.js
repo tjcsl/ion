@@ -8,72 +8,22 @@ $(function () {
 
     if (enabled) {
         // Snow streak - How many days in a row the user has seen the theme. Controls size and speed of snow.
-        let dayStreak, prevDay, savedDayStreak, savedPrevDay;
-
-        if (Cookies.get(btoa("dayStreak")) == null) {          // TODO: Store in database instead of cookies
-            Cookies.set(btoa("dayStreak"), btoa(1), { expires: 5 * 7 });
-            sessionStorage.setItem(btoa("savedDayStreak"), 1);  // save backup to session storage
+        let dayStreak = Cookies.get("dayStreak");
+        if (dayStreak == null) {
+            Cookies.set("dayStreak", 1, { expires: 5 * 7 });
             dayStreak = 1;
-            for(let i = 0; i < 20; i++) {
-                let randNum = Math.floor(Math.random() * 10) + 1;
-                Cookies.set(btoa("dayStreak" + i), btoa(randNum), { expires: 5 * 7 });
-                sessionStorage.setItem(btoa("savedDayStreak" + i), randNum);
-                Cookies.set(btoa("prevDay" + i), btoa(randNum), { expires: 5 * 7 });
-                sessionStorage.setItem(btoa("savedPrevDay" + i), randNum);
-            }
         }
-
-        dayStreak = atob(Cookies.get(btoa("dayStreak")));  // encode both the cookie name and value in base64 (make it *slightly* harder to find for these TJ kids)
 
         let day = new Date().getDate();
-        if (Cookies.get(btoa("prevDay")) == null) {
-            Cookies.set(btoa("prevDay"), btoa(day), { expires: 5 * 7 });
-            sessionStorage.setItem(btoa("savedPrevDay"), day);
+        let prevDay = Cookies.get("prevDay");
+        if (prevDay == null) {
+            Cookies.set("prevDay", day, { expires: 5 * 7 });
             prevDay = day;
         }
-
-        prevDay = atob(Cookies.get(btoa("prevDay")));
-
         if (prevDay < day) {
-            Cookies.set(btoa("dayStreak"), btoa(parseInt(dayStreak) + 1), { expires: 5 * 7 });
-            sessionStorage.setItem(btoa("savedDayStreak"), parseInt(dayStreak) + 1);
-
+            Cookies.set("dayStreak", parseInt(dayStreak) + 1, { expires: 5 * 7 });
             dayStreak = parseInt(dayStreak) + 1;
-
-            Cookies.set(btoa("prevDay"), btoa(day), { expires: 5 * 7 });
-            sessionStorage.setItem(btoa("savedPrevDay"), day);
-        }
-
-        // attempt to fool them lol
-        Cookies.set("snow-streak", dayStreak, { expires: 5 * 7 });
-
-        savedDayStreak = sessionStorage.getItem(btoa("savedDayStreak"));
-        savedPrevDay = sessionStorage.getItem(btoa("savedPrevDay"));
-
-        if(savedDayStreak != dayStreak || savedPrevDay != prevDay) {
-            Cookies.set(btoa("dayStreak"), btoa(1), { expires: 5 * 7 });
-            sessionStorage.setItem(btoa("savedDayStreak"), 1);
-            Cookies.set(btoa("prevDay"), btoa(savedPrevDay), { expires: 5 * 7 });
-            dayStreak = 1;
-
-            let messages = [
-                "nice try lol",
-                "This incident will be reported.",
-                "really?",
-                "hi there!",
-                "you almost got me",
-                ":(",
-                ">:(",
-                ">:)",
-                "Please refrain from tampering with Intranet.",
-                "don't hack us pls and ty",
-                "I will uphold academic and personal integrity in the TJ community.",
-                "please don't",
-                "can you not",
-                "that's no fun",
-                "congrats you just broke Ion",
-            ]
-            alert(messages[Math.floor(Math.random() * messages.length)] + "\n - Your friendly neighborhood Sysadmins");
+            Cookies.set("prevDay", day, { expires: 5 * 7 });
         }
 
         // Option to disable theme
@@ -83,7 +33,7 @@ $(function () {
                     Snow streak: ${dayStreak}
                     <i title="Snow streak controls the size and speed of the snow. Each day you login to Ion, your snow streak will increase by 1. Click for more info."
                         class="snow-streak-info fas fa-info-circle"
-                        onclick="alert('About Snow Streak:\\n❆ Snow streak controls how large the snowflakes are and how fast the snow falls in the winter theme.\\n❆ Each day you login to Ion increases your snow streak by 1.\\n❆ Disabling the snow theme resets your snow streak.\\n❆ If the snow is too fast, you can decrease your snow streak by clicking the down arrow next to your snow streak (if your snow streak is greater than 1).')">
+                        onclick="alert('About Snow Streak:\\n❆ Snow streak controls how large the snowflakes are and how fast the snow falls.\\n❆ Each day you login to Ion increases your snow streak by 1.\\n❆ Disabling the snow theme resets your snow streak.\\n❆ If the snow is too fast, you can decrease your snow streak by clicking the down arrow next to your snow streak (if your snow streak is greater than 1).')">
                     </i>
                     <i class="decrease-snow-streak fas fa-long-arrow-alt-down"
                         title="Decrease snow streak by 1"
@@ -102,8 +52,8 @@ $(function () {
             $(".decrease-snow-streak").hide();
         }
 
-        // if screen size is less than 550 px
-        if (window.innerWidth < 550) {
+        // if screen size is less than 1000 px
+        if (window.innerWidth < 1000) {
             $(".snow-info-container").hide();
             let navbar = $("ul.nav");
             $(navbar).append($(`
@@ -127,7 +77,7 @@ $(function () {
                     </span>
                     <i title="Snow streak controls the size and speed of the snow. Each day you login to Ion, your snow streak will increase by 1. Click for more info."
                         class="snow-nav-info-icon-1 snow-streak-info fas fa-info-circle"
-                        onclick="alert('About Snow Streak:\\n❆ Snow streak controls how large the snowflakes are and how fast the snow falls in the winter theme.\\n❆ Each day you login to Ion increases your snow streak by 1.\\n❆ Disabling the snow theme resets your snow streak.\\n❆ If the snow is too fast, you can decrease your snow streak by clicking the down arrow next to your snow streak (if your snow streak is greater than 1).')">
+                        onclick="alert('About Snow Streak:\\n❆ Snow streak controls how large the snowflakes are and how fast the snow falls.\\n❆ Each day you login to Ion increases your snow streak by 1.\\n❆ Disabling the snow theme resets your snow streak.\\n❆ If the snow is too fast, you can decrease your snow streak by clicking the down arrow next to your snow streak.')">
                     </i>
                     <i title="Decrease snow streak by 1"
                         class="snow-nav-info-icon-2 decrease-snow-streak fas fa-long-arrow-alt-down"
@@ -560,7 +510,7 @@ $(function () {
                 ❄ Turn On Winter Theme
             </a>
         `);
-        if (window.innerWidth < 550) {
+        if (window.innerWidth < 1000) {
             $(".enable-snow").hide();
             $("ul.nav").append($(`
                 <li>
@@ -575,8 +525,8 @@ $(function () {
                 </li>
             `));
         }
-        Cookies.remove(btoa("dayStreak"));
-        Cookies.remove(atob("prevDay"));
+        Cookies.remove("dayStreak");
+        Cookies.remove("prevDay");
     }
 });
 
@@ -588,13 +538,12 @@ function toggleTheme() {
 
 function handleDecreaseSnowStreak() {
     if(confirm("Are you sure you want to decrease your snow streak by 1?")) {
-        let dayStreak = atob(Cookies.get(btoa("dayStreak")));
+        let dayStreak = Cookies.get("dayStreak");
         if(dayStreak <= 1) {
             alert("Your snow streak is already 1 and cannot be decreased further.");
             return;
         }
-        Cookies.set(btoa("dayStreak"), btoa(parseInt(dayStreak) - 1), { expires: 5 * 7 });
-        sessionStorage.setItem(btoa("savedDayStreak"), parseInt(dayStreak) - 1);
+        Cookies.set("dayStreak", parseInt(dayStreak) - 1, { expires: 5 * 7 });
         location.reload();
     }
 }
