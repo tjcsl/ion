@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #1454) documentation</title>
+    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #1469) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -121,7 +121,7 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.utils.helpers</h1><div class="highlight"><pre>
-<span></span><span class="c1"># import datetime</span>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">ipaddress</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">string</span>
@@ -314,18 +314,17 @@
 
 
 <div class="viewcode-block" id="get_theme_name"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_theme_name">[docs]</a><span class="k">def</span> <span class="nf">get_theme_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Get the name of the currently active login theme (e.g. &quot;snow&quot;, &quot;halloween&quot; or &quot;piday&quot;).</span>
+    <span class="sd">&quot;&quot;&quot;Get the name of the currently active special event theme (e.g. &quot;snow&quot;, &quot;halloween&quot; or &quot;piday&quot;).</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        The name of the currently active login theme.</span>
+<span class="sd">        The name of the currently active theme.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="c1"># Snow</span>
-        <span class="c1"># Temporarily disable due to bug, 12/01/2022        </span>
-        <span class="c1"># return &quot;snow&quot;</span>
-        <span class="k">pass</span>
+        <span class="n">first_monday_of_month</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">weekday</span><span class="p">())</span> <span class="o">%</span> <span class="mi">7</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">12</span> <span class="ow">and</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&gt;=</span> <span class="n">first_monday_of_month</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;</span> <span class="n">first_monday_of_month</span> <span class="o">+</span> <span class="mi">7</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;snow&quot;</span>
     <span class="k">elif</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="p">(</span><span class="mi">14</span> <span class="o">&lt;=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;piday&quot;</span>
     <span class="k">elif</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">10</span> <span class="ow">and</span> <span class="mi">27</span> <span class="o">&lt;=</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">&lt;=</span> <span class="mi">31</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">and</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
@@ -334,7 +333,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<span class="n">LOGIN_THEMES</span> <span class="o">=</span> <span class="p">{</span>
+<span class="n">GLOBAL_THEMES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;snow&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/snow/snow.js&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/snow/snow.css&quot;</span><span class="p">},</span>
     <span class="s2">&quot;piday&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/piday/piday.js&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/piday/piday.css&quot;</span><span class="p">},</span>
     <span class="s2">&quot;halloween&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;js&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/halloween/halloween.js&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">:</span> <span class="s2">&quot;themes/halloween/halloween.css&quot;</span><span class="p">},</span>
@@ -343,7 +342,7 @@
 
 <div class="viewcode-block" id="get_theme"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_theme">[docs]</a><span class="k">def</span> <span class="nf">get_theme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;Load a custom login theme (e.g. snow)&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">LOGIN_THEMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">get_theme_name</span><span class="p">(),</span> <span class="p">{})</span></div>
+    <span class="k">return</span> <span class="n">GLOBAL_THEMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">get_theme_name</span><span class="p">(),</span> <span class="p">{})</span></div>
 
 
 <div class="viewcode-block" id="dark_mode_enabled"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.dark_mode_enabled">[docs]</a><span class="k">def</span> <span class="nf">dark_mode_enabled</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
