@@ -1,9 +1,41 @@
 {% extends "oauth2_provider/base.html" %}
 
 {% load i18n %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        {# Get token id #}
+        let url = window.location.href.split('/');
+        if(url[url.length - 1] == '') {
+            url.pop();
+        }
+        let token = url[url.length - 2];
+        $(function() {
+            $('#confirm-message').append('<b>' + token + '</b>?');
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
-    <form action="" method="post">{% csrf_token %}
-        <p>{% trans "Are you sure you want to delete this token?" %}</p>
-        <input type="submit" value="{% trans "Delete" %}">
+<a href="/oauth/authorized_tokens" class="back-button button">
+    <i class="fas fa-arrow-left"></i> Cancel
+</a>
+
+<div class="block-center">
+    <h3 class="block-center-heading">{% trans "Delete Token" %}</h3>
+    <hr noshade>
+    <form action="" method="post">
+        {% csrf_token %}
+        <center id="confirm-message" style="font-size: 11pt">
+            {% trans "Are you sure you want to delete token " %}
+        </center>
+        <br>
+        <div class="control-group" style="text-align: center">
+            <div class="controls">
+                <button type="submit" style="color: red" value="{% trans "Delete" %}"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
+            </div>
+        </div>
     </form>
+</div>
 {% endblock %}
