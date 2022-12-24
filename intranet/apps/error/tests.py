@@ -20,7 +20,7 @@ class ErrorPageTest(IonTestCase):
         with self.settings(MAINTENANCE_MODE=True):
             resp = self.client.get(reverse("login"))
             self.assertEqual(resp.status_code, 503)
-            self.assertIn(b"This site is currently undergoing maintenance", resp.content)
+            self.assertIn(b"Ion is currently undergoing maintenance", resp.content)
 
     def test_csrf_page(self):
         csrf_client = Client(enforce_csrf_checks=True)
