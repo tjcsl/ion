@@ -210,11 +210,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     # See Website model for websites
 
     user_locked = models.BooleanField(default=False)
+    oauth_and_api_access = models.BooleanField(default=True, help_text="Whether the user can create OAuth applications and access the API.")
 
     # Local internal fields
-    first_login = models.DateTimeField(null=True)
+    first_login = models.DateTimeField(null=True, blank=True)
     seen_welcome = models.BooleanField(default=False)
-    last_global_logout_time = models.DateTimeField(null=True)
+    last_global_logout_time = models.DateTimeField(null=True, blank=True)
 
     # Local preference fields
     receive_news_emails = models.BooleanField(default=True)
@@ -222,20 +223,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     receive_schedule_notifications = models.BooleanField(default=False)
 
-    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH, unique=True, null=True)
+    student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH, unique=True, null=True, blank=True)
     user_type = models.CharField(max_length=30, choices=USER_TYPES, default="student")
     admin_comments = models.TextField(blank=True, null=True)
-    counselor = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="students", null=True)
-    graduation_year = models.IntegerField(null=True)
+    counselor = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="students", null=True, blank=True)
+    graduation_year = models.IntegerField(null=True, blank=True)
     title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
     first_name = models.CharField(max_length=35, null=True)
-    middle_name = models.CharField(max_length=70, null=True)
+    middle_name = models.CharField(max_length=70, null=True, blank=True)
     last_name = models.CharField(max_length=70, null=True)
-    nickname = models.CharField(max_length=35, null=True)
+    nickname = models.CharField(max_length=35, null=True, blank=True)
     gender = models.CharField(max_length=35, choices=GENDER, null=True, blank=True)
     preferred_photo = models.OneToOneField("Photo", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     primary_email = models.OneToOneField("Email", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
-    bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True)
+    bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
@@ -500,7 +501,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Returns the grade of a user.
 
         Returns:
-            A Grade object representing the uset's current grade.
+            A Grade object representing the user's current grade.
 
         """
         return Grade(self.graduation_year)

@@ -41,9 +41,9 @@ def edit_profile_view(request, user_id=None):
             # user.properties.address = address_form.save()
             # user.properties.save()
             user.save()
-            messages.success(request, "Successfully updated student profile.")
+            messages.success(request, "Successfully updated user profile.")
         else:
-            messages.error(request, "An error occurred updating the student profile.")
+            messages.error(request, "An error occurred updating user profile.")
     else:
         user_form = ProfileEditForm(initial={"counselor_id": "" if not user.counselor else user.counselor.id}, instance=user)
         # address_form = AddressForm(instance=user.properties.address)
