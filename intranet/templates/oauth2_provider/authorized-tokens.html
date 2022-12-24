@@ -1,29 +1,311 @@
 {% extends "oauth2_provider/base.html" %}
 
 {% load i18n %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+        ol {
+            list-style: number;
+            font-size: 14pt;
+            margin-left: 20px;
+        }
+
+        ul {
+            font-size: 10pt;
+        }
+
+        .fa-trash-alt {
+            color: red;
+        }
+
+        .applications-list-nav {
+            font-size: 12pt;
+            position: absolute;
+            left: -240px;
+            top: 235px;
+        }
+
+        .ul-tokens {
+            list-style: none;
+            margin-left: -30px;
+        }
+
+        .ul-scopes {
+            list-style: circle;
+        }
+
+        .ul-application-info {
+            margin-left: -15px;
+        }
+
+        .fa-info-circle {
+            color: #036bfc;
+            cursor: pointer;
+        }
+
+        #expand-collapse-all {
+            color: #036bfc;
+            cursor: pointer;
+        }
+
+        .token-info {
+            margin-left: 2px;
+        }
+
+        .expired-info {
+            margin-left: 7px;
+        }
+
+        .blur {
+            filter: blur(3px);
+        }
+
+        .eye {
+            cursor: pointer;
+        }
+
+        .green {
+            color: green;
+            font-weight: bold;
+        }
+
+        .mono {
+            font-family: monospace;
+            padding: 0px 2px;
+            color: black;
+            {% if dark_mode_enabled %}
+            color: white;
+            {% endif %}
+        }
+
+        {% if not "oauth-tokens-enable-developer-info" in request.COOKIES %}
+        .fa-trash-alt {
+            margin-left: 2px;
+        }
+        {% endif %}
+
+        @media(max-width: 1080px) {
+            .applications-list-nav {
+                position: initial;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        $(function() {
+            $(".ul-token-info").hide();
+            $(".ul-application-info").hide();
+
+            if(document.cookie.includes("oauth-tokens-enable-developer-info")) {
+                $(".enable-disable-dev-mode").text("Disable developer mode");
+            }
+
+            $(".token-info").click(function() {
+                $(this).parent().find(".ul-token-info").slideToggle("fast");
+            });
+
+            $(".application-info").click(function() {
+                $(this).parent().find(".ul-application-info").slideToggle("fast");
+            });
+
+            $("#expand-collapse-all").click(function() {
+                $('.ul-token-info, .ul-application-info').slideToggle("fast");
+                $(this).toggleClass("fa-plus fa-minus");
+            });
+
+            $(".enable-disable-dev-mode").click(function() {
+                if(document.cookie.includes("oauth-tokens-enable-developer-info")) {
+                    document.cookie = "oauth-tokens-enable-developer-info=false; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                }
+                else {
+                    document.cookie = "oauth-tokens-enable-developer-info=true; path=/;";
+                }
+            });
+
+            $(".application-name").click(function() {
+                let link = $(this).attr("href");
+                if(link != undefined && link != "" && !$(this).hasClass("is-sanctioned")) {
+                    let open = confirm("External Link Notice\nThis will open the application (" + link + ") in a new tab. This application is not sanctioned by Ion. Are you sure you want to continue?");
+                    if(open) {
+                        {# For some reason this stops browsers from blocking a "pop-up"? Even though it*s just a link? #}
+                        window.open(link, "_blank");
+                    }
+                    return false;
+                }
+            })
+
+            $(".application-name").each(function(i) {
+                {# Add to application list #}
+                $(".applications-list-nav").append("<li><a href='#application-" + parseInt(i+1) + "'>" + $(this).text() + "</a></li>");
+
+                {# Process multiple redirect_uris by taking the first one then set the URL to only the domain name #}
+                let urlParts = $(this).attr("href").split("\n")[0].split(" ")[0].split("/");
+
+                {# If no redirect_uris #}
+                if(urlParts.length > 2) {
+                    $(this).attr("href", urlParts[0] + "\/\/" + urlParts[2]);
+                }
+                else {
+                    $(this).removeAttr("href");
+                }
+            });
+
+            $(".eye").click(function() {
+                $(this).parent().find(".mono").toggleClass("blur");
+                $(this).toggleClass("fa-eye fa-eye-slash");
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
-    <div class="block-center">
-    <h1>{% trans "Tokens" %}</h1>
-        <ul>
-        {% for application, authorized_tokens in applications_tokens %}
-            <li>{{ application }}
-                <ul>
-                {% for authorized_token in authorized_tokens %}
-                    <li>
-                        Token #{{ authorized_token.id }}
-                        (<a href="{% url 'oauth2_provider:authorized-token-delete' authorized_token.pk %}">revoke</a>)
-                        <ul>
-                        {% for scope_name, scope_description in authorized_token.scopes.items %}
-                            <li>{{ scope_name }}: {{ scope_description }}</li>
-                        {% endfor %}
+{% if "oauth-tokens-enable-developer-info" in request.COOKIES and request.user.oauth_and_api_access %}
+    {# Make dev_enabled truthy #}
+    {% now "Y" as dev_enabled %}
+{% endif %}
+
+<a href="/oauth/applications" class="back-button button">
+    <i class="fas fa-arrow-left"></i> Back
+</a>
+
+<div class="block-center">
+<h3 class="block-center-heading">{% trans "Authorized Applications and Tokens" %}</h3>
+<center>
+    Click on the <i class="far fa-trash-alt"></i> Delete icon next to any active access token to revoke it.
+    You should only do this when you no longer wish for an application to have access to your account;
+    you may need to re-authorize the application next time you use it.
+    Expired tokens cannot access your account and will be automatically deleted.
+    Report abuse to <a href="mailto:intranet@tjhsst.edu">intranet@tjhsst.edu</a>.
+
+    {% if request.user.oauth_and_api_access %}
+    <br>
+    <i class="fas fa-info-circle" title="Show additional information for Ion OAuth developers"></i>
+    <a class="enable-disable-dev-mode" href="">
+        Enable developer info
+    </a>
+    {% endif %}
+</center>
+<hr noshade>
+    <ol class="applications-list-nav">
+        <center style="font-size: 14pt; margin-left: -17px;">Authorized Applications</center>
+    </ol>
+
+    <ol>
+    <center>
+        Authorized Tokens
+        {% if dev_enabled %}
+            <i class="fas fa-plus" id="expand-collapse-all" title="Expand/Collapse all"></i>
+        {% endif %}
+    </center>
+
+    {% for application, authorized_tokens in applications_tokens reversed %}
+    {# reverse the for loop to access the most recently added applications first #}
+        <li id="application-{{ forloop.counter }}">
+            <a href="{{ application.redirect_uris|escape }}" target="_blank" class="application-name {% if application.sanctioned %}is-sanctioned{% endif %}">{{ application|escape }}</a>
+            {# Ensure fields are escaped just to be safe because values are being processed by javascript#}
+
+            {% if dev_enabled %}
+            &nbsp;<i class="fas fa-info-circle application-info" title="Application details"></i>
+            <ul class="ul-application-info">
+                <li>Application ID: {{ application.id }}</li>
+                <li>
+                    Client ID:
+                    <span class="mono blur">{{ application.client_id|slice:8 }}****</span>
+                    <i class="fas fa-solid fa-eye-slash eye" title="Show/hide client ID"></i>
+                </li>
+                <li>
+                    Trusted by Ion:
+                    {% if application.sanctioned %}
+                        <span class="green">yes
+                            <i class="fas fa-user-check"></i>
+                        </span>
+                    {% else %}
+                        no
+                    {% endif %}
+                </li>
+                <li>Client type: {{ application.client_type }}</li>
+                <li>Grant type: {{ application.authorization_grant_type }}</li>
+            </ul>
+            {% endif %}
+
+            <ul class="ul-tokens">
+            {% for authorized_token in authorized_tokens reversed %}
+                {# reverse the for loop to access the most recently added tokens first #}
+                <li>
+                    <b>Token {{ authorized_token.id }}</b>:
+                    Created {{ authorized_token.created|date:"M d, Y, h:i A" }} -
+
+                    {% if authorized_token.is_expired %}
+                        <span class="expired">
+                            Expired {{ authorized_token.expires|date:"M d, Y, h:i A" }}
+                        </span>
+                        {% if dev_enabled %}
+                            <i class="fas fa-info-circle token-info expired-info" title="Token details"></i>
+                        {% endif %}
+                    {% else %}
+                        <span class="green">
+                            Expires {{ authorized_token.expires|date:"M d, Y, h:i A" }}
+                        </span>
+                        {% if dev_enabled %}
+                            <i class="fas fa-info-circle token-info" title="Token details"></i>
+                        {% endif %}
+                        <a href="{% url 'oauth2_provider:authorized-token-delete' authorized_token.pk %}">
+                            <i class="far fa-trash-alt" title="Delete token"></i>
+                        </a>
+                    {% endif %}
+
+                    {% if dev_enabled%}
+                    <ul class="ul-token-info">
+                        <li>
+                            Access token:
+                            <span class="mono blur">{{ authorized_token.token|slice:6 }}****</span>
+                            <i class="fas fa-solid fa-eye-slash eye" title="Show/hide access token"></i>
+                        </li>
+                        <li>
+                            Refresh token:
+                            <span class="mono blur">{{ authorized_token.refresh_token.token|slice:6 }}****</span>
+                            <i class="fas fa-solid fa-eye-slash eye" title="Show/hide refresh token"></i>
+                        </li>
+                        <li>
+                            Granted from refresh token:
+                            {% if authorized_token.source_refresh_token %}
+                                <span class="green">yes: </span>
+                                <span class="mono blur">{{ authorized_token.source_refresh_token.token|slice:6 }}****</span>
+                                <i class="fas fa-solid fa-eye-slash eye" title="Show/hide source refresh token"></i>
+                            {% else %}
+                                no
+                            {% endif %}
+                        </li>
+                        <li>
+                            Valid:
+                            {% if authorized_token.is_valid %}
+                                <span class="green">yes</span>
+                            {% else %}
+                                no
+                            {% endif %}
+                        </li>
+                        <li>Scopes:</li>
+                        <ul class="ul-scopes">
+                            {% for scope_name, scope_description in authorized_token.scopes.items %}
+                                <li>{{ scope_name }}: {{ scope_description }}</li>
+                            {% endfor %}
                         </ul>
-                    </li>
-                {% endfor %}
-                </ul>
-            </li>
+                    </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
         {% empty %}
-            <li>{% trans "There are no authorized tokens yet." %}</li>
+            <center>
+                {% trans "You have not authorized any OAuth applications." %}
+            </center>
         {% endfor %}
-        </ul>
-    </div>
+    </ol>
+    <br>
+</div>
 {% endblock %}
