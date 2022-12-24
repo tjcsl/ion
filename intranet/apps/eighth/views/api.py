@@ -19,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 class IsAuthenticatedOrClientCredentials(permissions.BasePermission):
     def has_permission(self, request, view):
-        return bool((request.user and request.user.is_authenticated and not request.user.is_restricted) or request.auth)
+        return bool(
+            (request.user and request.user.is_authenticated and not request.user.is_restricted and request.user.oauth_and_api_access) or request.auth
+        )
 
 
 class EighthActivityList(generics.ListAPIView):
@@ -91,6 +93,7 @@ class EighthBlockDetail(views.APIView):
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
     queryset = EighthSignup.objects.all().order_by("id")
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def is_valid_date(self, date_text):
         try:
@@ -169,6 +172,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
     serializer_class = EighthToggleFavoriteSerializer
     queryset = EighthActivity.undeleted_objects.all()
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -204,6 +208,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
 class EighthUserFavoritesAdd(generics.CreateAPIView):
     serializer_class = EighthActivityDetailSerializer
     queryset = EighthActivity.undeleted_objects.all()
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -229,6 +234,7 @@ class EighthUserFavoritesAdd(generics.CreateAPIView):
 class EighthUserFavoritesRemove(generics.ListCreateAPIView):
     serializer_class = EighthActivityListSerializer
     queryset = EighthActivity.undeleted_objects.all()
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -260,6 +266,8 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
 class EighthScheduledActivitySignupList(views.APIView):
     """API endpoint that lists all signups for a certain scheduled activity."""
 
+    permission_classes = (IsAuthenticatedOrClientCredentials,)
+
     def get(self, request, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
         serializer = EighthScheduledActivitySerializer(scheduled_activity, context={"request": request})
@@ -272,3 +280,4 @@ class EighthSignupDetail(generics.RetrieveAPIView):
 
     queryset = EighthSignup.objects.all()
     serializer_class = EighthSignupSerializer
+    permission_classes = (IsAuthenticatedOrClientCredentials,)

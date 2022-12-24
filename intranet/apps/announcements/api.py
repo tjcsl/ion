@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 class IsAnnouncementAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        return (request.user and request.user.is_authenticated and not request.user.is_restricted or request.auth) and (
-            request.method in permissions.SAFE_METHODS or request.user and request.user.is_announcements_admin
-        )
+        return (
+            request.user and request.user.is_authenticated and not request.user.is_restricted and request.user.oauth_and_api_access or request.auth
+        ) and (request.method in permissions.SAFE_METHODS or request.user and request.user.is_announcements_admin)
 
 
 class ListCreateAnnouncement(generics.ListCreateAPIView):

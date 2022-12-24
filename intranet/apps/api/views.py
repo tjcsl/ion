@@ -14,15 +14,32 @@ def perma_reverse(request, view, *args, **kwargs):
 @api_view(("GET",))
 @permission_classes((AllowAny,))
 def api_root(request, format=None):  # pylint: disable=redefined-builtin,unused-argument; It doesn't appear we can change this keyword argument name
-    r"""Welcome to the Ion API!
+    """
+    Welcome to the Ion API!
 
     Documentation is below. <pk> refers to the unique id of a certain object - this is shown as "id" in most lists and references.
-
-    The general form of the api link (with /api/ assumed to be prepended) is shown, along with an example URL.
-
+    The general form of the API link (with /api/ assumed to be prepended) is shown, along with an example URL.
     All of the API methods, except for those relating to the Bell Schedule, require authentication.
 
+    Use of the Ion API is subject to the TJHSST Intranet API and OAuth Acceptable Use Policy,\
+    which can be found at https://ion.tjhsst.edu/docs/api-oauth-aup.\
+    Activity inconsistent with the AUP may result in revocation of API and/or OAuth access.\
+    All API activity is logged and monitored, and may be used to identify and investigate violations of the AUP.
+
     """
+    if request.user and request.user.is_authenticated and not request.user.oauth_and_api_access:
+        return Response(
+            {
+                "detail": (
+                    "You are not authorized to access the API. "
+                    "You may have violated the TJHSST Intranet API and OAuth Acceptable Use Policy, "
+                    "which can be found at https://ion.tjhsst.edu/docs/api-oauth-aup. "
+                    "Attempts to circumvent this restriction will result in disciplinary action. "
+                    "Contact intranet@tjhsst.edu for more information. "
+                )
+            },
+            status=403,
+        )
 
     views = OrderedDict(
         (
