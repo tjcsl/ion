@@ -4,14 +4,13 @@ import logging
 import os
 import re
 
-from oauth2_provider.models import Application
-
 from django.conf import settings
 from django.urls import Resolver404, resolve
 from django.utils import timezone
 
 from intranet.apps.cslapps.models import App
 from intranet.apps.notifications.models import NotificationConfig
+from intranet.apps.oauth.models import CSLApplication
 
 from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_name
 from .schedule.models import Day
@@ -196,7 +195,7 @@ def oauth_toolkit(request):
             if resolve_match.namespaces == ["oauth2_provider"] and resolve_match.url_name == "authorized-token-list":
                 applications_tokens = [
                     (application, application.accesstoken_set.filter(user=request.user))
-                    for application in Application.objects.filter(accesstoken__user=request.user).distinct()
+                    for application in CSLApplication.objects.filter(accesstoken__user=request.user).distinct()
                 ]
                 return {"applications_tokens": applications_tokens}
 
