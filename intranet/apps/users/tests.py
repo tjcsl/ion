@@ -542,11 +542,6 @@ class ProfileTest(IonTestCase):
         # Get data for ourself.
         response = self.client.get(reverse("api_user_myprofile_detail"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)
-        address = self.user.properties._address  # pylint: disable=protected-access
-        self.assertEqual(response.json()["address"]["postal_code"], address.postal_code)
-        self.assertEqual(response.json()["address"]["street"], address.street)
-        self.assertEqual(response.json()["address"]["city"], address.city)
-        self.assertEqual(response.json()["address"]["state"], address.state)
 
         # Verify that response is the same
         response_with_username = self.client.get(

@@ -39,7 +39,21 @@ class ProfileDetail(generics.RetrieveAPIView):
         if request.user.is_restricted and user != request.user:
             raise get_user_model().DoesNotExist
 
-        return Response(self.get_serializer(user).data)
+        # Remove sensitive information
+        data = self.get_serializer(user).data
+        fields_to_remove = [
+            "middle_name",
+            "absences",
+            "address",
+            "emails",
+            "phones",
+            "websites",
+            "is_announcements_admin",
+        ]
+        for field in fields_to_remove:
+            data.pop(field)
+
+        return Response(data)
 
 
 class ProfilePictureDetail(generics.RetrieveAPIView):
