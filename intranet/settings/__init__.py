@@ -559,8 +559,16 @@ OAUTH2_PROVIDER = {
     # OAuth refresh tokens expire in 30 days
     "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
     "PKCE_REQUIRED": False,
+    # Custom Django admin class
+    "APPLICATION_ADMIN_CLASS": "intranet.apps.oauth.admin.CSLApplicationAdmin",
+    # Controls whether the user is prompted to authorize the OAuth application every time
+    # Default is 'force', which always prompts the user
+    # 'auto' will only prompt the user the first time
+    # See https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html#request-approval-prompt
+    # "REQUEST_APPROVAL_PROMPT": "auto",
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
+
 
 INSTALLED_APPS = [
     # internal Django
