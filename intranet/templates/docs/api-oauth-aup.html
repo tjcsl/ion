@@ -1,0 +1,242 @@
+{% extends "page_base.html" %}
+
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - API and OAuth Acceptable Use Policy
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'page_base' %}
+    {% stylesheet 'login' %}
+    {% stylesheet 'about' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/login' %}
+        {% stylesheet 'dark/about' %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+{% if request.user.is_authenticated %}
+<ul class="nav dashboard-link" style="position: absolute">
+  <li>
+    <a href="{% url 'index' %}">
+      <i class="fas fa-arrow-left fa-2x"></i>
+      Dashboard
+    </a>
+  </li>
+</ul>
+{% else %}
+<ul class="nav login-link" style="position: absolute">
+  <li>
+    <a href="{% url 'index' %}">
+      <i class="fas fa-arrow-left fa-2x"></i>
+      Login
+    </a>
+  </li>
+</ul>
+{% endif %}
+
+<div class="center-wrapper" style="z-index: -1">
+  <div class="logo"></div>
+  <center style="font-size: 20pt">
+    Ion API and OAuth
+    <br />
+    <b>Acceptable Use Policy</b>
+  </center>
+</div>
+
+<div class="aup">
+  <hr noshade />
+  {# Begin text #}
+
+  <h3>Overview</h3>
+  This Acceptable Use Policy ("AUP") governs your use of the TJHSST Intranet API
+  and OAuth Services. By using the Services, you agree to comply with this AUP
+  and understand violations of this AUP may result in disciplinary and/or legal
+  consequences to include suspension or termination of your access to the
+  Services.
+  <hr />
+
+  <h2 style="display: block; text-align: center">
+    TJHSST Intranet API and OAuth Services Acceptable Use Policy
+  </h2>
+
+  <h3>1. Purpose</h3>
+  The TJHSST Intranet Application Programming Interface ("API") and Open
+  Authorization ("OAuth") services (collectively, the “Services”) are provided
+  by the Thomas Jefferson High School for Science and Technology (“TJHSST”)
+  Intranet to enable authorized users to access and use Intranet resources.
+  <br /><br />
+
+  <h3>2. Accessing the Services</h3>
+  Access to the Services is a privilege restricted to authorized users and may
+  be revoked at any time by the Intranet Development Team, the TJHSST Computer
+  Systems Lab ("CSL") Systems Administrators ("Sysadmins"), or the Sysadmin
+  Faculty Sponsor. The following web pages may be used to access the Services:
+  <ul>
+    <li>
+      The API may be accessed at
+      <a href="https://ion.tjhsst.edu/api" target="_blank">
+        https://ion.tjhsst.edu/api </a
+      >.
+    </li>
+    <li>
+      The OAuth interface may be accessed at
+      <a href="https://ion.tjhsst.edu/oauth" target="_blank">
+        https://ion.tjhsst.edu/oauth </a
+      >.
+    </li>
+  </ul>
+  <br />
+
+  <h3>3. Acceptable Use</h3>
+  The following policies apply to the use of the Services:
+  <ol type="a" style="list-style: lower-alpha; margin-left: 25px">
+    <li>
+      All use of the Services must further the educational mission of TJHSST.
+    </li>
+    <li>The Services may only be used by current TJHSST students and staff.</li>
+    <li>
+      The Services may only be used for the purpose of developing applications
+      that are intended to be used by TJHSST students and staff.
+    </li>
+    <li>
+      All use of the Services must promote the use of the Intranet web
+      application, located at
+      <a target="_blank" href="https://ion.tjhsst.edu">https://ion.tjhsst.edu</a
+      >, as the primary means of accessing Intranet resources.
+    </li>
+  </ol>
+  <br />
+
+  <h3>4. Prohibited Use</h3>
+  The following activities are strictly prohibited and may result in
+  disciplinary or legal consequences including suspension or termination of
+  access to the Services:
+  <ol type="a" style="list-style: lower-alpha; margin-left: 25px">
+    <li>
+      Accessing or attempting to access any CSL or Intranet resource without
+      appropriate and intended authorization.
+    </li>
+    <li>
+      Accessing or attempting to access another user's CSL or Intranet account
+      without appropriate and intended authorization.
+    </li>
+    <li>
+      Storing or transmitting data that contains sensitive credentials
+      including, but not limited to, passwords and access tokens, on or to any
+      machine or remote server other than the authenticating user's device or
+      CSL servers.
+    </li>
+    <li>
+      Storing or transmitting unencrypted data that contains sensitive
+      credentials including, but not limited to, passwords and access tokens, on
+      or to any machine or remote server including the authenticating user's
+      device and CSL servers.
+    </li>
+    <li>
+      Sharing or transmitting data that contains sensitive credentials
+      including, but not limited to, passwords and access tokens, to any third
+      party.
+    </li>
+    <li>
+      Sharing or transmitting data that contains sensitive OAuth application
+      credentials including, but not limited to client secrets, to any third
+      party other than authorized members of the OAuth application's development
+      team.
+    </li>
+    <li>
+      Providing access to the Services to any third party other than yourself.
+    </li>
+    <li>
+      Engaging in any activity that is intended to damage, disable, overburden,
+      or impair the Services or any other Intranet or CSL service.
+    </li>
+    <li>
+      Developing any application intended to replace in whole or part the
+      Intranet web application.
+    </li>
+    <li>
+      Engaging in any activity that may lend to your OAuth or API application
+      the impression that it is endorsed by TJHSST, FCPS, the Intranet
+      Development Team, the CSL, or the Sysadmins, unless your application is
+      officially endorsed by such applicable entity and you have received
+      written permission to use the applicable entity's name.
+    </li>
+    <li>
+      Engaging in any activity that violates any applicable TJHSST or Fairfax
+      County Public Schools ("FCPS") policies.
+    </li>
+    <li>
+      Engaging in any activity that is intended to violate or circumvent any
+      part of this AUP or violate or circumvent any part of this AUP on behalf
+      of another party.
+    </li>
+    <li>
+      Engaging in any activity that violates any applicable local, state, or
+      federal laws or regulations.
+    </li>
+    <li>
+      Developing any application that uses the Services and is intended for
+      commercial use.
+    </li>
+    <li>
+      Distributing or transmitting any material that is unlawful, harassing,
+      libelous, defamatory, obscene, or otherwise objectionable while using the
+      Services.
+    </li>
+    <li>
+      Distributing or transmitting any material that contains a virus or other
+      harmful component while using the Services.
+    </li>
+    <li>
+      Engaging in any activity that infringes upon the intellectual property
+      rights of any third party while using the Services.
+    </li>
+    <li>
+      Engaging in any activity that violates the privacy of any user or third
+      party while using the Services.
+    </li>
+  </ol>
+  <br />
+
+  <h3>4. Compliance</h3>
+  The Intranet Development Team reserves the right to monitor use of the
+  Services and to investigate any suspected violations of this AUP. The Intranet
+  Development Team may take any action it deems necessary to protect the
+  Services and other Intranet and CSL resources, including but not limited to
+  suspending or terminating access to the Services and pursuing disciplinary or
+  legal action. Attempts to circumvent any part of this AUP after a violation
+  has been identified will result in additional disciplinary or legal
+  consequences. Limited exceptions to the AUP may be considered on a
+  case-by-case basis when the Intranet Development Team, at its sole discretion,
+  judges that it is in the best interests of TJHSST, FCPS, or the CSL to do so.
+  Policy exceptions must be approved by the Intranet Lead and Sysadmin Faculty
+  Sponsor and may be revoked at any time.
+  <br /><br />
+
+  <h3>5. Disclaimer</h3>
+  The Services are provided "AS IS", without warranty of any kind, express or
+  implied, including but not limited to the warranties of merchantability,
+  fitness for a particular purpose and noninfringement. In no event shall
+  TJHSST, FCPS, the CSL, the Intranet Development Team, or the Sysadmins be
+  liable for any claim, damages or other liability, whether in an action of
+  contract, tort or otherwise, arising from, out of or in connection with use or
+  other dealings in the Services.
+
+  {# End text #}
+  <br />
+  <hr />
+  <small style="font-size: 10pt">
+    Version 1.0 &nbsp; - &nbsp; Effective January 1, 2023
+  </small>
+  <br /><br />
+</div>
+{% endblock %}
