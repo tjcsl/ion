@@ -4,11 +4,11 @@ from django.urls import include, re_path
 from django.views.generic.base import RedirectView, TemplateView
 
 from intranet.apps.error.views import handle_404_view, handle_500_view, handle_503_view
-from intranet.apps.oauth.views import ApplicationUpdateView
+from intranet.apps.oauth.views import ApplicationDeleteView, ApplicationRegistrationView, ApplicationUpdateView
 
 admin.autodiscover()
 
-admin.site.site_header = "Ion administration"  # type: ignore
+admin.site.site_header = "Ion Administration"  # type: ignore
 
 urlpatterns = [
     re_path(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
@@ -44,6 +44,8 @@ urlpatterns = [
     # FIXME: update when admin supports django 1.10+ properly
     re_path(r"^djangoadmin/", admin.site.urls),
     re_path(r"^oauth/applications/(?P<pk>\d+)/update/$", ApplicationUpdateView.as_view()),
+    re_path(r"^oauth/applications/(?P<pk>\d+)/delete/$", ApplicationDeleteView.as_view()),
+    re_path(r"^oauth/applications/register/$", ApplicationRegistrationView.as_view()),
     re_path(r"^oauth/", include(("oauth2_provider.urls", "oauth2_provider"))),
     re_path(r"^oauth/$", RedirectView.as_view(url="/oauth/applications/"), name="oauth_redirect"),
     re_path(r"^nominations", include("intranet.apps.nomination.urls")),
@@ -51,6 +53,9 @@ urlpatterns = [
     re_path(r"^features", include("intranet.apps.features.urls", namespace="features")),
     re_path(r"^prometheus/", include("django_prometheus.urls")),
     re_path(r"^docs/accounts$", TemplateView.as_view(template_name="docs/accounts.html", content_type="text/html"), name="docs_accounts"),
+    re_path(
+        r"^docs/api-oauth-aup$", TemplateView.as_view(template_name="docs/api-oauth-aup.html", content_type="text/html"), name="docs_api_oauth_aup"
+    ),
     re_path(r"^docs/terminology$", TemplateView.as_view(template_name="docs/terminology.html", content_type="text/html"), name="docs_terminology"),
     re_path(r"^docs/privacy$", TemplateView.as_view(template_name="docs/privacy.html", content_type="text/html"), name="docs_privacy"),
 ]
