@@ -26,6 +26,7 @@ class UserAdmin(admin.ModelAdmin):
         "is_superuser",
         "user_locked",
         "gender",
+        "oauth_and_api_access",
         "receive_news_emails",
         "receive_eighth_emails",
         "receive_schedule_notifications",

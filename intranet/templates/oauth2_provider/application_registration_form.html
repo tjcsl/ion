@@ -1,9 +1,127 @@
-{% extends "oauth2_provider/application_form.html" %}
+{% extends "oauth2_provider/base.html" %}
 
 {% load i18n %}
+{% load static %}
 
-{% block app-form-title %}{% trans "Register a new application" %}{% endblock app-form-title %}
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    <style>
+        textarea {
+            max-height: 100px;
+        }
+    </style>
+{% endblock %}
 
-{% block app-form-action-url %}{% url 'oauth2_provider:register' %}{% endblock app-form-action-url %}
+{% block js %}
+    {{ block.super }}
+    {% if request.user.oauth_and_api_access %} {# Show unauthorized users as little as possible #}
+        <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+        <script>
+            $(document).ready(function() {
+                let client_type_desc = {
+                    "confidential": "You should select this option if you have a server backend.",
+                    "public": "Select this option if you do not have a server backend to perform authentication."
+                };
 
-{% block app-form-back-url %}{% url "oauth2_provider:list" %}"{% endblock app-form-back-url %}
+                let client_grant_desc = {
+                    "authorization-code": "Your application will redirect the user to Ion to login.",
+                    {% comment "Disabled - see oauth.models.CSLApplication" %}
+                    "implicit": "The application does authentication purely on the client, and there is no server backend.",
+                    "password": "Your application will collect the user's username and password and pass it to Ion.",
+                    "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
+                    {% endcomment %}
+                    "client-credentials": "Your application does not have a user login. Must be confidential type.",
+                };
+
+                $("#id_client_type").selectize({
+                    render: {
+                        option: function(item, esc) {
+                            return "<div><b>" + item.text + "</b>" + (item.value == "confidential" ? " (Recommended)" : "") + "<br>" + client_type_desc[item.value] + "</div>";
+                        }
+                    }
+                });
+                $("#id_authorization_grant_type").selectize({
+                    render: {
+                        option: function(item, esc) {
+                            return "<div><b>" + item.text + "</b>" + (item.value == "authorization-code" ? " (Recommended)" : "") + "<br>" + client_grant_desc[item.value] + "</div>";
+                        }
+                    }
+                });
+
+                $("label[for='id_client_secret']").parent().append("<p>&nbsp; Save the client secret now, as you will not be able to access it again.</p><hr>");
+
+                $("form").submit(function(e) {
+                    if (!$("#accept-aup").is(":checked")) {
+                        alert("You must agree to the Ion API and OAuth Acceptable Use Policy to create an OAuth application.");
+                        return false;
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if request.user.oauth_and_api_access %}
+<a href="/oauth/applications" class="back-button button">
+    <i class="fas fa-arrow-left"></i> Back
+</a>
+
+<div class="block-center">
+    <form class="form-horizontal" method="post" action="{% block app-form-action-url %}{% url 'oauth2_provider:register' %}{% endblock app-form-action-url %}">
+        <h3 class="block-center-heading">
+            {% block app-form-title %}
+                {% trans "Create a New Application" %}
+            {% endblock app-form-title %}
+        </h3>
+
+        {% block app-form-description %}
+            <center>
+                For more information on how to use Ion OAuth, click <a target="_blank" href="https://guides.tjhsst.edu/ion/using-ion-oauth">here</a>.
+            </center>
+            <hr noshade>
+        {% endblock %}
+
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="control-group {% if field.errors %}error{% endif %}">
+                <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="controls">
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <span class="help-inline">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="control-group {% if form.non_field_errors %}error{% endif %}">
+            {% for error in form.non_field_errors %}
+                <span class="help-inline">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="control-group">
+            <hr noshade>
+            <input type="checkbox" id="accept-aup" name="accept-aup" style="position: relative; top: 1px;">
+            <label for="accept-aup">
+                I agree to the <a target="_blank" href="/docs/api-oauth-aup">TJHSST Intranet API and OAuth Acceptable Use Policy</a>.
+                I understand that activity inconsistent with the AUP may result in revocation of my OAuth application and/or API and OAuth privileges.
+                Additionally, I understand that all OAuth activity is logged and monitored, and may be used to identify and investigate violations of the AUP.
+            </label>
+        </div>
+        <br>
+
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-check"></i> Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% else %}
+    <h3 class="block-center-heading">You are not authorized to access this page.</h3>
+{% endif %}
+{% endblock %}

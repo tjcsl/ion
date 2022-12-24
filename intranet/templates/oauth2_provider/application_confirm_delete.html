@@ -2,17 +2,23 @@
 
 {% load i18n %}
 {% block content %}
-    <div class="block-center">
-        <h3 class="block-center-heading">{% trans "Are you sure you want to delete the application" %} {{ application.name }}?</h3>
-        <form method="post" action="{% url 'oauth2_provider:delete' application.pk %}">
-            {% csrf_token %}
+{% if request.user.oauth_and_api_access %}
+<a href="/oauth/applications/{{ application.id }}" class="back-button button">
+    <i class="fas fa-arrow-left"></i> Cancel
+</a>
+<div class="block-center">
+    <h3 class="block-center-heading">{% trans "Are you sure you want to delete the application" %} {{ application.name }}?</h3>
+    <form method="post" action="{% url 'oauth2_provider:delete' application.pk %}">
+        {% csrf_token %}
 
-            <div class="control-group" style="text-align: center">
-                <div class="controls">
-                    <a class="button btn-large" href="{% url "oauth2_provider:list" %}">{% trans "Cancel" %}</a>
-                    <button type="submit" style="color: red" name="allow" value="Delete"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
-                </div>
+        <div class="control-group" style="text-align: center">
+            <div class="controls">
+                <button type="submit" style="color: red" name="allow" value="Delete"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
+{% else %}
+    <h3 class="block-center-heading">You are not authorized to access this page.</h3>
+{% endif %}
 {% endblock content %}
