@@ -10,12 +10,12 @@ class ProfileEditForm(forms.ModelForm):
     GENDERS = (("male", "Male"), ("female", "Female"), ("non-binary", "Non-Binary"))
 
     admin_comments = forms.CharField(label="Admin Comments", widget=forms.Textarea, required=False)
-    student_id = forms.IntegerField(label="FCPS Student ID")
+    student_id = forms.IntegerField(label="FCPS Student ID", required=False)
     first_name = forms.CharField(label="First Name")
     middle_name = forms.CharField(label="Middle Name", required=False)
     last_name = forms.CharField(label="Last Name")
     nickname = forms.CharField(label="Nickname", required=False)
-    graduation_year = forms.IntegerField(label="Graduation Year")
+    graduation_year = forms.IntegerField(label="Graduation Year", required=False)
     gender = forms.ChoiceField(choices=GENDERS, label="Sex (Male, Female, or Non-Binary)")
     counselor_id = forms.IntegerField(label="Counselor ID", required=False)
 
