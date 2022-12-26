@@ -10,6 +10,9 @@
         textarea {
             max-height: 100px;
         }
+        .controls {
+            margin-bottom: 5px;
+        }
     </style>
 {% endblock %}
 
@@ -20,7 +23,7 @@
         <script>
             $(document).ready(function() {
                 let client_type_desc = {
-                    "confidential": "You should select this option if you have a server backend.",
+                    "confidential": "Select this option if you have a server backend that can securely store the client secret.",
                     "public": "Select this option if you do not have a server backend to perform authentication."
                 };
 
@@ -31,7 +34,7 @@
                     "password": "Your application will collect the user's username and password and pass it to Ion.",
                     "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
                     {% endcomment %}
-                    "client-credentials": "Your application does not have a user login. Must be confidential type.",
+                    "client-credentials": "Your application will obtain an access token on its own, not on behalf of a user.",
                 };
 
                 $("#id_client_type").selectize({
@@ -78,7 +81,9 @@
 
         {% for field in form %}
             <div class="control-group {% if field.errors %}error{% endif %}">
-                <label class="control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <label class="control-label" for="{{ field.id_for_label }}">
+                    <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }} {% endif %}
+                </label>
                 <div class="controls">
                     {{ field }}
                     {% for error in field.errors %}

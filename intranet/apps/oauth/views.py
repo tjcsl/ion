@@ -28,12 +28,16 @@ class ApplicationRegistrationView(ApplicationRegistration):
             get_application_model(),
             fields=(
                 "name",
-                "client_id",
-                "client_secret",
                 "client_type",
                 "authorization_grant_type",
                 "redirect_uris",
+                "client_id",
+                "client_secret",
             ),
+            help_texts={
+                "client_secret": "Save this now, as you will not be able to access it again. Keep it secure - it acts as your application's password.",
+                "redirect_uris": "Space or line separated list",
+            },
         )
 
         # make client_id and client_secret read-only
@@ -77,6 +81,9 @@ class ApplicationUpdateView(ApplicationUpdate):
                 "authorization_grant_type",
                 "redirect_uris",
             ),
+            help_texts={
+                "redirect_uris": "Space or line separated list",
+            },
         )
 
     def dispatch(self, request, *args, **kwargs):
