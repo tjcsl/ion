@@ -9,7 +9,10 @@ from .models import BlankModel
 
 class ApplicationRegistrationView(ApplicationRegistration):
     """
-    Custom registration view to disable the algorithm field and check if the user can register applications.
+    Custom registration view.
+    Check that the user has OAuth and API access before allowing them to register an application.
+    Disable showing algorithm field.
+    Disable editing client_id and client_secret fields.
     Note that there are three layers of permission checking: at the template level, form level, and response level.
     This view handles the form and response levels.
     """
@@ -21,7 +24,7 @@ class ApplicationRegistrationView(ApplicationRegistration):
         if not self.request.user.oauth_and_api_access:
             return modelform_factory(BlankModel, fields=())
 
-        return modelform_factory(
+        form = modelform_factory(
             get_application_model(),
             fields=(
                 "name",
@@ -32,6 +35,12 @@ class ApplicationRegistrationView(ApplicationRegistration):
                 "redirect_uris",
             ),
         )
+
+        # make client_id and client_secret read-only
+        form.base_fields["client_id"].widget.attrs["readonly"] = True
+        form.base_fields["client_secret"].widget.attrs["readonly"] = True
+
+        return form
 
     def dispatch(self, request, *args, **kwargs):
         user = request.user
@@ -48,7 +57,10 @@ class ApplicationRegistrationView(ApplicationRegistration):
 
 
 class ApplicationUpdateView(ApplicationUpdate):
-    "Custom update view to disable algorithm and client_secret fields and check if the user can update applications."
+    """
+    Custom update view to disable showing the algorithm, client_id and client_secret fields
+    and check if the user can update applications.
+    """
 
     def get_form_class(self):
         """
@@ -61,7 +73,6 @@ class ApplicationUpdateView(ApplicationUpdate):
             get_application_model(),
             fields=(
                 "name",
-                "client_id",
                 "client_type",
                 "authorization_grant_type",
                 "redirect_uris",
