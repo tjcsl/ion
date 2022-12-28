@@ -10,8 +10,19 @@
         textarea {
             max-height: 100px;
         }
+
         .controls {
             margin-bottom: 5px;
+        }
+
+        .help-inline {
+            color: red;
+        }
+
+        span.copy {
+            cursor: pointer;
+            float: right;
+            color: #2a66e8;
         }
     </style>
 {% endblock %}
@@ -22,19 +33,22 @@
         <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
         <script>
             $(document).ready(function() {
+                {# Add an hr to separate the read-only client id and secret from the fields you have to fill out #}
+                $("#id_client_id").parent().parent().before("<hr noshade>");
+
                 let client_type_desc = {
-                    "confidential": "Select this option if you have a server backend that can securely store the client secret.",
-                    "public": "Select this option if you do not have a server backend to perform authentication."
+                    "confidential": "You have a server backend that can securely store the client secret.",
+                    "public": "You do not have a server backend to perform authentication. Does not use a client secret."
                 };
 
                 let client_grant_desc = {
-                    "authorization-code": "Your application will redirect the user to Ion to login.",
+                    "authorization-code": "Your application will redirect the user to Ion to login. Ion will then redirect the user back to your application with an authorization code. Confidential or public.",
                     {% comment "Disabled - see oauth.models.CSLApplication" %}
                     "implicit": "The application does authentication purely on the client, and there is no server backend.",
                     "password": "Your application will collect the user's username and password and pass it to Ion.",
                     "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
                     {% endcomment %}
-                    "client-credentials": "Your application will obtain an access token on its own, not on behalf of a user.",
+                    "client-credentials": "Your application will obtain an access token on its own, not on behalf of a user. Confidential only.",
                 };
 
                 $("#id_client_type").selectize({
@@ -44,6 +58,7 @@
                         }
                     }
                 });
+
                 $("#id_authorization_grant_type").selectize({
                     render: {
                         option: function(item, esc) {
@@ -52,10 +67,73 @@
                     }
                 });
 
+                {# Initialization #}
+                if(!$("#id_client_type").val()) {
+                    $("#id_client_secret").parent().parent().hide();
+                }
+
+                else if($("#id_client_type").val() == "public") {
+                    $("#id_authorization_grant_type")[0].selectize.removeOption("client-credentials");
+                    $("#id_client_secret").parent().parent().hide();
+                }
+
+                if($("#id_authorization_grant_type").val() != "authorization-code") {
+                    $("#id_redirect_uris").parent().parent().hide();
+                }
+
+                else {
+                    $("#id_redirect_uris").attr("required", "required");
+                }
+
+                {# If client_type is public, hide client_secret and remove the client_credentials option for authorization_grant_type #}
+                $("#id_client_type").change(function() {
+                    if ($("#id_client_type").val() == "public") {
+                        $("#id_client_secret").parent().parent().slideUp();
+                        $("#id_authorization_grant_type")[0].selectize.setValue("authorization-code");
+                        $("#id_authorization_grant_type")[0].selectize.removeOption("client-credentials");
+                    }
+                    else {
+                        $("#id_client_secret").parent().parent().slideDown();
+                        $("#id_authorization_grant_type")[0].selectize.addOption({
+                            value: "client-credentials",
+                            text: "Client credentials"
+                        });
+                    }
+                });
+
+                $("span.copy-click").click(function() {
+                    $(this).parent().parent().next().find("input").select();
+                    document.execCommand("copy");
+
+                    $(this).text("Copied!").parent().css("color", "#00b300");
+                    $(this).prev().toggleClass("fa-copy fa-check");
+
+                    setTimeout(function(el) {
+                        $("span.copy-click").text("Copy").parent().css("color", "");
+                        $("span.copy-click").prev().removeClass("fa-check").addClass("fa-copy");
+                    }, 1500);
+                });
+
+                {# If authorization_grant_type is authorization_code, show redirect_uris #}
+                $("#id_authorization_grant_type").change(function() {
+                    if ($("#id_authorization_grant_type").val() == "authorization-code") {
+                        $("#id_redirect_uris").attr("required", "required").parent().parent().slideDown();
+                    }
+                    else {
+                        $("#id_redirect_uris").removeAttr("required").parent().parent().slideUp();
+                    }
+                });
+
                 $("form").submit(function(e) {
+                    {# Check for AUP confirmation #}
                     if (!$("#accept-aup").is(":checked")) {
                         alert("You must agree to the Ion API and OAuth Acceptable Use Policy to create an OAuth application.");
                         return false;
+                    }
+
+                    {# Clear redirect_uris if authorization_grant_type is client_credentials #}
+                    if (!$("#id_redirect_uris").attr("required")) {
+                        $("#id_redirect_uris").val("");
                     }
                 });
             });
@@ -90,21 +168,28 @@
             <div class="control-group {% if field.errors %}error{% endif %}">
                 <label class="control-label" for="{{ field.id_for_label }}">
                     <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }} {% endif %}
+                    {% if field.label == "Client id" or field.label == "Client secret" %}
+                        <span class="copy">
+                            <i class="fas fa-copy"></i>
+                            <span class="copy-click">Copy</span>
+                        </span>
+                    {% endif %}
                 </label>
                 <div class="controls">
                     {{ field }}
                     {% for error in field.errors %}
                         <span class="help-inline">{{ error }}</span>
                     {% endfor %}
+
+                    {# Place errors (which pretty much happen only with the redirect_uris field anyway) before the client_id and client_secret read-only fields #}
+                    {% if field.label == "Redirect uris" %}
+                        {% for error in form.non_field_errors %}
+                            <span class="help-inline">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
-
-        <div class="control-group {% if form.non_field_errors %}error{% endif %}">
-            {% for error in form.non_field_errors %}
-                <span class="help-inline">{{ error }}</span>
-            {% endfor %}
-        </div>
 
         <div class="control-group">
             <hr noshade>
