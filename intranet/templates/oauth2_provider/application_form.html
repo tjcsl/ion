@@ -13,6 +13,9 @@
         .controls {
             margin-bottom: 5px;
         }
+        .help-inline {
+            color: red;
+        }
     </style>
 {% endblock %}
 
@@ -22,19 +25,27 @@
         <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
         <script>
             $(document).ready(function() {
+                {# Initialization #}
+                if($("#id_authorization_grant_type").val() != "authorization-code") {
+                    $("#id_redirect_uris").parent().parent().hide();
+                }
+                else {
+                    $("#id_redirect_uris").attr("required", "required");
+                }
+
                 let client_type_desc = {
-                    "confidential": "Select this option if you have a server backend that can securely store the client secret.",
-                    "public": "Select this option if you do not have a server backend to perform authentication."
+                    "confidential": "You have a server backend that can securely store the client secret.",
+                    "public": "You do not have a server backend to perform authentication. Does not use a client secret."
                 };
 
                 let client_grant_desc = {
-                    "authorization-code": "Your application will redirect the user to Ion to login.",
+                    "authorization-code": "Your application will redirect the user to Ion to login. Ion will then redirect the user back to your application with an authorization code. Confidential or public.",
                     {% comment "Disabled - see oauth.models.CSLApplication" %}
                     "implicit": "The application does authentication purely on the client, and there is no server backend.",
                     "password": "Your application will collect the user's username and password and pass it to Ion.",
                     "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
                     {% endcomment %}
-                    "client-credentials": "Your application will obtain an access token on its own, not on behalf of a user.",
+                    "client-credentials": "Your application will obtain an access token on its own, not on behalf of a user. Confidential only.",
                 };
 
                 $("#id_client_type").selectize({
@@ -49,6 +60,37 @@
                         option: function(item, esc) {
                             return "<div><b>" + item.text + "</b>" + (item.value == "authorization-code" ? " (Recommended)" : "") + "<br>" + client_grant_desc[item.value] + "</div>";
                         }
+                    }
+                });
+
+                {# if client_type is public, remove the client_credentials option for authorization_grant_type #}
+                $("#id_client_type").change(function() {
+                    if ($("#id_client_type").val() == "public") {
+                        $("#id_authorization_grant_type")[0].selectize.setValue("authorization-code");
+                        $("#id_authorization_grant_type")[0].selectize.removeOption("client-credentials");
+                    }
+                    else {
+                        $("#id_authorization_grant_type")[0].selectize.addOption({
+                            value: "client-credentials",
+                            text: "Client credentials"
+                        });
+                    }
+                });
+
+                {# if authorization_grant_type is authorization_code, show redirect_uris #}
+                $("#id_authorization_grant_type").change(function() {
+                    if ($("#id_authorization_grant_type").val() == "authorization-code") {
+                        $("#id_redirect_uris").attr("required", "required").parent().parent().slideDown();
+                    }
+                    else {
+                        $("#id_redirect_uris").removeAttr("required").parent().parent().slideUp();
+                    }
+                });
+
+                $("form").submit(function(e) {
+                    {# Clear redirect_uris if authorization_grant_type is client_credentials #}
+                    if (!$("#id_redirect_uris").attr("required")) {
+                        $("#id_redirect_uris").val("");
                     }
                 });
             });
@@ -100,6 +142,7 @@
         </div>
 
         <div class="control-group">
+            <hr noshade>
             <div class="controls">
                 <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-check"></i> Save</button>
             </div>
