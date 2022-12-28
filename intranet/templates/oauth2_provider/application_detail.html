@@ -12,8 +12,35 @@
     ul li b:after {
         content: ":";
     }
+
+    span.copy {
+        cursor: pointer;
+        float: right;
+        color: #2a66e8;
+    }
     </style>
 {% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        $(function() {
+            $("span.copy-click").click(function() {
+                $(this).parent().parent().next().select();
+                document.execCommand("copy");
+
+                $(this).text("Copied!").parent().css("color", "#00b300");
+                $(this).prev().toggleClass("fa-copy fa-check");
+
+                setTimeout(function(el) {
+                    $("span.copy-click").text("Copy").parent().css("color", "");
+                    $("span.copy-click").prev().removeClass("fa-check").addClass("fa-copy");
+                }, 1500);
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
 {% if request.user.oauth_and_api_access %}
 <a href="/oauth/applications" class="back-button button">
@@ -22,10 +49,17 @@
 
 <div class="block-center">
     <h3 class="block-center-heading">{{ application.name }}</h3>
+    <hr noshade>
 
     <ul class="unstyled">
         <li>
-            <p><b>{% trans "Client id" %}</b></p>
+            <p>
+                <b>{% trans "Client id" %}</b>
+                <span class="copy">
+                    <i class="fas fa-copy"></i>
+                    <span class="copy-click">Copy</span>
+                </span>
+            </p>
             <input class="input-block-level" type="text" value="{{ application.client_id }}" readonly>
         </li>
 
@@ -35,19 +69,22 @@
         </li>
 
         <li>
-            <p><b>{% trans "Authorization Grant Type" %}</b></p>
+            <p><b>{% trans "Authorization grant type" %}</b></p>
             <p>{{ application.authorization_grant_type }}</p>
         </li>
 
+        {% if application.authorization_grant_type == "authorization-code" %}
         <li>
-            <p><b>{% trans "Redirect Uris" %}</b></p>
+            <p><b>{% trans "Redirect uris" %}</b></p>
             <textarea class="input-block-level" readonly>{{ application.redirect_uris }}</textarea>
         </li>
+        {% endif %}
     </ul>
 
+    <hr noshade>
     <div class="btn-toolbar">
         <div class="pull-right">
-            <a class="button btn-primary" href="{% url "oauth2_provider:update" application.id %}"><i class="fas fa-pencil"></i> {% trans "Edit" %}</a>
+            <a class="button btn-primary" href="{% url "oauth2_provider:update" application.id %}"><i class="fas fa-pencil-alt"></i> {% trans "Edit" %}</a>
             <a class="button" style="color: red" href="{% url "oauth2_provider:delete" application.id %}"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</a>
         </div>
     </div>
