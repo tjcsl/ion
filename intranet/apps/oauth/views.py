@@ -35,7 +35,9 @@ class ApplicationRegistrationView(ApplicationRegistration):
                 "client_secret",
             ),
             help_texts={
-                "client_secret": "Save this now, as you will not be able to access it again. Keep it secure - it acts as your application's password.",
+                "client_secret": (
+                    "Save this now, as you will not be able to access it again. " "Keep it secure - it acts as your application's password."
+                ),
                 "redirect_uris": "Space or line separated list",
             },
         )
