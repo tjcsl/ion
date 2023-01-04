@@ -275,7 +275,7 @@ def reauthentication_view(request):
     return render(request, "auth/reauth.html", context)
 
 
-@login_required
+@sensitive_post_parameters("old_password", "new_password", "new_password_confirm")
 def reset_password_view(request):
     context = {"password_match": True, "unable_to_set": False, "password_expired": request.GET.get("expired", "false").lower() == "true"}
     if request.method == "POST":
