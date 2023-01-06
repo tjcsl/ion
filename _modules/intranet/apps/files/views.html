@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.files.views &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -165,7 +165,7 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">files_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The main filecenter view.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The main filecenter view.&quot;&quot;&quot;</span>
 
     <span class="n">hosts</span> <span class="o">=</span> <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 
@@ -178,9 +178,9 @@
 <span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="s2">&quot;iv&quot;</span><span class="p">,</span> <span class="s2">&quot;ciphertext&quot;</span><span class="p">)</span>
 <span class="nd">@sensitive_post_parameters</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">files_auth</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Display authentication for filecenter.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display authentication for filecenter.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Encrypt the password with AES mode CFB.</span>
 <span class="sd">        Create a random 32 char key, stored in a CLIENT-side cookie.</span>
 <span class="sd">        Create a random 32 char IV, stored in a SERVER-side session.</span>
@@ -218,10 +218,10 @@
 
 <div class="viewcode-block" id="get_authinfo"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.get_authinfo">[docs]</a><span class="nd">@sensitive_variables</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_authinfo</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get authentication info from the encrypted message.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get authentication info from the encrypted message.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;files_iv&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;files_text&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;files_key&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Decrypt the password given the SERVER-side IV, SERVER-side</span>
 <span class="sd">        ciphertext, and CLIENT-side key.</span>
 
@@ -241,7 +241,7 @@
 
 
 <div class="viewcode-block" id="windows_dir_format"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.files.html#intranet.apps.files.views.windows_dir_format">[docs]</a><span class="k">def</span> <span class="nf">windows_dir_format</span><span class="p">(</span><span class="n">host_dir</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Format a string for the location of the user&#39;s folder on the Windows (TJ03) fileserver.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a string for the location of the user&#39;s folder on the Windows (TJ03) fileserver.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">user</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="p">:</span>
         <span class="n">grade</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -257,7 +257,7 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">files_type</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fstype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Do all processing (directory listing, file downloads) for a given filesystem.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Do all processing (directory listing, file downloads) for a given filesystem.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">host</span> <span class="o">=</span> <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="n">fstype</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">Host</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -663,7 +663,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

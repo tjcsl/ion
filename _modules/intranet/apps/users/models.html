@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.users.models &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -157,7 +157,7 @@
 
 
 <div class="viewcode-block" id="UserManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager">[docs]</a><span class="k">class</span> <span class="nc">UserManager</span><span class="p">(</span><span class="n">DjangoUserManager</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;User model Manager for table-level User queries.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;User model Manager for table-level User queries.</span>
 
 <span class="sd">    Provides an abstraction for the User model. If a call</span>
 <span class="sd">    to a method fails for this Manager, the call is deferred to the</span>
@@ -166,14 +166,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="UserManager.user_with_student_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.user_with_student_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_student_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get a unique user object by FCPS student ID. (Ex. 1624472)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a unique user object by FCPS student ID. (Ex. 1624472)&quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">student_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">student_id</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">results</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="UserManager.user_with_ion_id"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.user_with_ion_id">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_ion_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">student_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Get a unique user object by Ion ID. (Ex. 489)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a unique user object by Ion ID. (Ex. 489)&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_entirely_digit</span><span class="p">(</span><span class="n">student_id</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">results</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">student_id</span><span class="p">))</span>
@@ -182,11 +182,11 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="UserManager.users_in_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.users_in_year">[docs]</a>    <span class="k">def</span> <span class="nf">users_in_year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Get a list of users in a specific graduation year.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of users in a specific graduation year.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">graduation_year</span><span class="o">=</span><span class="n">year</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.user_with_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.user_with_name">[docs]</a>    <span class="k">def</span> <span class="nf">user_with_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">given_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">last_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Get a unique user object by given name (first/nickname) and/or last name.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a unique user object by given name (first/nickname) and/or last name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            given_name: If given, users will be filtered to those who have either this first name or this nickname.</span>
@@ -210,14 +210,14 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="UserManager.get_students"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_students">[docs]</a>    <span class="k">def</span> <span class="nf">get_students</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Get user objects that are students (quickly).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get user objects that are students (quickly).&quot;&quot;&quot;</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">graduation_year__gte</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">())</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">users</span></div>
 
 <div class="viewcode-block" id="UserManager.get_teachers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_teachers">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Get user objects that are teachers (quickly).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get user objects that are teachers (quickly).&quot;&quot;&quot;</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">EXTRA</span><span class="p">)</span>
         <span class="c1"># Add possible exceptions handling here</span>
@@ -228,7 +228,7 @@
         <span class="k">return</span> <span class="n">users</span></div>
 
 <div class="viewcode-block" id="UserManager.get_teachers_attendance_users"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_teachers_attendance_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_attendance_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
-        <span class="sd">&quot;&quot;&quot;Like ``get_teachers()``, but includes attendance-only users as well as</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Like ``get_teachers()``, but includes attendance-only users as well as</span>
 <span class="sd">        teachers.</span>
 
 <span class="sd">        Returns:</span>
@@ -245,7 +245,7 @@
         <span class="k">return</span> <span class="n">users</span></div>
 
 <div class="viewcode-block" id="UserManager.get_teachers_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_teachers_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">],</span> <span class="n">QuerySet</span><span class="p">]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of teachers sorted by last name, then first name.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of teachers sorted by last name, then first name.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A ``QuerySet`` of teachers sorted by last name, then first name.</span>
@@ -254,7 +254,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.get_teachers_attendance_users_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_teachers_attendance_users_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_teachers_attendance_users_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by</span>
 <span class="sd">        last name, then first name.</span>
 
 <span class="sd">        Returns:</span>
@@ -264,7 +264,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_teachers_attendance_users</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UserManager.get_approve_announcements_users"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_approve_announcements_users">[docs]</a>    <span class="k">def</span> <span class="nf">get_approve_announcements_users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,</span>
 <span class="sd">        alumni, service users and students.</span>
 
 <span class="sd">        Returns:</span>
@@ -280,7 +280,7 @@
         <span class="k">return</span> <span class="n">users</span></div>
 
 <div class="viewcode-block" id="UserManager.get_approve_announcements_users_sorted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserManager.get_approve_announcements_users_sorted">[docs]</a>    <span class="k">def</span> <span class="nf">get_approve_announcements_users_sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;QuerySet[User]&quot;</span><span class="p">:</span>  <span class="c1"># noqa</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,</span>
 <span class="sd">        alumni, service users and students sorted by last name, then first name.</span>
 
 <span class="sd">        This is used for the announcement request page.</span>
@@ -302,7 +302,7 @@
 
 
 <div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">AbstractBaseUser</span><span class="p">,</span> <span class="n">PermissionsMixin</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Django User model subclass&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Django User model subclass&quot;&quot;&quot;</span>
 
     <span class="n">TITLES</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;Mr.&quot;</span><span class="p">,</span> <span class="s2">&quot;Mr.&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Ms.&quot;</span><span class="p">,</span> <span class="s2">&quot;Ms.&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Mrs.&quot;</span><span class="p">,</span> <span class="s2">&quot;Mrs.&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Dr.&quot;</span><span class="p">,</span> <span class="s2">&quot;Dr.&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Mx.&quot;</span><span class="p">,</span> <span class="s2">&quot;Mx.&quot;</span><span class="p">))</span>
 
@@ -362,13 +362,13 @@
 
     <span class="c1"># Required to replace the default Django User model</span>
     <span class="n">USERNAME_FIELD</span> <span class="o">=</span> <span class="s2">&quot;username&quot;</span>
-    <span class="sd">&quot;&quot;&quot;Override default Model Manager (objects) with</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Override default Model Manager (objects) with</span>
 <span class="sd">    custom UserManager to add table-level functionality.&quot;&quot;&quot;</span>
     <span class="n">objects</span> <span class="o">=</span> <span class="n">UserManager</span><span class="p">()</span>
 
 <div class="viewcode-block" id="User.get_signage_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.get_signage_user">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_signage_user</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;User&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the user used to authenticate signage displays</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the user used to authenticate signage displays</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The user used to authenticate signage displays</span>
@@ -378,7 +378,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Address&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the ``Address`` object representing this user&#39;s address, or ``None`` if it is not</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the ``Address`` object representing this user&#39;s address, or ``None`` if it is not</span>
 <span class="sd">        set or the current user does not have permission to access it.</span>
 
 <span class="sd">        Returns:</span>
@@ -390,7 +390,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">QuerySet</span><span class="p">,</span> <span class="n">Collection</span><span class="p">[</span><span class="s2">&quot;Section&quot;</span><span class="p">]]]:</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
-        <span class="sd">&quot;&quot;&quot;Returns a QuerySet of the ``Section`` objects representing the classes this student is</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a QuerySet of the ``Section`` objects representing the classes this student is</span>
 <span class="sd">        in, or ``None`` if the current user does not have permission to list this student&#39;s classes.</span>
 
 <span class="sd">        Returns:</span>
@@ -402,7 +402,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">schedule</span>
 
 <div class="viewcode-block" id="User.member_of"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.member_of">[docs]</a>    <span class="k">def</span> <span class="nf">member_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Group</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether a user is a member of a certain group.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether a user is a member of a certain group.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            group: Either the name of a group or a ``Group`` object.</span>
@@ -416,7 +416,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span><span class="n">ops</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;exists&quot;</span><span class="p">],</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>  <span class="c1"># pylint: disable=no-member</span></div>
 
 <div class="viewcode-block" id="User.has_admin_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.has_admin_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_admin_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perm</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether a user has an admin permission (explicitly, or implied by being in the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether a user has an admin permission (explicitly, or implied by being in the</span>
 <span class="sd">        &quot;admin_all&quot; group)</span>
 
 <span class="sd">        Args:</span>
@@ -430,7 +430,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
 
 <span class="sd">        This is required for subclasses of User.</span>
 
@@ -442,18 +442,18 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">full_name_nick</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;If the user has a nickname, returns their name in the format &quot;Nickname Lastname.&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the user has a nickname, returns their name in the format &quot;Nickname Lastname.&quot;</span>
 <span class="sd">        Otherwise, this is identical to full_name.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The user&#39;s full name, with their nickname substituted for their first name if it is set.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nickname</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns ``self.full_name``.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns ``self.full_name``.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The user&#39;s full name.</span>
@@ -463,14 +463,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_first</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
 <span class="sd">        Lastname, Firstname [(Nickname)]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot; (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nickname</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">nickname</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_first_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
 <span class="sd">        Lastname, Firstname [(Nickname)] (Student ID/ID/Username)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -481,7 +481,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_first_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a name in the format of:</span>
 <span class="sd">        Lastname, F [(Nickname)]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
@@ -490,7 +490,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return short name (first name) of a user.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return short name (first name) of a user.</span>
 
 <span class="sd">        This is required for subclasses of User.</span>
 
@@ -501,7 +501,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span>
 
 <div class="viewcode-block" id="User.get_full_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.get_full_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return full name, e.g. Angela William.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The user&#39;s full name (see ``full_name``).</span>
@@ -510,7 +510,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_name</span></div>
 
 <div class="viewcode-block" id="User.get_short_name"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.get_short_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_short_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get short (first) name of a user.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get short (first) name of a user.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The user&#39;s first name (see ``short_name`` and ``first_name``).</span>
@@ -527,7 +527,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Get (or guess) a user&#39;s TJ email.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get (or guess) a user&#39;s TJ email.</span>
 
 <span class="sd">        If a fcps.edu or tjhsst.edu email is specified in their email</span>
 <span class="sd">        list, use that. Otherwise, append the user&#39;s username to the</span>
@@ -552,7 +552,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">non_tj_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the user&#39;s first non-TJ email found, or None if none is found.</span>
 
 <span class="sd">        If a user has a primary email set and it is not their TJ email,</span>
@@ -574,7 +574,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">notification_email</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the notification email.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the notification email.</span>
 
 <span class="sd">        If a primary email is set, use it. Otherwise, use the first</span>
 <span class="sd">        email on file. If no email addresses exist, use the user&#39;s</span>
@@ -594,7 +594,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">default_photo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns default photo (in binary) that should be used</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns default photo (in binary) that should be used</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The binary representation of the user&#39;s default photo.</span>
@@ -620,7 +620,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">grade</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Grade&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the grade of a user.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the grade of a user.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A Grade object representing the uset&#39;s current grade.</span>
@@ -630,7 +630,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Dynamically generate dictionary of privacy options.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dynamically generate dictionary of privacy options.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A dictionary mapping the name of each privacy option to a boolean indicating whether it</span>
@@ -647,7 +647,7 @@
         <span class="k">return</span> <span class="n">permissions_dict</span>
 
     <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher or eighth admin, and can view</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher or eighth admin, and can view</span>
 <span class="sd">        all of a student&#39;s information regardless of their privacy settings.</span>
 
 <span class="sd">        Returns:</span>
@@ -671,7 +671,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">ion_username</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns this user&#39;s username.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns this user&#39;s username.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            This user&#39;s username (see ``username``).</span>
@@ -681,7 +681,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">grade_number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the number of the grade this user is currently in (9, 10, 11, or 12 for</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of the grade this user is currently in (9, 10, 11, or 12 for</span>
 <span class="sd">        students).</span>
 
 <span class="sd">        Returns:</span>
@@ -692,7 +692,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sex</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns the gender of this user (male, female, or non-binary).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the gender of this user (male, female, or non-binary).</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The gender of this user (male, female, or non-binary).</span>
@@ -702,7 +702,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_male</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether the user is male.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether the user is male.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is male.</span>
@@ -712,7 +712,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_female</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether the user is female.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether the user is female.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is female.</span>
@@ -722,7 +722,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_nonbinary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether the user is non-binary.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether the user is non-binary.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is non-binary.</span>
@@ -732,7 +732,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">can_view_eighth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if a user has the show_eighth permission.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a user has the show_eighth permission.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user has made their eighth period signups public.</span>
@@ -743,7 +743,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">can_view_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if a user has the show_telephone permission.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a user has the show_telephone permission.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user has made their phone number public.</span>
@@ -754,7 +754,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_eighth_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is an eighth period admin.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is an eighth period admin.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is an eighth period admin.</span>
@@ -765,7 +765,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">has_print_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user has the admin permission &#39;printing&#39;.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user has the admin permission &#39;printing&#39;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a printing administrator.</span>
@@ -776,7 +776,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_parking_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user has the admin permission &#39;parking&#39;.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user has the admin permission &#39;parking&#39;.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a parking administrator.</span>
@@ -787,7 +787,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_bus_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether the user has the ``bus`` admin permission.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether the user has the ``bus`` admin permission.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether the user has the ``bus`` admin permission.</span>
@@ -797,7 +797,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">can_request_parking</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user can view the parking interface.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user can view the parking interface.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user can view the parking interface and request a parking spot.</span>
@@ -807,7 +807,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_announcements_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is an announcements admin.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is an announcements admin.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is an announcement admin.</span>
@@ -818,7 +818,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_schedule_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is a schedule admin.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is a schedule admin.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a schedule admin.</span>
@@ -829,7 +829,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_board_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is a board admin.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is a board admin.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a board admin.</span>
@@ -839,7 +839,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="User.can_manage_group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.can_manage_group">[docs]</a>    <span class="k">def</span> <span class="nf">can_manage_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Group</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks whether this user has permission to edit/manage the given group (either</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether this user has permission to edit/manage the given group (either</span>
 <span class="sd">        a Group or a group name).</span>
 
 <span class="sd">        WARNING: Granting permission to edit/manage &quot;admin_&quot; groups gives that user control</span>
@@ -863,7 +863,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_teacher</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is a teacher.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is a teacher.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a teacher.</span>
@@ -873,7 +873,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_student</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is a student.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is a student.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a student.</span>
@@ -883,7 +883,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_alum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is an alumnus.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is an alumnus.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is an alumnus.</span>
@@ -893,7 +893,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_senior</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is a student in Grade 12.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is a student in Grade 12.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a senior.</span>
@@ -903,7 +903,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_eighthoffice</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is an Eighth Period office user.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is an Eighth Period office user.</span>
 
 <span class="sd">        This is currently hardcoded, but is meant to be used instead</span>
 <span class="sd">        of user.id == 9999 or user.username == &quot;eighthoffice&quot;.</span>
@@ -916,7 +916,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if the user is active.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the user is active.</span>
 
 <span class="sd">        This is currently used to catch invalid logins.</span>
 
@@ -929,7 +929,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user needs the restricted view of Ion</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user needs the restricted view of Ion</span>
 
 <span class="sd">        This applies to users that are user_type &#39;user&#39;, user_type &#39;alum&#39;</span>
 <span class="sd">        or user_type &#39;service&#39;</span>
@@ -943,7 +943,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_staff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if a user should have access to the Django Admin interface.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a user should have access to the Django Admin interface.</span>
 
 <span class="sd">        This has nothing to do with staff at TJ - `is_staff`</span>
 <span class="sd">        has to be overridden to make this a valid user model.</span>
@@ -957,7 +957,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_attendance_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is an attendance-only user.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is an attendance-only user.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is an attendance-only user.</span>
@@ -967,7 +967,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_simple_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if user is a simple user (e.g. eighth office user)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if user is a simple user (e.g. eighth office user)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this user is a simple user (e.g. eighth office user).</span>
@@ -977,7 +977,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">has_senior</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if a ``Senior`` model (see ``intranet.apps.seniors.models.Senior`` exists for the</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a ``Senior`` model (see ``intranet.apps.seniors.models.Senior`` exists for the</span>
 <span class="sd">        current user.</span>
 
 <span class="sd">        Returns:</span>
@@ -993,7 +993,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_attendance_taker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if this user can take attendance for an eighth activity.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if this user can take attendance for an eighth activity.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether this  user can take attendance for an eighth activity.</span>
@@ -1003,7 +1003,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Determine whether the given user is associated with an.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine whether the given user is associated with an.</span>
 
 <span class="sd">        :class:`intranet.apps.eighth.models.EighthSponsor` and, therefore, should view activity</span>
 <span class="sd">        sponsoring information.</span>
@@ -1016,7 +1016,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">frequent_signups</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return a QuerySet of activity id&#39;s and counts for the activities that a given user</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a QuerySet of activity id&#39;s and counts for the activities that a given user</span>
 <span class="sd">        has signed up for more than `settings.SIMILAR_THRESHOLD` times&quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:frequent_signups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
         <span class="n">cached</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -1065,7 +1065,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;admin_comments&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="User.get_eighth_sponsor"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.get_eighth_sponsor">[docs]</a>    <span class="k">def</span> <span class="nf">get_eighth_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the ``EighthSponsor`` that this user is associated with.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the ``EighthSponsor`` that this user is associated with.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The ``EighthSponsor`` that this user is associated with.</span>
@@ -1079,7 +1079,7 @@
         <span class="k">return</span> <span class="n">sp</span></div>
 
 <div class="viewcode-block" id="User.has_unvoted_polls"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.has_unvoted_polls">[docs]</a>    <span class="k">def</span> <span class="nf">has_unvoted_polls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns whether there are open polls thet this user has not yet voted in.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether there are open polls thet this user has not yet voted in.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether there are open polls thet this user has not yet voted in.</span>
@@ -1089,7 +1089,7 @@
         <span class="k">return</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__lt</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">end_time__gt</span><span class="o">=</span><span class="n">now</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">question__answer__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.signed_up_today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.signed_up_today">[docs]</a>    <span class="k">def</span> <span class="nf">signed_up_today</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;If the user is a student, returns whether they are signed up for an activity during</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the user is a student, returns whether they are signed up for an activity during</span>
 <span class="sd">        all eighth period blocks that are scheduled today. Otherwise, returns ``True``.</span>
 
 <span class="sd">        Returns:</span>
@@ -1103,7 +1103,7 @@
         <span class="k">return</span> <span class="ow">not</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_blocks_today</span><span class="p">()</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthscheduledactivity__eighthsignup_set__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.signed_up_next_few_days"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.signed_up_next_few_days">[docs]</a>    <span class="k">def</span> <span class="nf">signed_up_next_few_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">num_days</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;If the user is a student, returns whether they are signed up for an activity during</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If the user is a student, returns whether they are signed up for an activity during</span>
 <span class="sd">        all eighth period blocks in the next ``num_days`` days. Otherwise, returns ``True``.</span>
 
 <span class="sd">        Today is counted as a day, so ``signed_up_few_next_day(num_days=1)`` is equivalent to</span>
@@ -1129,7 +1129,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="User.absence_count"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.absence_count">[docs]</a>    <span class="k">def</span> <span class="nf">absence_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the user&#39;s absence count.</span>
 
 <span class="sd">        If the user has no absences or is not a signup user, returns 0.</span>
 
@@ -1140,7 +1140,7 @@
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="User.absence_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.absence_info">[docs]</a>    <span class="k">def</span> <span class="nf">absence_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of the ``EighthSignup``s for which this user was absent.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a ``QuerySet`` of the ``EighthSignup``s for which this user was absent.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A ``QuerySet`` of the ``EighthSignup``s for which this user was absent.</span>
@@ -1149,7 +1149,7 @@
         <span class="k">return</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scheduled_activity__attendance_taken</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="User.handle_delete"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.User.handle_delete">[docs]</a>    <span class="k">def</span> <span class="nf">handle_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Handle a graduated user being deleted.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle a graduated user being deleted.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="n">EighthScheduledActivity</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
 
         <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">eighthsignup_set__user</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">archived_member_count</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="s2">&quot;archived_member_count&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
@@ -1173,7 +1173,7 @@
 
     <span class="n">_address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="s2">&quot;Address&quot;</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
     <span class="n">_schedule</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">&quot;Section&quot;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;_students&quot;</span><span class="p">)</span>
-    <span class="sd">&quot;&quot;&quot; User preference permissions (privacy options)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; User preference permissions (privacy options)</span>
 <span class="sd">        When setting permissions, use set_permission(permission, value , parent=False)</span>
 <span class="sd">        The permission attribute should be the part after &quot;self_&quot; or &quot;parent_&quot;</span>
 <span class="sd">            e.g. show_pictures</span>
@@ -1217,7 +1217,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
 
 <div class="viewcode-block" id="UserProperties.set_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserProperties.set_permission">[docs]</a>    <span class="k">def</span> <span class="nf">set_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">admin</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Sets permission for personal information.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets permission for personal information.</span>
 
 <span class="sd">        Returns False silently if unable to set permission. Returns True if successful.</span>
 
@@ -1251,7 +1251,7 @@
             <span class="k">return</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="nf">_current_user_override</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher, and can view all of a student&#39;s</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the currently logged in user is a teacher, and can view all of a student&#39;s</span>
 <span class="sd">        information regardless of their privacy settings.</span>
 
 <span class="sd">        Returns:</span>
@@ -1274,7 +1274,7 @@
         <span class="k">return</span> <span class="n">can_view_anyway</span>
 
 <div class="viewcode-block" id="UserProperties.is_http_request_sender"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserProperties.is_http_request_sender">[docs]</a>    <span class="k">def</span> <span class="nf">is_http_request_sender</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if a user the HTTP request sender (accessing own info)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a user the HTTP request sender (accessing own info)</span>
 
 <span class="sd">        Used primarily to load private personal information from the</span>
 <span class="sd">        cache. (A student should see all info on his or her own profile</span>
@@ -1297,7 +1297,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="UserProperties.attribute_is_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserProperties.attribute_is_visible">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks privacy options to see if an attribute is visible to the user sending the current</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks privacy options to see if an attribute is visible to the user sending the current</span>
 <span class="sd">        HTTP request.</span>
 
 <span class="sd">        Args:</span>
@@ -1317,7 +1317,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">parent</span> <span class="ow">and</span> <span class="n">student</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_http_request_sender</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_user_override</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="UserProperties.attribute_is_public"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserProperties.attribute_is_public">[docs]</a>    <span class="k">def</span> <span class="nf">attribute_is_public</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">permission</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Checks if attribute is visible to public (ignoring whether the user sending the HTTP</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if attribute is visible to public (ignoring whether the user sending the HTTP</span>
 <span class="sd">        request has permission to access it).</span>
 
 <span class="sd">        Args:</span>
@@ -1342,7 +1342,7 @@
 
 
 <div class="viewcode-block" id="UserDarkModeProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.UserDarkModeProperties">[docs]</a><span class="k">class</span> <span class="nc">UserDarkModeProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Contains user properties relating to dark mode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1354,7 +1354,7 @@
 
 
 <div class="viewcode-block" id="Email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Email">[docs]</a><span class="k">class</span> <span class="nc">Email</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents an email address&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an email address&quot;&quot;&quot;</span>
 
     <span class="n">address</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">EmailField</span><span class="p">()</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;emails&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
@@ -1367,7 +1367,7 @@
 
 
 <div class="viewcode-block" id="Phone"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Phone">[docs]</a><span class="k">class</span> <span class="nc">Phone</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a phone number&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a phone number&quot;&quot;&quot;</span>
 
     <span class="n">PURPOSES</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;Home Phone&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;Mobile Phone&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;Other Phone&quot;</span><span class="p">))</span>
 
@@ -1396,7 +1396,7 @@
 
 
 <div class="viewcode-block" id="Website"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Website">[docs]</a><span class="k">class</span> <span class="nc">Website</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a user&#39;s website&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a user&#39;s website&quot;&quot;&quot;</span>
 
     <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">()</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;websites&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
@@ -1409,7 +1409,7 @@
 
 
 <div class="viewcode-block" id="Address"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Address">[docs]</a><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a user&#39;s address.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a user&#39;s address.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        street</span>
@@ -1429,12 +1429,12 @@
     <span class="n">postal_code</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Address.__str__"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Address.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns full address string.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns full address string.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">street</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">postal_code</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Photo"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Photo">[docs]</a><span class="k">class</span> <span class="nc">Photo</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a user photo&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a user photo&quot;&quot;&quot;</span>
 
     <span class="n">grade_number</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">GRADE_NUMBERS</span><span class="p">)</span>
     <span class="n">_binary</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BinaryField</span><span class="p">()</span>
@@ -1455,7 +1455,7 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">base64</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;Returns base64 encoded binary data for a user&#39;s picture.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns base64 encoded binary data for a user&#39;s picture.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">           Base 64-encoded binary data for a user&#39;s picture.</span>
@@ -1469,12 +1469,12 @@
 
 
 <div class="viewcode-block" id="Grade"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Grade">[docs]</a><span class="k">class</span> <span class="nc">Grade</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Represents a user&#39;s grade.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a user&#39;s grade.&quot;&quot;&quot;</span>
 
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">GRADE_NUMBERS</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graduation_year</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize the Grade object.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Grade object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            graduation_year</span>
@@ -1493,7 +1493,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the grade as a number (9-12).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the grade as a number (9-12).</span>
 
 <span class="sd">        For use in templates since there is no nice integer casting.</span>
 <span class="sd">        In Python code you can also use int() on a Grade object.</span>
@@ -1503,17 +1503,17 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the grade&#39;s name (e.g. senior)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the grade&#39;s name (e.g. senior)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name_plural</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the grade&#39;s plural name (e.g. freshmen)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the grade&#39;s plural name (e.g. freshmen)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;freshmen&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">==</span> <span class="mi">9</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">s&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Return the grade&#39;s number as a string (e.g. Grade 12, Graduate)&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the grade&#39;s number as a string (e.g. Grade 12, Graduate)&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="mi">9</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Grade </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1546,16 +1546,16 @@
         <span class="k">return</span> <span class="n">current_senior_year</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">grade</span></div>
 
 <div class="viewcode-block" id="Grade.__int__"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Grade.__int__">[docs]</a>    <span class="k">def</span> <span class="fm">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the grade as a number (9-12).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the grade as a number (9-12).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number</span></div>
 
 <div class="viewcode-block" id="Grade.__str__"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Grade.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return name of the grade.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return name of the grade.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span></div></div>
 
 
 <div class="viewcode-block" id="Course"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Course">[docs]</a><span class="k">class</span> <span class="nc">Course</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a course at TJ (not to be confused with section)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a course at TJ (not to be confused with section)&quot;&quot;&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
     <span class="n">course_id</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1568,7 +1568,7 @@
 
 
 <div class="viewcode-block" id="Section"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.users.html#intranet.apps.users.forms.Section">[docs]</a><span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Represents a section - a class with teacher, period, and room assignments&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a section - a class with teacher, period, and room assignments&quot;&quot;&quot;</span>
 
     <span class="n">course</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Course</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;sections&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">teacher</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">SET_NULL</span><span class="p">)</span>
@@ -1603,7 +1603,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

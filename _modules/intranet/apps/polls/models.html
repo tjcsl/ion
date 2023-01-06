@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.polls.models &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -136,7 +136,7 @@
 
 <div class="viewcode-block" id="PollQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollQuerySet">[docs]</a><span class="k">class</span> <span class="nc">PollQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
 <div class="viewcode-block" id="PollQuerySet.this_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollQuerySet.this_year">[docs]</a>    <span class="k">def</span> <span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get Polls from this school year only.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Polls from this school year only.&quot;&quot;&quot;</span>
         <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">start_time__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span></div></div>
 
@@ -146,7 +146,7 @@
         <span class="k">return</span> <span class="n">PollQuerySet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PollManager.visible_to_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.PollManager.visible_to_user">[docs]</a>    <span class="k">def</span> <span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a list of visible polls for a given user (usually request.user).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of visible polls for a given user (usually request.user).</span>
 
 <span class="sd">        These visible polls will be those that either have no groups</span>
 <span class="sd">        assigned to them (and are therefore public) or those in which</span>
@@ -158,7 +158,7 @@
 
 
 <div class="viewcode-block" id="Poll"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Poll">[docs]</a><span class="k">class</span> <span class="nc">Poll</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A Poll, for the TJ community.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Poll, for the TJ community.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        title</span>
@@ -198,17 +198,17 @@
     <span class="c1"># Access questions through .question_set</span>
 
 <div class="viewcode-block" id="Poll.before_end_time"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Poll.before_end_time">[docs]</a>    <span class="k">def</span> <span class="nf">before_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Has the poll not ended yet?&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Has the poll not ended yet?&quot;&quot;&quot;</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span></div>
 
 <div class="viewcode-block" id="Poll.before_start_time"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Poll.before_start_time">[docs]</a>    <span class="k">def</span> <span class="nf">before_start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Has the poll not started yet?&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Has the poll not started yet?&quot;&quot;&quot;</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span></div>
 
 <div class="viewcode-block" id="Poll.in_time_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Poll.in_time_range">[docs]</a>    <span class="k">def</span> <span class="nf">in_time_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Is it within the poll time range?&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Is it within the poll time range?&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_start_time</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_end_time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Poll.get_users_voted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Poll.get_users_voted">[docs]</a>    <span class="k">def</span> <span class="nf">get_users_voted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -258,7 +258,7 @@
 
 
 <div class="viewcode-block" id="Question"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Question">[docs]</a><span class="k">class</span> <span class="nc">Question</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A question for a Poll.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A question for a Poll.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        poll</span>
@@ -356,7 +356,7 @@
 
 
 <div class="viewcode-block" id="Choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Choice">[docs]</a><span class="k">class</span> <span class="nc">Choice</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>  <span class="c1"># individual answer choices</span>
-    <span class="sd">&quot;&quot;&quot;A choice for a Question.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A choice for a Question.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        question</span>
@@ -400,7 +400,7 @@
     <span class="n">rank</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># for rank choice</span>
 
 <div class="viewcode-block" id="Answer.display_votes"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.forms.Answer.display_votes">[docs]</a>    <span class="k">def</span> <span class="nf">display_votes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert rank to votes for displaying by assigning rank 1 the max number of votes and continuing down.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert rank to votes for displaying by assigning rank 1 the max number of votes and continuing down.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Question</span><span class="o">.</span><span class="n">RANK</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">max_choices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -441,7 +441,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

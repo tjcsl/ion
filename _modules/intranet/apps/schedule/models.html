@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.schedule.models &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.schedule.models &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -199,7 +199,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Time</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns Time the school day begins.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns Time the school day begins.</span>
 <span class="sd">        Returns None if there are no blocks.</span>
 
 <span class="sd">        Returns:</span>
@@ -211,7 +211,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Time</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns Time the school day ends.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns Time the school day ends.</span>
 <span class="sd">        Returns None if there are no blocks.</span>
 
 <span class="sd">        Returns:</span>
@@ -223,7 +223,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">no_school</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Returns True if no blocks are scheduled.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if no blocks are scheduled.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether there are no blocks scheduled.</span>
@@ -237,13 +237,13 @@
 
 <div class="viewcode-block" id="DayManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayManager">[docs]</a><span class="k">class</span> <span class="nc">DayManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Manager</span><span class="p">):</span>
 <div class="viewcode-block" id="DayManager.get_future_days"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayManager.get_future_days">[docs]</a>    <span class="k">def</span> <span class="nf">get_future_days</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return only future Day objects.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return only future Day objects.&quot;&quot;&quot;</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">today</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DayManager.today"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.schedule.html#intranet.apps.schedule.forms.DayManager.today">[docs]</a>    <span class="k">def</span> <span class="nf">today</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return the Day for the current day&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the Day for the current day&quot;&quot;&quot;</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">)</span>
@@ -259,12 +259,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return time the school day begins&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return time the school day begins&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">start_time</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return time the school day ends&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return time the school day ends&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">end_time</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -288,7 +288,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

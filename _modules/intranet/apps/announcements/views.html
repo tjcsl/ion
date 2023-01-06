@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.announcements.views &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -147,19 +147,19 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">view_announcements</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show the dashboard with only announcements.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show the dashboard with only announcements.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">])</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">view_announcements_archive</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show the dashboard with only announcements, showing expired posts.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show the dashboard with only announcements, showing expired posts.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="announcement_posted_hook"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.announcement_posted_hook">[docs]</a><span class="k">def</span> <span class="nf">announcement_posted_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Runs whenever a new announcement is created, or a request is approved and posted.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs whenever a new announcement is created, or a request is approved and posted.</span>
 
 <span class="sd">    obj: The Announcement object</span>
 
@@ -185,7 +185,7 @@
 
 
 <div class="viewcode-block" id="announcement_approved_hook"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.announcement_approved_hook">[docs]</a><span class="k">def</span> <span class="nf">announcement_approved_hook</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">req</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Runs whenever an administrator approves an announcement request.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Runs whenever an administrator approves an announcement request.</span>
 
 <span class="sd">    obj: the Announcement object</span>
 <span class="sd">    req: the AnnouncementRequest object</span>
@@ -196,7 +196,7 @@
 
 <div class="viewcode-block" id="request_announcement_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.views.request_announcement_view">[docs]</a><span class="nd">@login_required</span>
 <span class="k">def</span> <span class="nf">request_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The request announcement page.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The request announcement page.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementRequestForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
 
@@ -254,7 +254,7 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">approve_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">req_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The approve announcement page. Teachers will be linked to this page from an email.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The approve announcement page. Teachers will be linked to this page from an email.</span>
 
 <span class="sd">    req_id: The ID of the AnnouncementRequest</span>
 
@@ -307,7 +307,7 @@
 <span class="nd">@announcements_admin_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">admin_approve_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">req_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The administrator approval announcement request page. Admins will view this page through the</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The administrator approval announcement request page. Admins will view this page through the</span>
 <span class="sd">    UI.</span>
 
 <span class="sd">    req_id: The ID of the AnnouncementRequest</span>
@@ -381,7 +381,7 @@
 <span class="nd">@announcements_admin_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">add_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add an announcement.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an announcement.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">AnnouncementForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -404,7 +404,7 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">view_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;View an announcement.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;View an announcement.</span>
 
 <span class="sd">    announcement_id: announcement id</span>
 
@@ -417,7 +417,7 @@
 <span class="nd">@announcements_admin_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">modify_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Modify an announcement.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify an announcement.</span>
 
 <span class="sd">    announcement_id: announcement id</span>
 
@@ -453,7 +453,7 @@
 <span class="nd">@announcements_admin_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">delete_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">announcement_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Delete an announcement.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete an announcement.</span>
 
 <span class="sd">    announcement_id: announcement id</span>
 
@@ -488,7 +488,7 @@
 <span class="nd">@deny_restricted</span>
 <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
 <span class="k">def</span> <span class="nf">show_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Unhide an announcement that was hidden by the logged-in user.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unhide an announcement that was hidden by the logged-in user.</span>
 
 <span class="sd">    announcements_hidden in the user model is the related_name for</span>
 <span class="sd">    &quot;users_hidden&quot; in the announcement model.</span>
@@ -509,7 +509,7 @@
 <span class="nd">@deny_restricted</span>
 <span class="nd">@transaction</span><span class="o">.</span><span class="n">atomic</span>
 <span class="k">def</span> <span class="nf">hide_announcement_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Hide an announcement for the logged-in user.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hide an announcement for the logged-in user.</span>
 
 <span class="sd">    announcements_hidden in the user model is the related_name for</span>
 <span class="sd">    &quot;users_hidden&quot; in the announcement model.</span>
@@ -543,7 +543,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

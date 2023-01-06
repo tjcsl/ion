@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -152,7 +152,7 @@
 
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">KerberosAuthenticationBackend</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Authenticate using Kerberos.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate using Kerberos.</span>
 
 <span class="sd">    This is the default authentication backend.</span>
 
@@ -160,7 +160,7 @@
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.kinit_timeout_handle"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -179,7 +179,7 @@
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.get_kerberos_ticket"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Attempts to create a Kerberos ticket for a user.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Attempts to create a Kerberos ticket for a user.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            username</span>
@@ -242,7 +242,7 @@
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">[docs]</a>    <span class="nd">@kerberos_authenticate</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
 <span class="sd">        Creates a new user if one is not already in the database.</span>
 
@@ -290,7 +290,7 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="KerberosAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
 <span class="sd">                The user id of the user to fetch.</span>
@@ -304,10 +304,10 @@
 
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">MasterPasswordAuthenticationBackend</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Authenticate as any user against a master password whose hash is in secret.py.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate as any user against a master password whose hash is in secret.py.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
 <span class="sd">        Creates a new user if one is not already in the database.</span>
 
@@ -339,7 +339,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
 <span class="sd">                The user id of the user to fetch.</span>
@@ -366,7 +366,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

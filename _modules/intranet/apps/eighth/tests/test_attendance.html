@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.test_attendance &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.eighth.tests.test_attendance &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -136,10 +136,10 @@
 
 
 <div class="viewcode-block" id="EighthAttendanceTestCase"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase">[docs]</a><span class="k">class</span> <span class="nc">EighthAttendanceTestCase</span><span class="p">(</span><span class="n">EighthAbstractTest</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Test cases for ``views.attendance``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test cases for ``views.attendance``.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_take_attendance"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_take_attendance">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Makes sure that taking attendance for activites with multiple students signed up works.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes sure that taking attendance for activites with multiple students signed up works.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="n">user1</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
@@ -182,7 +182,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user3</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_take_attendance_clear_bit"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_take_attendance_clear_bit">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance_clear_bit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests the &quot;clear attendance bit&quot; feature.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the &quot;clear attendance bit&quot; feature.&quot;&quot;&quot;</span>
         <span class="c1"># Schedule an activity</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
         <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -205,7 +205,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span><span class="o">.</span><span class="n">attendance_taken</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_take_attendance_google_meet_csv"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_take_attendance_google_meet_csv">[docs]</a>    <span class="k">def</span> <span class="nf">test_take_attendance_google_meet_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Make sure taking attendence through an uploaded Google Meet file works.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make sure taking attendence through an uploaded Google Meet file works.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
         <span class="n">user1</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
             <span class="n">username</span><span class="o">=</span><span class="s2">&quot;user1&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;User&quot;</span>
@@ -243,7 +243,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user2</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact1</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_roster_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_roster_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_roster_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.roster_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.roster_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Schedule an activity</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
@@ -274,7 +274,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;is_sponsor&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_raw_roster_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_raw_roster_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_raw_roster_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.raw_roster_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.raw_roster_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Schedule an activity</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
@@ -293,7 +293,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;viewable_members&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_raw_waitlist_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_raw_waitlist_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_raw_waitlist_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.raw_waitlist_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.raw_waitlist_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># We don&#39;t use the waitlist anymore. But that doesn&#39;t mean I can test it.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -309,7 +309,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;ordered_waitlist&quot;</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_generate_roster_pdf"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_generate_roster_pdf">[docs]</a>    <span class="k">def</span> <span class="nf">test_generate_roster_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.generate_roster_pdf`&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.generate_roster_pdf`&quot;&quot;&quot;</span>
 
         <span class="c1"># Make us an admin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -337,7 +337,7 @@
         <span class="c1"># We can&#39;t really parse this PDF to make sure it is fine though</span>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_eighth_absences_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_eighth_absences_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_eighth_absences_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.eighth_absences_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.eighth_absences_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># First, test as a student</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="s2">&quot;2021awilliam&quot;</span><span class="p">)</span>
@@ -384,7 +384,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">),</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_sponsor_schedule_widget_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_sponsor_schedule_widget_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_sponsor_schedule_widget_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.sponsor_schedule_widget_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.sponsor_schedule_widget_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Log in and load the page; the page should show that &quot;you are not an eighth period sponsor&quot;</span>
         <span class="c1"># because we are not one</span>
@@ -429,7 +429,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sponsor_schedule&quot;</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_email_students_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_email_students_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_email_students_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.email_students_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.email_students_view`.&quot;&quot;&quot;</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
         <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Activity&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -454,7 +454,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_teacher_choose_scheduled_activity_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_teacher_choose_scheduled_activity_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_teacher_choose_scheduled_activity_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.teacher_choose_scheduled_activity_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.teacher_choose_scheduled_activity_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Make this user a teacher and a sponsor of an eighth period activity</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -533,7 +533,7 @@
         <span class="c1"># self.assertIn(str(activity), response.content.decode(&quot;UTF-8&quot;))</span>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_attendance_export_csv"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_attendance_export_csv">[docs]</a>    <span class="k">def</span> <span class="nf">test_attendance_export_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests the &quot;export CSV&quot; function in :func:`~intranet.apps.eighth.views.attendance.take_attendance_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the &quot;export CSV&quot; function in :func:`~intranet.apps.eighth.views.attendance.take_attendance_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Make this user a teacher and a sponsor of an eighth period activity</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -605,7 +605,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_accept_pass_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_accept_pass_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_accept_pass_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.accept_pass_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.accept_pass_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Create an activity and a late signup</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -639,7 +639,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">signup</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">was_absent</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EighthAttendanceTestCase.test_accept_all_passes_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.tests.html#intranet.apps.eighth.tests.test_attendance.EighthAttendanceTestCase.test_accept_all_passes_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_accept_all_passes_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.accept_all_passes_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.attendance.accept_all_passes_view`.&quot;&quot;&quot;</span>
 
         <span class="c1"># Very similar to test_accept_pass_view, but we have multiple passes to accept</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -682,7 +682,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

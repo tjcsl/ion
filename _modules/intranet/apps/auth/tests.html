@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.tests &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.auth.tests &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -134,17 +134,17 @@
 
 
 <div class="viewcode-block" id="GrantAdminTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.GrantAdminTest">[docs]</a><span class="k">class</span> <span class="nc">GrantAdminTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Tests granting admin to an user.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests granting admin to an user.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="GrantAdminTest.test_grant_admin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.GrantAdminTest.test_grant_admin">[docs]</a>    <span class="k">def</span> <span class="nf">test_grant_admin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests giving an valid user admin_all.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests giving an valid user admin_all.&quot;&quot;&quot;</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="n">call_command</span><span class="p">(</span><span class="s2">&quot;grant_admin&quot;</span><span class="p">,</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="s2">&quot;admin_all&quot;</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="s2">&quot;Added awilliam to admin_all&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="LoginViewTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.LoginViewTest">[docs]</a><span class="k">class</span> <span class="nc">LoginViewTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Tests of the login page (but not actually auth)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests of the login page (but not actually auth)&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="LoginViewTest.test_login_page"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.LoginViewTest.test_login_page">[docs]</a>    <span class="k">def</span> <span class="nf">test_login_page</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
@@ -172,7 +172,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">does_login_redirect_to</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="LoginViewTest.test_login"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.tests.LoginViewTest.test_login">[docs]</a>    <span class="k">def</span> <span class="nf">test_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Just test Kerberos login, but not really because Kerberos isn&#39;t accessible from here...&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just test Kerberos login, but not really because Kerberos isn&#39;t accessible from here...&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">KINIT_TIMEOUT</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;dankmemes123&quot;</span><span class="p">})</span>
@@ -264,7 +264,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.tests.admin.test_admin_rooms &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.eighth.tests.admin.test_admin_rooms &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
@@ -132,7 +132,7 @@
 
 <div class="viewcode-block" id="EighthAdminRoomsTest"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest">[docs]</a><span class="k">class</span> <span class="nc">EighthAdminRoomsTest</span><span class="p">(</span><span class="n">EighthAbstractTest</span><span class="p">):</span>
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_add_room_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_add_room_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_room_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.add_room_view`&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.add_room_view`&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="c1"># Load the page</span>
@@ -155,7 +155,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Room 3&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_edit_room_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_edit_room_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_edit_room_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.edit_room_view`&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.edit_room_view`&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
         <span class="n">act1</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Act1&quot;</span><span class="p">)</span>
         <span class="n">room1</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Room 1&quot;</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -180,7 +180,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_delete_room_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_delete_room_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_room_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.delete_room_view`&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.delete_room_view`&quot;&quot;&quot;</span>
 
         <span class="c1"># Make us an admin and make a room</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -196,7 +196,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">room1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_room_sanity_check_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_room_sanity_check_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_room_sanity_check_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.room_sanity_check_view`&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.room_sanity_check_view`&quot;&quot;&quot;</span>
 
         <span class="c1"># Make us an admin and a room</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -236,7 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([{</span><span class="s2">&quot;room_name&quot;</span><span class="p">:</span> <span class="n">room1</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">activity1</span><span class="p">,</span> <span class="n">activity2</span><span class="p">]}],</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;room_conflicts&quot;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_room_utilization_for_block_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_room_utilization_for_block_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_room_utilization_for_block_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.room_utilization_for_block_view`&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.room_utilization_for_block_view`&quot;&quot;&quot;</span>
 
         <span class="c1"># Make us an admin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -260,7 +260,7 @@
         <span class="c1"># The room utilization view is tested later</span>
 
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_room_utilization_view"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_room_utilization_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_room_utilization_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.room_utilization_view` - the wizard only&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.rooms.room_utilization_view` - the wizard only&quot;&quot;&quot;</span>
 
         <span class="c1"># Make us an admin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
@@ -292,7 +292,7 @@
         <span class="c1"># The room utilization view is tested later</span>
 
 <div class="viewcode-block" id="EighthAdminRoomsTest.test_eighth_room_utilization"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.tests.admin.html#intranet.apps.eighth.tests.admin.test_admin_rooms.EighthAdminRoomsTest.test_eighth_room_utilization">[docs]</a>    <span class="k">def</span> <span class="nf">test_eighth_room_utilization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Ensure that the room utilization check filters properly.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure that the room utilization check filters properly.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
@@ -334,7 +334,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

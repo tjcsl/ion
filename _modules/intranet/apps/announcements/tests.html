@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.announcements.tests &#8212; TJ Intranet v3 (Build #1484) documentation</title>
+    <title>intranet.apps.announcements.tests &#8212; TJ Intranet v3 (Build #1502) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -135,7 +135,7 @@
 
 <div class="viewcode-block" id="AnnouncementTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.tests.AnnouncementTest">[docs]</a><span class="k">class</span> <span class="nc">AnnouncementTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;Tests for the announcements module.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the announcements module.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AnnouncementTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.tests.AnnouncementTest.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
@@ -184,7 +184,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AnnouncementTest.test_announcement_approval_allowed_users"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.tests.AnnouncementTest.test_announcement_approval_allowed_users">[docs]</a>    <span class="k">def</span> <span class="nf">test_announcement_approval_allowed_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests to ensure that only allowed users can approve announcements.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests to ensure that only allowed users can approve announcements.&quot;&quot;&quot;</span>
         <span class="n">teacher</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;timmy&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">counselor</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;counselor&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;counselor&quot;</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;ursula&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -193,7 +193,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="n">student</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_approve_announcements_users_sorted</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="AnnouncementTest.test_announcement_request"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.tests.AnnouncementTest.test_announcement_request">[docs]</a>    <span class="k">def</span> <span class="nf">test_announcement_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tests the announcement request view.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the announcement request view.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;request_announcement&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
@@ -615,7 +615,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2022, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2023, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>
