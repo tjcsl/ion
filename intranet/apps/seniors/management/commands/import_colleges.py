@@ -14,3 +14,5 @@ class Command(BaseCommand):
             for row in reader:
                 ceeb, name, city, state = row
                 College.objects.create(ceeb=ceeb, name=("{} - {}, {}".format(name, city, state)).title())
+        # custom additions
+        College.objects.create(ceeb=-1, name="University of Swamp (Harvard of the South) - The South")
