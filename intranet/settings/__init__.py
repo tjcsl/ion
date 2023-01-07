@@ -270,31 +270,21 @@ STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
 PIPELINE = {
     "CSS_COMPRESSOR": None,
     "COMPILERS": ["pipeline.compilers.sass.SASSCompiler"],
-    "STYLESHEETS": {
-        "base": {
-            "source_filenames": ["css/base.scss", "css/themes.scss", "css/responsive.scss"],
-            "output_filename": "css/base.css",
-        },
-        "eighth.admin": {
-            "source_filenames": ["css/eighth.common.scss", "css/eighth.admin.scss"],
-            "output_filename": "css/eighth.admin.css",
-        },
-        "eighth.signup": {
-            "source_filenames": ["css/eighth.common.scss", "css/eighth.signup.scss"],
-            "output_filename": "css/eighth.signup.css",
-        },
-    },
+    "STYLESHEETS": {},
 }  # type: Dict[str,Any]
 
 LIST_OF_INDEPENDENT_CSS = [
     "about",
     "api",
+    "base",
     "login",
     "emerg",
     "files",
     "schedule",
+    "themes",
     "theme.blue",
     "page_base",
+    "responsive",
     "responsive.core",
     "search",
     "dashboard",
@@ -312,6 +302,8 @@ LIST_OF_INDEPENDENT_CSS = [
     "signage.touch",
     "signage.touch.landscape",
     "eighth.common",
+    "eighth.admin",
+    "eighth.signup",
     "eighth.attendance",
     "eighth.profile",
     "eighth.schedule",
