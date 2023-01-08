@@ -243,6 +243,7 @@ TEST_RUNNER = "django.test.runner.DiscoverRunner"
 # Example: "/home/media/media.lawrence.com/static/"
 #
 # This is the folder that Nginx serves as /static in production
+# and WhiteNoise serves in development.
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "collected_static")
 
 # URL prefix for static files.
@@ -433,6 +434,14 @@ MIDDLEWARE = [
     "django_referrer_policy.middleware.ReferrerPolicyMiddleware",  # Sets the Referrer-Policy header
 ]
 
+if not PRODUCTION and not DEBUG:
+    # Serve static files using WhiteNoise in development if DEBUG is False
+    # See http://whitenoise.evans.io/en/stable/django.html
+    WHITENOISE_AUTOREFRESH = True
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_MAX_AGE = 0
+    MIDDLEWARE += ["whitenoise.middleware.WhiteNoiseMiddleware"]
+
 # URLconf at urls.py
 ROOT_URLCONF = "intranet.urls"
 
@@ -579,6 +588,7 @@ INSTALLED_APPS = [
     "intranet.apps.auth",
     "intranet.apps.bus",
     "intranet.apps.cslapps",
+    "intranet.apps.django",
     "intranet.apps.eighth",
     "intranet.apps.events",
     "intranet.apps.groups",
@@ -732,6 +742,10 @@ if SHOW_DEBUG_TOOLBAR:
         "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled],
         "SHOW_TOOLBAR_CALLBACK": "intranet.utils.helpers.debug_toolbar_callback",
     }
+
+    # Disable all panels by default in development for performance
+    if not PRODUCTION:
+        DEBUG_TOOLBAR_CONFIG["DISABLE_PANELS"] = [panel for panel, _ in _panels]
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 

@@ -41,12 +41,19 @@ def parse_db_url(db_url):
 
 
 def debug_toolbar_callback(request):
-    """Show the debug toolbar to those with the Django staff permission, excluding the Eighth Period
-    office."""
+    """
+    In development:
+        Show the debug toolbar to all users.
+    In production:
+        Show the debug toolbar to those with the Django staff permission, excluding the Eighth Period
+        office.
+    """
+
+    if not settings.PRODUCTION:
+        return True
 
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
         return False
-
     if not hasattr(request, "user"):
         return False
     if not request.user.is_authenticated:
