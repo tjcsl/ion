@@ -179,7 +179,6 @@ class LoginView(View):
             login(request, form.get_user())
             # Initial load into session
             logger.info("Login succeeded as %s", request.POST.get("username", "unknown"))
-            logger.info("request.user: %s", request.user)
 
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 

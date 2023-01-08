@@ -1,73 +1,88 @@
 version: '3.9'
 
-
 services:
   redis:
     container_name: server
     image: redis:latest
     networks:
-    - intranet_net
+      - intranet_net
     expose:
-    - "6379"
+      - "6379"
 
   postgres:
     container_name: database
     image: postgres:latest
     networks:
-    - intranet_net
+      - intranet_net
     expose:
-    - "5432"
+      - "5432"
     environment:
-    - POSTGRES_DB=ion
-    - POSTGRES_USER=ion
-    - POSTGRES_PASSWORD=pwd
+      - POSTGRES_DB=ion
+      - POSTGRES_USER=ion
+      - POSTGRES_PASSWORD=pwd
     volumes:
-    - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 
   application:
     container_name: intranet
     image: application
     networks:
-    - intranet_net
-    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && python3 config/docker/entrypoint.py && chmod +x config/docker/entrypoint.sh && config/docker/entrypoint.sh"]
+      - intranet_net
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "git config --global --add safe.directory /ion && \
+         /bin/sh config/docker/entrypoint.sh"
+      ]
     ports:
-    - 8080:8080
+      - 8080:8080
     build:
       context: ../../
       dockerfile: ./config/docker/Dockerfile
     volumes:
-    - ../../:/ion:z
+      - ../../:/ion:z
     depends_on:
-    - redis
-    - postgres
+      - redis
+      - postgres
 
   celery:
     container_name: celery
     image: application
     networks:
-    - intranet_net
-    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && pipenv run celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"]
+      - intranet_net
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "git config --global --add safe.directory /ion && \
+         pipenv run celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"
+      ]
     depends_on:
-    - application
+      - application
     volumes:
-    - ../../:/ion:z
+      - ../../:/ion:z
 
   celerybeat:
     container_name: celerybeat
     image: application
     networks:
-    - intranet_net
-    entrypoint: ["/bin/sh", "-c" , "git config --global --add safe.directory /ion && pipenv run celery --app intranet beat -l info"]
+      - intranet_net
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "git config --global --add safe.directory /ion && \
+         pipenv run celery --app intranet beat -l info"
+      ]
     depends_on:
-    - application
+      - application
     volumes:
-    - ../../:/ion:z
-
+      - ../../:/ion:z
 
 networks:
   intranet_net:
-      driver: bridge
-
+    driver: bridge
 
 volumes:
   pgdata:
