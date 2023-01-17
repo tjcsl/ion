@@ -145,7 +145,7 @@ class EighthCommandsTest(EighthAbstractTest):
         EighthBlock.objects.all().delete()
         EighthActivity.objects.all().delete()
 
-        today = timezone.localtime()
+        today = timezone.localtime() - datetime.timedelta(days=2)
 
         with patch("intranet.apps.eighth.management.commands.dev_generate_signups.input", return_value="y") as m:
             with self.assertRaises(CommandError):

@@ -57,8 +57,6 @@ if datetime.date.today() < SCHOOL_START_DATE - datetime.timedelta(weeks=2):
 
 """ !! In production, add a file called secret.py to the settings package that
 defines SECRET_KEY, SECRET_DATABASE_URL. !!
-
-
 SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
@@ -632,7 +630,6 @@ PROMETHEUS_EXPORT_MIGRATIONS = False
 # Eighth period default block date format
 # Post Django 1.8.7, this can no longer be used in templates.
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
-
 
 # EIGHTH_PRESIGNUP_HOURS is the amount of hours before 12:00am of the day of 8th periods when signups open for 8th periods that require presigns.
 # For example, if eighth periods were on Wednesday and EIGHTH_PRESIGN_HOURS was 29, signups would open at 7:00pm on Monday

@@ -142,6 +142,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "special": scheduled_activity.get_special(),
             "administrative": scheduled_activity.get_administrative(),
             "presign": activity.presign,
+            "presign_time": scheduled_activity.is_too_early_to_signup()[1].strftime("%A, %B %-d at %-I:%M %p"),
             "sticky": scheduled_activity.get_sticky(),
             "finance": "",  # TODO: refactor JS to remove this
             "title": scheduled_activity.title,
