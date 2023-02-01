@@ -15,9 +15,9 @@ The Git repository on the host computer is synced with ``~/intranet`` on the vir
 
 1. Create your own fork of the [``tjcsl/ion`` repository](https://github.com/tjcsl/ion.git).
 2. Clone the Ion repositiory from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
-3. Inside the Ion repository, edit the ``config/docker/make_admin.py`` file, replacing "\<YOUR_USERNAME\>" with your Ion username.
-4. Run ``cd config/docker``.
-5. Run ``docker-compose up -d``.
+3. Inside the Ion repository, run ``cd config/docker`` to get into the configuration for Docker.
+4. Once in the directory, run ``docker-compose build`` to build the container and install the dependenices required for Ion development.
+5. After the command finishes running, run ``docker-compose up -d`` to compose the container. If no errors pops up, you have sucessfully started an Ion development environment using Docker.
 
 ## Docker Post Set-Up
 
