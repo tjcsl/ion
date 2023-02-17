@@ -11,7 +11,9 @@ RUN apk update && \
     npm install -g sass && \
     pip3 install pipenv && \
     ln -s /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-    pip3 install -r requirements.txt && \
-    rm requirements.txt
+    pip3 install -I -r requirements.txt && \
+    pip3 install -I -r requirements-dev.txt && \
+    rm requirements.txt && \
+    rm requirements-dev.txt
 
 WORKDIR /ion
