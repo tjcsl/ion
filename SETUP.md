@@ -37,8 +37,8 @@ To view logs of a container, run `docker logs [CONTAINER NAME] -f`. For example,
 
 ## Prerequisites
 
-- [Virtualbox](https://www.virtualbox.org/wiki/Downloads) is the containerization framework that runs Ion's individual services. Installation is OS-specific and instructions can be found [here](ttps://www.docker.com/products/docker-desktop/). On Windows and Mac, install Docker Desktop.
-- [Vagrant](http://docs.vagrantup.com/v2/installation/index.html) is the containerization framework that runs Ion's individual services. Installation is OS-specific and instructions can be found [here](ttps://www.docker.com/products/docker-desktop/). On Windows and Mac, install Docker Desktop.
+- [Virtualbox](https://www.virtualbox.org/) is a virtualization service that allows the creation of virtual machines. Installation is OS-specific and instructions can be found [here](https://www.virtualbox.org/wiki/Downloads). 
+- [Vagrant](https://www.vagrantup.com/) is a command line utility for managing and setting up virtual machines and environments. Installation is OS-specific and instructions can be found [here](https://developer.hashicorp.com/vagrant/downloads).
 - [GitHub](https://github.com) is the version control system used by the CSL. Make sure that you have an account and an SSH key tied to that account that will allow you to push and pull code. Ensure you have an SSH key set up with GitHub by running ``ssh -T git@github.com``. You should be greeted by your username. If not, set up an SSH key with GitHub by following [these instructions](https://help.github.com/articles/generating-an-ssh-key/).
 
 ## Set Up
