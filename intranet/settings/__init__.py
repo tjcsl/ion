@@ -57,8 +57,6 @@ if datetime.date.today() < SCHOOL_START_DATE - datetime.timedelta(weeks=2):
 
 """ !! In production, add a file called secret.py to the settings package that
 defines SECRET_KEY, SECRET_DATABASE_URL. !!
-
-
 SECRET_DATABASE_URL should be of the following form:
     postgres://<user>:<password>@<host>/<database>
 """
@@ -243,6 +241,7 @@ TEST_RUNNER = "django.test.runner.DiscoverRunner"
 # Example: "/home/media/media.lawrence.com/static/"
 #
 # This is the folder that Nginx serves as /static in production
+# and WhiteNoise serves in development.
 STATIC_ROOT = os.path.join(PROJECT_ROOT, "collected_static")
 
 # URL prefix for static files.
@@ -270,31 +269,21 @@ STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
 PIPELINE = {
     "CSS_COMPRESSOR": None,
     "COMPILERS": ["pipeline.compilers.sass.SASSCompiler"],
-    "STYLESHEETS": {
-        "base": {
-            "source_filenames": ["css/base.scss", "css/themes.scss", "css/responsive.scss"],
-            "output_filename": "css/base.css",
-        },
-        "eighth.admin": {
-            "source_filenames": ["css/eighth.common.scss", "css/eighth.admin.scss"],
-            "output_filename": "css/eighth.admin.css",
-        },
-        "eighth.signup": {
-            "source_filenames": ["css/eighth.common.scss", "css/eighth.signup.scss"],
-            "output_filename": "css/eighth.signup.css",
-        },
-    },
+    "STYLESHEETS": {},
 }  # type: Dict[str,Any]
 
 LIST_OF_INDEPENDENT_CSS = [
     "about",
     "api",
+    "base",
     "login",
     "emerg",
     "files",
     "schedule",
+    "themes",
     "theme.blue",
     "page_base",
+    "responsive",
     "responsive.core",
     "search",
     "dashboard",
@@ -312,6 +301,8 @@ LIST_OF_INDEPENDENT_CSS = [
     "signage.touch",
     "signage.touch.landscape",
     "eighth.common",
+    "eighth.admin",
+    "eighth.signup",
     "eighth.attendance",
     "eighth.profile",
     "eighth.schedule",
@@ -440,6 +431,14 @@ MIDDLEWARE = [
     "intranet.middleware.dark_mode.DarkModeMiddleware",  # Dark mode-related middleware
     "django_referrer_policy.middleware.ReferrerPolicyMiddleware",  # Sets the Referrer-Policy header
 ]
+
+if not PRODUCTION and not DEBUG:
+    # Serve static files using WhiteNoise in development if DEBUG is False
+    # See http://whitenoise.evans.io/en/stable/django.html
+    WHITENOISE_AUTOREFRESH = True
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_MAX_AGE = 0
+    MIDDLEWARE += ["whitenoise.middleware.WhiteNoiseMiddleware"]
 
 # URLconf at urls.py
 ROOT_URLCONF = "intranet.urls"
@@ -587,6 +586,7 @@ INSTALLED_APPS = [
     "intranet.apps.auth",
     "intranet.apps.bus",
     "intranet.apps.cslapps",
+    "intranet.apps.django",
     "intranet.apps.eighth",
     "intranet.apps.events",
     "intranet.apps.groups",
@@ -632,6 +632,11 @@ PROMETHEUS_EXPORT_MIGRATIONS = False
 # Eighth period default block date format
 # Post Django 1.8.7, this can no longer be used in templates.
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
+
+# EIGHTH_PRESIGNUP_HOURS is the amount of hours before 12:00am of the day of 8th periods when signups open for 8th periods that require presigns.
+# For example, if eighth periods were on Wednesday and EIGHTH_PRESIGN_HOURS was 29, signups would open at 7:00pm on Monday
+EIGHTH_PRESIGNUP_HOURS = 42
+EIGHTH_PRESIGNUP_MINUTES = 0
 
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
@@ -740,6 +745,10 @@ if SHOW_DEBUG_TOOLBAR:
         "DISABLE_PANELS": [panel for panel, enabled in _panels if not enabled],
         "SHOW_TOOLBAR_CALLBACK": "intranet.utils.helpers.debug_toolbar_callback",
     }
+
+    # Disable all panels by default in development for performance
+    if not PRODUCTION:
+        DEBUG_TOOLBAR_CONFIG["DISABLE_PANELS"] = [panel for panel, _ in _panels]
 
     DEBUG_TOOLBAR_PANELS = [t[0] for t in _panels]
 

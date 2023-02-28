@@ -134,7 +134,7 @@ $(function () {
 
         if (typeof snowmaxsize === "undefined" || typeof snowminsize === "undefined") {
             //Maximum size of snowflakes
-            var snowmaxsize = mobile ? 44 : 20 + 2*parseInt(dayStreak);
+            var snowmaxsize = mobile ? 44 : 20 + 2*Math.abs(parseInt(dayStreak));
             //Miniumum size of snowflakes
             var snowminsize = mobile ? 16 : 8;
         }
