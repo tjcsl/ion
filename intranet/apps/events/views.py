@@ -105,7 +105,6 @@ def week_data(request, date=None):
 
 
 def month_data(request):
-
     if "date" in request.GET:
         start_date = decode_date(request.GET["date"])
     else:

@@ -12,7 +12,6 @@ class Command(BaseCommand):
         parser.add_argument("--fix", action="store_true", dest="fix", default=False, help="Fix.")
 
     def handle(self, *args, **options):
-
         signup_list = collections.defaultdict(int)
         for x in EighthSignup.objects.all().prefetch_related("scheduled_activity__block"):
             signup_list[(x.user_id, x.scheduled_activity.block_id)] += 1

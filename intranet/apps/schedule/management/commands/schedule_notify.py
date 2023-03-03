@@ -19,7 +19,6 @@ class Command(BaseCommand):
         _, _ = gcm_post(users, pd_data, user=user)
 
     def handle(self, *args, **options):
-
         notify = options["notify"]
         pd_data = period_start_end_data(None)
         if pd_data:

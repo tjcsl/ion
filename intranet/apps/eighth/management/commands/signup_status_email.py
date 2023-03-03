@@ -27,7 +27,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-
         log = not options["silent"]
         if options["everyone"]:
             users = get_user_model().objects.get_students()

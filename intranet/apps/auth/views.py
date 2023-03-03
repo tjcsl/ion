@@ -237,7 +237,7 @@ class LoginView(View):
     def get(self, request):
         """Redirect to the login page."""
         next_page = request.POST.get("next", request.GET.get("next", ""))
-        return index_view(request, force_login=True, has_next_page=(next_page != ""))
+        return index_view(request, force_login=True, has_next_page=next_page != "")
 
 
 def about_view(request):

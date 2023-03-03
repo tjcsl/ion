@@ -70,10 +70,14 @@ class ScheduleTest(IonTestCase):
         # Now, try again, but have Day objects created
         daytype = DayType.objects.get_or_create(name="Test Day")[0]
         day_today = Day.objects.update_or_create(date="2021-03-22", day_type=daytype)[0]
-        day_tomorrow = Day.objects.update_or_create(date="2021-03-23", day_type=daytype)[0]
+        # day_tomorrow = Day.objects.update_or_create(date="2021-03-23", day_type=daytype)[0]
         # day_yesterday = Day.objects.update_or_create(date="2021-03-19", day_type=daytype)[0]
 
         with patch("intranet.apps.schedule.views.timezone.localtime", return_value=datetime(2021, 3, 21, 22, 00, tzinfo=pytz.timezone("US/Eastern"))):
+            # Clear cache
+            self.make_admin()
+            self.client.post(reverse("schedule_admin"), data={"delete_cache": "delete_cache"}, follow=True)
+
             sched = schedule_context()
             self.assertEqual("2021-03-22", sched["sched_ctx"]["date_today"])
             self.assertEqual(day_today, sched["sched_ctx"]["dayobj"])
@@ -91,11 +95,12 @@ class ScheduleTest(IonTestCase):
             factory = RequestFactory()
             request = factory.get("/")
             request.user = user
-            sched = schedule_context(request=request)
-            self.assertEqual(day_tomorrow, sched["sched_ctx"]["schedule_tomorrow"])
+
+            # Using the date argument, tomorrow is actually today
+            sched = schedule_context(request=request, date=datetime(2021, 3, 21, 22, 00, tzinfo=pytz.timezone("US/Eastern")))
+            self.assertEqual(day_today, sched["sched_ctx"]["schedule_tomorrow"])
 
         with patch("intranet.apps.schedule.views.timezone.localtime", return_value=datetime(2021, 3, 26, 22, 00, tzinfo=pytz.timezone("US/Eastern"))):
-
             # Authenticate
             user = self.make_admin("awilliam")
             factory = RequestFactory()

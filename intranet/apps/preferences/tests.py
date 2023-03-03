@@ -131,7 +131,6 @@ class PreferencesTest(IonTestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_save_bus_route(self):
-
         # Test that save_bus_route() works
 
         # Test that choices are in order
