@@ -12,8 +12,8 @@ RUN apk update && \
     npm install -g sass && \
     pip3 install pipenv && \
     ln -s /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-    pip3 install -r requirements.txt && \
-    pip3 install -r requirements-dev.txt && \
+    pip3 install -Ir requirements.txt && \
+    pip3 install -Ir requirements-dev.txt && \
     rm requirements.txt && \
     rm requirements-dev.txt
 
