@@ -1,51 +1,15 @@
 {% load static %}
 <script>
-    window.firstname = "{{ request.user.first_name }}";
     window.isAdmin = {{ admin | yesno:"true,false" }};
     window.isStudent = {{ request.user.is_student | yesno:"true,false" }}
     window.enableBusDriver = {{ enable_bus_driver | yesno:"true,false" }}
     window.endHour = "{{ school_end_hour }}";
     window.endMinute = "{{ school_end_time }}";
 
-    window.label_status_strings = {
-        "a": {
-            empty_text: "No buses have arrived yet.",
-            name: "Arrived",
-            personal: "has arrived.",
-            icon: "check",
-            color: "green",
-        },
-        "o": {
-            empty_text: "All buses have arrived or are delayed.",
-            name: "On Time",
-            personal: "is on time.",
-            icon: "clock",
-            color: "blue",
-        },
-        "d": {
-            empty_text: "No delays.",
-            name: "Delayed",
-            personal: "is delayed.",
-            icon: "exclamation-triangle",
-            color: "red",
-        },
-    };
-
-    var now = new Date();
-    var end_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(endHour), parseInt(endMinute), 0, 0);
-    var five_min_before_end = new Date(end_time.getFullYear(), end_time.getMonth(), end_time.getDate(), parseInt(endHour), parseInt(endMinute) - 5, 0, 0);
-
-    if(now.getTime() >= five_min_before_end.getTime()) {
-        var o = window.label_status_strings.o;
-        o.personal = "has not arrived yet.";
-        o.icon = "exclamation-triangle";
-        o.color = "orange";
-    }
-
     if (Boolean("{{ on_home }}")) {
-        var now = new Date();
-        var reloadTime = new Date();
-        var midnight = new Date();
+        let now = new Date();
+        let reloadTime = new Date();
+        let midnight = new Date();
         midnight.setHours(24, 0, 0, 0);
         reloadTime.setHours(parseInt("{{ changeover_time }}", 10), 00, 0);
         if (reloadTime > now) {

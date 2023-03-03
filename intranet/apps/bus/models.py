@@ -22,3 +22,20 @@ class Route(models.Model):
 
     class Meta:
         ordering = ["route_name"]
+
+
+class BusAnnouncement(models.Model):
+    """Announcement on the bus page. Only one instance of this model is allowed."""
+
+    message = models.TextField(blank=True)
+
+    @classmethod
+    def object(cls):
+        return cls.objects.first() or cls.objects.create()
+
+    def save(self, *args, **kwargs):
+        self.pk = self.id = 1
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Bus announcement: {self.message}"

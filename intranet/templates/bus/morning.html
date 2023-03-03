@@ -64,5 +64,33 @@
             </h2>
             <div class="list" id="delayed"></div>
         </div>
+        <div class="bus-announcement-container">
+            <h2 class="bordered-element bus-announcement-header">
+                <i class="fas fa-bullhorn"></i>&nbsp;
+                <b>Announcements</b>
+                {% if admin %}
+                    <button class="button bus-announcement-save">
+                        Save
+                    </button>
+                    <button class="button bus-announcement-clear">
+                        Clear
+                    </button>
+                {% endif %}
+            </h2>
+            <div class="bus-announcement bordered-element" {% if admin %} contenteditable {% endif %}></div>
+            {% if admin %}
+            <p class="bus-announcement-help bordered-element">
+                <i class="fas fa-info-circle"></i>
+                Type in the box above to add an announcement, then click <b>Save</b> to publish it.
+                Click <b>Clear</b> to hide the announcement.
+                <br><br>
+                <b>Tip:</b> If you want to alert students riding a specific bus, include the bus name
+                in the announcement and Ion will alert students riding that bus to read this announcement.
+                For example, if you want to alert students riding JT-100, the following will work:
+                <br>
+                JT-100, JT100, jt-100, jt100, or 100.
+            </p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

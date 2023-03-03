@@ -1,10 +1,14 @@
+import logging
+
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
 from django.conf import settings
 from django.utils import timezone
 
-from .models import Route
+from .models import BusAnnouncement, Route
+
+logger = logging.getLogger(__name__)
 
 
 class BusConsumer(JsonWebsocketConsumer):
@@ -35,18 +39,24 @@ class BusConsumer(JsonWebsocketConsumer):
         if self.user is not None and self.user.is_authenticated and self.user.is_bus_admin:
             try:
                 if self.within_time_range(content["time"]):
-                    route = Route.objects.get(id=content["id"])
-                    route.status = content["status"]
-                    if content["time"] == "afternoon" and route.status == "a":
-                        route.space = content["space"]
+                    if content.get("announcement") or content.get("announcement") == "":
+                        if content["announcement"].strip() == "":
+                            content["announcement"] = ""
+                        announcement = BusAnnouncement.object()
+                        announcement.message = content["announcement"]
+                        announcement.save()
                     else:
-                        route.space = ""
-                    route.save()
+                        route = Route.objects.get(id=content["id"])
+                        route.status = content["status"]
+                        if content["time"] == "afternoon" and route.status == "a":
+                            route.space = content["space"]
+                        else:
+                            route.space = ""
+                        route.save()
                 data = self._serialize()
                 async_to_sync(self.channel_layer.group_send)("bus", {"type": "bus.update", "data": data})
             except Exception as e:
-                # TODO: Add logging
-                print(e)
+                logger.error(e)
                 self.send_json({"error": "An error occurred."})
         else:
             self.send_json({"error": "User does not have permissions."})
@@ -72,8 +82,11 @@ class BusConsumer(JsonWebsocketConsumer):
             route_list.append(serialized)
             if user and user in route.user_set.all():
                 data["userRouteId"] = route.id
+                data["userRouteName"] = route.route_name
 
         data["allRoutes"] = route_list
+        data["announcement"] = str(BusAnnouncement.object().message)
+
         return data
 
     def within_time_range(self, time):
