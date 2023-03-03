@@ -156,7 +156,6 @@ def poll_vote_view(request, poll_id):
         entries = request.POST
         for name in entries:
             if name.startswith("question-"):
-
                 question_num = name.split("question-", 2)[1]
                 try:
                     question_obj = questions.get(num=question_num)

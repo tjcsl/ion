@@ -29,7 +29,6 @@ ScheduledActivityFormset = formset_factory(ScheduledActivityForm, extra=0)
 
 @eighth_admin_required
 def schedule_activity_view(request):
-
     if request.method == "POST":
         formset = ScheduledActivityFormset(request.POST)
 

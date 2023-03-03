@@ -22,7 +22,7 @@ class ApiTest(IonTestCase):
     """Tests for the api module."""
 
     def setUp(self):
-        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=(get_senior_graduation_year() + 1))[0]
+        self.user = get_user_model().objects.get_or_create(username="awilliam", graduation_year=get_senior_graduation_year() + 1)[0]
         self.application = Application(
             name="Test Application",
             redirect_uris="http://localhost http://example.com http://example.it",
@@ -76,7 +76,6 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_oauth_read(self):
-
         self.make_token()
         response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, 200)

@@ -428,7 +428,7 @@ def eighth_location(request):
         messages.error(request, "There are no eighth period blocks scheduled today.")
         response = redirect("index")
 
-    response.set_cookie("seen_eighth_location", "1", max_age=(3 * 60 * 60))
+    response.set_cookie("seen_eighth_location", "1", max_age=3 * 60 * 60)
     return response
 
 

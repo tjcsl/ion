@@ -14,7 +14,6 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def pull_sports_schedules(month=None) -> None:
-
     start_date = None
     today = date.today()
     if month is None:
@@ -64,6 +63,7 @@ def pull_sports_schedules(month=None) -> None:
             "ffVwLayout": "1",
             "downloadtype": "csv",
         },
+        timeout=60,
     )
 
     reader = csv.DictReader(r.content.decode("UTF-8").splitlines())

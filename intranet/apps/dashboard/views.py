@@ -394,13 +394,13 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
                 end_of_day = make_aware(day.end_time.date_obj(now.date()))
                 if end_of_day - timedelta(minutes=5) <= now <= end_of_day + timedelta(minutes=20):
                     response = redirect(reverse("afternoon_bus"))
-                    response.set_cookie("seen_bus_redirect", "1", max_age=(60 * 60))
+                    response.set_cookie("seen_bus_redirect", "1", max_age=60 * 60)
                     return response
             elif settings.IS_SUMMER_SCHOOL:
                 end_of_day = datetime.datetime(now.year, now.month, now.day, settings.SCHOOL_END_HOUR, settings.SCHOOL_END_MINUTE)
                 if end_of_day - timedelta(minutes=5) <= now <= end_of_day + timedelta(minutes=20):
                     response = redirect(reverse("afternoon_bus"))
-                    response.set_cookie("seen_bus_redirect", "1", max_age=(60 * 60))
+                    response.set_cookie("seen_bus_redirect", "1", max_age=60 * 60)
                     return response
 
         except AttributeError:

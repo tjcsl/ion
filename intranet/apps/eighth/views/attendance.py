@@ -256,7 +256,6 @@ def take_attendance_view(request, scheduled_activity_id):
         edit_perm_cancelled = True
 
     if request.method == "POST":
-
         if not edit_perm:
             if edit_perm_cancelled:
                 return render(

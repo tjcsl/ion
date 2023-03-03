@@ -13,7 +13,6 @@ class Command(BaseCommand):
         parser.add_argument("--pretend", action="store_true", dest="pretend", default=False, help="Pretend, and don't actually do anything.")
 
     def handle(self, *args, **options):
-
         log = not options["silent"]
 
         absences = EighthSignup.objects.get_absences().filter(absence_emailed=False)

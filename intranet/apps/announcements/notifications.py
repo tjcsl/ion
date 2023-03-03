@@ -198,6 +198,6 @@ def notify_twitter(status):
 
     data = {"status": status}
 
-    req = requests.post(url, data=data, auth=auth)
+    req = requests.post(url, data=data, auth=auth, timeout=15)
 
     return req.text

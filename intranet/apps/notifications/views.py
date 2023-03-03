@@ -144,7 +144,7 @@ def gcm_post(nc_users, data, user=None, request=None):
     headers = {"Content-Type": "application/json", "project_id": settings.GCM_PROJECT_ID, "Authorization": "key={}".format(settings.GCM_AUTH_KEY)}
     postdata = {"registration_ids": reg_ids, "data": data}
     postjson = json.dumps(postdata)
-    req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson)
+    req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson, timeout=15)
     try:
         resp = req.json()
     except ValueError as e:

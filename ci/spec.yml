@@ -55,9 +55,9 @@ env:
     run: |
       set -e
 
-      pip install -U pip setuptools==57.5.0 wheel
+      pip install -U pip setuptools wheel
       pip install -U \
-        flake8 pylint==2.14.5 pylint-django pylint-plugin-utils isort black==20.8b1 autopep8 \
+        flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \
         coveralls pyyaml pytest-django
       pip install -U -r requirements.txt
 
@@ -85,10 +85,8 @@ jobs:
 
       - name: Run flake8
         run: 'flake8 --max-line-length 150 --exclude=*/migrations/* intranet/ scripts/ docs/ *.py'
-      - name: Run pylint
-        run: pylint --jobs=0 --disable=fixme,broad-except,global-statement,attribute-defined-outside-init,cyclic-import,consider-using-f-string --django-settings-module=intranet.settings intranet/
-      - name: Run isort
-        run: isort --check intranet
+      - name: Run pylintx
+        run: pylint --jobs=0 --disable=fixme,broad-exception-caught,broad-exception-raised,unsupported-binary-operation,global-statement,attribute-defined-outside-init,cyclic-import,consider-using-f-string --django-settings-module=intranet.settings intranet/
 
   formatting:
     runs-on: ubuntu-latest
@@ -129,19 +127,13 @@ jobs:
       - name: Regenerate workflow YAML file and check for changes
         run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
 
-      # Build docs/sources
-      - name: Build docs
-        run: ./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh
+      # Build sources
       - name: Build sources
         run: ./scripts/build_ensure_no_changes.sh ./scripts/build_sources.sh
 
       # Check for changes to CI spec
       - name: Check for changes to CI spec
         run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
-
-      # Check for unmigrated changes
-      - name: Check for unmigrated changes
-        run: ./scripts/build_ensure_no_changes.sh ./manage.py migrate
 
       # Validate commit messages
       - name: Validate PR commit messages
@@ -153,7 +145,9 @@ jobs:
         if: "github.event_name == 'push' && (github.repository_owner != 'tjcsl' || github.ref != 'refs/heads/master' || github.ref != 'refs/heads/dev')"
         run: 'git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}'
 
-      # Push docs
+      # Build/push docs
+      - name: Build docs
+        run: ./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh
       - name: Push docs
         # Only run for pushes to the main Ion repo
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.8
@@ -229,7 +223,14 @@ jobs:
 
       # Tests
       - name: Run tests
-        run: coverage run -m pytest
+        if: github.repository_owner != 'tjcsl'
+        run: coverage run -a ./manage.py test --noinput --parallel 4
+      - name: Run tests
+        if: github.repository_owner == 'tjcsl'  # Run single-threaded for accurate coverage reporting on Ion GitHub
+        run: coverage run -a ./manage.py test --noinput
+      # Check for unmigrated changes
+      - name: Check for unmigrated changes
+        run: coverage run -a ./manage.py makemigrations --noinput --check
       - name: Migrate database
         run: coverage run -a ./manage.py migrate
       - name: Collect static files
