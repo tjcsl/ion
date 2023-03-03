@@ -106,8 +106,9 @@ LOGGING_VERBOSE = PRODUCTION
 # Whether to report master password attempts
 MASTER_NOTIFY = False
 
-# DEBUG defaults to off in PRODUCTION, on otherwise.
-DEBUG = os.getenv("DEBUG", str(not PRODUCTION).upper()) == "TRUE"
+# DEBUG defaults to off in all environments. This has HUGE performance benefits, even in development. Set to "TRUE" to manually enable.
+DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
+#DEBUG = "TRUE"
 
 # Don't send emails unless we're in production.
 EMAIL_ANNOUNCEMENTS = PRODUCTION
