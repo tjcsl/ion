@@ -222,10 +222,10 @@ jobs:
         run: sudo apt install -y krb5-user
 
       # Tests
-      - name: Run tests
+      - name: Run tests (Fork)
         if: github.repository_owner != 'tjcsl'
         run: coverage run -a ./manage.py test --noinput --parallel 4
-      - name: Run tests
+      - name: Run tests (PR/Push)
         if: github.repository_owner == 'tjcsl'  # Run single-threaded for accurate coverage reporting on Ion GitHub
         run: coverage run -a ./manage.py test --noinput
       # Check for unmigrated changes

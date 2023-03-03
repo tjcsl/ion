@@ -12,6 +12,28 @@ $(function() {
         create: false,
         sortField: "text"
     });
+
+    if(isAdmin) {
+        $(".bus-announcement-save").click(function() {
+            sendMorningUpdate({
+                announcement: $(".bus-announcement").text()
+            }, socket);
+            $(".bus-announcement-save").text("Saved!").css("color", "green");
+            setTimeout(function() {
+                $(".bus-announcement-save").text("Save").css("color", "");
+            }, 1500);
+        });
+        $(".bus-announcement-clear").click(function() {
+            $(".bus-announcement").text("");
+            sendMorningUpdate({
+                announcement: "",
+            }, socket);
+            $(".bus-announcement-clear").text("Cleared!").css("color", "green");
+            setTimeout(function() {
+                $(".bus-announcement-clear").text("Clear").css("color", "");
+            }, 1500);
+        });
+    }
 });
 
 function sendMorningUpdate(data, socket) {

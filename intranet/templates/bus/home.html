@@ -26,6 +26,7 @@
         {% stylesheet 'dark/nav' %}
         {% stylesheet 'dark/bus' %}
     {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 {% endblock %}
 
 {% block main %}
@@ -42,7 +43,7 @@
         <h2 class="personal-status bordered-element">
             <i class="fas fa-info-circle"></i>
             <a href="{% url 'preferences' %}#id_bus_route" target="_blank">
-                Register your bus route for faster access to arrival information.
+                 Register your bus route for personalized status updates.
             </a>
         </h2>
     {% verbatim %}
@@ -83,6 +84,42 @@
         </div>
     </script>
     {% endverbatim %}
+    <div class="primary-content">
+        <div class="info"> </div>
+        <div class="bus-announcement-container">
+            <h2 class="bordered-element bus-announcement-header">
+                <i class="fas fa-bullhorn"></i>&nbsp;
+                <b>Announcements</b>
+                {% if admin %}
+                    <button class="button bus-announcement-save">
+                        Save
+                    </button>
+                    <button class="button bus-announcement-clear">
+                        Clear
+                    </button>
+                {% endif %}
+            </h2>
+            <div class="bus-announcement bordered-element" {% if admin %} contenteditable {% endif %}></div>
+            {% if admin %}
+            <p class="bus-announcement-help bordered-element">
+                <i class="fas fa-info-circle"></i>
+                Type in the box above to add an announcement, then click <b>Save</b> to publish it.
+                Click <b>Clear</b> to hide the announcement.
+                <br><br>
+                <b>Tip:</b> If you want to alert students riding a specific bus, include the bus name
+                in the announcement and Ion will alert students riding that bus to read this announcement.
+                For example, if you want to alert students riding JT-100, the following will work:
+                <br>
+                JT-100, JT100, jt-100, jt100, or 100.
+            </p>
+            {% endif %}
+        </div>
+        {% comment %}
+        <div class="beta-warning bordered-element">
+            Looking for Ion BusDriver? Click on a bus space, then click "skrt skrt".
+        </div>
+        {% endcomment %}
+    </div>
     <script type="text/template" id="map-view">
         {% if enable_bus_driver %}
             <div id='map' class='busdriver-map'></div>
@@ -90,12 +127,4 @@
         {% endif %}
         {% svg 'optimized_bus_map_v2' %}
     </script>
-    <div class="primary-content">
-        {% comment %}
-        <div class="beta-warning bordered-element">
-            Looking for Ion BusDriver? Click on a bus space, then click "skrt skrt".
-        </div>
-        {% endcomment %}
-        <div class="info"> </div>
-    </div>
 {% endblock %}

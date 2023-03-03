@@ -113,7 +113,7 @@ $(function() {
                 busList = routeList.filter(bus => bus.attributes.status !== 'a')
                                     .map(bus => bus.attributes);
             }
-            container.find('select').selectize({
+            let selectField = container.find('select').selectize({
                 'options': busList,
                 'valueField': 'route_name',
                 'labelField': 'route_name',
@@ -128,7 +128,21 @@ $(function() {
                         field: '$score'
                     }
                 ]
-            })[0].selectize.focus();
+            })[0].selectize;
+
+            // Make search input readonly on mobile by default so the keyboard doesn't pop up
+            // if (window.innerWidth < 768) {
+            //     selectField.$control_input.prop('readonly', true);
+            //     $('.selectize-control').one("focus click", function (){
+            //         selectField.$control_input.prop('readonly', false);
+            //         // TODO: Auto-focus the input field again and get the virtual keyboard to show up.
+            //         // There doesn't seem to be an easy way to do this.
+            //     });
+            // }
+
+            selectField.$control_input.prop('pattern', '[0-9]*');
+            selectField.focus();
+
             return this;
         },
         handleBusSelect: function (e) {
@@ -684,6 +698,28 @@ $(function() {
             this.render();
         }
     });
+
+    if(isAdmin) {
+        $(".bus-announcement-save").click(function() {
+            bus.sendUpdate({
+                announcement: $(".bus-announcement").text()
+            });
+            $(".bus-announcement-save").text("Saved!").css("color", "green");
+            setTimeout(function() {
+                $(".bus-announcement-save").text("Save").css("color", "");
+            }, 1500);
+        });
+        $(".bus-announcement-clear").click(function() {
+            $(".bus-announcement").text("");
+            bus.sendUpdate({
+                announcement: "",
+            });
+            $(".bus-announcement-clear").text("Cleared!").css("color", "green");
+            setTimeout(function() {
+                $(".bus-announcement-clear").text("Clear").css("color", "");
+            }, 1500);
+        });
+    }
 
     if (enableBusDriver) {
         $('body').on('keydown', function (e) {

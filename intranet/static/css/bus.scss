@@ -7,9 +7,72 @@ body {
 svg {
     width: 100%;
     max-height: 80vh;
+    margin-top: 15px;
 
     path.a {
         cursor: pointer;
+    }
+}
+
+.info {
+    height: 80vh;
+}
+
+.bus-announcement-container, .bus-announcement-header, .bus-announcement, .bus-announcement-help {
+    width: 25vw;
+}
+
+.bus-announcement-container {
+    position: absolute;
+    top: 56px;
+    right: 4vw;
+    display: none;
+}
+
+.bus-announcement {
+    outline: none;
+    font-size: 16px;
+    margin-top: 0;
+    border-radius: 0px 0px 5px 5px;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+}
+
+.bus-announcement.bus-announcement-alert {
+    border-top: 1px solid #ff6a6a;
+    background-color: #ff9a96;
+}
+
+.bus-announcement-header {
+    background-color: #dbdada;
+    margin-bottom: 0;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.bus-announcement-header.bus-announcement-alert {
+    background-color: #ff6a6a;
+    border-bottom: 1px solid #ff6a6a;
+}
+
+.bus-announcement-help {
+    display: none;
+    background-color: #dbdada;
+}
+
+.bus-announcement-save, .bus-announcement-clear {
+    float: right;
+    font-size: 14px;
+    padding: 3px 5px;
+}
+
+.bus-announcement-clear {
+    margin-right: 5px;
+}
+
+@media(max-width: 800px) {
+    .bus-announcement-container, .bus-announcement-header, .bus-announcement, .bus-announcement-help {
+        position: static;
+        width: 60vw;
     }
 }
 
@@ -41,29 +104,34 @@ svg {
 }
 
 @media (max-width: 550px) {
-    h2.personal-status {
-        width: 95% !important;
+    .info {
+        height: 86vh;
     }
 
     svg {
-        position: relative;
-        top: 5vh;
+        margin-bottom: 50px;
+    }
+
+    h2.personal-status, .bus-announcement-container, .bus-announcement-header, .bus-announcement, .bus-announcement-help {
+        width: 81vw !important;
+    }
+
+    .bus-announcement-container {
+        margin-top: 10px;
     }
 
     .action-view {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-        height: 65px;
+        // position: fixed;
+        // bottom: 0;
+        // left: 0;
+        width: 86vw;
+        font-size: 16px;
 
         padding: 0;
         margin: 0;
         border-radius: 0;
         border: none;
-
-        font-size: 14pt;
-        line-height: 8vh;
+        line-height: 250%;
 
         .action-button {
             position: relative;
@@ -76,10 +144,9 @@ svg {
         }
 
         &.search-widget {
+            background-color: rgba(255, 255, 255, 0);
             top: 40px;
             height: calc(100vh - 40px);
-            background-color: #ffffff94;
-            z-index: 100;
 
             .search-widget {
                 background-color: white;
@@ -207,10 +274,14 @@ h2.title {
 }
 
 #buses {
-    width: 125px;
+    width: 95%;
     height: 35px;
     font-size: 20px;
     margin: 10px 20px;
+}
+
+div.selectize-input.full {
+    width: 220px;
 }
 
 .update-button {

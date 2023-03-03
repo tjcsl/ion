@@ -108,7 +108,7 @@ MASTER_NOTIFY = False
 
 # DEBUG defaults to off in all environments. This has HUGE performance benefits, even in development. Set to "TRUE" to manually enable.
 DEBUG = os.getenv("DEBUG", "FALSE") == "TRUE"
-#DEBUG = "TRUE"
+# DEBUG = "TRUE"
 
 # Don't send emails unless we're in production.
 EMAIL_ANNOUNCEMENTS = PRODUCTION
