@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #1533) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #1600) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -229,8 +229,9 @@
 <span class="c1"># Whether to report master password attempts</span>
 <span class="n">MASTER_NOTIFY</span> <span class="o">=</span> <span class="kc">False</span>
 
-<span class="c1"># DEBUG defaults to off in PRODUCTION, on otherwise.</span>
-<span class="n">DEBUG</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="ow">not</span> <span class="n">PRODUCTION</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
+<span class="c1"># DEBUG defaults to off in all environments. This has HUGE performance benefits, even in development. Set to &quot;TRUE&quot; to manually enable.</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;FALSE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;TRUE&quot;</span>
+<span class="c1"># DEBUG = &quot;TRUE&quot;</span>
 
 <span class="c1"># Don&#39;t send emails unless we&#39;re in production.</span>
 <span class="n">EMAIL_ANNOUNCEMENTS</span> <span class="o">=</span> <span class="n">PRODUCTION</span>
@@ -364,6 +365,7 @@
 <span class="c1"># Example: &quot;/home/media/media.lawrence.com/static/&quot;</span>
 <span class="c1">#</span>
 <span class="c1"># This is the folder that Nginx serves as /static in production</span>
+<span class="c1"># and WhiteNoise serves in development.</span>
 <span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;collected_static&quot;</span><span class="p">)</span>
 
 <span class="c1"># URL prefix for static files.</span>
@@ -391,31 +393,21 @@
 <span class="n">PIPELINE</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;CSS_COMPRESSOR&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s2">&quot;COMPILERS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pipeline.compilers.sass.SASSCompiler&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;STYLESHEETS&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;base&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/base.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/themes.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/responsive.scss&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/base.css&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;eighth.admin&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/eighth.common.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/eighth.admin.scss&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/eighth.admin.css&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;eighth.signup&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/eighth.common.scss&quot;</span><span class="p">,</span> <span class="s2">&quot;css/eighth.signup.scss&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/eighth.signup.css&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
+    <span class="s2">&quot;STYLESHEETS&quot;</span><span class="p">:</span> <span class="p">{},</span>
 <span class="p">}</span>  <span class="c1"># type: Dict[str,Any]</span>
 
 <span class="n">LIST_OF_INDEPENDENT_CSS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;about&quot;</span><span class="p">,</span>
     <span class="s2">&quot;api&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;base&quot;</span><span class="p">,</span>
     <span class="s2">&quot;login&quot;</span><span class="p">,</span>
     <span class="s2">&quot;emerg&quot;</span><span class="p">,</span>
     <span class="s2">&quot;files&quot;</span><span class="p">,</span>
     <span class="s2">&quot;schedule&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;themes&quot;</span><span class="p">,</span>
     <span class="s2">&quot;theme.blue&quot;</span><span class="p">,</span>
     <span class="s2">&quot;page_base&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;responsive&quot;</span><span class="p">,</span>
     <span class="s2">&quot;responsive.core&quot;</span><span class="p">,</span>
     <span class="s2">&quot;search&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dashboard&quot;</span><span class="p">,</span>
@@ -433,6 +425,8 @@
     <span class="s2">&quot;signage.touch&quot;</span><span class="p">,</span>
     <span class="s2">&quot;signage.touch.landscape&quot;</span><span class="p">,</span>
     <span class="s2">&quot;eighth.common&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eighth.admin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;eighth.signup&quot;</span><span class="p">,</span>
     <span class="s2">&quot;eighth.attendance&quot;</span><span class="p">,</span>
     <span class="s2">&quot;eighth.profile&quot;</span><span class="p">,</span>
     <span class="s2">&quot;eighth.schedule&quot;</span><span class="p">,</span>
@@ -561,6 +555,14 @@
     <span class="s2">&quot;intranet.middleware.dark_mode.DarkModeMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Dark mode-related middleware</span>
     <span class="s2">&quot;django_referrer_policy.middleware.ReferrerPolicyMiddleware&quot;</span><span class="p">,</span>  <span class="c1"># Sets the Referrer-Policy header</span>
 <span class="p">]</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">PRODUCTION</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">DEBUG</span><span class="p">:</span>
+    <span class="c1"># Serve static files using WhiteNoise in development if DEBUG is False</span>
+    <span class="c1"># See http://whitenoise.evans.io/en/stable/django.html</span>
+    <span class="n">WHITENOISE_AUTOREFRESH</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">WHITENOISE_USE_FINDERS</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">WHITENOISE_MAX_AGE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">MIDDLEWARE</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;whitenoise.middleware.WhiteNoiseMiddleware&quot;</span><span class="p">]</span>
 
 <span class="c1"># URLconf at urls.py</span>
 <span class="n">ROOT_URLCONF</span> <span class="o">=</span> <span class="s2">&quot;intranet.urls&quot;</span>
@@ -708,6 +710,7 @@
     <span class="s2">&quot;intranet.apps.auth&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.bus&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.cslapps&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intranet.apps.django&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.eighth&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.events&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.groups&quot;</span><span class="p">,</span>
@@ -866,6 +869,10 @@
         <span class="s2">&quot;DISABLE_PANELS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">panel</span> <span class="k">for</span> <span class="n">panel</span><span class="p">,</span> <span class="n">enabled</span> <span class="ow">in</span> <span class="n">_panels</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">],</span>
         <span class="s2">&quot;SHOW_TOOLBAR_CALLBACK&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.utils.helpers.debug_toolbar_callback&quot;</span><span class="p">,</span>
     <span class="p">}</span>
+
+    <span class="c1"># Disable all panels by default in development for performance</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">PRODUCTION</span><span class="p">:</span>
+        <span class="n">DEBUG_TOOLBAR_CONFIG</span><span class="p">[</span><span class="s2">&quot;DISABLE_PANELS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">panel</span> <span class="k">for</span> <span class="n">panel</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">_panels</span><span class="p">]</span>
 
     <span class="n">DEBUG_TOOLBAR_PANELS</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_panels</span><span class="p">]</span>
 

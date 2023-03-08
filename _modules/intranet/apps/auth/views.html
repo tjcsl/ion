@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1533) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1600) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -302,7 +302,6 @@
             <span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">form</span><span class="o">.</span><span class="n">get_user</span><span class="p">())</span>
             <span class="c1"># Initial load into session</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Login succeeded as </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">))</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;request.user: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 
             <span class="n">log_auth</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;success</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot; - first login&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">first_login</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
@@ -361,7 +360,7 @@
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Redirect to the login page.&quot;&quot;&quot;</span>
         <span class="n">next_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">force_login</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">has_next_page</span><span class="o">=</span><span class="p">(</span><span class="n">next_page</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="n">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">force_login</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">has_next_page</span><span class="o">=</span><span class="n">next_page</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="about_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.views.about_view">[docs]</a><span class="k">def</span> <span class="nf">about_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
