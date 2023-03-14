@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.oauth.models &#8212; TJ Intranet v3 (Build #1600) documentation</title>
+    <title>intranet.apps.oauth.models &#8212; TJ Intranet v3 (Build #1604) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -124,17 +124,93 @@
 <span></span><span class="kn">from</span> <span class="nn">oauth2_provider.models</span> <span class="kn">import</span> <span class="n">AbstractApplication</span>
 
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">gettext_lazy</span> <span class="k">as</span> <span class="n">_</span>
 
 
 <div class="viewcode-block" id="CSLApplication"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.oauth.html#intranet.apps.oauth.models.CSLApplication">[docs]</a><span class="k">class</span> <span class="nc">CSLApplication</span><span class="p">(</span><span class="n">AbstractApplication</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extends the default OAuth Application model to add CSL-specific information about an OAuth application.</span>
+<span class="sd">    Disables the implicit, password, and OpenID connect hybrid grant types.</span>
+<span class="sd">    Disables use of an OIDC algorithm.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        sanctioned (bool): Whether the application is sanctioned by the tjCSL.</span>
-
+<span class="sd">        sanctioned_but_do_not_skip_authorization (bool): Whether to not skip the authorization page for this application even if it is sanctioned.</span>
+<span class="sd">        user_has_oauth_and_api_access (bool): Whether the user associated with the CSLApplication has OAuth and API access.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">sanctioned</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    <span class="n">CLIENT_CONFIDENTIAL</span> <span class="o">=</span> <span class="s2">&quot;confidential&quot;</span>
+    <span class="n">CLIENT_PUBLIC</span> <span class="o">=</span> <span class="s2">&quot;public&quot;</span>
+    <span class="n">CLIENT_TYPES</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">CLIENT_CONFIDENTIAL</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Confidential&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">CLIENT_PUBLIC</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Public&quot;</span><span class="p">)),</span>
+    <span class="p">)</span>
+
+    <span class="n">GRANT_AUTHORIZATION_CODE</span> <span class="o">=</span> <span class="s2">&quot;authorization-code&quot;</span>
+    <span class="n">GRANT_IMPLICIT</span> <span class="o">=</span> <span class="s2">&quot;implicit&quot;</span>
+    <span class="n">GRANT_PASSWORD</span> <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
+    <span class="n">GRANT_CLIENT_CREDENTIALS</span> <span class="o">=</span> <span class="s2">&quot;client-credentials&quot;</span>
+    <span class="n">GRANT_OPENID_HYBRID</span> <span class="o">=</span> <span class="s2">&quot;openid-hybrid&quot;</span>
+    <span class="n">GRANT_TYPES</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">GRANT_AUTHORIZATION_CODE</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Authorization code&quot;</span><span class="p">)),</span>
+        <span class="c1"># Disabled for security reasons</span>
+        <span class="c1"># (GRANT_IMPLICIT, _(&quot;Implicit&quot;)),</span>
+        <span class="c1"># (GRANT_PASSWORD, _(&quot;Resource owner password-based&quot;)),</span>
+        <span class="p">(</span><span class="n">GRANT_CLIENT_CREDENTIALS</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Client credentials&quot;</span><span class="p">)),</span>
+        <span class="c1"># Disabled because we don&#39;t support OIDC</span>
+        <span class="c1"># (GRANT_OPENID_HYBRID, _(&quot;OpenID connect hybrid&quot;)),</span>
+    <span class="p">)</span>
+
+    <span class="n">NO_ALGORITHM</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">RS256_ALGORITHM</span> <span class="o">=</span> <span class="s2">&quot;RS256&quot;</span>
+    <span class="n">HS256_ALGORITHM</span> <span class="o">=</span> <span class="s2">&quot;HS256&quot;</span>
+    <span class="n">ALGORITHM_TYPES</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">NO_ALGORITHM</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No OIDC support&quot;</span><span class="p">)),</span>
+        <span class="c1"># Disabled because we don&#39;t support OIDC</span>
+        <span class="c1"># (RS256_ALGORITHM, _(&quot;RSA with SHA-2 256&quot;)),</span>
+        <span class="c1"># (HS256_ALGORITHM, _(&quot;HMAC with SHA-2 256&quot;)),</span>
+    <span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># make name required</span>
+    <span class="n">authorization_grant_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">GRANT_TYPES</span><span class="p">)</span>
+    <span class="n">algorithm</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ALGORITHM_TYPES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NO_ALGORITHM</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sanctioned</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Whether this application is sanctioned by the tjCSL.&quot;</span><span class="p">)</span>
+    <span class="n">skip_authorization</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Skip the authorization page for this application. This will automatically be set to true upon save &quot;</span>
+            <span class="s2">&quot;if this application is marked as sanctioned by the CSL.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">sanctioned_but_do_not_skip_authorization</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Set to true if this application is sanctioned but you do NOT want to skip the authorization page for this application. &quot;</span>
+            <span class="s2">&quot;Overrides automatically skipping authorization for sanctioned applications.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user_has_oauth_and_api_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span>
+
+<div class="viewcode-block" id="CSLApplication.save"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.oauth.html#intranet.apps.oauth.models.CSLApplication.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip_authorization</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanctioned</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_authorization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sanctioned_but_do_not_skip_authorization</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanctioned</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanctioned_but_do_not_skip_authorization</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanctioned_but_do_not_skip_authorization</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">skip_authorization</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BlankModel2"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.oauth.html#intranet.apps.oauth.models.BlankModel2">[docs]</a><span class="k">class</span> <span class="nc">BlankModel2</span><span class="p">:</span>
+    <span class="n">private_fields</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">concrete_fields</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">many_to_many</span> <span class="o">=</span> <span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BlankModel"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.oauth.html#intranet.apps.oauth.models.BlankModel">[docs]</a><span class="k">class</span> <span class="nc">BlankModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A blank model to use for modelform_factory for unauthorized users.&quot;&quot;&quot;</span>
+
+    <span class="n">_meta</span> <span class="o">=</span> <span class="n">BlankModel2</span></div>
 </pre></div>
 
     </div>

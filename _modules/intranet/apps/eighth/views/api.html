@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #1600) documentation</title>
+    <title>intranet.apps.eighth.views.api &#8212; TJ Intranet v3 (Build #1604) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -142,7 +142,9 @@
 
 <div class="viewcode-block" id="IsAuthenticatedOrClientCredentials"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.IsAuthenticatedOrClientCredentials">[docs]</a><span class="k">class</span> <span class="nc">IsAuthenticatedOrClientCredentials</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
 <div class="viewcode-block" id="IsAuthenticatedOrClientCredentials.has_permission"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.IsAuthenticatedOrClientCredentials.has_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">bool</span><span class="p">((</span><span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">auth</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">auth</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="EighthActivityList"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthActivityList">[docs]</a><span class="k">class</span> <span class="nc">EighthActivityList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
@@ -214,6 +216,7 @@
 <div class="viewcode-block" id="EighthUserSignupListAdd"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserSignupListAdd">[docs]</a><span class="k">class</span> <span class="nc">EighthUserSignupListAdd</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthAddSignupSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="EighthUserSignupListAdd.is_valid_date"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserSignupListAdd.is_valid_date">[docs]</a>    <span class="k">def</span> <span class="nf">is_valid_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_text</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -292,6 +295,7 @@
 <div class="viewcode-block" id="EighthUserFavoritesListToggle"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesListToggle</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthToggleFavoriteSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="EighthUserFavoritesListToggle.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesListToggle.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
@@ -327,6 +331,7 @@
 <div class="viewcode-block" id="EighthUserFavoritesAdd"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesAdd</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">CreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityDetailSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="EighthUserFavoritesAdd.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesAdd.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
@@ -352,6 +357,7 @@
 <div class="viewcode-block" id="EighthUserFavoritesRemove"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesRemove">[docs]</a><span class="k">class</span> <span class="nc">EighthUserFavoritesRemove</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="EighthUserFavoritesRemove.get_queryset"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthUserFavoritesRemove.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
@@ -383,6 +389,8 @@
 <div class="viewcode-block" id="EighthScheduledActivitySignupList"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthScheduledActivitySignupList">[docs]</a><span class="k">class</span> <span class="nc">EighthScheduledActivitySignupList</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint that lists all signups for a certain scheduled activity.&quot;&quot;&quot;</span>
 
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+
 <div class="viewcode-block" id="EighthScheduledActivitySignupList.get"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.api.EighthScheduledActivitySignupList.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
         <span class="n">serializer</span> <span class="o">=</span> <span class="n">EighthScheduledActivitySerializer</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span>
@@ -394,7 +402,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint that shows details of an eighth signup.&quot;&quot;&quot;</span>
 
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthSignupSerializer</span></div>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthSignupSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span></div>
 </pre></div>
 
     </div>

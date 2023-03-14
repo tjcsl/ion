@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.oauth package &#8212; TJ Intranet v3 (Build #1600) documentation</title>
+    <title>intranet.apps.oauth package &#8212; TJ Intranet v3 (Build #1604) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -94,7 +94,23 @@
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">intranet.apps.oauth package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.oauth.admin">intranet.apps.oauth.admin module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.oauth.admin">intranet.apps.oauth.admin module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.actions"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.actions</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.do_not_skip_authorization_for_applications"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.do_not_skip_authorization_for_applications()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.list_filter</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.radio_fields"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.radio_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.raw_id_fields"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.raw_id_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.sanction_applications"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.sanction_applications()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.search_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.skip_authorization_for_applications"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.skip_authorization_for_applications()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.unsanction_applications"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.unsanction_applications()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.user_has_oauth_and_api_access"><code class="docutils literal notranslate"><span class="pre">CSLApplicationAdmin.user_has_oauth_and_api_access()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.oauth.apps">intranet.apps.oauth.apps module</a><ul>
 <li><a class="reference internal" href="#intranet.apps.oauth.apps.OauthConfig"><code class="docutils literal notranslate"><span class="pre">OauthConfig</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.oauth.apps.OauthConfig.name"><code class="docutils literal notranslate"><span class="pre">OauthConfig.name</span></code></a></li>
@@ -103,10 +119,32 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#module-intranet.apps.oauth.models">intranet.apps.oauth.models module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.BlankModel"><code class="docutils literal notranslate"><span class="pre">BlankModel</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.BlankModel2"><code class="docutils literal notranslate"><span class="pre">BlankModel2</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.BlankModel2.concrete_fields"><code class="docutils literal notranslate"><span class="pre">BlankModel2.concrete_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.BlankModel2.many_to_many"><code class="docutils literal notranslate"><span class="pre">BlankModel2.many_to_many</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.BlankModel2.private_fields"><code class="docutils literal notranslate"><span class="pre">BlankModel2.private_fields</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication"><code class="docutils literal notranslate"><span class="pre">CSLApplication</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.sanctioned"><code class="docutils literal notranslate"><span class="pre">CSLApplication.sanctioned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.sanctioned_but_do_not_skip_authorization"><code class="docutils literal notranslate"><span class="pre">CSLApplication.sanctioned_but_do_not_skip_authorization</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.user_has_oauth_and_api_access"><code class="docutils literal notranslate"><span class="pre">CSLApplication.user_has_oauth_and_api_access</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.ALGORITHM_TYPES"><code class="docutils literal notranslate"><span class="pre">CSLApplication.ALGORITHM_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.CLIENT_CONFIDENTIAL"><code class="docutils literal notranslate"><span class="pre">CSLApplication.CLIENT_CONFIDENTIAL</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.CLIENT_PUBLIC"><code class="docutils literal notranslate"><span class="pre">CSLApplication.CLIENT_PUBLIC</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.CLIENT_TYPES"><code class="docutils literal notranslate"><span class="pre">CSLApplication.CLIENT_TYPES</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">CSLApplication.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.GRANT_AUTHORIZATION_CODE"><code class="docutils literal notranslate"><span class="pre">CSLApplication.GRANT_AUTHORIZATION_CODE</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.GRANT_CLIENT_CREDENTIALS"><code class="docutils literal notranslate"><span class="pre">CSLApplication.GRANT_CLIENT_CREDENTIALS</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.GRANT_IMPLICIT"><code class="docutils literal notranslate"><span class="pre">CSLApplication.GRANT_IMPLICIT</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.GRANT_OPENID_HYBRID"><code class="docutils literal notranslate"><span class="pre">CSLApplication.GRANT_OPENID_HYBRID</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.GRANT_PASSWORD"><code class="docutils literal notranslate"><span class="pre">CSLApplication.GRANT_PASSWORD</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.GRANT_TYPES"><code class="docutils literal notranslate"><span class="pre">CSLApplication.GRANT_TYPES</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.HS256_ALGORITHM"><code class="docutils literal notranslate"><span class="pre">CSLApplication.HS256_ALGORITHM</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">CSLApplication.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.NO_ALGORITHM"><code class="docutils literal notranslate"><span class="pre">CSLApplication.NO_ALGORITHM</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.RS256_ALGORITHM"><code class="docutils literal notranslate"><span class="pre">CSLApplication.RS256_ALGORITHM</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.accesstoken_set"><code class="docutils literal notranslate"><span class="pre">CSLApplication.accesstoken_set</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.get_algorithm_display"><code class="docutils literal notranslate"><span class="pre">CSLApplication.get_algorithm_display()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.get_authorization_grant_type_display"><code class="docutils literal notranslate"><span class="pre">CSLApplication.get_authorization_grant_type_display()</span></code></a></li>
@@ -120,15 +158,28 @@
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.objects"><code class="docutils literal notranslate"><span class="pre">CSLApplication.objects</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.refreshtoken_set"><code class="docutils literal notranslate"><span class="pre">CSLApplication.refreshtoken_set</span></code></a></li>
 <li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">CSLApplication.sanctioned</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">CSLApplication.sanctioned_but_do_not_skip_authorization</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.save"><code class="docutils literal notranslate"><span class="pre">CSLApplication.save()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.oauth.models.CSLApplication.user"><code class="docutils literal notranslate"><span class="pre">CSLApplication.user</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">CSLApplication.user_has_oauth_and_api_access</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-intranet.apps.oauth.tests">intranet.apps.oauth.tests module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.oauth.views">intranet.apps.oauth.views module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationDeleteView"><code class="docutils literal notranslate"><span class="pre">ApplicationDeleteView</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationDeleteView.dispatch"><code class="docutils literal notranslate"><span class="pre">ApplicationDeleteView.dispatch()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationRegistrationView"><code class="docutils literal notranslate"><span class="pre">ApplicationRegistrationView</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationRegistrationView.dispatch"><code class="docutils literal notranslate"><span class="pre">ApplicationRegistrationView.dispatch()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationRegistrationView.get_form_class"><code class="docutils literal notranslate"><span class="pre">ApplicationRegistrationView.get_form_class()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationUpdateView"><code class="docutils literal notranslate"><span class="pre">ApplicationUpdateView</span></code></a><ul>
-<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationUpdateView.fields"><code class="docutils literal notranslate"><span class="pre">ApplicationUpdateView.fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationUpdateView.dispatch"><code class="docutils literal notranslate"><span class="pre">ApplicationUpdateView.dispatch()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.oauth.views.ApplicationUpdateView.get_form_class"><code class="docutils literal notranslate"><span class="pre">ApplicationUpdateView.get_form_class()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -176,6 +227,72 @@
 </section>
 <section id="module-intranet.apps.oauth.admin">
 <span id="intranet-apps-oauth-admin-module"></span><h2>intranet.apps.oauth.admin module<a class="headerlink" href="#module-intranet.apps.oauth.admin" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.admin.</span></span><span class="sig-name descname"><span class="pre">CSLApplicationAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/admin.html#CSLApplicationAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<p>Custom admin interface for the CSLApplication model.
+Adds display and filtering by relevant fields.
+Adds actions to sanction and unsanction applications.
+Registered by oauth2_provider.admin
+Communicated to oauth2_provider by settings.OAUTH2_PROVIDER.APPLICATION_ADMIN_CLASS</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.actions">
+<span class="sig-name descname"><span class="pre">actions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['sanction_applications',</span> <span class="pre">'unsanction_applications',</span> <span class="pre">'skip_authorization_for_applications',</span> <span class="pre">'do_not_skip_authorization_for_applications']</span></em><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.do_not_skip_authorization_for_applications">
+<span class="sig-name descname"><span class="pre">do_not_skip_authorization_for_applications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/admin.html#CSLApplicationAdmin.do_not_skip_authorization_for_applications"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.do_not_skip_authorization_for_applications" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('id',</span> <span class="pre">'name',</span> <span class="pre">'user',</span> <span class="pre">'client_type',</span> <span class="pre">'authorization_grant_type',</span> <span class="pre">'sanctioned',</span> <span class="pre">'skip_authorization',</span> <span class="pre">'user_has_oauth_and_api_access')</span></em><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('sanctioned',</span> <span class="pre">'skip_authorization',</span> <span class="pre">'sanctioned_but_do_not_skip_authorization',</span> <span class="pre">'user__oauth_and_api_access',</span> <span class="pre">'client_type',</span> <span class="pre">'authorization_grant_type')</span></em><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.radio_fields">
+<span class="sig-name descname"><span class="pre">radio_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'authorization_grant_type':</span> <span class="pre">2,</span> <span class="pre">'client_type':</span> <span class="pre">1}</span></em><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.radio_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.raw_id_fields">
+<span class="sig-name descname"><span class="pre">raw_id_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('user',)</span></em><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.raw_id_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.sanction_applications">
+<span class="sig-name descname"><span class="pre">sanction_applications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/admin.html#CSLApplicationAdmin.sanction_applications"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.sanction_applications" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'user__username')</span></em><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.search_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.skip_authorization_for_applications">
+<span class="sig-name descname"><span class="pre">skip_authorization_for_applications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/admin.html#CSLApplicationAdmin.skip_authorization_for_applications"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.skip_authorization_for_applications" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.unsanction_applications">
+<span class="sig-name descname"><span class="pre">unsanction_applications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/admin.html#CSLApplicationAdmin.unsanction_applications"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.unsanction_applications" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.admin.CSLApplicationAdmin.user_has_oauth_and_api_access">
+<span class="sig-name descname"><span class="pre">user_has_oauth_and_api_access</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/admin.html#CSLApplicationAdmin.user_has_oauth_and_api_access"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.admin.CSLApplicationAdmin.user_has_oauth_and_api_access" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-intranet.apps.oauth.apps">
 <span id="intranet-apps-oauth-apps-module"></span><h2>intranet.apps.oauth.apps module<a class="headerlink" href="#module-intranet.apps.oauth.apps" title="Permalink to this heading">¶</a></h2>
@@ -194,10 +311,40 @@
 <section id="module-intranet.apps.oauth.models">
 <span id="intranet-apps-oauth-models-module"></span><h2>intranet.apps.oauth.models module<a class="headerlink" href="#module-intranet.apps.oauth.models" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.BlankModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.models.</span></span><span class="sig-name descname"><span class="pre">BlankModel</span></span><a class="reference internal" href="../_modules/intranet/apps/oauth/models.html#BlankModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.models.BlankModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A blank model to use for modelform_factory for unauthorized users.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.BlankModel2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.models.</span></span><span class="sig-name descname"><span class="pre">BlankModel2</span></span><a class="reference internal" href="../_modules/intranet/apps/oauth/models.html#BlankModel2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.models.BlankModel2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.BlankModel2.concrete_fields">
+<span class="sig-name descname"><span class="pre">concrete_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#intranet.apps.oauth.models.BlankModel2.concrete_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.BlankModel2.many_to_many">
+<span class="sig-name descname"><span class="pre">many_to_many</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#intranet.apps.oauth.models.BlankModel2.many_to_many" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.BlankModel2.private_fields">
+<span class="sig-name descname"><span class="pre">private_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">()</span></em><a class="headerlink" href="#intranet.apps.oauth.models.BlankModel2.private_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.models.</span></span><span class="sig-name descname"><span class="pre">CSLApplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/models.html#CSLApplication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractApplication</span></code></p>
-<p>Extends the default OAuth Application model to add CSL-specific information about an OAuth application.</p>
+<p>Extends the default OAuth Application model to add CSL-specific information about an OAuth application.
+Disables the implicit, password, and OpenID connect hybrid grant types.
+Disables use of an OIDC algorithm.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.sanctioned">
 <span class="sig-name descname"><span class="pre">sanctioned</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.sanctioned" title="Permalink to this definition">¶</a></dt>
@@ -209,17 +356,104 @@
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.sanctioned_but_do_not_skip_authorization">
+<span class="sig-name descname"><span class="pre">sanctioned_but_do_not_skip_authorization</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.sanctioned_but_do_not_skip_authorization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to not skip the authorization page for this application even if it is sanctioned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.user_has_oauth_and_api_access">
+<span class="sig-name descname"><span class="pre">user_has_oauth_and_api_access</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.user_has_oauth_and_api_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the user associated with the CSLApplication has OAuth and API access.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.ALGORITHM_TYPES">
+<span class="sig-name descname"><span class="pre">ALGORITHM_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('',</span> <span class="pre">'No</span> <span class="pre">OIDC</span> <span class="pre">support'),)</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.ALGORITHM_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.CLIENT_CONFIDENTIAL">
+<span class="sig-name descname"><span class="pre">CLIENT_CONFIDENTIAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'confidential'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.CLIENT_CONFIDENTIAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.CLIENT_PUBLIC">
+<span class="sig-name descname"><span class="pre">CLIENT_PUBLIC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'public'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.CLIENT_PUBLIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.CLIENT_TYPES">
+<span class="sig-name descname"><span class="pre">CLIENT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('confidential',</span> <span class="pre">'Confidential'),</span> <span class="pre">('public',</span> <span class="pre">'Public'))</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.CLIENT_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.DoesNotExist">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.GRANT_AUTHORIZATION_CODE">
+<span class="sig-name descname"><span class="pre">GRANT_AUTHORIZATION_CODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'authorization-code'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.GRANT_AUTHORIZATION_CODE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.GRANT_CLIENT_CREDENTIALS">
+<span class="sig-name descname"><span class="pre">GRANT_CLIENT_CREDENTIALS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'client-credentials'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.GRANT_CLIENT_CREDENTIALS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.GRANT_IMPLICIT">
+<span class="sig-name descname"><span class="pre">GRANT_IMPLICIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'implicit'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.GRANT_IMPLICIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.GRANT_OPENID_HYBRID">
+<span class="sig-name descname"><span class="pre">GRANT_OPENID_HYBRID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'openid-hybrid'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.GRANT_OPENID_HYBRID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.GRANT_PASSWORD">
+<span class="sig-name descname"><span class="pre">GRANT_PASSWORD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'password'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.GRANT_PASSWORD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.GRANT_TYPES">
+<span class="sig-name descname"><span class="pre">GRANT_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('authorization-code',</span> <span class="pre">'Authorization</span> <span class="pre">code'),</span> <span class="pre">('client-credentials',</span> <span class="pre">'Client</span> <span class="pre">credentials'))</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.GRANT_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.HS256_ALGORITHM">
+<span class="sig-name descname"><span class="pre">HS256_ALGORITHM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'HS256'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.HS256_ALGORITHM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.MultipleObjectsReturned">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.NO_ALGORITHM">
+<span class="sig-name descname"><span class="pre">NO_ALGORITHM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.NO_ALGORITHM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.RS256_ALGORITHM">
+<span class="sig-name descname"><span class="pre">RS256_ALGORITHM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RS256'</span></em><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.RS256_ALGORITHM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.accesstoken_set">
@@ -329,6 +563,18 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">sanctioned_but_do_not_skip_authorization</span></span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/models.html#CSLApplication.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.oauth.models.CSLApplication.user">
 <span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#intranet.apps.oauth.models.CSLApplication.user" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
@@ -341,6 +587,11 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="id2">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_has_oauth_and_api_access</span></span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -350,13 +601,56 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <section id="module-intranet.apps.oauth.views">
 <span id="intranet-apps-oauth-views-module"></span><h2>intranet.apps.oauth.views module<a class="headerlink" href="#module-intranet.apps.oauth.views" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationDeleteView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.views.</span></span><span class="sig-name descname"><span class="pre">ApplicationDeleteView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationDeleteView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationDeleteView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ApplicationDelete</span></code></p>
+<p>Custom delete view to check if the user can delete applications.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationDeleteView.dispatch">
+<span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationDeleteView.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationDeleteView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationRegistrationView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.views.</span></span><span class="sig-name descname"><span class="pre">ApplicationRegistrationView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationRegistrationView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationRegistrationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ApplicationRegistration</span></code></p>
+<p>Custom registration view.
+Check that the user has OAuth and API access before allowing them to register an application.
+Disable showing algorithm field.
+Disable editing client_id and client_secret fields.
+Note that there are three layers of permission checking: at the template level, form level, and response level.
+This view handles the form and response levels.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationRegistrationView.dispatch">
+<span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationRegistrationView.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationRegistrationView.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationRegistrationView.get_form_class">
+<span class="sig-name descname"><span class="pre">get_form_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationRegistrationView.get_form_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationRegistrationView.get_form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the form class for the application model</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationUpdateView">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.oauth.views.</span></span><span class="sig-name descname"><span class="pre">ApplicationUpdateView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationUpdateView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationUpdateView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ApplicationUpdate</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationUpdateView.fields">
-<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['name',</span> <span class="pre">'client_id',</span> <span class="pre">'client_secret',</span> <span class="pre">'client_type',</span> <span class="pre">'authorization_grant_type',</span> <span class="pre">'redirect_uris']</span></em><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationUpdateView.fields" title="Permalink to this definition">¶</a></dt>
+<p>Custom update view to disable showing the algorithm, client_id and client_secret fields
+and check if the user can update applications.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationUpdateView.dispatch">
+<span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationUpdateView.dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationUpdateView.dispatch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.oauth.views.ApplicationUpdateView.get_form_class">
+<span class="sig-name descname"><span class="pre">get_form_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/oauth/views.html#ApplicationUpdateView.get_form_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.oauth.views.ApplicationUpdateView.get_form_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the form class for the application model</p>
+</dd></dl>
 
 </dd></dl>
 

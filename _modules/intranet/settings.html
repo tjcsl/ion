@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #1600) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #1604) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -682,8 +682,16 @@
     <span class="c1"># OAuth refresh tokens expire in 30 days</span>
     <span class="s2">&quot;REFRESH_TOKEN_EXPIRE_SECONDS&quot;</span><span class="p">:</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">30</span><span class="p">,</span>
     <span class="s2">&quot;PKCE_REQUIRED&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="c1"># Custom Django admin class</span>
+    <span class="s2">&quot;APPLICATION_ADMIN_CLASS&quot;</span><span class="p">:</span> <span class="s2">&quot;intranet.apps.oauth.admin.CSLApplicationAdmin&quot;</span><span class="p">,</span>
+    <span class="c1"># Controls whether the user is prompted to authorize the OAuth application every time</span>
+    <span class="c1"># Default is &#39;force&#39;, which always prompts the user</span>
+    <span class="c1"># &#39;auto&#39; will only prompt the user the first time</span>
+    <span class="c1"># See https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html#request-approval-prompt</span>
+    <span class="c1"># &quot;REQUEST_APPROVAL_PROMPT&quot;: &quot;auto&quot;,</span>
 <span class="p">}</span>
 <span class="n">OAUTH2_PROVIDER_APPLICATION_MODEL</span> <span class="o">=</span> <span class="s2">&quot;oauth.CSLApplication&quot;</span>
+
 
 <span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1"># internal Django</span>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #1600) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #1604) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -95,7 +95,16 @@
 <li><a class="reference internal" href="#">intranet.apps.users package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-intranet.apps.users.admin">intranet.apps.users.admin module</a></li>
+<li><a class="reference internal" href="#module-intranet.apps.users.admin">intranet.apps.users.admin module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.users.admin.UserAdmin"><code class="docutils literal notranslate"><span class="pre">UserAdmin</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.users.admin.UserAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">UserAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.admin.UserAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">UserAdmin.list_filter</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.admin.UserAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">UserAdmin.search_fields</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.admin.UserAdmin.user_active"><code class="docutils literal notranslate"><span class="pre">UserAdmin.user_active()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.users.api">intranet.apps.users.api module</a><ul>
 <li><a class="reference internal" href="#intranet.apps.users.api.ProfileDetail"><code class="docutils literal notranslate"><span class="pre">ProfileDetail</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.users.api.ProfileDetail.permission_classes"><code class="docutils literal notranslate"><span class="pre">ProfileDetail.permission_classes</span></code></a></li>
@@ -363,6 +372,7 @@
 <li><a class="reference internal" href="#intranet.apps.users.models.User.oauth2_provider_grant"><code class="docutils literal notranslate"><span class="pre">User.oauth2_provider_grant</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.oauth2_provider_idtoken"><code class="docutils literal notranslate"><span class="pre">User.oauth2_provider_idtoken</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.oauth2_provider_refreshtoken"><code class="docutils literal notranslate"><span class="pre">User.oauth2_provider_refreshtoken</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.models.User.oauth_and_api_access"><code class="docutils literal notranslate"><span class="pre">User.oauth_and_api_access</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.oauth_cslapplication"><code class="docutils literal notranslate"><span class="pre">User.oauth_cslapplication</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.objects"><code class="docutils literal notranslate"><span class="pre">User.objects</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.parkingapplication"><code class="docutils literal notranslate"><span class="pre">User.parkingapplication</span></code></a></li>
@@ -680,6 +690,32 @@
 </section>
 <section id="module-intranet.apps.users.admin">
 <span id="intranet-apps-users-admin-module"></span><h2>intranet.apps.users.admin module<a class="headerlink" href="#module-intranet.apps.users.admin" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.users.admin.UserAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.users.admin.</span></span><span class="sig-name descname"><span class="pre">UserAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/admin.html#UserAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.users.admin.UserAdmin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.users.admin.UserAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('username',</span> <span class="pre">'first_name',</span> <span class="pre">'middle_name',</span> <span class="pre">'last_name',</span> <span class="pre">'nickname',</span> <span class="pre">'user_type',</span> <span class="pre">'is_superuser',</span> <span class="pre">'user_active')</span></em><a class="headerlink" href="#intranet.apps.users.admin.UserAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.users.admin.UserAdmin.list_filter">
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('graduation_year',</span> <span class="pre">'user_type',</span> <span class="pre">'is_superuser',</span> <span class="pre">'user_locked',</span> <span class="pre">'gender',</span> <span class="pre">'oauth_and_api_access',</span> <span class="pre">'receive_news_emails',</span> <span class="pre">'receive_eighth_emails',</span> <span class="pre">'receive_schedule_notifications',</span> <span class="pre">'bus_route',</span> <span class="pre">'counselor')</span></em><a class="headerlink" href="#intranet.apps.users.admin.UserAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.users.admin.UserAdmin.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('username',</span> <span class="pre">'first_name',</span> <span class="pre">'middle_name',</span> <span class="pre">'last_name',</span> <span class="pre">'nickname',</span> <span class="pre">'student_id')</span></em><a class="headerlink" href="#intranet.apps.users.admin.UserAdmin.search_fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.users.admin.UserAdmin.user_active">
+<span class="sig-name descname"><span class="pre">user_active</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/users/admin.html#UserAdmin.user_active"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.users.admin.UserAdmin.user_active" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-intranet.apps.users.api">
 <span id="intranet-apps-users-api-module"></span><h2>intranet.apps.users.api module<a class="headerlink" href="#module-intranet.apps.users.api" title="Permalink to this heading">¶</a></h2>
@@ -747,7 +783,7 @@
 <p>Paginated using ?page=&lt;page&gt;</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.users.api.Search.permission_classes">
-<span class="sig-name descname"><span class="pre">permission_classes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'intranet.apps.auth.rest_permissions.DenyRestrictedPermission'&gt;,)</span></em><a class="headerlink" href="#intranet.apps.users.api.Search.permission_classes" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">permission_classes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'intranet.apps.auth.rest_permissions.ApiAndOauthPermission'&gt;,)</span></em><a class="headerlink" href="#intranet.apps.users.api.Search.permission_classes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2124,7 +2160,7 @@ object the first time, the query is executed.</p>
 <dd><p>Returns the grade of a user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A Grade object representing the uset’s current grade.</p>
+<dd class="field-odd"><p>A Grade object representing the user’s current grade.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2700,6 +2736,13 @@ many-to-one relation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.users.models.User.oauth_and_api_access">
+<span class="sig-name descname"><span class="pre">oauth_and_api_access</span></span><a class="headerlink" href="#intranet.apps.users.models.User.oauth_and_api_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="py attribute">
