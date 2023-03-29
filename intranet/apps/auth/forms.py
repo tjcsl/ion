@@ -32,7 +32,7 @@ class AuthenticateForm(AuthenticationForm):
         error_messages={"required": "Invalid password", "inactive": "Access disallowed."},
     )
 
-    trust_device = forms.BooleanField(required=False, label="Trust this device", label_suffix="")
+    trust_device = forms.BooleanField(required=False, initial=True, label="Remember me", label_suffix="")
 
     def is_valid(self):
         """Validates the username and password in the form."""
