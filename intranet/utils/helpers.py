@@ -192,18 +192,16 @@ def get_ap_week_warning(request):
     return False
 
 
-def is_april_fools_day():
-    today = timezone.localdate()
-    return (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and today.day == 1)
+GLOBAL_THEMES = {
+    "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
+    "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
+    "halloween": {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"},
+    "april_fools": {"js": "themes/april_fools/april_fools.js", "css": "themes/april_fools/april_fools.css"},
+}
 
 
 def get_theme_name() -> str:
-    """Get the name of the currently active special event theme (e.g. "snow", "halloween" or "piday").
-
-    Returns:
-        The name of the currently active theme.
-
-    """
+    """Get the name of the currently active special event theme."""
     today = timezone.localdate()
     if today.month in (12, 1):
         first_monday_of_month = (8 - datetime.date(today.year, today.month, 1).weekday()) % 7
@@ -213,19 +211,14 @@ def get_theme_name() -> str:
         return "piday"
     elif (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
         return "halloween"
+    elif (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 3)):
+        return "april_fools"
 
     return None
 
 
-GLOBAL_THEMES = {
-    "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
-    "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
-    "halloween": {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"},
-}
-
-
 def get_theme() -> Dict[str, Dict[str, str]]:
-    """Load a custom login theme (e.g. snow)"""
+    """Return JS and CSS for the currently active special event theme."""
     return GLOBAL_THEMES.get(get_theme_name(), {})
 
 

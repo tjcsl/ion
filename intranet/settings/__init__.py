@@ -595,6 +595,7 @@ INSTALLED_APPS = [
     "intranet.apps.auth",
     "intranet.apps.bus",
     "intranet.apps.cslapps",
+    "intranet.apps.customthemes",
     "intranet.apps.django",
     "intranet.apps.eighth",
     "intranet.apps.events",
