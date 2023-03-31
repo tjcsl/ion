@@ -3,7 +3,6 @@ from datetime import datetime, time, timedelta
 from itertools import chain
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -11,7 +10,7 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
-from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, is_april_fools_day
+from ...utils.helpers import get_ap_week_warning, get_fcps_emerg
 from ..announcements.models import Announcement, AnnouncementRequest
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..events.models import Event, TJStarUUIDMap
@@ -527,11 +526,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
 
     self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user).this_year()
     context.update({"self_awaiting_teacher": self_awaiting_teacher})
-
-    if is_april_fools_day():
-        messages.success(request, "Happy April Fools Week!")
-        messages.error(request, "It's Ion, not ION.")
-        messages.info(request, "Roses and red, violets are blue and your sysadmins want to tell you:")
 
     if show_welcome:
         return render(request, "welcome/student.html", context)

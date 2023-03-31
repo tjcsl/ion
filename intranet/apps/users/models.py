@@ -238,6 +238,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     primary_email = models.OneToOneField("Email", related_name="+", null=True, blank=True, on_delete=models.SET_NULL)
     bus_route = models.ForeignKey(Route, on_delete=models.SET_NULL, null=True, blank=True)
 
+    # April Fools 2023
+    seen_april_fools = models.BooleanField(default=False)
+    enable_april_fools = models.BooleanField(default=False)
+
     # Required to replace the default Django User model
     USERNAME_FIELD = "username"
     """Override default Model Manager (objects) with
