@@ -970,6 +970,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         now = timezone.localtime()
         return Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now).exclude(question__answer__user=self).exists()
 
+    def should_see_polls(self) -> bool:
+        """
+
+        Returns whether the user should have the Polls icon visible
+
+        """
+        now = timezone.localtime()
+        return Poll.objects.visible_to_user(self).filter(start_time__lt=now, end_time__gt=now).exists() or self.has_admin_permission("polls")
+
     def signed_up_today(self) -> bool:
         """If the user is a student, returns whether they are signed up for an activity during
         all eighth period blocks that are scheduled today. Otherwise, returns ``True``.
