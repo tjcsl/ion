@@ -20,6 +20,7 @@ class App(models.Model):
         name (str): The name of the app.
         description (str): A description of the app.
         order (int): The order in which the app should be displayed.
+        oauth_application (:obj:`CSLApplication`): The OAuth application associated with the app, if any.
         auth_url (str): The URL to the app's authentication page (preferably, if available, using Ion OAuth).
         url (str): The URL to the app.
         image_url (str): The URL to the image icon for the app.
@@ -35,6 +36,7 @@ class App(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=1000, blank=True)
     order = models.IntegerField(default=0)
+    oauth_application = models.ForeignKey("oauth.CSLApplication", on_delete=models.CASCADE, null=True, blank=True)
     auth_url = models.URLField(blank=True)
     url = models.URLField(max_length=2048, blank=False)
     image_url = models.URLField(max_length=2097152, blank=True)

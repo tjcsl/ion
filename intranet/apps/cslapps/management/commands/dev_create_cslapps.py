@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 
+from ....oauth.models import CSLApplication
 from ...models import App
 
 
@@ -21,6 +22,7 @@ class Command(BaseCommand):
                 "name": "Director",
                 "description": "Web hosting interface",
                 "url": "https://director.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="Director 4.0", sanctioned=True)[0],
                 "auth_url": "https://director.tjhsst.edu/login/ion/",
                 "html_icon": "<i class='fas fa-cloud' style='color: #003060; left: 0;'></i>",
             },
@@ -29,6 +31,7 @@ class Command(BaseCommand):
                 "name": "Tin",
                 "description": "Autograder for CS classes",
                 "url": "https://tin.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="Turn-in", sanctioned=True)[0],
                 "auth_url": "https://tin.tjhsst.edu/login/ion/",
                 "image_url": "/static/img/cslapps/tin.svg",
                 "invert_image_color_for_dark_mode": True,
@@ -38,6 +41,7 @@ class Command(BaseCommand):
                 "name": "JupyterHub",
                 "description": "Web interface for the TJ Cluster",
                 "url": "https://jupyterhub.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="JupyterHub", sanctioned=True)[0],
                 "auth_url": "https://jupyterhub.tjhsst.edu/hub/oauth_login",
                 "image_url": "/static/img/cslapps/jupyterhub.png",
             },
@@ -53,6 +57,7 @@ class Command(BaseCommand):
                 "name": "Mail Forwarding",
                 "description": "Forward your TJ email to another address",
                 "url": "https://mailforwarding.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="CSL Mail Forwarding", sanctioned=True)[0],
                 "auth_url": "https://mailforwarding.tjhsst.edu/login/ion/",
                 "image_url": "/static/img/cslapps/mailforwarding.png",
                 "invert_image_color_for_dark_mode": True,
@@ -62,6 +67,7 @@ class Command(BaseCommand):
                 "name": "Othello",
                 "description": "Othello tournament platform for AI classes",
                 "url": "https://othello.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="Othello", sanctioned=True)[0],
                 "auth_url": "https://othello.tjhsst.edu/oauth/login/ion/",
                 "image_url": "/static/img/cslapps/othello.ico",
             },
@@ -70,6 +76,7 @@ class Command(BaseCommand):
                 "name": "Tiny",
                 "description": "URL shortener",
                 "url": "https://tiny.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="tiny.tjhsst.edu", sanctioned=True)[0],
                 "auth_url": "https://tiny.tjhsst.edu/oauth/login/ion/",
                 "html_icon": "<i class='fas fa-link'></i>",
             },
@@ -139,6 +146,7 @@ class Command(BaseCommand):
                 "name": "Runbooks",
                 "description": "Internal documentation",
                 "url": "https://runbooks.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="CSL Runbooks", sanctioned=True)[0],
                 "auth_url": "https://runbooks.tjhsst.edu/auth",
                 "image_url": "/static/img/csl_logo.png",
                 "groups": [Group.objects.get_or_create(name="Sysadmin(R) -- Permissions")[0]],
@@ -206,6 +214,7 @@ class Command(BaseCommand):
                 "name": "Workstatus",
                 "description": "Workstations status",
                 "url": "https://workstatus.tjhsst.edu/",
+                "oauth_application": CSLApplication.objects.get_or_create(name="Workstatus", sanctioned=True)[0],
                 "auth_url": "https://workstatus.tjhsst.edu/login/ion/",
                 "html_icon": "<i class='fas fa-desktop'></i>",
                 "groups": [Group.objects.get_or_create(name="Sysadmin(R) -- Permissions")[0]],
@@ -215,6 +224,7 @@ class Command(BaseCommand):
                 "name": "Signage",
                 "description": "Signage management",
                 "url": "https://signage.tjhsst.edu/admin",
+                "oauth_application": CSLApplication.objects.get_or_create(name="Signage", sanctioned=True)[0],
                 "auth_url": "https://signage.tjhsst.edu/login/ion/",
                 "html_icon": "<i class='fas fa-sign'></i>",
                 "groups": [Group.objects.get_or_create(name="Sysadmin(R) -- Permissions")[0]],
