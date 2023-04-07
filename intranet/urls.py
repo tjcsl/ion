@@ -41,7 +41,6 @@ urlpatterns = [
     re_path(r"^parking", include("intranet.apps.parking.urls")),
     re_path(r"^sessions", include("intranet.apps.sessionmgmt.urls")),
     re_path(r"^themes", include("intranet.apps.customthemes.urls")),
-    re_path(r"^chat", include("intranet.apps.customthemes.urls")),
     re_path(r"^djangoadmin/doc/", include("django.contrib.admindocs.urls")),
     # FIXME: update when admin supports django 1.10+ properly
     re_path(r"^djangoadmin/", admin.site.urls),
