@@ -2,7 +2,7 @@
 echo "---- Running entrypoint script ----"
 
 echo "Performing pre-startup tasks..."
-python3 config/docker/entrypoint.py &  # For initial setup
+python3 -u config/docker/entrypoint.py &  # For initial setup
 sass --watch intranet/static/css:intranet/collected_static/css &  # Automatically compile modified scss files
 
 echo "Starting web server..."
