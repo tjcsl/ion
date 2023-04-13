@@ -427,8 +427,8 @@ def handle_rank_choice(q, show_answers=False):
                     "all": sum(v.display_votes() for v in votes),
                     "all_percent": perc(sum(v.display_votes() for v in votes), q.get_total_votes()),
                     "votes_all": q.get_total_votes(),
-                    "male": sum(v.display_votes() if v.user.is_male else 0 for v in votes),
-                    "female": sum(v.display_votes() if v.user.is_female else 0 for v in votes),
+                    "male": sum(v.display_votes() if v.user and v.user.is_male else 0 for v in votes),
+                    "female": sum(v.display_votes() if v.user and v.user.is_female else 0 for v in votes),
                 }
             },
             "users": [v.user for v in votes] if show_answers else None,
@@ -438,8 +438,8 @@ def handle_rank_choice(q, show_answers=False):
             yr_votes = votes.filter(user__graduation_year=get_senior_graduation_year() + 12 - yr)
             choice["votes"][yr] = {
                 "all": sum(v.display_votes() for v in yr_votes),
-                "male": sum(v.display_votes() if v.user.is_male else 0 for v in yr_votes),
-                "female": sum(v.display_votes() if v.user.is_female else 0 for v in yr_votes),
+                "male": sum(v.display_votes() if v.user and v.user.is_male else 0 for v in yr_votes),
+                "female": sum(v.display_votes() if v.user and v.user.is_female else 0 for v in yr_votes),
             }
 
         choices.append(choice)
@@ -455,10 +455,11 @@ def handle_rank_choice(q, show_answers=False):
     for v in question_votes:
         all_sum += v.display_votes()
 
-        if v.user.is_male:
-            male_sum += v.display_votes()
-        elif v.user.is_female:
-            female_sum += v.display_votes()
+        if v.user:
+            if v.user.is_male:
+                male_sum += v.display_votes()
+            elif v.user.is_female:
+                female_sum += v.display_votes()
 
     for yr in range(9, 14):
         yr_votes = question_votes.filter(user__graduation_year=get_senior_graduation_year() + 12 - yr)
