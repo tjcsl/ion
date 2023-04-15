@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #1618) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #1636) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -537,67 +537,62 @@
 
 
 <div class="viewcode-block" id="handle_rank_choice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.polls.html#intranet.apps.polls.views.handle_rank_choice">[docs]</a><span class="k">def</span> <span class="nf">handle_rank_choice</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">show_answers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">question_votes</span> <span class="o">=</span> <span class="n">votes</span> <span class="o">=</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
+    <span class="c1"># For some reason, this seems to be faster than select_related(&quot;question&quot;, &quot;user&quot;, &quot;choice&quot;)</span>
+    <span class="n">question_votes</span> <span class="o">=</span> <span class="n">votes</span> <span class="o">=</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">()</span>
     <span class="n">choices</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">q_set</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;num&quot;</span><span class="p">)</span>
+    <span class="n">c_set</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;num&quot;</span><span class="p">)</span>
+    <span class="n">votes_total</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get_total_votes</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">q_set</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">c_set</span><span class="p">:</span>
         <span class="n">votes</span> <span class="o">=</span> <span class="n">question_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">choice</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">votes_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">)</span>
         <span class="n">choice</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;choice&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span>
             <span class="s2">&quot;votes&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">),</span>
-                    <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">),</span> <span class="n">q</span><span class="o">.</span><span class="n">get_total_votes</span><span class="p">()),</span>
-                    <span class="s2">&quot;votes_all&quot;</span><span class="p">:</span> <span class="n">q</span><span class="o">.</span><span class="n">get_total_votes</span><span class="p">(),</span>
-                    <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">),</span>
-                    <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">),</span>
+                    <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">votes_sum</span><span class="p">,</span>
+                    <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="n">votes_sum</span><span class="p">,</span> <span class="n">votes_total</span><span class="p">),</span>
+                    <span class="s2">&quot;votes_all&quot;</span><span class="p">:</span> <span class="n">votes_total</span><span class="p">,</span>
+                    <span class="c1"># Gender statistics commented out because of large performance hit</span>
+                    <span class="c1"># Also, Ion doesn&#39;t really get gender information anymore so it isn&#39;t very helpful anyway</span>
+                    <span class="c1"># &quot;male&quot;: sum(v.display_votes() if v.user and v.user.is_male else 0 for v in votes),</span>
+                    <span class="c1"># &quot;female&quot;: sum(v.display_votes() if v.user and v.user.is_female else 0 for v in votes),</span>
                 <span class="p">}</span>
             <span class="p">},</span>
             <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">user</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">votes</span><span class="p">]</span> <span class="k">if</span> <span class="n">show_answers</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">for</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>  <span class="c1"># Year 13 is staff</span>
             <span class="n">yr_votes</span> <span class="o">=</span> <span class="n">votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">yr</span><span class="p">)</span>
             <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="n">yr</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">yr_votes</span><span class="p">),</span>
-                <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">yr_votes</span><span class="p">),</span>
-                <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">yr_votes</span><span class="p">),</span>
+                <span class="c1"># &quot;male&quot;: sum(v.display_votes() if v.user and v.user.is_male else 0 for v in yr_votes),</span>
+                <span class="c1"># &quot;female&quot;: sum(v.display_votes() if v.user and v.user.is_female else 0 for v in yr_votes),</span>
             <span class="p">}</span>
 
         <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
 
-    <span class="n">all_sum</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">male_sum</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">female_sum</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">choice</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;choice&quot;</span><span class="p">:</span> <span class="s2">&quot;Total&quot;</span><span class="p">,</span>
         <span class="s2">&quot;votes&quot;</span><span class="p">:</span> <span class="p">{},</span>
     <span class="p">}</span>
-
-    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">question_votes</span><span class="p">:</span>
-        <span class="n">all_sum</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span><span class="p">:</span>
-            <span class="n">male_sum</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span><span class="p">:</span>
-            <span class="n">female_sum</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
         <span class="n">yr_votes</span> <span class="o">=</span> <span class="n">question_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">12</span> <span class="o">-</span> <span class="n">yr</span><span class="p">)</span>
         <span class="n">yr_votes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">yr_votes</span><span class="p">))</span>
         <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="n">yr</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">yr_votes</span><span class="p">),</span>
-            <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_male</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">yr_votes</span><span class="p">),</span>
-            <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_female</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">yr_votes</span><span class="p">),</span>
+            <span class="c1"># &quot;male&quot;: sum(v.display_votes() if v.user.is_male else 0 for v in yr_votes),</span>
+            <span class="c1"># &quot;female&quot;: sum(v.display_votes() if v.user.is_female else 0 for v in yr_votes),</span>
         <span class="p">}</span>
 
+    <span class="n">all_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">question_votes</span><span class="p">)</span>
     <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">all_sum</span><span class="p">,</span>
-        <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="n">all_sum</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">get_total_votes</span><span class="p">()),</span>
-        <span class="s2">&quot;votes_all&quot;</span><span class="p">:</span> <span class="n">q</span><span class="o">.</span><span class="n">get_total_votes</span><span class="p">(),</span>
-        <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="n">male_sum</span><span class="p">,</span>
-        <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="n">female_sum</span><span class="p">,</span>
+        <span class="s2">&quot;all_percent&quot;</span><span class="p">:</span> <span class="n">perc</span><span class="p">(</span><span class="n">all_sum</span><span class="p">,</span> <span class="n">votes_total</span><span class="p">),</span>
+        <span class="s2">&quot;votes_all&quot;</span><span class="p">:</span> <span class="n">votes_total</span><span class="p">,</span>
+        <span class="c1"># &quot;male&quot;: sum(v.display_votes() if v.user.is_male else 0 for v in question_votes),</span>
+        <span class="c1"># &quot;female&quot;: sum(v.display_votes() if v.user.is_female else 0 for v in question_votes),</span>
     <span class="p">}</span>
 
     <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
