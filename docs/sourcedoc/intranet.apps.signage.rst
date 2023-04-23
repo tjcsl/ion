@@ -28,6 +28,14 @@ intranet.apps.signage.consumers module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.signage.forms module
+----------------------------------
+
+.. automodule:: intranet.apps.signage.forms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.signage.models module
 -----------------------------------
 

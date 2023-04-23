@@ -21,6 +21,15 @@
 
         {% stylesheet 'signage.base' %}
 
+
+        {% if sign.lock_page %}
+        <style>
+            section.signage-section iframe.signage-iframe {
+                width: 100vw;
+            }
+        </style>
+        {% endif %}
+
         <script>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/static/signage/serviceworker.js');
@@ -30,7 +39,20 @@
             window.endSwitchPage = '{{ sign.day_end_switch_page.pk }}';
             window.endSwitchHour = {{ end_switch_page_time.hour }};
             window.endSwitchMinute = {{ end_switch_page_time.minute }};
-
+            window.customSwitchPage = '{{ sign.custom_switch_page.pk }}';
+            {% if sign.custom_switch_page_lock %}
+                window.customSwitchPageLock = '{{ sign.custom_switch_page_lock }}';
+            {% else %}
+                window.customSwitchPageLock = null;
+            {% endif %}
+            {% if custom_switch_time %}
+                window.customSwitchHour = {{ custom_switch_time.hour }};
+                window.customSwitchMinute = {{ custom_switch_time.minute }};
+            {% else %}
+                {# Technically not needed, but just in case #}
+                window.customSwitchHour = null;
+                window.customSwitchMinute = null;
+            {% endif %}
             window.signageHeartbeatIntervalSecs = {{ DJANGO_SETTINGS.SIGNAGE_HEARTBEAT_INTERVAL }};
 
             var now = new Date();
