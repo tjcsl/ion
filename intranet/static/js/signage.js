@@ -60,12 +60,18 @@ var resetPage = function () {
     }
 
     $('.signage-container').find('.strip-links iframe').each(function () {
-        $(this).contents().find('a').each(function() {
-            this.href = "javascript:void(0)";
-            $(this).click(function (e) {
-                e.preventDefault();
+        try {
+            $(this).contents().find('a').each(function() {
+                this.href = "javascript:void(0)";
+                $(this).click(function (e) {
+                    e.preventDefault();
+                });
             });
-        });
+        }
+        catch (e) {
+            console.log("Error stripping links from iFrame - this is expected.")
+            console.log(e);
+        }
     });
 };
 
