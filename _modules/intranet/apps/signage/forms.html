@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.lostfound.admin &#8212; TJ Intranet v3 (Build #1648) documentation</title>
+    <title>intranet.apps.signage.forms &#8212; TJ Intranet v3 (Build #1648) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -120,28 +120,19 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.lostfound.admin</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">FoundItem</span><span class="p">,</span> <span class="n">LostItem</span>
+  <h1>Source code for intranet.apps.signage.forms</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
 
 
-<div class="viewcode-block" id="LostItemAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.lostfound.html#intranet.apps.lostfound.admin.LostItemAdmin">[docs]</a><span class="k">class</span> <span class="nc">LostItemAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;last_seen&quot;</span><span class="p">,</span> <span class="s2">&quot;added&quot;</span><span class="p">)</span>
-    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">,</span> <span class="s2">&quot;last_seen&quot;</span><span class="p">)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,)</span></div>
-
-
-<div class="viewcode-block" id="FoundItemAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.lostfound.html#intranet.apps.lostfound.admin.FoundItemAdmin">[docs]</a><span class="k">class</span> <span class="nc">FoundItemAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;found&quot;</span><span class="p">,</span> <span class="s2">&quot;added&quot;</span><span class="p">)</span>
-    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">,</span> <span class="s2">&quot;found&quot;</span><span class="p">)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,)</span></div>
-
-
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">LostItem</span><span class="p">,</span> <span class="n">LostItemAdmin</span><span class="p">)</span>
-<span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">FoundItem</span><span class="p">,</span> <span class="n">FoundItemAdmin</span><span class="p">)</span>
+<div class="viewcode-block" id="SetSignCustomSwitchTimeForm"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.forms.SetSignCustomSwitchTimeForm">[docs]</a><span class="k">class</span> <span class="nc">SetSignCustomSwitchTimeForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+    <span class="n">_selected_action</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">MultipleHiddenInput</span><span class="p">)</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">HiddenInput</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="s2">&quot;set_custom_switch_time_for_all_signs&quot;</span><span class="p">)</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">TimeField</span><span class="p">(</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">TimeInput</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">),</span>
+        <span class="n">input_formats</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">,),</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Time at which to switch to the custom page for the Sign. Leave blank to clear. Example: 16:30&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span></div>
 </pre></div>
 
     </div>

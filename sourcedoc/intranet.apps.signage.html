@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.signage package &#8212; TJ Intranet v3 (Build #1642) documentation</title>
+    <title>intranet.apps.signage package &#8212; TJ Intranet v3 (Build #1648) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -97,11 +97,24 @@
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.signage.admin">intranet.apps.signage.admin module</a><ul>
 <li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin"><code class="docutils literal notranslate"><span class="pre">PageAdmin</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.actions"><code class="docutils literal notranslate"><span class="pre">PageAdmin.actions</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.add_page_to_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.add_page_to_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.custom_page_on"><code class="docutils literal notranslate"><span class="pre">PageAdmin.custom_page_on()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">PageAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.lock_page_on"><code class="docutils literal notranslate"><span class="pre">PageAdmin.lock_page_on()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.lock_page_to_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.lock_page_to_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.remove_custom_switch_page_from_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.remove_custom_switch_page_from_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.remove_page_from_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.remove_page_from_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.set_custom_switch_page_for_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.set_custom_switch_page_for_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.set_custom_switch_time_for_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.set_custom_switch_time_for_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.set_locked_custom_switch_page_for_all_signs"><code class="docutils literal notranslate"><span class="pre">PageAdmin.set_locked_custom_switch_page_for_all_signs()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.sign_list"><code class="docutils literal notranslate"><span class="pre">PageAdmin.sign_list()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.PageAdmin.unlock_all_signs_from_selected_pages"><code class="docutils literal notranslate"><span class="pre">PageAdmin.unlock_all_signs_from_selected_pages()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#intranet.apps.signage.admin.SignAdmin"><code class="docutils literal notranslate"><span class="pre">SignAdmin</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.signage.admin.SignAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">SignAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.admin.SignAdmin.page_list"><code class="docutils literal notranslate"><span class="pre">SignAdmin.page_list()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -115,15 +128,25 @@
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-intranet.apps.signage.forms">intranet.apps.signage.forms module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.signage.forms.SetSignCustomSwitchTimeForm"><code class="docutils literal notranslate"><span class="pre">SetSignCustomSwitchTimeForm</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.signage.forms.SetSignCustomSwitchTimeForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">SetSignCustomSwitchTimeForm.declared_fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-intranet.apps.signage.models">intranet.apps.signage.models module</a><ul>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page"><code class="docutils literal notranslate"><span class="pre">Page</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Page.DoesNotExist</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Page.MultipleObjectsReturned</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.button"><code class="docutils literal notranslate"><span class="pre">Page.button</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Page.custom_page_signs"><code class="docutils literal notranslate"><span class="pre">Page.custom_page_signs</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Page.default_signs"><code class="docutils literal notranslate"><span class="pre">Page.default_signs</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.deploy_to"><code class="docutils literal notranslate"><span class="pre">Page.deploy_to()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.function"><code class="docutils literal notranslate"><span class="pre">Page.function</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.id"><code class="docutils literal notranslate"><span class="pre">Page.id</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.iframe"><code class="docutils literal notranslate"><span class="pre">Page.iframe</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Page.locked_signs"><code class="docutils literal notranslate"><span class="pre">Page.locked_signs</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.name"><code class="docutils literal notranslate"><span class="pre">Page.name</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.objects"><code class="docutils literal notranslate"><span class="pre">Page.objects</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Page.order"><code class="docutils literal notranslate"><span class="pre">Page.order</span></code></a></li>
@@ -141,6 +164,10 @@
 <li><a class="reference internal" href="#intranet.apps.signage.models.Sign"><code class="docutils literal notranslate"><span class="pre">Sign</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Sign.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Sign.DoesNotExist</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Sign.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Sign.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Sign.custom_switch_page"><code class="docutils literal notranslate"><span class="pre">Sign.custom_switch_page</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Sign.custom_switch_page_id"><code class="docutils literal notranslate"><span class="pre">Sign.custom_switch_page_id</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Sign.custom_switch_page_lock"><code class="docutils literal notranslate"><span class="pre">Sign.custom_switch_page_lock</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.signage.models.Sign.custom_switch_time"><code class="docutils literal notranslate"><span class="pre">Sign.custom_switch_time</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Sign.day_end_switch_minutes"><code class="docutils literal notranslate"><span class="pre">Sign.day_end_switch_minutes</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Sign.day_end_switch_page"><code class="docutils literal notranslate"><span class="pre">Sign.day_end_switch_page</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.signage.models.Sign.day_end_switch_page_id"><code class="docutils literal notranslate"><span class="pre">Sign.day_end_switch_page_id</span></code></a></li>
@@ -267,8 +294,68 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.signage.admin.</span></span><span class="sig-name descname"><span class="pre">PageAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
 <dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.actions">
+<span class="sig-name descname"><span class="pre">actions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['add_page_to_all_signs',</span> <span class="pre">'remove_page_from_all_signs',</span> <span class="pre">'lock_page_to_all_signs',</span> <span class="pre">'unlock_all_signs_from_selected_pages',</span> <span class="pre">'set_custom_switch_page_for_all_signs',</span> <span class="pre">'set_locked_custom_switch_page_for_all_signs',</span> <span class="pre">'remove_custom_switch_page_from_all_signs',</span> <span class="pre">'set_custom_switch_time_for_all_signs']</span></em><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.actions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.add_page_to_all_signs">
+<span class="sig-name descname"><span class="pre">add_page_to_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.add_page_to_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.add_page_to_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.custom_page_on">
+<span class="sig-name descname"><span class="pre">custom_page_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.custom_page_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.custom_page_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.list_display">
-<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',)</span></em><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'url',</span> <span class="pre">'template',</span> <span class="pre">'order',</span> <span class="pre">'sign_list',</span> <span class="pre">'lock_page_on',</span> <span class="pre">'custom_page_on')</span></em><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.lock_page_on">
+<span class="sig-name descname"><span class="pre">lock_page_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.lock_page_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.lock_page_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.lock_page_to_all_signs">
+<span class="sig-name descname"><span class="pre">lock_page_to_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.lock_page_to_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.lock_page_to_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.remove_custom_switch_page_from_all_signs">
+<span class="sig-name descname"><span class="pre">remove_custom_switch_page_from_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.remove_custom_switch_page_from_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.remove_custom_switch_page_from_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.remove_page_from_all_signs">
+<span class="sig-name descname"><span class="pre">remove_page_from_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.remove_page_from_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.remove_page_from_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.set_custom_switch_page_for_all_signs">
+<span class="sig-name descname"><span class="pre">set_custom_switch_page_for_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.set_custom_switch_page_for_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.set_custom_switch_page_for_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.set_custom_switch_time_for_all_signs">
+<span class="sig-name descname"><span class="pre">set_custom_switch_time_for_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.set_custom_switch_time_for_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.set_custom_switch_time_for_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.set_locked_custom_switch_page_for_all_signs">
+<span class="sig-name descname"><span class="pre">set_locked_custom_switch_page_for_all_signs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.set_locked_custom_switch_page_for_all_signs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.set_locked_custom_switch_page_for_all_signs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.sign_list">
+<span class="sig-name descname"><span class="pre">sign_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.sign_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.sign_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.PageAdmin.unlock_all_signs_from_selected_pages">
+<span class="sig-name descname"><span class="pre">unlock_all_signs_from_selected_pages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#PageAdmin.unlock_all_signs_from_selected_pages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.PageAdmin.unlock_all_signs_from_selected_pages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -279,7 +366,12 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.signage.admin.SignAdmin.list_display">
-<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'display')</span></em><a class="headerlink" href="#intranet.apps.signage.admin.SignAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'display',</span> <span class="pre">'lock_page',</span> <span class="pre">'default_page',</span> <span class="pre">'custom_switch_page',</span> <span class="pre">'custom_switch_time',</span> <span class="pre">'custom_switch_page_lock',</span> <span class="pre">'latest_heartbeat_time',</span> <span class="pre">'page_list')</span></em><a class="headerlink" href="#intranet.apps.signage.admin.SignAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.signage.admin.SignAdmin.page_list">
+<span class="sig-name descname"><span class="pre">page_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/admin.html#SignAdmin.page_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.admin.SignAdmin.page_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -304,6 +396,20 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="intranet.apps.signage.consumers.SignageConsumer.receive_json">
 <span class="sig-name descname"><span class="pre">receive_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/intranet/apps/signage/consumers.html#SignageConsumer.receive_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.consumers.SignageConsumer.receive_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-intranet.apps.signage.forms">
+<span id="intranet-apps-signage-forms-module"></span><h2>intranet.apps.signage.forms module<a class="headerlink" href="#module-intranet.apps.signage.forms" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.signage.forms.SetSignCustomSwitchTimeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.signage.forms.</span></span><span class="sig-name descname"><span class="pre">SetSignCustomSwitchTimeForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_id='id_%s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_class=&lt;class</span> <span class="pre">'django.forms.utils.ErrorList'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_suffix=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_permitted=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_order=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_required_attribute=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">renderer=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/forms.html#SetSignCustomSwitchTimeForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.forms.SetSignCustomSwitchTimeForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.forms.SetSignCustomSwitchTimeForm.declared_fields">
+<span class="sig-name descname"><span class="pre">declared_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'_selected_action':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'action':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'time':</span> <span class="pre">&lt;django.forms.fields.TimeField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#intranet.apps.signage.forms.SetSignCustomSwitchTimeForm.declared_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -345,9 +451,39 @@ order: index at which button should be placed</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Page.custom_page_signs">
+<span class="sig-name descname"><span class="pre">custom_page_signs</span></span><a class="headerlink" href="#intranet.apps.signage.models.Page.custom_page_signs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Page.default_signs">
+<span class="sig-name descname"><span class="pre">default_signs</span></span><a class="headerlink" href="#intranet.apps.signage.models.Page.default_signs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="intranet.apps.signage.models.Page.deploy_to">
-<span class="sig-name descname"><span class="pre">deploy_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">displays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/models.html#Page.deploy_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.models.Page.deploy_to" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">deploy_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">displays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/signage/models.html#Page.deploy_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.signage.models.Page.deploy_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deploys page to listed display (specify with display). If display is None,
 deploy to all display. Can specify exclude for which display to exclude.
 This overwrites the first argument.</p>
@@ -372,6 +508,21 @@ object the first time, the query is executed.</p>
 <span class="sig-name descname"><span class="pre">iframe</span></span><a class="headerlink" href="#intranet.apps.signage.models.Page.iframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Page.locked_signs">
+<span class="sig-name descname"><span class="pre">locked_signs</span></span><a class="headerlink" href="#intranet.apps.signage.models.Page.locked_signs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -495,6 +646,38 @@ the sign previously had an open connection).</p>
 <dt class="sig sig-object py" id="intranet.apps.signage.models.Sign.MultipleObjectsReturned">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#intranet.apps.signage.models.Sign.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Sign.custom_switch_page">
+<span class="sig-name descname"><span class="pre">custom_switch_page</span></span><a class="headerlink" href="#intranet.apps.signage.models.Sign.custom_switch_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Child.parent</span></code> is a <code class="docutils literal notranslate"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Sign.custom_switch_page_id">
+<span class="sig-name descname"><span class="pre">custom_switch_page_id</span></span><a class="headerlink" href="#intranet.apps.signage.models.Sign.custom_switch_page_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Sign.custom_switch_page_lock">
+<span class="sig-name descname"><span class="pre">custom_switch_page_lock</span></span><a class="headerlink" href="#intranet.apps.signage.models.Sign.custom_switch_page_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.signage.models.Sign.custom_switch_time">
+<span class="sig-name descname"><span class="pre">custom_switch_time</span></span><a class="headerlink" href="#intranet.apps.signage.models.Sign.custom_switch_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="py attribute">
