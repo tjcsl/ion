@@ -21,8 +21,10 @@ if sys.version_info < (3, 5):
 # July = 7
 YEAR_TURNOVER_MONTH = 7
 
+# School years spans 2 calendar years. start_school_year is the year the school year starts in, and end_school_year is the year the school year ends in.
+# For example, for the 2022-2023 school year, start_school_year = 2022 and end_school_year = 2023.
 start_school_year = datetime.date.today().year - 1 if datetime.date.today().month < YEAR_TURNOVER_MONTH else datetime.date.today().year
-end_school_year = start_school_year if datetime.date.today().month < YEAR_TURNOVER_MONTH else start_school_year + 1
+end_school_year = start_school_year + 1
 
 
 """ !! -------- UPDATE ANNUALLY -------- !!
