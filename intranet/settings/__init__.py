@@ -21,29 +21,41 @@ if sys.version_info < (3, 5):
 # July = 7
 YEAR_TURNOVER_MONTH = 7
 
-# School years spans 2 calendar years. start_school_year is the year the school year starts in, and end_school_year is the year the school year ends in.
+# School years span 2 calendar years.
+# start_school_year is the year the school year starts in, and end_school_year is the year the school year ends in.
 # For example, for the 2022-2023 school year, start_school_year = 2022 and end_school_year = 2023.
 start_school_year = datetime.date.today().year - 1 if datetime.date.today().month < YEAR_TURNOVER_MONTH else datetime.date.today().year
 end_school_year = start_school_year + 1
 
-
+# fmt: off
 """ !! -------- UPDATE ANNUALLY -------- !!
 Update this section annually after summer school ends and before school starts.
-Last updated: 2022-08-30. """
+School year last updated:  2022-08-30
+Hoco last updated:         2022-08-30
+"""
 
 # When school is scheduled to start and end
-SCHOOL_START_DATE = datetime.date(start_school_year, 8, 22)
-SCHOOL_END_DATE = datetime.date(end_school_year, 6, 16)
+SCHOOL_START_DATE = datetime.date(start_school_year,
+    8, 22  # UPDATE THIS! Value when last updated: August 22, 2022      # noqa: E128
+)                                                                       # noqa: E124
+SCHOOL_END_DATE = datetime.date(end_school_year,
+    6, 16  # UPDATE THIS! Value when last updated: June 16, 2023        # noqa: E128
+)                                                                       # noqa: E124
 
 # Dates when hoco starts and ends
-HOCO_START_DATE = datetime.date(start_school_year, 9, 19)
-HOCO_END_DATE = datetime.date(start_school_year, 9, 24)
+HOCO_START_DATE = datetime.date(start_school_year,
+    9, 19  # UPDATE THIS! Value when last updated: September 19, 2022   # noqa: E128
+)                                                                       # noqa: E124
+HOCO_END_DATE = datetime.date(start_school_year,
+    9, 24  # UPDATE THIS! Value when last updated: September 24, 2022   # noqa: E128
+)                                                                       # noqa: E124
 
 """  -------- END UPDATE ANNUALLY --------  """
+# fmt: on
 
 # Default fallback time for start and end of school if no schedule is available
-SCHOOL_START_HOUR = 8  # Not currently used
-SCHOOL_START_MINUTE = 40  # Not currently used
+SCHOOL_START_HOUR = 8
+SCHOOL_START_MINUTE = 40
 SCHOOL_END_HOUR = 16
 SCHOOL_END_MINUTE = 0
 
