@@ -44,19 +44,19 @@
                 {% for i in range %}
                     var option = $("option#default-option-{{ q.num }}-{{ forloop.counter }}");
                     if($(option).text() === "") {
-                        option.text("Choose an option");
-                        option.attr("value", "Choose an option");
+                        var choices = [];
+                        {% for choice_and_value in q.choices_and_values %}
+                            choices.push($("option#option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}"));
+                        {% endfor %}
+                        var random_choice = choices[Math.floor(Math.random() * choices.length)];
+                        option.text(random_choice.text());
+                        option.attr("value", random_choice.val());
                     }
-
-                    {% for choice_and_value in q.choices_and_values|shuffle %}
-                        option = $("option#option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}");
-                        option.html(choice_and_value.choice);
-                    {% endfor %}
-
                 {% endfor %}
                 {% endwith %}
             {% endif %}
         {% endfor %}
+
 
         $("form").submit(function(e) {
             var errorContainer = $("#error-container");
