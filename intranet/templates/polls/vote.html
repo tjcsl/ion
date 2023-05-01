@@ -48,9 +48,9 @@
                         option.attr("value", "Choose an option");
                     }
 
-                    {% for choice_and_value in q.choices_and_values %}
+                    {% for choice_and_value in q.choices_and_values|shuffle %}
                         option = $("option#option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}");
-                        option.html(option.html().split("|")[0]);
+                        option.html(choice_and_value.choice);
                     {% endfor %}
 
                 {% endfor %}
