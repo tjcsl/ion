@@ -44,20 +44,19 @@
                 {% for i in range %}
                     var option = $("option#default-option-{{ q.num }}-{{ forloop.counter }}");
                     if($(option).text() === "") {
-                        var choices = [];
-                        {% for choice_and_value in q.choices_and_values %}
-                            choices.push($("option#option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}"));
-                        {% endfor %}
-                        var random_choice = choices[Math.floor(Math.random() * choices.length)];
-                        option.text(random_choice.text());
-                        option.attr("value", random_choice.val());
+                        option.text("Choose an option");
+                        option.attr("value", "Choose an option");
                     }
+
+                    {% for choice_and_value in q.choices_and_values %}
+                        option = $("option#option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}");
+                        option.html(option.html().split("|")[0]);
+                    {% endfor %}
+
                 {% endfor %}
                 {% endwith %}
             {% endif %}
         {% endfor %}
-        {% endfor %}
-
 
         $("form").submit(function(e) {
             var errorContainer = $("#error-container");
@@ -206,55 +205,58 @@
                             </li>
                         </ul>
 
-                    {% elif q.is_rank_choice %}
-                    <div class="directions">Choose your top {{ q.max_choices}} choices for each position; first choice is most desirable.</div>
-                    <br>
+                        {% elif q.is_rank_choice %}
+                        <div class="directions">Choose your top {{ q.max_choices}} choices for each position; first choice is most desirable.</div>
+                        <br>
                         <ul class="answers rank-answers">
-                        {# ''|center:length creates a string of all spaces with the given length #}
-                        {# The for loop loops through each character in the string #}
-                        {% with ''|center:q.max_choices as range %}
-                        {% for i in range %}
-                            <li class="choice-item">
-                            <div class="box">
-                                <label class="rank-choice-number"
-                                    for="question-{{ q.num }}-{{ forloop.counter }}-select">
-                                    Rank {{ forloop.counter }}:
-                                </label>
-                                <br>
-                                <select
-                                    id="question-{{ q.num }}-{{ forloop.counter }}-select"
-                                    name="question-{{ q.num }}">
-
-                                    {# Default option - "Choose an option" (see JS) or, if voted already, selected choice #}
-                                    <option value="Choose an option"
-                                        class="choice-option"
-                                        id="default-option-{{ q.num }}-{{ forloop.parentloop.counter }}">
-                                            Choose an option
-                                    </option>
-
-                                    {# Loop through choices #}
-                                    {% for choice_and_value in q.choices_and_values %}
-                                        <option value="{{ choice_and_value.0.num }}"
-                                            class="choice-option"
-                                            {% if choice_and_value.1 == forloop.parentloop.counter %}selected{% endif %}
-                                            id="option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-                                                {{ choice_and_value.0.info|safe }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                                <div>
-                                {% for choice_and_value in q.choices_and_values %}
-                                    <input class="hide"
-                                        type="number"
-                                        name="helper-question-{{ q.num }}"
-                                        value="{{ choice_and_value.0.num }}">
+                            {# ''|center:length creates a string of all spaces with the given length #}
+                            {# The for loop loops through each character in the string #}
+                            {% with ''|center:q.max_choices as range %}
+                                {% for i in range %}
+                                    {% with q.choices_and_values|shuffle as shuffled_choices %}
+                                        <li class="choice-item">
+                                            <div class="box">
+                                                <label class="rank-choice-number"
+                                                       for="question-{{ q.num }}-{{ forloop.counter }}-select">
+                                                    Rank {{ forloop.counter }}:
+                                                </label>
+                                                <br>
+                                                <select
+                                                        id="question-{{ q.num }}-{{ forloop.counter }}-select"
+                                                        name="question-{{ q.num }}">
+                    
+                                                    {# Default option - "Choose an option" (see JS) or, if voted already, selected choice #}
+                                                    <option value="Choose an option"
+                                                            class="choice-option"
+                                                            id="default-option-{{ q.num }}-{{ forloop.parentloop.counter }}">
+                                                        Choose an option
+                                                    </option>
+                    
+                                                    {# Loop through shuffled choices #}
+                                                    {% for choice_and_value in shuffled_choices %}
+                                                        <option value="{{ choice_and_value.0.num }}"
+                                                                class="choice-option"
+                                                                {% if choice_and_value.1 == forloop.parentloop.counter %}selected{% endif %}
+                                                                id="option-{{ q.num }}-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+                                                            {{ choice_and_value.0.info|safe }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <div>
+                                                    {% for choice_and_value in q.choices_and_values %}
+                                                        <input class="hide"
+                                                               type="number"
+                                                               name="helper-question-{{ q.num }}"
+                                                               value="{{ choice_and_value.0.num }}">
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endwith %}
                                 {% endfor %}
-                                </div>
-                            </div>
-                            </li>
-                        {% endfor %}
-                        {% endwith %}
+                            {% endwith %}
                         </ul>
+                    
                         <br>
 
                         {% if poll.is_election %}
