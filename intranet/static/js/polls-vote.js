@@ -4,6 +4,11 @@ $(function() {
         $(this.children[1]).toggleClass("fa-angle-up fa-angle-down");
     });
 
+    $(".question-other-writing").on("click", function() {
+        let li = $("input", $(this).parent().parent().parent());
+        li.prop("checked", true).trigger("click");
+    });
+
     $(".expand-collapse-all").data("expanded", true).click(function() {
         var expanded = $(this).data("expanded");
         var elements = $(".candidate-info-header, .rank-q-header, .expand-collapse-all");

@@ -189,7 +189,7 @@ class Question(models.Model):
         return self.type in [Question.FREE_RESP, Question.SHORT_RESP]
 
     def is_single_choice(self):
-        return self.type in [Question.STD, Question.ELECTION]
+        return self.type in [Question.STD, Question.ELECTION, Question.STD_OTHER]
 
     def is_rank_choice(self):
         return self.type in [Question.RANK]
@@ -198,7 +198,7 @@ class Question(models.Model):
         return self.type in [Question.APP, Question.SPLIT_APP]
 
     def is_choice(self):
-        return self.type in [Question.STD, Question.ELECTION, Question.RANK, Question.APP, Question.SPLIT_APP]
+        return self.type in [Question.STD, Question.ELECTION, Question.STD_OTHER, Question.RANK, Question.APP, Question.SPLIT_APP]
 
     def trunc_question(self):
         comp = strip_tags(self.question)
@@ -273,6 +273,7 @@ class Answer(models.Model):  # individual answer choices selected
     choice = models.ForeignKey(Choice, null=True, on_delete=models.CASCADE)  # for multiple choice questions
     answer = models.CharField(max_length=10000, null=True)  # for free response
     clear_vote = models.BooleanField(default=False)
+    other_vote = models.BooleanField(default=False)  # for standard other questions
     weight = models.DecimalField(max_digits=4, decimal_places=3, default=1)  # for split approval
     rank = models.IntegerField(null=True)  # for rank choice
 

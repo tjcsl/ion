@@ -145,7 +145,11 @@
                         {% for c in q.choices %}
                         <tr {% if c.choice == "Total" %} class="total"{% endif %}>
                             <td class="choice">
-                                {{ c.choice.display_name }}
+                                {% if c.choice.display_name %}
+                                    {{ c.choice.display_name }}
+                                {% else %}
+                                    {{ c.choice }}
+                                {% endif %}
                                 {% if c.choice == "Total" %}
                                     {% if q.question.type == "SAP" %}
                                         Votes: {{ c.votes.total.votes_all }}
