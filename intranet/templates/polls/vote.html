@@ -191,6 +191,26 @@
                                 </div>
                             </li>
                         {% endfor %}
+                        {% if q.type == "STO" %}
+                        <li class="choice-item">
+                            <input type="radio"
+                                   id="question-{{ q.num }}-other"
+                                   name="question-{{ q.num }}"
+                                   value="OTHER"
+                                   {% if q.current_vote_other %} checked {% endif %}>
+                            <div class="choice-desc">
+                            <label for="question-{{ q.num }}-other" class="other-vote">
+                                Other:
+                                <input type="text"
+                                      id="question-{{ q.num }}-writing"
+                                      name="question-{{ q.num }}-writing"
+                                      class="question-other-writing"
+                                      placeholder=""
+                                      value="{% if q.current_vote_other %}{{ q.current_vote.answer|escape }}{% endif %}">
+                            </label>
+                            </div>
+                        </li>
+                        {% endif %}
                             <li class="choice-item">
                                 <input type="radio"
                                        id="question-{{ q.num }}-clear"

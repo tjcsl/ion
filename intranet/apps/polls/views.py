@@ -76,7 +76,7 @@ def csv_results(request, poll_id):
             if answer.choice:
                 answer_dict[question] = answer.choice
             elif answer.answer:
-                answer_dict[question] = answer.answer
+                answer_dict[question] = ("Other: " if answer.other_vote else "") + answer.answer
             elif answer.clear_vote:
                 answer_dict[question] = "Cleared"
             else:
@@ -156,7 +156,7 @@ def poll_vote_view(request, poll_id):
         entries = request.POST
         for name in entries:
             if name.startswith("question-"):
-                question_num = name.split("question-", 2)[1]
+                question_num = name.split("-", 3)[1]
                 try:
                     question_obj = questions.get(num=question_num)
                 except Question.DoesNotExist:
@@ -169,8 +169,21 @@ def poll_vote_view(request, poll_id):
                     choices = question_obj.choice_set.all()
                     if question_obj.is_single_choice():
                         if choice_num and choice_num == "CLEAR":
-                            Answer.objects.update_or_create(user=user, question=question_obj, defaults={"clear_vote": True, "choice": None})
+                            Answer.objects.update_or_create(
+                                user=user, question=question_obj, defaults={"clear_vote": True, "other_vote": False, "choice": None, "answer": None}
+                            )
                             messages.success(request, f"Clear Vote for {question_obj}")
+                        elif choice_num == "OTHER":  # Standard Other option
+                            continue
+                        elif name.endswith("-writing"):  # Standard Other answer
+                            if entries["question-" + question_num] != "OTHER":
+                                continue
+                            Answer.objects.update_or_create(
+                                user=user,
+                                question=question_obj,
+                                defaults={"clear_vote": False, "other_vote": True, "choice": None, "answer": choice_num},
+                            )
+                            messages.success(request, f"Vote saved for choice Other on question {question_obj}")
                         else:
                             try:
                                 choice_obj = choices.get(num=choice_num)
@@ -179,7 +192,9 @@ def poll_vote_view(request, poll_id):
                                 continue
                             else:
                                 Answer.objects.update_or_create(
-                                    user=user, question=question_obj, defaults={"clear_vote": False, "choice": choice_obj}
+                                    user=user,
+                                    question=question_obj,
+                                    defaults={"clear_vote": False, "other_vote": False, "choice": choice_obj, "answer": None},
                                 )
                                 messages.success(request, f"Voted for {choice_obj} on {question_obj}")
 
@@ -277,6 +292,7 @@ def poll_vote_view(request, poll_id):
                 "current_choices": [v.choice for v in current_votes],
                 "current_vote_none": (len(current_votes) < 1),
                 "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote),
+                "current_vote_other": (len(current_votes) == 1 and current_votes[0].other_vote),
                 "choices_and_values": choices_and_values,
             }
             questions.append(question)
@@ -488,8 +504,18 @@ def handle_choice(q, show_answers=False):
 
     # Choices
     for c in q.choice_set.all().order_by("num"):
-        votes = question_votes.filter(choice=c)
-        choices.append(generate_choice(c, votes, total_count, show_answers))
+        if c:
+            votes = question_votes.filter(choice=c)
+            choices.append(generate_choice(c, votes, total_count, show_answers))
+
+    if q.type == "STO":
+        other_votes = question_votes.filter(other_vote=True)
+        choices.append(generate_choice("Total Votes for Other", other_votes, total_count, show_answers))
+
+        answers = {ans.answer for ans in other_votes}
+        for ans in answers:
+            votes = other_votes.filter(answer=ans)
+            choices.append(generate_choice(f"Other: {ans}", votes, total_count, show_answers))
 
     # Clear vote
     votes = question_votes.filter(clear_vote=True)
