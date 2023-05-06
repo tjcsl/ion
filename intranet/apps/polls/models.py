@@ -53,6 +53,8 @@ class Poll(models.Model):
             user responses for secret polls.
         is_election
             Whether the poll is an election.
+        is_randomized
+            Whether the poll displays choices in random order.
         groups
             The Groups that can view and vote in the poll. Like Announcements,
             if there are none set, then it is public to all.
@@ -70,6 +72,7 @@ class Poll(models.Model):
     visible = models.BooleanField(default=False)
     is_secret = models.BooleanField(default=False)
     is_election = models.BooleanField(default=False)
+    #is_randomized = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     # Access questions through .question_set
@@ -163,6 +166,7 @@ class Question(models.Model):
 
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     question = models.CharField(max_length=500)
+    is_randomized = models.BooleanField(default=False)
     num = models.IntegerField()
     STD = "STD"
     ELECTION = "ELC"
@@ -247,6 +251,7 @@ class Choice(models.Model):  # individual answer choices
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     num = models.IntegerField()
+    is_randomized = models.BooleanField(default=False)
     info = models.CharField(max_length=1000)
 
     def trunc_info(self):
