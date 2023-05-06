@@ -243,7 +243,7 @@ def poll_vote_view(request, poll_id):
         for q in poll.question_set.all():
             current_votes = Answer.objects.filter(user=user, question=q)
 
-            if q.type == Question.ELECTION:
+            if q.poll.is_randomized:
                 choices = q.random_choice_set
             else:
                 choices = q.choice_set.all()
