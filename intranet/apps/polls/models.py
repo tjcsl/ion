@@ -166,7 +166,6 @@ class Question(models.Model):
 
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
     question = models.CharField(max_length=500)
-    is_randomized = models.BooleanField(default=False)
     num = models.IntegerField()
     STD = "STD"
     ELECTION = "ELC"
@@ -251,7 +250,6 @@ class Choice(models.Model):  # individual answer choices
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     num = models.IntegerField()
-    is_randomized = models.BooleanField(default=False)
     info = models.CharField(max_length=1000)
 
     def trunc_info(self):
