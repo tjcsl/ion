@@ -72,7 +72,7 @@ class Poll(models.Model):
     visible = models.BooleanField(default=False)
     is_secret = models.BooleanField(default=False)
     is_election = models.BooleanField(default=False)
-    #is_randomized = models.BooleanField(default=False)
+    is_randomized = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     # Access questions through .question_set
