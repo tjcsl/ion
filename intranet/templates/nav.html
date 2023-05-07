@@ -85,6 +85,7 @@
         </li>
         {% endcomment %}
 
+        {% if request.user.should_see_polls %}
         <li {% if nav_category == "polls" %}class="selected"{% endif %}>
             <a href="{% url 'polls' %}">
                 <div class="nav-alert-container">
@@ -96,6 +97,7 @@
                 Polls
             </a>
         </li>
+        {% endif %}
 
         <li {% if nav_category == "files" %}class="selected"{% endif %}>
             <a href="{% url 'files' %}">

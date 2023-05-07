@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    console.log('hello');
     $.get("https://homecoming.tjhsst.edu/api/", function(data) {
         console.log(data.senior_total ? data.senior_total : 0);
         $("#score-senior").text(data.senior_total ? data.senior_total : 0);

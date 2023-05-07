@@ -60,12 +60,18 @@ var resetPage = function () {
     }
 
     $('.signage-container').find('.strip-links iframe').each(function () {
-        $(this).contents().find('a').each(function() {
-            this.href = "javascript:void(0)";
-            $(this).click(function (e) {
-                e.preventDefault();
+        try {
+            $(this).contents().find('a').each(function() {
+                this.href = "javascript:void(0)";
+                $(this).click(function (e) {
+                    e.preventDefault();
+                });
             });
-        });
+        }
+        catch (e) {
+            console.log("Error stripping links from iFrame - this is expected.")
+            console.log(e);
+        }
     });
 };
 
@@ -195,5 +201,17 @@ window.onload = function () {
         setTimeout(function() {
             setActive(window.endSwitchPage);
         }, ((endSwitchHour - now.getHours()) * 3600 + (endSwitchMinute - now.getMinutes()) * 60 - now.getSeconds()) * 1000 - now.getMilliseconds());
+    }
+
+    if(window.customSwitchPage && window.customSwitchHour && window.customSwitchMinute) {
+        var now = new Date();
+        setTimeout(function() {
+            setActive(window.customSwitchPage);
+            if(window.customSwitchPageLock) {
+                window.lockPage = window.customSwitchPage;
+                $('.signage-nav').addClass('lock');
+                $('section.signage-section iframe.signage-iframe').css('width', '100vw');
+            }
+        }, Math.max(((customSwitchHour - now.getHours()) * 3600 + (customSwitchMinute - now.getMinutes()) * 60 - now.getSeconds()) * 1000 - now.getMilliseconds()), 0);
     }
 };

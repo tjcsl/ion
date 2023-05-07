@@ -102,7 +102,7 @@ def mobile_app(request):
 
 
 def csl_apps(request):
-    return {"csl_apps": App.objects.visible_to_user(request.user).order_by("order")}
+    return {"csl_apps": App.objects.visible_to_user(request.user)}
 
 
 def global_custom_theme(request):

@@ -20,7 +20,6 @@ class AppsTest(IonTestCase):
             auth_url="http://localhost:8080/login",
             url="http://localhost:8080",
             image_url="http://localhost:8080/favicon.ico",
-            available_to_all=True,
         )
         response = self.client.get(reverse("apps") + "?id=" + str(app.id))
 
@@ -36,7 +35,6 @@ class AppsTest(IonTestCase):
             auth_url="http://127.0.0.1:8080/login",
             url="http://127.0.0.1:8080",
             html_icon="<i class=fas fa-cloud></i>",
-            available_to_all=False,
         )
         restricted_app.groups_visible.add(group)
         response = self.client.get(reverse("apps") + "?id=" + str(restricted_app.id))

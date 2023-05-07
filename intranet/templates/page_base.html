@@ -5,11 +5,7 @@
 <head>
     <title>
         {% block title %}
-            {% if 'april_fools' in theme.css and request.user and request.user.enable_april_fools %}
-                Intranet 4
-            {% else %}
-                Intranet
-            {% endif %}
+            Intranet
         {% endblock %}
     </title>
 
@@ -34,13 +30,7 @@
     {% endblock %}
         {% stylesheet 'theme.blue' %}
         {% if theme.css %}
-            {% if 'april_fools' not in theme.css %}
-                <link rel="stylesheet" href="{% static theme.css %}">
-            {% else %}
-                {% if request.user and request.user.enable_april_fools %}
-                    <link rel="stylesheet" href="{% static theme.css %}">
-                {% endif %}
-            {% endif %}
+            <link rel="stylesheet" href="{% static theme.css %}">
         {% endif %}
 
     {% block js %}
@@ -62,13 +52,7 @@
             });
         </script>
         {% if theme.js %}
-            {% if 'april_fools' not in theme.css %}
-                <script src="{% static theme.js %}"></script>
-            {% else %}
-                {% if request.user and request.user.enable_april_fools %}
-                    <script src="{% static theme.js %}"></script>
-                {% endif %}
-            {% endif %}
+            <script src="{% static theme.js %}"></script>
         {% endif %}
     {% endblock %}
 

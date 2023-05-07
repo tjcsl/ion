@@ -1,8 +1,11 @@
+import logging
 from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 
 class PageQuerySet(models.query.QuerySet):
@@ -50,7 +53,7 @@ class Page(models.Model):
 
     strip_links = models.BooleanField(default=True)
 
-    def deploy_to(self, displays=None, exclude=None):
+    def deploy_to(self, displays=None, exclude=None, lock=False):
         """
         Deploys page to listed display (specify with display). If display is None,
         deploy to all display. Can specify exclude for which display to exclude.
@@ -64,16 +67,17 @@ class Page(models.Model):
         else:
             signs = Sign.objects.filter(display__in=displays)
         for sign in signs.exclude(display__in=exclude):
-            sign.pages.add(self)
+            if lock:
+                sign.lock_page = self
+            else:
+                sign.pages.add(self)
             sign.save()
 
     def __str__(self):
-        if self.iframe:
-            url = self.url[:10]
-            url = url + "..." if len(self.url) > 10 else url
-            return "{} ({})".format(self.name, url)
-        else:
-            return "{}".format(self.name)
+        return self.name
+
+    class Meta:
+        ordering = ["order", "name"]
 
 
 class SignQuerySet(models.query.QuerySet):
@@ -121,8 +125,8 @@ class Sign(models.Model):
     map_location = models.CharField(max_length=20, null=True, blank=True)
     img_path = models.CharField(max_length=250, default="https://c1.staticflickr.com/5/4331/36927945575_c2c09e44db_k.jpg")
 
-    lock_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="_unused_1")
-    default_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="_unused_2")
+    lock_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="locked_signs")
+    default_page = models.ForeignKey(Page, on_delete=models.SET_NULL, null=True, blank=True, related_name="default_signs")
     pages = models.ManyToManyField(Page, related_name="signs")
 
     day_end_switch_page = models.ForeignKey(
@@ -131,6 +135,17 @@ class Sign(models.Model):
     day_end_switch_minutes = models.IntegerField(
         default=5, null=False, blank=False, help_text="Switch pages this many minutes before the end of the day"
     )
+
+    custom_switch_page = models.ForeignKey(
+        Page,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="custom_page_signs",
+        help_text="Switch to this page at the custom switch time",
+    )
+    custom_switch_time = models.TimeField(null=True, blank=True, help_text="Switch to the custom page at this time")
+    custom_switch_page_lock = models.BooleanField(default=False, help_text="Lock the custom page when switching to it")
 
     # This can be set to None at any time if the
     latest_heartbeat_time = models.DateTimeField(null=True, default=None)
@@ -142,4 +157,4 @@ class Sign(models.Model):
         )
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.display)
+        return self.name

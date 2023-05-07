@@ -211,8 +211,9 @@ def get_theme_name() -> str:
         return "piday"
     elif (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
         return "halloween"
-    elif (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 3)):
-        return "april_fools"
+    # Enable when a new idea for April Fools 2024 comes around
+    # elif (today.month == 3 and (28 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 3)):
+    #     return "april_fools"
 
     return None
 

@@ -1,6 +1,14 @@
 intranet.apps.cslapps package
 =============================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   intranet.apps.cslapps.management
+
 Submodules
 ----------
 

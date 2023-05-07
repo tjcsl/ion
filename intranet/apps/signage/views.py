@@ -54,6 +54,7 @@ def signage_display(request, display_id: str) -> HttpResponse:
     context["sign"] = sign
     context["page_args"] = (sign, request)
     context["end_switch_page_time"] = end_of_day - datetime.timedelta(minutes=sign.day_end_switch_minutes)
+    context["custom_switch_time"] = sign.custom_switch_time
     context["senior_graduation_year"] = get_senior_graduation_year()
     return render(request, "signage/base.html", context)
 

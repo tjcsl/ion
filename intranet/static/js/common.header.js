@@ -92,7 +92,12 @@ $(function() {
     arrowPosition = function() {
         // Calculate dimensions to align arrow to icons/text in header
         $(".notifications .dropdown-menu .arrow").css("right", ($(".notifications").width() / 2) + "px");
-        $(".username .dropdown-menu .arrow, .csl-apps .dropdown-menu .arrow").css("right", ((($(".username .dropdown-item-wrapper").width()) / 2)) + 1 + "px");
+        let rightDistance = $(".username .dropdown-item-wrapper").width() / 2 + 1;
+        $(".username .dropdown-menu .arrow").css("right", rightDistance + "px");
+        if(window.innerWidth < 768) {
+            rightDistance -= parseFloat($(".csl-apps .dropdown-menu").css("right"));
+        }
+        $(".csl-apps .dropdown-menu .arrow").css("right", rightDistance + "px");
     }
 
     arrowPosition();

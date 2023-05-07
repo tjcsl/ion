@@ -2,7 +2,6 @@
 {% load static %}
 {% load pipeline %}
 
-
 {% block css %}
     {{ block.super }}
     {% stylesheet 'page_base' %}
@@ -22,8 +21,7 @@
     {% if messages %}
         <script>
         window.addEventListener("load", function() {
-        // JS comment needed here to prevent syntax highlighting from breaking
-        // {% for message in messages %}
+        {% for message in messages %}
             {% if message.level >= 30 %}
                 Messenger().error("{{ message|escapejs }}");
             {% elif message.level == 25 %}
@@ -86,26 +84,27 @@
                     </li>
                 {% endif %}
 
-                {% if csl_apps|length > 0%}
+                {% if csl_apps|length > 0 %}
                 <li class="csl-apps has-dropdown">
                     <div class="dropdown-item-wrapper">
                         <i class="fas fa-th"></i><span class="user-name">Apps</span><i class="fas fa-caret-down"></i>
                     </div>
                     <ul class="dropdown-menu">
                         <div class="arrow"></div>
+                        <div class="csl-apps-container">
                         {% for app in csl_apps %}
-                        <a href="{% url 'apps' %}?id={{ app.id }}" title="{{ app.description }}" target="_blank">
-                            <span class="image-container">
-                                {% if not app.image_url == '' %}
-                                    <img src="{{ app.image_url }}" class="csl-app-icon">
-                                {% endif %}
-                                {{ app.html_icon|safe }}
-                                &nbsp;
-                            </span>
-                            <span>{{ app.name }}</span>
-                        </a>
-
+                            <a href="{% url 'apps' %}?id={{ app.id }}" title="{{ app.description }}" target="_blank">
+                                <span class="image-container">
+                                    {% if not app.image_url == '' %}
+                                        <img src="{{ app.image_url }}" class="csl-app-icon {% if app.invert_image_color_for_dark_mode %} invert {% endif %}">
+                                    {% endif %}
+                                    {{ app.html_icon|safe }}
+                                    &nbsp;
+                                </span>
+                                <span>{{ app.name }}</span>
+                            </a>
                         {% endfor %}
+                        </div>
                     </ul>
                 </li>
                 {% endif %}
