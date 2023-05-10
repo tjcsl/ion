@@ -370,9 +370,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     """Process and show the dashboard, which includes activities, events, and widgets."""
 
     user = request.user
+    now = timezone.localtime()
 
     if user.is_student and settings.ENABLE_PRE_EIGHTH_LOCATION_REDIRECT and request.COOKIES.get("seen_eighth_location", "") != "1":
-        now = timezone.localtime()
         try:
             today_8 = Day.objects.today().day_type.blocks.filter(name__contains="8")
             if today_8:
@@ -386,7 +386,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
             pass
 
     if user.is_student and settings.ENABLE_PRE_DISMISSAL_BUS_REDIRECT and request.COOKIES.get("seen_bus_redirect", "") != "1":
-        now = timezone.localtime()
         try:
             day = Day.objects.today()
             if day is not None and day.end_time is not None:
@@ -429,6 +428,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "show_all": show_all,
         "paginate_link_suffix": paginate_link_suffix,
         "show_expired": show_expired,
+        "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= now.date() <= settings.TJSTAR_DATE,
     }
 
     # Get list of announcements

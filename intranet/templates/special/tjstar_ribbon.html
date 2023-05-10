@@ -1,0 +1,56 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/tjstar_ribbon.css' %}">
+<script>
+    let tjStarDate = new Date({{ DJANGO_SETTINGS.TJSTAR_DATE|date:"U" }} * 1000 + {{ DJANGO_SETTINGS.SCHOOL_START_HOUR }} * 60 * 60 * 1000 + {{ DJANGO_SETTINGS.SCHOOL_START_MINUTE }} * 60 * 1000);
+</script>
+<script src="{% static 'js/tjstar_ribbon.js' %}"></script>
+
+
+{% if dark_mode_enabled %}
+<style>
+    .tjstar-ribbon-content {
+        color: #fff;
+        background-color: #1f1f1f;
+        border-color: #343a40;
+    }
+
+    .tjstar-ribbon-toggle {
+        color: #fff;
+        background-color: #1f1f1f;
+        border-color: #343a40;
+    }
+</style>
+{% endif %}
+
+<div class="tjstar-ribbon-toggle">
+    <span class="tjstar-ribbon-expand" title="Show tjSTAR ribbon">
+        <i class="fas fa-chevron-down"></i>
+    </span>
+    <img
+        class="tjstar-img {% if dark_mode_enabled %}invert-100{% endif %}"
+        src="{% static 'img/special/tjstar.svg' %}"
+        alt="tjSTAR" height="30"
+    >
+    <b class="tjstar-ribbon-toggle-text">{{ DJANGO_SETTINGS.TJSTAR_DATE|date:"F j, Y" }}</b>
+</div>
+<div class="tjstar-ribbon-content">
+    <span class="tjstar-ribbon-collapse" title="Close tjSTAR ribbon">
+        <i class="fas fa-chevron-up"></i>
+    </span>
+    <center>
+        <img
+            class="tjstar-img tjstar-img-link {% if dark_mode_enabled %}invert-100{% endif %}"
+            src="{% static 'img/special/tjstar.svg' %}"
+            alt="tjSTAR" height="100"
+            onclick="window.open('https://tjhsst.fcps.edu/academics/research-program', '_blank');"
+        >
+        <br>
+        <span class="tjstar-countdown">
+            &nbsp;
+            <span class="tjstar-countdown-days"></span>
+            <span class="tjstar-countdown-hours"></span>
+            <span class="tjstar-countdown-minutes"></span>
+            <span class="tjstar-countdown-seconds"></span>
+        </span>
+    </center>
+</div>
