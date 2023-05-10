@@ -141,6 +141,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "sports_events": sports_events,
             "school_events": school_events,
             "should_not_index_page": has_next_page,
+            "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= timezone.now().date() <= settings.TJSTAR_DATE,
         }
         schedule = schedule_context(request)
         data.update(schedule)
