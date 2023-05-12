@@ -4,7 +4,7 @@
 {% load pipeline %}
 
 {% block title %}
-    {{ block.super }} - Election Winner: {{ poll }}
+    {{ block.super }} - Election Winners: {{ poll }}
 {% endblock %}
 
 {% block css %}
@@ -43,20 +43,22 @@
             <i class="fas fa-arrow-left"></i> Results
         </a>
         <h2>Election Winners: {{ poll }}</h2>
-        <p>This page shows the results of rank choice questions after processing votes for rank choice voting. This page can be printed for exporting results.</p>
-        <p>Remember that rank choice voting is a complex process that involves continuously changing ranks, especially for voters of rejected candidates. This can lead to a human thinking a result is incorrect when instead the script has taken additional variables into account.</p>
-        <p>Note: For positions that require more than one winner, view the detailed output (grey background) for additional rankings.</p>
+        <div class="print-hide">
+            <p>This page shows the results of rank choice questions after processing votes for rank choice voting. This page can be printed for exporting results.</p>
+            <p>Remember that rank choice voting is a complex process that involves continuously changing ranks, especially for voters of rejected candidates. This can lead to a human thinking a result is incorrect when instead the script has taken additional variables into account.</p>
+            <p>Note: For positions that require more than one winner, view the detailed output (grey background) for additional rankings.</p>
+        </div>
         <ol class="questions">
         {% for result in results %}
-                <b class="title">{{ result.0.num }}. {{ result.0.question|safe }}</b>
-                <ul>
-                    <li>
-                        <span class="title">Winner: </span>
-                        <span class="title" style="font-weight: bold;">{{ result.2 }}</span>
-                    </li>
-                </ul>
-                <br>
-                <pre class="result"> {{ result.1 }} </pre>
+            <b class="title">{{ result.0.num }}. {{ result.0.question|safe }}</b>
+            <ul>
+                <li>
+                    <span class="title">Winner: </span>
+                    <span class="title" style="font-weight: bold;">{{ result.2 }}</span>
+                </li>
+            </ul>
+            <br>
+            <pre class="result"> {{ result.1 }} </pre>
             <br>
         {% endfor %}
         </ol>
