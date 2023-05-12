@@ -598,6 +598,16 @@ def determine_ranked_choice_winners(poll):
 
             results.append([q, str(result).strip(), str(winner)])
 
+        else:
+            max_votes = 0
+            winner = ""
+            for c in q.choice_set.all():
+                num_votes = q.answer_set.filter(choice=c).count()
+                if num_votes > max_votes:
+                    max_votes = num_votes
+                    winner = c.display_name()
+            results.append([q, f"{winner} ({max_votes} votes)", winner])
+
     return results
 
 
