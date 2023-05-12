@@ -463,6 +463,9 @@ def handle_rank_choice(q, show_answers=False):
             # "female": sum(v.display_votes() if v.user.is_female else 0 for v in yr_votes),
         }
 
+    # Sort
+    choices.sort(key=lambda e: e["votes"]["total"]["all"], reverse=True)
+
     all_sum = sum(v.display_votes() for v in question_votes)
     choice["votes"]["total"] = {
         "all": all_sum,
@@ -491,6 +494,9 @@ def handle_choice(q, show_answers=False):
     # Clear vote
     votes = question_votes.filter(clear_vote=True)
     choices.append(generate_choice("Clear vote", votes, total_count, show_answers))
+
+    # Sort
+    choices.sort(key=lambda e: e["votes"]["total"]["all"], reverse=True)
 
     # Total
     total_choice = generate_choice("Total", question_votes, total_count, show_answers)
