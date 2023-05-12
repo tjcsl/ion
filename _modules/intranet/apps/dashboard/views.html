@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #1704) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #1706) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -493,9 +493,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process and show the dashboard, which includes activities, events, and widgets.&quot;&quot;&quot;</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_EIGHTH_LOCATION_REDIRECT</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seen_eighth_location&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">today_8</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">today_8</span><span class="p">:</span>
@@ -509,7 +509,6 @@
             <span class="k">pass</span>
 
     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_DISMISSAL_BUS_REDIRECT</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seen_bus_redirect&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">day</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">day</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -552,6 +551,7 @@
         <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
         <span class="s2">&quot;paginate_link_suffix&quot;</span><span class="p">:</span> <span class="n">paginate_link_suffix</span><span class="p">,</span>
         <span class="s2">&quot;show_expired&quot;</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
+        <span class="s2">&quot;show_tjstar&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_BANNER_START_DATE</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_DATE</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="c1"># Get list of announcements</span>
