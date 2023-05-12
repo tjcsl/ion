@@ -70,7 +70,10 @@
         <a href="{% url 'polls' %}" class="button print-hide">
             <i class="fas fa-arrow-left"></i> Polls
         </a>
-
+        &nbsp;
+        <a target="_blank" class="button print-hide" onclick="window.print()">
+            <i class="fas fa-print"></i> Print
+        </a>
         {% if show_answers %}
             &nbsp;
             <a href="#" class="button print-hide" id="user-sels">
@@ -87,7 +90,7 @@
         &nbsp;
         {% if poll.is_election %}
         <a href="{% url 'election_winner' poll.id %}" target="_blank" class="button print-hide">
-            <i class="fas fa-vote-yea"></i> Determine Election Winner
+            <i class="fas fa-vote-yea"></i> Determine Election Winners
         </a>
         {% endif %}
         {% if not poll.is_secret %}
@@ -104,8 +107,8 @@
         {% endif %}
         <br>
         <h2>Results: {{ poll }}</h2>
-        <p>&nbsp; {{ poll.get_voted_string }}</p><br>
-        <p>&nbsp; Show results by gender<input id="gender-toggle" type="checkbox"></p><br>
+        <p>{{ poll.get_voted_string }}</p><br>
+        <p class="print-hide">&nbsp; Show results by gender<input id="gender-toggle" type="checkbox"></p><br>
         <ol class="questions">
             {% for q in questions %}
                 <li id="question-{{ q.question.num }}"><b>{{ q.question.question|safe }}</b>
@@ -117,7 +120,7 @@
                         Note: Because this is a rank choice question, the values will not reflect the number of users that voted, but instead the ranks.
                         Ranks have been reversed for viewing such that an individual that was voted as rank 1 receives {{ q.question.max_choices }} votes.
                         The individual with the highest total has a high number of votes or ranks, but is not necessarily the winner.
-                        Click <a href="{% url 'election_winner' poll.id %}" target="_blank">Determine Election Winner</a> to view the results after running rank choice voting scripts.
+                        <span class="print-hide">Click <a href="{% url 'election_winner' poll.id %}" target="_blank">Determine Election Winner</a> to view the results after running rank choice voting scripts.</span>
                         <br>
                     {% endif %}
                     {% if q.question.type == "APP" %}
@@ -129,15 +132,15 @@
                             <th rowspan="1" class="choice-header">Choice</th>
                             <th class="grade-header" colspan="1">Total Votes</th>
                             {% for i in grades %}
-                                <th class="grade-header" colspan="1">{{ i }}</th>
+                                <th class="grade-header print-hide" colspan="1">{{ i }}</th>
                             {% endfor %}
-                            <th class="grade-header" colspan="1">Staff</th>
+                            <th class="grade-header print-hide" colspan="1">Staff</th>
                         </tr>
                         <tr class="gender-results">
                         {% for i in "012345" %}
-                            <th>T</th>
-                            <th class="gender-results">M</th>
-                            <th class="gender-results">F</th>
+                            <th class="print-hide">T</th>
+                            <th class="gender-results print-hide">M</th>
+                            <th class="gender-results print-hide">F</th>
                         {% endfor %}
                         </tr>
                     </thead>
@@ -168,33 +171,33 @@
                             </td>
                             {% with t=c.votes.total %}
                                 <td>{{ t.all }} ({{ t.all_percent }}%)</td>
-                                <td class="gender-results">{{ t.male }}</td>
-                                <td class="gender-results">{{ t.female }}</td>
+                                <td class="gender-results print-hide">{{ t.male }}</td>
+                                <td class="gender-results print-hide">{{ t.female }}</td>
                             {% endwith %}
                             {% with t=c.votes.9 %}
-                                <td>{{ t.all }}</td>
-                                <td class="gender-results">{{ t.male }}</td>
-                                <td class="gender-results">{{ t.female }}</td>
+                                <td class="print-hide">{{ t.all }}</td>
+                                <td class="gender-results print-hide">{{ t.male }}</td>
+                                <td class="gender-results print-hide">{{ t.female }}</td>
                             {% endwith %}
                             {% with t=c.votes.10 %}
-                                <td>{{ t.all }}</td>
-                                <td class="gender-results">{{ t.male }}</td>
-                                <td class="gender-results">{{ t.female }}</td>
+                                <td class="print-hide">{{ t.all }}</td>
+                                <td class="gender-results print-hide">{{ t.male }}</td>
+                                <td class="gender-results print-hide">{{ t.female }}</td>
                             {% endwith %}
                             {% with t=c.votes.11 %}
-                                <td>{{ t.all }}</td>
-                                <td class="gender-results">{{ t.male }}</td>
-                                <td class="gender-results">{{ t.female }}</td>
+                                <td class="print-hide">{{ t.all }}</td>
+                                <td class="gender-results print-hide">{{ t.male }}</td>
+                                <td class="gender-results print-hide">{{ t.female }}</td>
                             {% endwith %}
                             {% with t=c.votes.12 %}
-                                <td>{{ t.all }}</td>
-                                <td class="gender-results">{{ t.male }}</td>
-                                <td class="gender-results">{{ t.female }}</td>
+                                <td class="print-hide">{{ t.all }}</td>
+                                <td class="gender-results print-hide">{{ t.male }}</td>
+                                <td class="gender-results print-hide">{{ t.female }}</td>
                             {% endwith %}
                             {% with t=c.votes.13 %}
-                                <td>{{ t.all }}</td>
-                                <td class="gender-results">{{ t.male }}</td>
-                                <td class="gender-results">{{ t.female }}</td>
+                                <td class="print-hide">{{ t.all }}</td>
+                                <td class="gender-results print-hide">{{ t.male }}</td>
+                                <td class="gender-results print-hide">{{ t.female }}</td>
                             {% endwith %}
                         </tr>
                         {% endfor %}
