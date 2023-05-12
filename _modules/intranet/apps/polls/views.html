@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #1664) documentation</title>
+    <title>intranet.apps.polls.views &#8212; TJ Intranet v3 (Build #1704) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -586,6 +586,9 @@
             <span class="c1"># &quot;female&quot;: sum(v.display_votes() if v.user.is_female else 0 for v in yr_votes),</span>
         <span class="p">}</span>
 
+    <span class="c1"># Sort</span>
+    <span class="n">choices</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="s2">&quot;total&quot;</span><span class="p">][</span><span class="s2">&quot;all&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="n">all_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">display_votes</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">question_votes</span><span class="p">)</span>
     <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;all&quot;</span><span class="p">:</span> <span class="n">all_sum</span><span class="p">,</span>
@@ -614,6 +617,9 @@
     <span class="c1"># Clear vote</span>
     <span class="n">votes</span> <span class="o">=</span> <span class="n">question_votes</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">clear_vote</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">choices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generate_choice</span><span class="p">(</span><span class="s2">&quot;Clear vote&quot;</span><span class="p">,</span> <span class="n">votes</span><span class="p">,</span> <span class="n">total_count</span><span class="p">,</span> <span class="n">show_answers</span><span class="p">))</span>
+
+    <span class="c1"># Sort</span>
+    <span class="n">choices</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;votes&quot;</span><span class="p">][</span><span class="s2">&quot;total&quot;</span><span class="p">][</span><span class="s2">&quot;all&quot;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Total</span>
     <span class="n">total_choice</span> <span class="o">=</span> <span class="n">generate_choice</span><span class="p">(</span><span class="s2">&quot;Total&quot;</span><span class="p">,</span> <span class="n">question_votes</span><span class="p">,</span> <span class="n">total_count</span><span class="p">,</span> <span class="n">show_answers</span><span class="p">)</span>
@@ -693,6 +699,15 @@
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">poll</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">is_rank_choice</span><span class="p">():</span>
+            <span class="c1"># pyrankvote breaks in these cases</span>
+            <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="s2">&quot;No answer choices&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">])</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">q</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">winner</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">display_name</span><span class="p">()</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">winner</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">q</span><span class="o">.</span><span class="n">answer_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2"> votes)</span><span class="se">\n</span><span class="s2">Note: There was only one choice for this question.&quot;</span><span class="p">,</span> <span class="n">winner</span><span class="p">])</span>
+                <span class="k">continue</span>
+
             <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">ballots</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -711,6 +726,16 @@
             <span class="n">winner</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_winners</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">winner</span><span class="p">)])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_votes</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">winner</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">q</span><span class="o">.</span><span class="n">choice_set</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="n">num_votes</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">answer_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">choice</span><span class="o">=</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">num_votes</span> <span class="o">&gt;</span> <span class="n">max_votes</span><span class="p">:</span>
+                    <span class="n">max_votes</span> <span class="o">=</span> <span class="n">num_votes</span>
+                    <span class="n">winner</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">display_name</span><span class="p">()</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">winner</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">max_votes</span><span class="si">}</span><span class="s2"> votes)&quot;</span><span class="p">,</span> <span class="n">winner</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">results</span></div>
 
