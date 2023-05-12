@@ -570,6 +570,15 @@ def determine_ranked_choice_winners(poll):
     results = []
     for q in poll.question_set.all():
         if q.is_rank_choice():
+            # pyrankvote breaks in these cases
+            if q.choice_set.count() == 0:
+                results.append([q, "No answer choices", "None"])
+                continue
+            if q.choice_set.count() == 1:
+                winner = q.choice_set.first().display_name()
+                results.append([q, f"{winner} ({q.answer_set.count()} votes)\nNote: There was only one choice for this question.", winner])
+                continue
+
             candidates = []
             ballots = []
 
