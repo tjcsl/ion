@@ -98,19 +98,6 @@ $(function() {
                                     .filter(bus => bus.attributes.route_name.includes('JT'))
                                     .map(bus => bus.attributes);
             } else if (action === 'Mark a bus as arrived or on time') {
-<<<<<<< HEAD
-                busList = routeList.filter(bus => !bus.attributes.route_name.includes('JT'))
-                                    .map(bus => {
-                                        if (bus.attributes.status === 'a') {
-                                            // TODO: less hacky deep copy
-                                            let attr = JSON.parse(JSON.stringify(bus.attributes));
-                                            attr.route_name = `Mark ${bus.attributes.route_name} as on time`;
-                                            return attr;
-                                        } else {
-                                            return bus.attributes;
-                                        }
-                                    });
-=======
                 busList = routeList.map(bus => {
                     if ((bus.attributes.status === 'a' || bus.attributes.status === 'd') && !bus.attributes.route_name.includes('JT')) {
                         let attr = JSON.parse(JSON.stringify(bus.attributes));
@@ -135,7 +122,6 @@ $(function() {
 
                     }
                 }).flat().filter((element) => element != null);
->>>>>>> 45142c57 (feat(bus): option to mark bus as delayed)
             } else if (action === 'Assign a bus to this space') {
                 busList = routeList.filter(bus => bus.attributes.status !== 'a')
                                     .map(bus => bus.attributes);
@@ -193,16 +179,6 @@ $(function() {
             } else if (this.action === 'Mark a bus as arrived or on time') {
                 let route_name = '';
                 let st = '';
-<<<<<<< HEAD
-                // TODO: this is also super hacky
-                // Essentially, this checks if the selected route has "Mark"
-                // at the beginning, implying that it's to be marked on time.
-                if (e.target.value.indexOf('Mark') === 0) {
-                    route_name = e.target.value.split(' ')[1];
-                    st = 'o';
-                } else {
-                    route_name = e.target.value;
-=======
                 if (e.target.value.includes('on')) {
                     route_name = e.target.value.split(' ')[1];
 
@@ -215,7 +191,6 @@ $(function() {
                 }
                 else {
                     route_name = e.target.value.split(' ')[1];
->>>>>>> 45142c57 (feat(bus): option to mark bus as delayed)
                     st = 'a';
                 }
                 let route = this.model.findWhere({route_name: route_name}).attributes;
