@@ -56,7 +56,7 @@ services:
         "/bin/sh",
         "-c",
         "git config --global --add safe.directory /ion && \
-         pipenv run celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"
+         celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"
       ]
     depends_on:
       - application
@@ -73,7 +73,7 @@ services:
         "/bin/sh",
         "-c",
         "git config --global --add safe.directory /ion && \
-         pipenv run celery --app intranet beat -l info"
+         celery --app intranet beat -l info"
       ]
     depends_on:
       - application
