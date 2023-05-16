@@ -10,7 +10,6 @@ COPY requirements-dev.txt .
 RUN apk update && \
     apk add bash git curl python3 python3-dev py3-pip build-base libpq-dev freetype-dev libffi-dev ruby-full libmagic krb5 kinit rsync nodejs npm tzdata && \
     npm install -g sass && \
-    pip3 install pipenv && \
     ln -s /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     pip3 install -Ir requirements.txt && \
     pip3 install -Ir requirements-dev.txt && \
