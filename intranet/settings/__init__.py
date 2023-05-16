@@ -118,7 +118,7 @@ EMERGENCY_MESSAGE = None  # type: str
 # In production, Nginx filters requests that are not in this list. If this is
 # not done, a notification gets sent whenever someone messes with
 # the HTTP Host header.
-ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["ion.tjhsst.edu", "198.38.18.250", "localhost", ".local", "127.0.0.1"]
 
 PRODUCTION = os.getenv("PRODUCTION", "").upper() == "TRUE"
 IN_CI = any(os.getenv(key, "").upper() == "TRUE" for key in ["TRAVIS", "GITHUB_ACTIONS"])
