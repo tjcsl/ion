@@ -335,6 +335,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "welcome",
     "hoco_ribbon",
     "hoco_scores",
+    "tjstar_ribbon",
     "oauth",
     "bus",
     "signage.page",
