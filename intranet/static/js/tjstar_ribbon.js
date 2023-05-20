@@ -20,10 +20,13 @@ $(function() {
     let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    if(days <= 0 && hours <= 8) {
+    let tjStarEnded = tjStarEndTime - now <= 0;
+
+    // tjSTAR day
+    if(days <= 0 && hours <= tjStarDate.getHours() && minutes <= tjStarDate.getMinutes()) {
         $(".tjstar-ribbon-toggle-text").text("Today!").css("color", "#0fa674").css("font-weight", "bold");
-        // Auto expand the ribbon on tjSTAR day
-        if(!(hours < -4 || (hours == -4 && minutes <= -20))) {
+        // Auto expand the ribbon
+        if(!tjStarEnded) {
             Cookies.set("collapse_tjstar_ribbon", "0", { expires: 21 })
             $(".tjstar-ribbon-content").slideDown();
             $(".tjstar-ribbon-toggle").slideUp();
@@ -40,15 +43,13 @@ $(function() {
         minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        //console.log(days, hours, minutes, seconds)
-
         if (distance <= 0) {
             clearInterval(tjStarTimer);
             countdownEl.text("tjSTAR has started!");
-            if(hours <= -1 && minutes <= -10) {
+            if((hours <= -1 && minutes <= -10) || hours <= -2) {
                 countdownEl.text("tjSTAR is ongoing!");
             }
-            if(hours < -4 || (hours == -4 && minutes <= -20)) {
+            if(tjStarEnded) {
                 countdownEl.text("tjSTAR has ended!").css("color", "#F25B54");
             }
             countdownEl.fadeTo(500, 1);
