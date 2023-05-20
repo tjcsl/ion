@@ -3,6 +3,9 @@
 {% stylesheet 'tjstar_ribbon' %}
 <script>
     let tjStarDate = new Date({{ DJANGO_SETTINGS.TJSTAR_DATE|date:"U" }} * 1000 + {{ DJANGO_SETTINGS.SCHOOL_START_HOUR }} * 60 * 60 * 1000 + {{ DJANGO_SETTINGS.SCHOOL_START_MINUTE }} * 60 * 1000);
+    let tjStarEndTimeHour = 13;
+    let tjStarEndTimeMinute = 0;
+    let tjStarEndTime = new Date(tjStarDate.getFullYear(), tjStarDate.getMonth(), tjStarDate.getDate(), tjStarEndTimeHour, tjStarEndTimeMinute);
 </script>
 <script src="{% static 'js/tjstar_ribbon.js' %}"></script>
 
@@ -19,6 +22,10 @@
         color: #fff;
         background-color: #1f1f1f;
         border-color: #343a40;
+    }
+
+    .tjstar-ribbon-toggle-text {
+        color: #d2d4d2;
     }
 </style>
 {% endif %}
