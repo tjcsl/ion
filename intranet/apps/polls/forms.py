@@ -13,10 +13,11 @@ class PollForm(forms.ModelForm):
 
     class Meta:
         model = Poll
-        fields = ["title", "description", "start_time", "end_time", "visible", "is_secret", "is_election", "groups"]
+        fields = ["title", "description", "start_time", "end_time", "visible", "is_secret", "is_election", "is_randomized", "groups"]
         widgets = {"description": forms.Textarea()}
-        labels = {"is_secret": "Secret", "is_election": "Election"}
+        labels = {"is_secret": "Secret", "is_election": "Election", "is_randomized": "Randomize"}
         help_texts = {
             "is_secret": "This will prevent Ion administrators from viewing individual users' votes.",
             "is_election": "Enable election formatting and results features.",
+            "is_randomized": "Enable randomization of choices.",
         }
