@@ -10,8 +10,8 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
-from ...utils.helpers import get_ap_week_warning, get_fcps_emerg
-from ..announcements.models import Announcement, AnnouncementRequest
+from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
+from ..announcements.models import Announcement, AnnouncementRequest, WarningAnnouncement
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
 from ..events.models import Event, TJStarUUIDMap
 from ..schedule.models import Day
@@ -485,6 +485,11 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         dash_warning = fcps_emerg
     elif ap_week:
         dash_warning = ap_week
+
+    warnings = WarningAnnouncement.objects.filter(active=True)
+    html = get_warning_html(warnings, dashboard=True)
+    if html:
+        dash_warning = html
 
     context.update(
         {

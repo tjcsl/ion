@@ -260,3 +260,36 @@ class AnnouncementRequest(models.Model):
 
     class Meta:
         ordering = ["-added"]
+
+
+class WarningAnnouncement(models.Model):
+    """Warning in yellow to show on Ion"""
+
+    title = models.CharField(max_length=127)
+    content = models.TextField(help_text="Content of the warning. You can use HTML here.")
+    type = models.CharField(
+        max_length=127,
+        choices=[
+            ("dashboard", "Dashboard Warning (displays on dashboard)"),
+            ("login", "Login Warning (displays on login page)"),
+            ("dashboard_login", "Dashboard and Login Warning (displays on dashboard and login pages)"),
+            ("global", "Global Warning (displays on all pages)"),
+        ],
+        default="dashboard",
+    )
+    active = models.BooleanField(default=True, help_text="Whether or not to show the warning.")
+    added = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def show_on_dashboard(self):
+        return self.type in ("dashboard", "dashboard_login")  # global is not included. It will show on all pages and this logic isn't needed.
+
+    @property
+    def show_on_login(self):
+        return self.type in ("login", "dashboard_login")
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ["-added"]

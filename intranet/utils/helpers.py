@@ -192,6 +192,33 @@ def get_ap_week_warning(request):
     return False
 
 
+def get_warning_html(warnings, dashboard=False, login=False):
+    """
+    Returns HTML for announcements.models.WarningAnnouncement objects.
+    Dashboard and login logic is processed here because they cannot be filtered using .filter().
+    Global warnings are pre-filtered and passed directly to this function from the context processor.
+    """
+    if dashboard:
+        warnings = [warning for warning in warnings if warning.show_on_dashboard]
+    elif login:
+        warnings = [warning for warning in warnings if warning.show_on_login]
+    html = ""
+    counter = 0
+    for warning in warnings:
+        html += f"""\
+        <h3 class='warning-title'>\
+            <i class='fas fa-exclamation-triangle'></i>&nbsp;\
+            {warning.title}\
+            {'<i class="fa fa-chevron-down warning-toggle-icon"></i>' if counter == 0 else ''} \
+        </h3>\
+        <div class='warning-content'>\
+        {warning.content}
+        </div>\
+        """
+        counter += 1
+    return html
+
+
 GLOBAL_THEMES = {
     "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
     "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
