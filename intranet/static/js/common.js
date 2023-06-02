@@ -50,7 +50,7 @@ $(function() {
     $(".warning-title").click(function() {
         $(".warning-content").slideToggle();
         $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
-        $.cookie("collapseWarning", !collapseWarning, {path: "/"})
+        $.cookie("collapseWarning", !collapseWarning, {path: "/", expires: 14})
     });
     if(!collapseWarning) {
         $(".warning-content").show();
