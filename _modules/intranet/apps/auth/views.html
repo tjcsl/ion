@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1738) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1745) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -146,7 +146,8 @@
 
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_date</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">awaredate</span><span class="p">,</span> <span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">get_ap_week_warning</span><span class="p">,</span> <span class="n">get_theme</span>
-<span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span>
+<span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="kn">import</span> <span class="n">WarningAnnouncement</span>
+<span class="kn">from</span> <span class="nn">..dashboard.views</span> <span class="kn">import</span> <span class="n">dashboard_view</span><span class="p">,</span> <span class="n">get_fcps_emerg</span><span class="p">,</span> <span class="n">get_warning_html</span>
 <span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">..schedule.views</span> <span class="kn">import</span> <span class="n">schedule_context</span>
@@ -249,6 +250,11 @@
 
         <span class="k">if</span> <span class="n">ap_week</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">login_warning</span><span class="p">:</span>
             <span class="n">login_warning</span> <span class="o">=</span> <span class="n">ap_week</span>
+
+        <span class="n">warnings</span> <span class="o">=</span> <span class="n">WarningAnnouncement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">get_warning_html</span><span class="p">(</span><span class="n">warnings</span><span class="p">,</span> <span class="n">login</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">html</span><span class="p">:</span>
+            <span class="n">login_warning</span> <span class="o">=</span> <span class="n">html</span>
 
         <span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span> <span class="o">=</span> <span class="n">get_week_sports_school_events</span><span class="p">()</span>
 

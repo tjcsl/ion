@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #1738) documentation</title>
+    <title>intranet.apps.announcements.models &#8212; TJ Intranet v3 (Build #1745) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -377,6 +377,39 @@
     <span class="n">rejected_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;rejected_by&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
 
     <span class="n">admin_email_sent</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-added&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="WarningAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.forms.WarningAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">WarningAnnouncement</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Warning in yellow to show on Ion&quot;&quot;&quot;</span>
+
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">127</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Content of the warning. You can use HTML here.&quot;</span><span class="p">)</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">127</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;dashboard&quot;</span><span class="p">,</span> <span class="s2">&quot;Dashboard Warning (displays on dashboard)&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="s2">&quot;Login Warning (displays on login page)&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;dashboard_login&quot;</span><span class="p">,</span> <span class="s2">&quot;Dashboard and Login Warning (displays on dashboard and login pages)&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;Global Warning (displays on all pages)&quot;</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;dashboard&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Whether or not to show the warning.&quot;</span><span class="p">)</span>
+    <span class="n">added</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">show_on_dashboard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;dashboard&quot;</span><span class="p">,</span> <span class="s2">&quot;dashboard_login&quot;</span><span class="p">)</span>  <span class="c1"># global is not included. It will show on all pages and this logic isn&#39;t needed.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">show_on_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">,</span> <span class="s2">&quot;dashboard_login&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
