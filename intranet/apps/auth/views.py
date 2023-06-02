@@ -23,7 +23,8 @@ from django.views.generic.base import View
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import awaredate, dark_mode_enabled, get_ap_week_warning, get_theme
-from ..dashboard.views import dashboard_view, get_fcps_emerg
+from ..announcements.models import WarningAnnouncement
+from ..dashboard.views import dashboard_view, get_fcps_emerg, get_warning_html
 from ..eighth.models import EighthBlock
 from ..events.models import Event
 from ..schedule.views import schedule_context
@@ -126,6 +127,11 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
 
         if ap_week and not login_warning:
             login_warning = ap_week
+
+        warnings = WarningAnnouncement.objects.filter(active=True)
+        html = get_warning_html(warnings, login=True)
+        if html:
+            login_warning = html
 
         sports_events, school_events = get_week_sports_school_events()
 

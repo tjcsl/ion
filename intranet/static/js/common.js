@@ -44,6 +44,18 @@ $(function() {
     // On sortable tables, use the data-auto-sort parameter to
     // automatically sort by that field.
     $("table[data-sortable] thead th[data-auto-sort]").click();
+
+
+    let collapseWarning = $.cookie("collapseWarning") === "true";
+    $(".warning-title").click(function() {
+        $(".warning-content").slideToggle();
+        $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
+        $.cookie("collapseWarning", !collapseWarning, {path: "/"})
+    });
+    if(!collapseWarning) {
+        $(".warning-content").show();
+        $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
+    }
 });
 
 function ytwin(id) {

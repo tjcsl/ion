@@ -12,7 +12,8 @@ from intranet.apps.cslapps.models import App
 from intranet.apps.notifications.models import NotificationConfig
 from intranet.apps.oauth.models import CSLApplication
 
-from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_name
+from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_name, get_warning_html
+from .announcements.models import WarningAnnouncement
 from .schedule.models import Day
 
 logger = logging.getLogger(__name__)
@@ -29,9 +30,10 @@ def global_warning(request):
     """
     Display a global warning on all pages throughout the application.
     """
-    warning = settings.GLOBAL_WARNING if hasattr(settings, "GLOBAL_WARNING") else None
-
-    return {"global_warning": warning}
+    warnings = WarningAnnouncement.objects.filter(active=True, type="global")
+    if warnings.exists():
+        return {"global_warning": get_warning_html(warnings)}
+    return {"global_warning": None}
 
 
 def nav_categorizer(request):

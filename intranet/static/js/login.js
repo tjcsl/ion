@@ -120,4 +120,9 @@ $(function() {
         clearTimeout(typingTimer);
         typingTimer = setTimeout(doneTyping, 2000);
     });
+
+    $(".warning-content").hide();
+    $(".center").css("top", $(".center").outerHeight() + $(".warning-announcement").outerHeight() + 20);
+    $(".warning-toggle-icon").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+
 });
