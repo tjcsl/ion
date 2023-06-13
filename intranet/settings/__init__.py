@@ -644,6 +644,7 @@ INSTALLED_APPS = [
     "intranet.apps.sessionmgmt",
     "intranet.apps.features",
     "intranet.apps.oauth",
+    "intranet.apps.logs",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit
@@ -865,6 +866,8 @@ BUS_PAGE_CHANGEOVER_HOUR = 12
 
 # Substrings of user agents to not log in the Ion access logs
 NONLOGGABLE_USER_AGENT_SUBSTRINGS = ["Prometheus", "GoogleBot", "UptimeRobot"]
+NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
+NONLOGGABLE_PATH_ENDINGS = [".png", ".jpg", ".jpeg", ".gif", ".css", ".js", ".ico", "jsi18n/"]
 
 # The location of the Celery broker (message transport)
 CELERY_BROKER_URL = "amqp://localhost"
