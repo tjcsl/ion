@@ -25,6 +25,7 @@ Subpackages
    intranet.apps.files
    intranet.apps.groups
    intranet.apps.itemreg
+   intranet.apps.logs
    intranet.apps.lostfound
    intranet.apps.nomination
    intranet.apps.notifications

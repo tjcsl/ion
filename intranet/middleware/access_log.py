@@ -1,7 +1,10 @@
+import json
 import logging
 
 from django.conf import settings
 from django.utils import timezone
+
+from ..apps.logs.models import Request
 
 logger = logging.getLogger("intranet_access")
 
@@ -29,9 +32,48 @@ class AccessLogMiddleWare:
             ip = ip[0]
 
         user_agent = request.META.get("HTTP_USER_AGENT", "")
-        log_line = '{} - {} - [{}] "{}" "{}"'.format(ip, username, timezone.localtime(), request.get_full_path(), user_agent)
+        path = request.get_full_path()
 
-        if user_agent and not any(user_agent_substring in user_agent for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS):
+        if user_agent and not any(
+            [
+                any(user_agent_substring in user_agent for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS),
+                any(path.startswith(path_beginning) for path_beginning in settings.NONLOGGABLE_PATH_BEGINNINGS),
+                any(path.endswith(path_ending) for path_ending in settings.NONLOGGABLE_PATH_ENDINGS),
+            ]
+        ):
+            log_line = f'{ip} - {username} - [{timezone.localtime()}] "{path}" "{user_agent}"'
             logger.info(log_line)
+
+            r = Request.objects.create(
+                ip=ip,
+                path=path,
+                user_agent=user_agent,
+                method=request.method,
+                request=json.dumps(
+                    {
+                        "GET": dict(request.GET),
+                        "POST": dict(request.POST),
+                        "META": {k: v for k, v in request.META.items() if not k.startswith("HTTP")},  # HTTP headers are already logged
+                        "FILES": dict(request.FILES),
+                        # 'COOKIES': dict(request.COOKIES),  # already logged in headers
+                        "headers": dict(request.headers),
+                        "method": request.method,
+                        "body": request.body.decode("utf-8") if request.body else "",
+                        "content_type": request.content_type,
+                        "content_params": request.content_params,
+                    }
+                ),
+            )
+
+            # Redact passwords
+            r_request = json.loads(r.request)
+            if "password" in r_request["POST"]:
+                r_request["POST"]["password"] = "********"
+                r.request = json.dumps(r_request)
+                r.save()
+
+            if request.user and not request.user.is_anonymous:
+                r.user = request.user
+                r.save()
 
         return response
