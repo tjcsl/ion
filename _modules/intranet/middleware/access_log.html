@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.middleware.access_log &#8212; TJ Intranet v3 (Build #1761) documentation</title>
+    <title>intranet.middleware.access_log &#8212; TJ Intranet v3 (Build #1776) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -121,10 +121,13 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.middleware.access_log</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+
+<span class="kn">from</span> <span class="nn">..apps.logs.models</span> <span class="kn">import</span> <span class="n">Request</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;intranet_access&quot;</span><span class="p">)</span>
 
@@ -152,10 +155,49 @@
             <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">user_agent</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;HTTP_USER_AGENT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">log_line</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1"> - [</span><span class="si">{}</span><span class="s1">] &quot;</span><span class="si">{}</span><span class="s1">&quot; &quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">(),</span> <span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">(),</span> <span class="n">user_agent</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_full_path</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">user_agent</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">user_agent_substring</span> <span class="ow">in</span> <span class="n">user_agent</span> <span class="k">for</span> <span class="n">user_agent_substring</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">NONLOGGABLE_USER_AGENT_SUBSTRINGS</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_agent</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="nb">any</span><span class="p">(</span><span class="n">user_agent_substring</span> <span class="ow">in</span> <span class="n">user_agent</span> <span class="k">for</span> <span class="n">user_agent_substring</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">NONLOGGABLE_USER_AGENT_SUBSTRINGS</span><span class="p">),</span>
+                <span class="nb">any</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">path_beginning</span><span class="p">)</span> <span class="k">for</span> <span class="n">path_beginning</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">NONLOGGABLE_PATH_BEGINNINGS</span><span class="p">),</span>
+                <span class="nb">any</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">path_ending</span><span class="p">)</span> <span class="k">for</span> <span class="n">path_ending</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">NONLOGGABLE_PATH_ENDINGS</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">log_line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s1"> - [</span><span class="si">{</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="si">}</span><span class="s1">] &quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&quot; &quot;</span><span class="si">{</span><span class="n">user_agent</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">log_line</span><span class="p">)</span>
+
+            <span class="n">r</span> <span class="o">=</span> <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span>
+                <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                <span class="n">user_agent</span><span class="o">=</span><span class="n">user_agent</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                <span class="n">request</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;GET&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">),</span>
+                        <span class="s2">&quot;POST&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">),</span>
+                        <span class="s2">&quot;META&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;HTTP&quot;</span><span class="p">)},</span>  <span class="c1"># HTTP headers are already logged</span>
+                        <span class="s2">&quot;FILES&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">),</span>
+                        <span class="c1"># &#39;COOKIES&#39;: dict(request.COOKIES),  # already logged in headers</span>
+                        <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">),</span>
+                        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+                        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">body</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;content_type&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">content_type</span><span class="p">,</span>
+                        <span class="s2">&quot;content_params&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">content_params</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Redact passwords</span>
+            <span class="n">r_request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;password&quot;</span> <span class="ow">in</span> <span class="n">r_request</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">]:</span>
+                <span class="n">r_request</span><span class="p">[</span><span class="s2">&quot;POST&quot;</span><span class="p">][</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;********&quot;</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">r_request</span><span class="p">)</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_anonymous</span><span class="p">:</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
+                <span class="n">r</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
         <span class="k">return</span> <span class="n">response</span></div>
 </pre></div>
