@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.logs package &#8212; TJ Intranet v3 (Build #1804) documentation</title>
+    <title>intranet.apps.logs package &#8212; TJ Intranet v3 (Build #1805) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -108,14 +108,6 @@
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.readonly_fields"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.readonly_fields</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.request_json"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.request_json()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.search_fields</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.truncated_path"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.truncated_path()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#intranet.apps.logs.admin.TruncatedPathFilter"><code class="docutils literal notranslate"><span class="pre">TruncatedPathFilter</span></code></a><ul>
-<li><a class="reference internal" href="#intranet.apps.logs.admin.TruncatedPathFilter.lookups"><code class="docutils literal notranslate"><span class="pre">TruncatedPathFilter.lookups()</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.logs.admin.TruncatedPathFilter.parameter_name"><code class="docutils literal notranslate"><span class="pre">TruncatedPathFilter.parameter_name</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.logs.admin.TruncatedPathFilter.queryset"><code class="docutils literal notranslate"><span class="pre">TruncatedPathFilter.queryset()</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.logs.admin.TruncatedPathFilter.title"><code class="docutils literal notranslate"><span class="pre">TruncatedPathFilter.title</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -224,12 +216,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.list_display">
-<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('timestamp',</span> <span class="pre">'ip',</span> <span class="pre">'user',</span> <span class="pre">&lt;function</span> <span class="pre">RequestAdmin.truncated_path&gt;,</span> <span class="pre">'method',</span> <span class="pre">'flag')</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('timestamp',</span> <span class="pre">'ip',</span> <span class="pre">'user',</span> <span class="pre">'path',</span> <span class="pre">'method',</span> <span class="pre">'flag')</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.list_filter">
-<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('flag',</span> <span class="pre">'timestamp',</span> <span class="pre">'method',</span> <span class="pre">&lt;class</span> <span class="pre">'intranet.apps.logs.admin.TruncatedPathFilter'&gt;,</span> <span class="pre">'user',</span> <span class="pre">'ip',</span> <span class="pre">'user_agent')</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('flag',</span> <span class="pre">'timestamp',</span> <span class="pre">'method',</span> <span class="pre">'path',</span> <span class="pre">'user',</span> <span class="pre">'ip',</span> <span class="pre">'user_agent')</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -245,37 +237,6 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.search_fields">
 <span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('user__username',</span> <span class="pre">'ip',</span> <span class="pre">'path',</span> <span class="pre">'flag',</span> <span class="pre">'method',</span> <span class="pre">'user_agent',</span> <span class="pre">'request')</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.search_fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.truncated_path">
-<span class="sig-name descname"><span class="pre">truncated_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#RequestAdmin.truncated_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.truncated_path" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="intranet.apps.logs.admin.TruncatedPathFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.logs.admin.</span></span><span class="sig-name descname"><span class="pre">TruncatedPathFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_admin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#TruncatedPathFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.TruncatedPathFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleListFilter</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.logs.admin.TruncatedPathFilter.lookups">
-<span class="sig-name descname"><span class="pre">lookups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_admin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#TruncatedPathFilter.lookups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.TruncatedPathFilter.lookups" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="intranet.apps.logs.admin.TruncatedPathFilter.parameter_name">
-<span class="sig-name descname"><span class="pre">parameter_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path'</span></em><a class="headerlink" href="#intranet.apps.logs.admin.TruncatedPathFilter.parameter_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.logs.admin.TruncatedPathFilter.queryset">
-<span class="sig-name descname"><span class="pre">queryset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#TruncatedPathFilter.queryset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.TruncatedPathFilter.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="intranet.apps.logs.admin.TruncatedPathFilter.title">
-<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path'</span></em><a class="headerlink" href="#intranet.apps.logs.admin.TruncatedPathFilter.title" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
