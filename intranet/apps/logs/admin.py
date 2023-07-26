@@ -30,6 +30,24 @@ class TruncatedPathFilter(admin.SimpleListFilter):
         return queryset
 
 
+class TruncatedUserAgentFilter(admin.SimpleListFilter):
+    title = "user agent"
+    parameter_name = "user_agent"
+
+    def lookups(self, request, model_admin):
+        paths = model_admin.model.objects.order_by("user_agent").values_list("user_agent", flat=True).distinct()
+        truncated_paths = {path if len(path) < 40 else path[:40] + "..." for path in paths}
+        truncated_paths = sorted(truncated_paths)
+        return zip(truncated_paths, gettext_lazy(truncated_paths))
+
+    def queryset(self, request, queryset):
+        if self.value():
+            if self.value().endswith("..."):
+                return queryset.filter(user_agent__startswith=self.value()[:-3])
+            return queryset.filter(user_agent=self.value())
+        return queryset
+
+
 class RequestAdmin(admin.ModelAdmin):
     def truncated_path(self):
         return self.path[:80] + "..." if len(self.path) > 80 else self.path  # pylint: disable=no-member
@@ -49,10 +67,10 @@ class RequestAdmin(admin.ModelAdmin):
         "flag",
         "timestamp",
         "method",
-        TruncatedPathFilter,
         "user",
         "ip",
-        "user_agent",
+        TruncatedPathFilter,
+        TruncatedUserAgentFilter,
     )
     search_fields = (
         "user__username",
