@@ -9,14 +9,14 @@ class Request(models.Model):
     """
 
     timestamp = models.DateTimeField(auto_now_add=True)
-    ip = models.CharField(max_length=255, verbose_name="IP address")
-    path = models.CharField(max_length=255)
-    user_agent = models.CharField(max_length=255)
+    ip = models.TextField(verbose_name="IP address")
+    path = models.TextField()
+    user_agent = models.TextField()
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     flag = models.CharField(max_length=255, null=True, blank=True, help_text="Flag this request for review by assigning it a label.")
     request = models.JSONField(null=True, blank=True)  # Serialized HttpRequest object
-    method = models.CharField(max_length=255, null=True, blank=True)  # request method
+    method = models.TextField(null=True, blank=True)  # request method
 
     @property
     def username(self):

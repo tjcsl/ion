@@ -298,6 +298,7 @@ PIPELINE = {
 
 LIST_OF_INDEPENDENT_CSS = [
     "about",
+    "admin",
     "api",
     "base",
     "login",
