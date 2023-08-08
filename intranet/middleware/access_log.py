@@ -44,6 +44,8 @@ class AccessLogMiddleWare:
             log_line = f'{ip} - {username} - [{timezone.localtime()}] "{path}" "{user_agent}"'
             logger.info(log_line)
 
+            request._read_started = False
+            request_body = request.body.decode("utf-8") if request.body else ""
             r = Request.objects.create(
                 ip=ip,
                 path=path,
@@ -54,11 +56,11 @@ class AccessLogMiddleWare:
                         "GET": dict(request.GET),
                         "POST": dict(request.POST),
                         "META": {k: v for k, v in request.META.items() if not k.startswith("HTTP")},  # HTTP headers are already logged
-                        "FILES": dict(request.FILES),
+                        # "FILES": dict(request.FILES),  # TODO: add support for logging files
                         # 'COOKIES': dict(request.COOKIES),  # already logged in headers
                         "headers": dict(request.headers),
                         "method": request.method,
-                        "body": request.body.decode("utf-8") if request.body else "",
+                        "body": request_body,
                         "content_type": request.content_type,
                         "content_params": request.content_params,
                     }
@@ -69,6 +71,12 @@ class AccessLogMiddleWare:
             r_request = json.loads(r.request)
             if "password" in r_request["POST"]:
                 r_request["POST"]["password"] = "********"
+                r.request = json.dumps(r_request)
+                r.save()
+            if "password" in r_request["body"]:
+                idx = r_request["body"].index("password=")
+                length = r_request["body"][idx:].index("&") if "&" in r_request["body"][idx:] else len(r_request["body"][idx:])
+                r_request["body"] = r_request["body"][:idx] + "password=********" + r_request["body"][idx + length:]
                 r.request = json.dumps(r_request)
                 r.save()
 
