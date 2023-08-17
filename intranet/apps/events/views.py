@@ -168,9 +168,11 @@ def events_view(request):
 
     show_all = False
     if is_events_admin:
-        viewable_events = Event.objects.all().filter(rejected=False).this_year().prefetch_related("groups")
         if "show_all" in request.GET:
+            viewable_events = Event.objects.all().prefetch_related("groups")
             show_all = True
+        else:
+            viewable_events = Event.objects.all().filter(rejected=False).this_year().prefetch_related("groups")
     else:
         viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
 
