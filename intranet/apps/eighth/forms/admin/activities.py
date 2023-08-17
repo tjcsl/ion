@@ -136,7 +136,7 @@ class ActivityForm(forms.ModelForm):
         self.fields["users_allowed"].queryset = student_objects
         self.fields["users_blacklisted"].queryset = student_objects
 
-        self.fields["presign"].label = "48 Hour"
+        self.fields["presign"].label = "2 day pre-signup"
         self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
 
         # These fields are rendered on the right of the page on the edit activity page.
