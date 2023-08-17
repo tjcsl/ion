@@ -45,9 +45,9 @@
             <div id="step-1">
                 {% block step1 %}
                     <h2>Welcome to the TJ Intranet</h2>
-                    <p>The TJ Intranet gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you can start using Intranet, spend a minute to jump through this one-time welcome process.</p>
+                    <p>The TJ Intranet, known as Ion, gives you access to eighth period activities, announcements, directory information, events, polls, files, and more. Before you start using Ion, spend a minute to jump through this welcome process.</p>
 
-                    <p>Logged in as: {{ request.user.full_name }}{% if request.user.graduation_year %}, Class of {{ request.user.graduation_year }}{% endif %}</p>
+                    <p>Logged in as: <b>{{ request.user.full_name }}</b>{% if request.user.graduation_year %}, Class of {{ request.user.graduation_year }}{% endif %}</p>
                     <p>Email addresses on file:</p>
                     <ul>
                         {% for email in request.user.emails.all %}
@@ -69,8 +69,6 @@
                       <p>You can access your TJ email account ({{ request.user.tj_email }}) by going to <a href="https://webmail.tjhsst.edu" target="_blank">webmail.tjhsst.edu</a>. You can also use another mail client <a href="https://guides.tjhsst.edu/webmail/using-a-3rd-party-client" target="_blank">via IMAP</a>. Use your Intranet credentials.</p>
                       <p>By default, you will recieve emails about announcements and eighth periods. You can edit your preferences at any time by going to <a href="{% url 'preferences' %}">Preferences</a>.</p>
                     {% endif %}
-
-                    <p>It is <b>strongly recommended</b> that you set up email forwarding, which will ensure that you see all of the messages sent to your account.</p>
                 {% endblock %}
             </div>
 
@@ -89,13 +87,28 @@
 
             <div id="step-3">
                 <h2>About Intranet</h2>
-                    <p>Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. While the application has been released, development is not finished; it is continually being improved with bug fixes and new features.</p>
+                <p>
+                    Development on Intranet version 3 began in early 2013 and, after more than two years of work,
+                    was first used during the 2015-2016 school year. While the application has been released,
+                    development is not finished; it is continually being improved with bug fixes and new features.
+                    {% if request.user.is_student %}
+                    Intranet is an open source application and you can view its source code on <a href="https://github.com/tjcsl/ion" target="_blank">GitHub</a>.
+                    {% endif %}
+                </p>
 
                 <div class="ion-welcome-logo"></div>
                 <br><br><br>
                 <br><br><br>
                 <br>
                 {% include "credits.html" %}
+
+                <hr>
+                <h2>About the TJ Computer Systems Lab and the Student Sysadmins</h2>
+                <p>
+                The Computer Systems Lab, or CSL, is one of TJ's senior research labs.
+                A group of student Sysadmins (short for systems administrators) work to
+                maintain machines and services provided by the CSL for the TJ community.
+                Intranet is one of those services.
                 {% block step3 %}
                 {% endblock %}
             </div>
