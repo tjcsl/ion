@@ -49,7 +49,7 @@
         </li>
         {% endcomment %}
         {% if not request.user.is_restricted %}
-        <li {% if nav_category == "schedule" %}class="selected"{% endif %}>
+        <li class="thicker-border {% if nav_category == "schedule" %}selected{% endif %}">
             <a href="{% if request.user.is_schedule_admin and not request.user.is_student %}{% url 'schedule_admin' %}{% else %}{% url 'calendar' %}{% endif %}">
                 <i class="nav-icon bell-icon"></i>
                 Schedule
@@ -116,7 +116,7 @@
         {% endif %}
 
         {% if show_bus_nav %}
-             <li {% if nav_category == "bus" %}class="selected"{% endif %}>
+             <li class="thicker-border {% if nav_category == "bus" %}selected{% endif %}">
                 <a href="{% url 'bus' %}">
                     <i class="nav-icon bus-icon"></i>
                     Bus
