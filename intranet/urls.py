@@ -59,6 +59,11 @@ urlpatterns = [
     ),
     re_path(r"^docs/terminology$", TemplateView.as_view(template_name="docs/terminology.html", content_type="text/html"), name="docs_terminology"),
     re_path(r"^docs/privacy$", TemplateView.as_view(template_name="docs/privacy.html", content_type="text/html"), name="docs_privacy"),
+    re_path(
+        r"^docs/add-to-home-screen-android$",
+        TemplateView.as_view(template_name="docs/add-to-home-screen-android.html", content_type="text/html"),
+        name="docs_add_to_home_screen_android",
+    ),
 ]
 
 if settings.SHOW_DEBUG_TOOLBAR:

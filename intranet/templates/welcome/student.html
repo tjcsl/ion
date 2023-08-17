@@ -22,6 +22,12 @@
         </div>
         <div class="dashboard-text">
             <p>Intranet is fully optimized for small screens. On your phone, tablet, or other mobile device, you can simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
+            <p>You can also add Ion to your phone's home screen for quick access.
+                Use the following instructions to learn how to do so: &nbsp;
+                <a href="https://support.apple.com/guide/iphone/bookmark-favorite-webpages-iph42ab2f3a7/ios#iph4f9a47bbc" target="_blank">iPhone</a> |
+                <a href="{% url 'docs_add_to_home_screen_android' %}" target="_blank">Android</a>
+            </p>
+            <p>Note: There is no official TJ Intranet mobile app. Please do not install any app claiming to provide access to Ion; they may lack functionalities necessary for using Intranet.</p>
         </div>
     </div>
     <div class="brs">
@@ -66,8 +72,22 @@
 {% endblock %}
 
 {% block step3 %}
+    You will likely use other services provided by the CSL, such as your TJ email, throughout your time at TJ.
+    Some popular CSL services can be found in the "Apps" toolbar at the top right of Ion.
+    You can learn more about the CSL and the work the Sysadmins do at
+    <a href="https://sysadmins.tjhsst.edu" target="_blank">sysadmins.tjhsst.edu</a>.
+
+    {% if request.user.graduation_year and request.user.grade_number == 9 or request.user.grade_number == 10 %}
+        <br><br>
+        Want to become a Sysadmin? Applications to the program open at the start of the second semester -
+        look for an Ion announcement then!
+        Visit <a href="https://sysadmins.tjhsst.edu/understudy" target="_blank">this site</a> to learn more.
+    {% endif %}
+    </p>
+    <hr>
+
     <p>We are always looking for your feedback to make your experience with Intranet better. Please use the "Send Feedback" tool, which is accessible by clicking on your user icon in the top right corner, to voice your questions and comments.</p>
-    <p>Thanks for reading and have a great year!</p>
+    <p>Thanks for reading and have a great year! If you want to see the welcome message again, click the "Show Ion Welcome" button next to the Eighth Period Information widget near the center right of the Dashboard.</p>
     <div style="text-align: center">
         <a id="continue-step-3" href="{% url 'welcome_done' %}" class="button continue-step-3"><i class="fas fa-tachometer-alt fa-2x"></i><br>Go to Dashboard</a>
     </div>
