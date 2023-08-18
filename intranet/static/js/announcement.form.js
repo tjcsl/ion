@@ -26,7 +26,7 @@ $(function() {
 
         if($("#id_title").val().match(/\bION\b/) || editor.getData().match(/\bION\b/)) {
             // People frequently write "ION" instead of the correct spelling, "Ion." See https://github.com/tjcsl/ion/issues/805
-            Messenger().error('We have detected the use of "ION" in all caps in your announcement. Please correct it to use "Ion", <a href="/docs/terminology" style="color:#7F7FFF">the official name</a>.');
+            Messenger().error('We have detected the use of "ION" in all caps in your announcement. Please correct it to use "Ion", <a href="/docs/terminology" target="_blank" style="color:#7F7FFF">the official name</a>.');
             e.preventDefault();
             return;
         }
