@@ -176,9 +176,7 @@ def events_view(request):
     else:
         viewable_events = Event.objects.visible_to_user(request.user).this_year().prefetch_related("groups")
 
-    classic = False  # show classic view
-    if "classic" in request.GET:
-        classic = True
+    classic = "classic" in request.GET
 
     # get date objects for week and month
     today = timezone.localtime()

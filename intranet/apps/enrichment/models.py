@@ -1,4 +1,4 @@
-import pytz
+import datetime
 
 from django.conf import settings
 from django.db import models
@@ -62,9 +62,24 @@ class EnrichmentActivity(models.Model):
         return self.time < timezone.now()
 
     @property
-    def is_today(self):
-        """Return whether the enrichment activity is happening today."""
-        return self.time.date().astimezone(pytz.timezone("US/Eastern")) == timezone.now().date().astimezone(pytz.timezone("US/Eastern"))
+    def is_too_early_to_signup(self):
+        """Returns whether it is too early to sign up for the activity
+        if it is a presign.
+        This contains the 2 day presign logic.
+
+        Returns:
+            Whether it is too early to sign up for this scheduled activity
+            and when the activity opens for signups.
+        """
+        now = timezone.localtime()
+
+        # Midnight of the day of the activity
+        activity_date = self.time.astimezone(timezone.get_default_timezone())
+        activity_date = datetime.datetime.combine(activity_date.date(), datetime.time(0, 0, 0), tzinfo=activity_date.tzinfo)
+
+        presign_period = datetime.timedelta(minutes=settings.EIGHTH_PRESIGNUP_HOURS * 60 + settings.EIGHTH_PRESIGNUP_MINUTES)
+
+        return (now < (activity_date - presign_period), activity_date - presign_period)
 
     def __str__(self):
         return "{} - {}".format(self.title, self.time)

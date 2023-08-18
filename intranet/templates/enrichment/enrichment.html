@@ -42,9 +42,19 @@
             {{ enrichment.location }}
         {% endif %}
 
-        &bull;
+    </div>
+    <div class="enrichment-metadata event-metadata">
         {{ enrichment.attending.all|length }}/{{ enrichment.capacity }} signups
 
+        {% if enrichment.presign %}
+            &bull;
+            <span
+                class="badge yellow clickable"
+                data-append-search="is:p"
+                title="Signups for this enrichment activity open on {{ enrichment.is_too_early_to_signup.1|date:'l, F j' }} at {{ enrichment.is_too_early_to_signup.1|date:'P' }}">
+                2 day
+            </span>
+        {% endif %}
     </div>
     <div class="enrichment-content" style="font-size:14px;">
         {{ enrichment.description|safe }}
