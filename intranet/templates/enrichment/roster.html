@@ -1,0 +1,95 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Enrichment Activity: {{ enrichment.title }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
+    {% stylesheet 'enrichment' %}
+    {% stylesheet 'eighth.attendance' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/enrichment.js' %}"></script>
+    <script src="{% static 'js/eighth/user_link.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+        {% stylesheet 'dark/enrichment' %}
+        {% stylesheet 'dark/eighth.attendance' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content enrichment events">
+
+        <div class="enrichment-container">
+        {% with show_date_icon=True %}
+            {% include "enrichment/enrichment.html" %}
+        {% endwith %}
+        </div>
+
+        {% if is_enrichment_admin %}
+            <h2>Roster</h2>
+            {% if roster %}
+                <p style="margin-left: 10px;">
+                    <i style="font-style: italic">{{ roster|length }} students signed up</i>
+                </p>
+                <br>
+            {% endif %}
+            <table class="take-attendance-roster{% if not roster %} no-members{% endif %}" style="margin-left: 12px;">
+                <thead>
+                {% if roster %}
+                    <tr class="members-header">
+                        <th class="user-col" width="250">Student</th>
+                        <th class="sid-col">Student ID</th>
+                        <th class="grade-col">Grade</th>
+                        <th class="email-col">Email</th>
+                    </tr>
+                {% endif %}
+                </thead>
+                <tbody>
+                {% for member in roster %}
+                    <tr class="student-attendance-row bbcu-selector">
+                        <td class="user-col user-link" data-user-id="{{ member.id }}">
+                            <a class="user-name-eighth" href="{% url 'user_profile' member.id %}">
+                                {{ member.full_name }}
+                            </a>
+                        </td>
+                        <td class="sid-col id">
+                            {% if member.student_id %}
+                                {{ member.student_id }}
+                            {% else %}
+                                (Ion {{ member.id }})
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center">{{ member.grade.number }}</td>
+                        <td class="email-col">{{ member.tj_email }}</td>
+                        <img class='user-pic' data-user-id="{{ member.id }}" src="/profile/picture/{{ member.id }}" width="172" height="215" style="display:none">
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">
+                            <i class="fas fa-info-circle"></i> There are no signups.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    {# This needs to be at the bottom for the content to properly load #}
+    <script src="{% static 'js/events.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% load dates %}
+{% load static %}
+
+
+<div class="enrichment enrichment-top event" data-id="{{ enrichment.id }}">
+    <h3 style="font-size: 15px; margin-top: auto;">
+        {% if show_icon or show_date_icon %}
+            <i class="fas fa-solid fa-book dashboard-item-icon" title="Enrichment Activity"></i>
+        {% endif %}
+
+        <a href="{% url 'enrichment' enrichment.id %}" class="enrichment-link event-link"
+            title="{% if is_enrichment_admin %}View Roster{% else %}Enrichment Detail{% endif %}"
+        >
+            {{ enrichment.title }}
+        </a>
+
+        <div class="enrichment-icon-wrapper event-icon-wrapper">
+            {% if is_enrichment_admin %}
+                <a href="{% url 'modify_enrichment' enrichment.id %}">
+                    <i class="enrichment-icon event-icon fas fa-pencil-alt"></i>
+                </a>
+                <a href="{% url 'delete_enrichment' enrichment.id %}" class="enrichment-delete">
+                    <i class="enrichment-icon event-icon far fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </h3>
+
+    <div class="enrichment-metadata event-metadata">
+        {% if show_date_icon %}
+            {{ enrichment.time|date:"l, F j, Y"}}
+        {% endif %}
+
+        {% if enrichment.time|date:"P" != "midnight" %}
+            {{ enrichment.time|date:"P" }}
+        {% endif %}
+
+        @
+        {% if enrichment.location == "Thomas Jefferson Science & Technology High School" or enrichment.location == "Thomas Jefferson High School for Science and Technology" %}
+            TJHSST
+        {% else %}
+            {{ enrichment.location }}
+        {% endif %}
+
+        &bull;
+        {{ enrichment.attending.all|length }}/{{ enrichment.capacity }} signups
+
+    </div>
+    <div class="enrichment-content" style="font-size:14px;">
+        {{ enrichment.description|safe }}
+    </div>
+</div>
+<div class="enrichment enrichment-bottom event {% if request.user in enrichment.attending.all %}signed-up{% endif %}">
+    {% if not enrichment.happened %}
+        <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post" style="font-size: 12px">
+            {% csrf_token %}
+            {% if request.user in enrichment.attending.all %}
+                    <span style="color: green"><i class="fas fa-check"></i> You are signed up for this activity.</span>
+                <br>
+                <a data-form-attend="{{ enrichment.id }}" class="button small-button no-attend-button attend-button">
+                    <i class="fas fa-times"></i>
+                    Remove Signup
+                </a>
+            {% else %}
+                <input type="hidden" name="attending" value="true">
+                <a data-form-attend="{{ enrichment.id }}" class="button attend-button">
+                    Sign Up
+                </a>
+            {% endif %}
+        </form>
+    {% else %}
+        <div class="enrichment-content" style="font-size:12px;">
+            {% if request.user in enrichment.attending.all %}
+                {% if not enrichment.time.date == today %}
+                    <i class="fas fa-check"></i>
+                    You signed up for this activity.
+
+                {% else %}
+                <span style="color: green">
+                    <i class="fas fa-check"></i>
+                    You are signed up for this activity.
+                </span>
+                {% comment %} <br>
+                <hr>
+                <span class="remove-signup-text">
+                    You can still remove your signup, but you will not be able to sign up again.
+                </span>
+                <br>
+
+                <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post">
+                    {% csrf_token %}
+                    <a data-form-attend="{{ enrichment.id }}" style="margin-top: 3px" class="button small-button no-attend-button attend-button">
+                        <i class="fas fa-times"></i>
+                        Remove Signup
+                    </a>
+                </form> {% endcomment %}
+                {% endif %}
+            {% else %}
+                <i class="fas fa-times"></i>
+                You did not sign up for this activity.
+            {% endif %}
+            <br>
+            <i class="fas fa-lock"></i>&nbsp; Signups are locked. <br>
+        </div>
+    {% endif %}
+</div>

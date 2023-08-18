@@ -20,6 +20,7 @@ urlpatterns = [
     re_path(r"^announcements", include("intranet.apps.announcements.urls")),
     re_path(r"^apps", include("intranet.apps.cslapps.urls")),
     re_path(r"^eighth", include("intranet.apps.eighth.urls")),
+    re_path(r"^enrichment", include("intranet.apps.enrichment.urls")),
     re_path(r"^events", include("intranet.apps.events.urls")),
     re_path(r"^files", include("intranet.apps.files.urls")),
     re_path(r"^groups", include("intranet.apps.groups.urls")),

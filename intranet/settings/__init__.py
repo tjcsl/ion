@@ -97,12 +97,22 @@ PARKING_ENABLED = True
 PARKING_MAX_ABSENCES = 5
 NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
-ENABLE_WAITLIST = False  # WARNING: Enabling the waitlist causes severe performance issues
+
+# App and functionality availability toggles
+ENABLE_WAITLIST = False  # Eighth waitlist. WARNING: Enabling the waitlist causes severe performance issues
+
 ENABLE_BUS_APP = True
 ENABLE_BUS_DRIVER = True
+
 ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT = False  # Redirect to eighth signup page after login if the user isn't signed up for activities
 ENABLE_PRE_EIGHTH_LOCATION_REDIRECT = True  # Redirect to eighth_location around eighth period (increase performance during peak times)
 ENABLE_PRE_DISMISSAL_BUS_REDIRECT = True  # Redirect to bus page around dismissal
+
+ENABLE_HYBRID_EIGHTH = None  # Enable hybrid eighth period code
+
+ENABLE_ENRICHMENT_APP = True
+# End toggles
+
 NOTIFY_ADMIN_EMAILS = None
 
 IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of these client IDs will result in a *special* error message
@@ -313,6 +323,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "search",
     "dashboard",
     "events",
+    "enrichment",
     "schedule.widget",
     "dashboard.widgets",
     "profile",
@@ -346,6 +357,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/login",
     "dark/schedule",
     "dark/events",
+    "dark/enrichment",
     "dark/dashboard",
     "dark/dashboard.widgets",
     "dark/schedule.widget",
@@ -622,6 +634,7 @@ INSTALLED_APPS = [
     "intranet.apps.customthemes",
     "intranet.apps.django",
     "intranet.apps.eighth",
+    "intranet.apps.enrichment",
     "intranet.apps.events",
     "intranet.apps.groups",
     "intranet.apps.search",
@@ -919,8 +932,6 @@ EIGHTH_COORDINATOR_NAME = "Laura Slonina"
 # Script provided to assist in importing users to BbCU
 BBCU_SCRIPT = None
 
-# Enable hybrid eighth period code
-ENABLE_HYBRID_EIGHTH = None
 
 # How often the signage JS sends a heartbeat
 SIGNAGE_HEARTBEAT_INTERVAL = 60

@@ -49,7 +49,17 @@
         </li>
         {% endcomment %}
         {% if not request.user.is_restricted %}
-        <li class="thicker-border {% if nav_category == "schedule" %}selected{% endif %}">
+
+        {% if DJANGO_SETTINGS.ENABLE_ENRICHMENT_APP %}
+        <li class="thicker-border {% if nav_category == "enrichment" %}selected{% endif %}">
+            <a href="{% url 'enrichment' %}">
+                <i class="nav-icon enrichment-icon"></i>
+                Enrichment
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="{% if not DJANGO_SETTINGS.ENABLE_ENRICHMENT_APP %}thicker-border{% endif %} {% if nav_category == "schedule" %}selected{% endif %}">
             <a href="{% if request.user.is_schedule_admin and not request.user.is_student %}{% url 'schedule_admin' %}{% else %}{% url 'calendar' %}{% endif %}">
                 <i class="nav-icon bell-icon"></i>
                 Schedule
