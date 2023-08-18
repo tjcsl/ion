@@ -86,10 +86,11 @@
             <h2>
                 {% if scheduled_activity %}
                     {% if scheduled_activity.block.locked %}
-                        Take Attendance<span class="extra-title">: {{ scheduled_activity }}</span>
+                        <span class="print-hide">Take Attendance:</span>
                     {% else %}
-                        View Roster<span class="extra-title">: {{ scheduled_activity }}</span>
+                        <span class="print-hide">View Roster:</span>
                     {% endif %}
+                    <span class="extra-title">{{ scheduled_activity }}</span>
                 {% else %}
                     Attendance/Roster
                 {% endif %}
@@ -273,11 +274,11 @@
                 {% endif %}
 
                 {% if scheduled_activity.attendance_taken %}
-                    <div class="attendance-taken">
+                    <div class="attendance-taken print-hide">
                         <i class="fas fa-check"></i> Attendance Taken
                     </div>
                 {% elif scheduled_activity.block.locked %}
-                    <div class="no-attendance">
+                    <div class="no-attendance print-hide">
                         <i class="fas fa-exclamation-triangle"></i> Attendance Not Taken
                     </div>
                 {% endif %}
@@ -391,11 +392,13 @@
                             {% if members %}
                             <tr class="members-header">
                                 {% if show_checkboxes %}
-                                    <th class="cb-col"><input type="checkbox"> Present</th>
+                                    <th class="cb-col">
+                                        <input type="checkbox" class="print-hide"> Present
+                                    </th>
                                 {% elif show_icons %}
                                     <th class="cb-col">Present</th>
                                 {% endif %}
-                                <th class="user-col">Student</th>
+                                <th class="user-col" width="250">Student</th>
                                 <th class="sid-col">Student ID</th>
                                 <th class="grade-col">Grade</th>
                                 <th class="email-col">Email</th>
@@ -406,7 +409,7 @@
                         </thead>
                         <tbody>
                             {% for member in members %}
-                                <tr class="bbcu-selector">
+                                <tr class="student-attendance-row bbcu-selector">
                                     {% if show_checkboxes %}
                                         <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
                                     {% elif show_icons %}
@@ -430,6 +433,8 @@
                                     <td style="text-align: center">{{ member.grade }}</td>
                                     <td class="email-col">{{ member.email }}</td>
                                     <td class="extra-col">{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Accepted{% endif %}){% endif %}</td>
+
+                                    <img class='user-pic' data-user-id="{{ member.id }}" src="/profile/picture/{{ member.id }}" width="172" height="215" style="display:none">
                                 </tr>
                             {% empty %}
                                 <tr>
