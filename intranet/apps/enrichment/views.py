@@ -147,9 +147,7 @@ def enrichment_view(request):
     else:
         viewable_enrichments = EnrichmentActivity.objects.visible_to_user(request.user).this_year()
 
-    classic = False  # show classic view
-    if "classic" in request.GET:
-        classic = True
+    classic = "classic" in request.GET
 
     # get date objects for week and month
     today = timezone.localtime()
@@ -209,6 +207,14 @@ def enrichment_signup_view(request, enrichment_id):
 
         if enrichment.happened:  # and request.POST.get("attending") == "true":
             messages.error(request, "Signups are locked for this enrichment activity.")
+            return redirect("enrichment")
+
+        too_early_to_signup = enrichment.is_too_early_to_signup
+        if too_early_to_signup[0]:
+            messages.error(
+                request,
+                "You may not sign up for this enrichment activity until " f"{too_early_to_signup[1].strftime('%A, %B %d at %-I:%M %p')}.",
+            )
             return redirect("enrichment")
 
         if request.POST.get("attending") == "true":
