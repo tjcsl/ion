@@ -721,6 +721,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("schedule")
 
     @property
+    def is_enrichment_admin(self) -> bool:
+        """Checks if user is an enrichment admin.
+
+        Returns:
+            Whether this user is an enrichment admin.
+
+        """
+
+        return self.has_admin_permission("enrichment")
+
+    @property
     def is_board_admin(self) -> bool:
         """Checks if user is a board admin.
 

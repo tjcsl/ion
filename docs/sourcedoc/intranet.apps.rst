@@ -18,6 +18,7 @@ Subpackages
    intranet.apps.eighth
    intranet.apps.emailfwd
    intranet.apps.emerg
+   intranet.apps.enrichment
    intranet.apps.error
    intranet.apps.events
    intranet.apps.features

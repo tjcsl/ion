@@ -1,4 +1,8 @@
 $(function() {
+    attendButtonListener();
+});
+
+function attendButtonListener() {
     $(".attend-button").click(function() {
         var eventid = $(this).attr("data-form-attend");
         $("form[data-form-attend=" + eventid + "]").submit();
@@ -7,7 +11,7 @@ $(function() {
         var eventid = $(this).attr("data-form-no-attend");
         $("form[data-form-no-attend=" + eventid + "]").submit();
     });
-});
+}
 
 function toggleTouchEvents(viewName) {
     if(viewName === "month") {

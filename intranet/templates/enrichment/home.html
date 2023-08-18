@@ -1,0 +1,149 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Enrichment
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+    <script src="{% static 'js/enrichment.js' %}"></script>
+    {% if not show_all and not classic %}
+    <script>
+        var view = "{{ view }}";
+
+        function setView(view_name){
+            if(view_name == "month") {
+                $("#view-div").html(`{% include "enrichment/month.html" %}`);
+            }
+            else {
+                $("#view-div").html(`{% include "enrichment/week.html"  %}`);
+            }
+
+            toggleTouchEvents(view_name);
+            attendButtonListener();
+            $("#{{ week_data.today }}").attr("class", "today");
+        }
+
+        $(document).ready(function() {
+            setView(view);
+            $("#{{ week_data.today }}").attr("class", "today");
+
+            $("#month-button").click(function(e){
+                e.preventDefault();
+                setView("month");
+            });
+            $("#week-button").click(function(e){
+                e.preventDefault();
+                setView("week");
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
+    {% stylesheet 'enrichment' %}
+
+    {% if is_enrichment_admin %}
+    <style>
+        @media (max-width: 1080px) {
+            .enrichment-container > .enrichment:nth-child(2) {
+                margin-top: 80px !important;
+            }
+        }
+    </style>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+        {% stylesheet 'dark/enrichment' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content enrichment events">
+        <h2>Enrichment</h2>
+        <div class="button-container">
+            <div class="button-subcontainer">
+
+            {% if not classic %}
+                <a href="?classic=1" class="button">
+                    Classic View
+                </a>
+            {% else %}
+                <a href="{% url 'enrichment' %}" class="button">
+                    <i class="fas fa-times"></i>
+                    Exit Classic View
+                </a>
+            {% endif %}
+
+            {% if not show_all  and is_enrichment_admin %}
+                <a href="?show_all=1" class="button">
+                    Show All
+                </a>
+            {% endif %}
+
+            {% if show_all %}
+                <a href="{% url 'enrichment' %}" class="button">
+                    <i class="fas fa-times"></i>
+                    Close Show All
+                </a>
+            {% endif %}
+
+            {% if is_enrichment_admin %}
+                <a href="{% url 'add_enrichment' %}" class="button">
+                    <i class="fas fa-plus"></i>
+                    Add
+                </a>
+            {% endif %}
+
+            </div>
+
+            {% if not show_all and not classic %}
+                <div class="button-subcontainer">
+                    <a id="month-button" class="button" href="#">Month</a>
+                    <a id="week-button" class="button" href="#">Week</a>
+                </div>
+            {% endif %}
+
+        </div>
+        <div class="enrichment-container">
+        {% if show_all or classic %}
+            <div class="enrichment-container">
+                {% for category in enrichments %}
+                    {% if category.enrichments %}
+                        <h2 class="category">{{ category.title }}:</h2>
+                    {% endif %}
+
+                    {% for enrichment in category.enrichments %}
+                        {% with show_date_icon=True %}
+                            {% include "enrichment/enrichment.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+            <br />
+            <br />
+        </div>
+
+        {% if not show_all and not classic %}
+            <div class="enrichment-container" id="view-div"></div>
+        {% endif %}
+
+    </div>
+    {# This needs to be at the bottom for the content to properly load #}
+    <script src="{% static 'js/events.js' %}"></script>
+{% endblock %}

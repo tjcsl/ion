@@ -213,9 +213,7 @@ class Event(models.Model):
     @property
     def happened(self):
         """Return whether an event has happened."""
-        if self.time <= timezone.localtime():
-            return True
-        return False
+        return self.time < timezone.now()
 
     def __str__(self):
         if not self.approved:
