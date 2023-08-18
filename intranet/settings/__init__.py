@@ -669,8 +669,8 @@ PROMETHEUS_EXPORT_MIGRATIONS = False
 EIGHTH_BLOCK_DATE_FORMAT = "D, N j, Y"
 
 # EIGHTH_PRESIGNUP_HOURS is the amount of hours before 12:00am of the day of 8th periods when signups open for 8th periods that require presigns.
-# For example, if eighth periods were on Wednesday and EIGHTH_PRESIGN_HOURS was 29, signups would open at 7:00pm on Monday
-EIGHTH_PRESIGNUP_HOURS = 42
+# For example, if eighth periods were on Wednesday and EIGHTH_PRESIGNUP_HOURS was 29, signups would open at 7:00pm on Monday
+EIGHTH_PRESIGNUP_HOURS = 28  # 8:00 pm, 2 days before day of eighth periods
 EIGHTH_PRESIGNUP_MINUTES = 0
 
 # See http://docs.djangoproject.com/en/dev/topics/logging for
