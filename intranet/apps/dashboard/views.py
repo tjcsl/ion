@@ -13,6 +13,7 @@ from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
 from ..announcements.models import Announcement, AnnouncementRequest, WarningAnnouncement
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
+from ..enrichment.models import EnrichmentActivity
 from ..events.models import Event, TJStarUUIDMap
 from ..schedule.models import Day
 from ..schedule.views import decode_date, schedule_context
@@ -304,6 +305,7 @@ def add_widgets_context(request, context):
     WIDGETS:
     * Eighth signup (STUDENT)
     * Eighth attendance (TEACHER or ADMIN)
+    * Enrichment activities (ALL if enrichment activity today)
     * Bell schedule (ALL)
     * Administration (ADMIN)
     * Links (ALL)
@@ -361,6 +363,18 @@ def add_widgets_context(request, context):
 
     sched_ctx = schedule_context(request)
     context.update(sched_ctx)
+
+    today_midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
+    context.update(
+        {
+            "enrichments": EnrichmentActivity.objects.visible_to_user(user).filter(
+                time__gte=today_midnight,
+                time__lte=today_midnight + timedelta(days=1),
+            )
+            if settings.ENABLE_ENRICHMENT_APP
+            else [],
+        }
+    )
 
     return context
 
