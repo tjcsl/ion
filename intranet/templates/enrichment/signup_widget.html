@@ -1,0 +1,91 @@
+{% load dates %}
+{% load static %}
+
+{% block js %}
+    <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+{% endblock %}
+
+<div class="widget eighth-widget">
+    <div class="widget-title">
+        <h2>
+            {# <i class="fas fa-book"></i>&nbsp; #}
+            Enrichment Activities Today
+        </h2>
+        <div class="info">
+            <a href="{% url 'enrichment' %}" class="button small-button">View more days</a>
+        </div>
+
+    </div>
+    <div class="widget-content">
+    {% for enrichment in enrichments %}
+        <div class="eighth-block clickable {% if request.user in enrichment.attending.all %}enrichment-attending{% endif %}">
+            <div class="block-header">
+                <span class="block-letter-date">
+                    <i class="fas fa-book enrichment-icon"></i>
+                    {{ enrichment.time|date:"P"|title }}
+
+                    {% if request.user.is_student %}
+                        <span class="enrichment-status block-rooms">
+                            {% if request.user in enrichment.attending.all %}
+                                <i class="fas fa-check"></i>
+                                Signed up
+                            {% else %}
+                                <i class="fas fa-times"></i>
+                                Not signed up
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                </span>
+
+                <span class="block-signup {% if request.user.is_enrichment_admin %}block-sponsorship{% endif %}">
+                    {{ enrichment.title }}
+                </span>
+
+                <span class="block-rooms">
+                    {{ enrichment.location }}
+                </span>
+
+                {% if request.user.is_enrichment_admin and request.user.is_teacher %}
+                    <a href="{% url 'enrichment' enrichment.id %}" class="btn-link" style="width: 66px">
+                        View Roster
+                    </a>
+                {% elif request.user.is_teacher %}
+                    {% if enrichment.happened %}
+                        <a href="{% url 'enrichment' enrichment.id %}" class="btn-link">
+                            <i class="fas fa-lock"></i>
+                            View
+                        </a>
+                    {% else %}
+                        <a href="{% url 'enrichment' enrichment.id %}" class="btn-link">
+                            View
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {% if request.user in enrichment.attending.all and not enrichment.happened %}
+                        <a href="{% url 'enrichment' enrichment.id %}" class="btn-link">
+                            Change
+                        </a>
+                    {% else %}
+                        {% if enrichment.happened %}
+                            <a href="{% url 'enrichment' enrichment.id %}" class="btn-link">
+                                <i class="fas fa-lock"></i>
+                                View
+                            </a>
+                        {% else %}
+                            <a href="{% url 'enrichment' enrichment.id %}" class="btn-link">
+                                Sign Up
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="eighth-block">
+            <div class="block-header">
+            There are no enrichment activities today.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
