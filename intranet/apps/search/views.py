@@ -214,7 +214,7 @@ def do_courses_search(q):
 
 
 def do_announcements_search(q):
-    filter_query = get_query(q, ["title"])
+    filter_query = get_query(q, ["title", "content"])
     entires = Announcement.objects.filter(filter_query).order_by("title")
     final_entires = []
     for e in entires:
@@ -224,7 +224,7 @@ def do_announcements_search(q):
 
 
 def do_events_search(q):
-    filter_query = get_query(q, ["title"])
+    filter_query = get_query(q, ["title", "description"])
     entires = Event.objects.filter(filter_query).order_by("title")
     final_entires = []
     for e in entires:
