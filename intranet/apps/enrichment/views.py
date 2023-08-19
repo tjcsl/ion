@@ -209,13 +209,14 @@ def enrichment_signup_view(request, enrichment_id):
             messages.error(request, "Signups are locked for this enrichment activity.")
             return redirect("enrichment")
 
-        too_early_to_signup = enrichment.is_too_early_to_signup
-        if too_early_to_signup[0]:
-            messages.error(
-                request,
-                "You may not sign up for this enrichment activity until " f"{too_early_to_signup[1].strftime('%A, %B %d at %-I:%M %p')}.",
-            )
-            return redirect("enrichment")
+        if enrichment.presign:
+            too_early_to_signup = enrichment.is_too_early_to_signup
+            if too_early_to_signup[0]:
+                messages.error(
+                    request,
+                    "You may not sign up for this enrichment activity until " f"{too_early_to_signup[1].strftime('%A, %B %d at %-I:%M %p')}.",
+                )
+                return redirect("enrichment")
 
         if request.POST.get("attending") == "true":
             enrichment.attending.add(request.user)
@@ -303,6 +304,7 @@ def modify_enrichment_view(request, enrichment_id):
             logger.info("Admin %s modified enrichment activity: %s (%s)", request.user, obj, obj.id)
         else:
             messages.error(request, "Error modifying enrichment activity.")
+        return redirect("enrichment")
     else:
         form = EnrichmentActivityForm(instance=enrichment)
     context = {"form": form, "action": "modify", "action_title": "Modify", "enrichment": enrichment, "is_enrichment_admin": is_enrichment_admin}
