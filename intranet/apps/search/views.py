@@ -10,6 +10,7 @@ from ...utils.helpers import is_entirely_digit
 from ..announcements.models import Announcement
 from ..auth.decorators import deny_restricted
 from ..eighth.models import EighthActivity
+from ..enrichment.models import EnrichmentActivity
 from ..events.models import Event
 from ..search.utils import get_query
 from ..users.models import Course, Grade
@@ -233,6 +234,16 @@ def do_events_search(q):
     return final_entires
 
 
+def do_enrichment_search(q):
+    filter_query = get_query(q, ["title", "description"])
+    entires = EnrichmentActivity.objects.filter(filter_query).order_by("title")
+    final_entires = []
+    for e in entires:
+        if e.is_this_year:
+            final_entires.append(e)
+    return final_entires
+
+
 @login_required
 @deny_restricted
 def search_view(request):
@@ -257,6 +268,7 @@ def search_view(request):
         activities = do_activities_search(q)
         announcements = do_announcements_search(q)
         events = do_events_search(q)
+        enrichments = do_enrichment_search(q) if settings.ENABLE_ENRICHMENT_APP else []
         classes = do_courses_search(q)
 
         if users and len(users) == 1:
@@ -271,6 +283,7 @@ def search_view(request):
             "search_results": users,  # User objects
             "announcements": announcements,  # Announcement objects
             "events": events,  # Event objects
+            "enrichments": enrichments,  # EnrichmentActivity objects
             "activities": activities,  # EighthActivity objects
             "classes": classes,  # Course objects
         }
