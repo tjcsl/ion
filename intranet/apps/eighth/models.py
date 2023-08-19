@@ -153,10 +153,10 @@ class EighthRoom(AbstractBaseEighthModel):
         """
         if self.name[0] in string.digits:
             # All rooms starting with an integer will be prefixed
-            return "Rm. {}".format(self.name)
+            return f"Rm. {self.name}"
         if self.name.startswith("Room"):
             # Some room names are prefixed with 'Room'; for consistency
-            return "Rm. {}".format(self.name[5:])
+            return f"Rm. {self.name[5:]}"
         return self.name
 
     @property
@@ -165,7 +165,7 @@ class EighthRoom(AbstractBaseEighthModel):
         return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.capacity)
+        return f"{self.name} ({self.capacity})"
 
     class Meta:
         ordering = ("name",)
@@ -325,7 +325,7 @@ class EighthActivity(AbstractBaseEighthModel):
         name = "Special: " if self.special else ""
         name += self.name
         if title:
-            name += " - {}".format(title)
+            name += f" - {title}"
 
         name += " (R)" if include_restricted and self.restricted else ""
         name += " (BB)" if self.both_blocks else ""
@@ -348,7 +348,7 @@ class EighthActivity(AbstractBaseEighthModel):
         q = Q(users_allowed=user.id) | Q(groups_allowed__user=user.id)
 
         if user and user.grade and user.grade.number and user.grade.name and 9 <= user.grade.number <= 12:
-            q |= Q(**{"{}_allowed".format(user.grade.name_plural): True})
+            q |= Q(**{f"{user.grade.name_plural}_allowed": True})
 
         return EighthActivity.objects.filter(q).values_list("id", flat=True)
 
@@ -391,7 +391,7 @@ class EighthActivity(AbstractBaseEighthModel):
         Returns:
             A QuerySet of users who attend this activity frequently.
         """
-        key = "eighthactivity_{}:frequent_users".format(self.id)
+        key = f"eighthactivity_{self.id}:frequent_users"
         cached = cache.get(key)
         if cached:
             return cached
@@ -680,7 +680,7 @@ class EighthBlock(AbstractBaseEighthModel):
         Returns:
             The date and block letter.
         """
-        return "{} {}".format(self.date.strftime("%m/%d"), self.block_letter)
+        return f"{self.date.strftime('%m/%d')} {self.block_letter}"
 
     #######
     @property
@@ -720,10 +720,10 @@ class EighthBlock(AbstractBaseEighthModel):
     def __str__(self):
         #######
         if settings.ENABLE_HYBRID_EIGHTH:
-            return "{} ({})".format(self.formatted_date, self.hybrid_text)
+            return f"{self.formatted_date} ({self.hybrid_text})"
         else:
             #######
-            return "{} ({})".format(self.formatted_date, self.block_letter)
+            return f"{self.formatted_date} ({self.block_letter})"
 
     class Meta:
         unique_together = (("date", "block_letter"),)
@@ -841,7 +841,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         act_name = self.activity.name + cancelled_str
         if self.special and not self.activity.special:
             act_name = "Special: " + act_name
-        return act_name if not self.title else "{} - {}".format(act_name, self.title)
+        return act_name if not self.title else f"{act_name} - {self.title}"
 
     @property
     def title_with_flags(self) -> str:
@@ -1252,7 +1252,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 except EighthSignup.DoesNotExist:
                     add_breadcrumb(
                         category="eighth-signup",
-                        message="Signing user {} up for single-block activity {} in block {}".format(user.id, self.activity.id, self.block.id),
+                        message=f"Signing user {user.id} up for single-block activity {self.activity.id} in block {self.block.id}",
                         level="debug",
                     )
 
@@ -1457,7 +1457,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                     add_breadcrumb(
                         category="eighth-signup",
-                        message="Switching user {} to double-block activity {} in block {}".format(user.id, sched_act.id, self.block.id),
+                        message=f"Switching user {user.id} to double-block activity {sched_act.id} in block {self.block.id}",
                         level="debug",
                     )
 
@@ -1541,8 +1541,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     def __str__(self):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
-        suff = " - {}".format(self.title) if self.title else ""
-        return "{}{} on {}{}".format(self.activity, suff, self.block, cancelled_str)
+        suff = f" - {self.title}" if self.title else ""
+        return f"{self.activity}{suff} on {self.block}{cancelled_str}"
 
 
 class EighthSignupManager(Manager):
@@ -1715,7 +1715,7 @@ class EighthSignup(AbstractBaseEighthModel):
                 if not self.scheduled_activity.is_full():
                     waitlists = EighthWaitlist.objects.get_next_waitlist(self.scheduled_activity)
                     self.scheduled_activity.notify_waitlist(waitlists)
-            return "Successfully removed signup for {}.".format(block)
+            return f"Successfully removed signup for {block}."
 
     def accept_pass(self):
         """Accepts an eighth period pass for the EighthSignup object."""
@@ -1744,7 +1744,7 @@ class EighthSignup(AbstractBaseEighthModel):
             self.save(update_fields=["was_absent", "archived_was_absent"])
 
     def __str__(self):
-        return "{}: {}".format(self.user, self.scheduled_activity)
+        return f"{self.user}: {self.scheduled_activity}"
 
     class Meta:
         unique_together = (("user", "scheduled_activity"),)
@@ -1801,7 +1801,7 @@ class EighthWaitlist(AbstractBaseEighthModel):
     )
 
     def __str__(self):
-        return "{}: {}".format(self.user, self.scheduled_activity)
+        return f"{self.user}: {self.scheduled_activity}"
 
 
 class EighthActivitySimilarity(AbstractBaseEighthModel):
@@ -1822,4 +1822,4 @@ class EighthActivitySimilarity(AbstractBaseEighthModel):
 
     def __str__(self):
         act_set = self.activity_set.all()
-        return "{} and {}: {}".format(act_set.first(), act_set.last(), self.count)
+        return f"{act_set.first()} and {act_set.last()}: {self.count}"

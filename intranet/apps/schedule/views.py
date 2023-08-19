@@ -59,7 +59,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
                 date += timedelta(days=1)
 
     date_fmt = date_format(date)
-    key = "bell_schedule:{}".format(date_fmt)
+    key = f"bell_schedule:{date_fmt}"
     cached = cache.get(key)
     if cached and use_cache:
         return cached
@@ -260,7 +260,7 @@ def do_default_fill(request):
                     type_obj = daymap[day_of_week]
 
                     day_obj = Day.objects.create(date=day["formatted_date"], day_type=type_obj)
-                    msg = "{} is now a {}".format(day["formatted_date"], day_obj.day_type)
+                    msg = f"{day['formatted_date']} is now a {day_obj.day_type}"
                     msgs.append(msg)
     return render(request, "schedule/fill.html", {"msgs": msgs})
 
@@ -337,10 +337,10 @@ def admin_add_view(request):
         form = DayForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "{} is now a {}".format(date, form.cleaned_data["day_type"]))
+            messages.success(request, f"{date} is now a {form.cleaned_data['day_type']}")
             return redirect("schedule_admin")
         else:
-            messages.success(request, "{} has no schedule assigned".format(date))
+            messages.success(request, f"{date} has no schedule assigned")
             return redirect("schedule_admin")
     else:
         form = DayForm()
@@ -399,9 +399,9 @@ def admin_daytype_view(request, daytype_id=None):
 
             if "delete" in request.POST:
                 daytype = get_object_or_404(DayType, id=daytype_id)
-                name = "{}".format(daytype)
+                name = f"{daytype}"
                 daytype.delete()
-                messages.success(request, "Deleted {}".format(name))
+                messages.success(request, f"Deleted {name}")
                 return redirect("schedule_admin")
 
         if daytype_id:
@@ -436,9 +436,9 @@ def admin_daytype_view(request, daytype_id=None):
                 else:
                     dayobj.day_type = model
                     dayobj.save()
-                messages.success(request, "{} is now a {}".format(dayobj.date, dayobj.day_type))
+                messages.success(request, f"{dayobj.date} is now a {dayobj.day_type}")
 
-            messages.success(request, "Successfully {} Day Type.".format("modified" if daytype_id else "added"))
+            messages.success(request, f"Successfully {'modified' if daytype_id else 'added'} Day Type.")
             return redirect("schedule_daytype", model.id)
         else:
             messages.error(request, "Error adding Day Type")

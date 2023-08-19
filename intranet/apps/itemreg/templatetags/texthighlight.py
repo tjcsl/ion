@@ -10,6 +10,6 @@ def highlight(str1, str2):
         str2 = str2[0]
 
     if str1 and str2 and isinstance(str2, str):
-        return str1.replace(str2, "<b>{}</b>".format(str2))
+        return str1.replace(str2, f"<b>{str2}</b>")
     else:
         return str1

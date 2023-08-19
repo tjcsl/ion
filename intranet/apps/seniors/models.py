@@ -9,7 +9,7 @@ class College(models.Model):
     ceeb = models.IntegerField(unique=True)
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.ceeb)
+        return f"{self.name} ({self.ceeb})"
 
     class Meta:
         ordering = ["name"]
@@ -129,7 +129,7 @@ class Senior(models.Model):
     major_sure = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{}".format(self.user)
+        return f"{self.user}"
 
     class Meta:
         ordering = ["user"]

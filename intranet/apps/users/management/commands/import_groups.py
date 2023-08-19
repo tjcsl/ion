@@ -20,17 +20,17 @@ class Command(BaseCommand):
                     mappings[gid] = gexist[0]
                 else:
                     ngrp = Group.objects.create(name=gname)
-                    self.stdout.write("Created group {} with new id {}, old id {}".format(gname, ngrp.id, gid))
+                    self.stdout.write(f"Created group {gname} with new id {ngrp.id}, old id {gid}")
                     mappings[gid] = ngrp
 
-        self.stdout.write("{}".format(mappings))
+        self.stdout.write(f"{mappings}")
         with open("groups_static.csv", "r", encoding="utf-8") as staticopen:
             static = csv.reader(staticopen)
             for uid, gid in static:
                 try:
                     usrobj = get_user_model().objects.get(id=uid)
                 except get_user_model().DoesNotExist:
-                    self.stdout.write("UID {} doesn't exist, for adding to group {}".format(uid, gid))
+                    self.stdout.write(f"UID {uid} doesn't exist, for adding to group {gid}")
                 else:
                     grp = mappings[gid]
                     usrobj.groups.add(grp)

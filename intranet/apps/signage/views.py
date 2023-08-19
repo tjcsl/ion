@@ -156,7 +156,7 @@ def prometheus_metrics(request):
     metrics = {"intranet_signage_num_signs_online": Sign.objects.filter_online().count()}
 
     for sign in Sign.objects.all():
-        metrics['intranet_signage_sign_is_online{{display="{}"}}'.format(sign.display)] = int(not sign.is_offline)
+        metrics[f'intranet_signage_sign_is_online{{display="{sign.display}"}}'] = int(not sign.is_offline)
 
     context = {"metrics": metrics}
 

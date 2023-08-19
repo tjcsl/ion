@@ -49,7 +49,7 @@ def api_root(request, format=None):  # pylint: disable=redefined-builtin,unused-
                     "/schedule": ["Get today's schedule", perma_reverse(request, "api_schedule_day_list")],
                     "/schedule?page_size=<num>": [
                         "Get the schedule for the next <num> days",
-                        "{}?page_size=7".format(perma_reverse(request, "api_schedule_day_list")),
+                        f"{perma_reverse(request, 'api_schedule_day_list')}?page_size=7",
                     ],
                     "/schedule/<date>": [
                         "Get the schedule for a specific day, in YYYY-MM-DD format",
@@ -88,7 +88,7 @@ def api_root(request, format=None):  # pylint: disable=redefined-builtin,unused-
                 "Search",
                 {
                     "/search/<query>": [
-                        "Search users (see {}?tips for advanced search documentation)".format(perma_reverse(request, "search")),
+                        f"Search users (see {perma_reverse(request, 'search')}?tips for advanced search documentation)",
                         perma_reverse(request, "api_user_search", kwargs={"query": "last:Kim"}),
                     ]
                 },
@@ -99,11 +99,11 @@ def api_root(request, format=None):  # pylint: disable=redefined-builtin,unused-
                     "/blocks": ["List all blocks this year (paginated)", perma_reverse(request, "api_eighth_block_list")],
                     "/blocks?start_date=<start_date>": [
                         "List all blocks starting on the specified date (in YYYY-MM-DD format; paginated)",
-                        "{}?start_date=2015-11-18".format(perma_reverse(request, "api_eighth_block_list")),
+                        f"{perma_reverse(request, 'api_eighth_block_list')}?start_date=2015-11-18",
                     ],
                     "/blocks?date=<date>": [
                         "List all blocks on the specified date (in YYYY-MM-DD format)",
-                        "{}?date=2015-11-18".format(perma_reverse(request, "api_eighth_block_list")),
+                        f"{perma_reverse(request, 'api_eighth_block_list')}?date=2015-11-18",
                     ],
                     "/blocks/<pk>": ["Get a list of activities on a block", perma_reverse(request, "api_eighth_block_detail", kwargs={"pk": 3030})],
                 },

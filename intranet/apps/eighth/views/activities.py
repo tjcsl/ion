@@ -102,17 +102,15 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
         relements.append(Paragraph("<b>Default Rooms:</b> " + room_str, styles["Normal"]))
         relements.append(Spacer(0, 0.025 * inch))
 
-        relements.append(Paragraph("<b>Total blocks:</b> {}".format(act_stats["total_blocks"]), styles["Normal"]))
-        relements.append(Paragraph("<b>Scheduled blocks:</b> {}".format(act_stats["scheduled_blocks"]), styles["Indent"]))
-        relements.append(Paragraph("<b>Empty blocks:</b> {}".format(act_stats["empty_blocks"]), styles["Indent"]))
-        relements.append(Paragraph("<b>Cancelled blocks:</b> {}".format(act_stats["cancelled_blocks"]), styles["Indent"]))
+        relements.append(Paragraph(f"<b>Total blocks:</b> {act_stats['total_blocks']}", styles["Normal"]))
+        relements.append(Paragraph(f"<b>Scheduled blocks:</b> {act_stats['scheduled_blocks']}", styles["Indent"]))
+        relements.append(Paragraph(f"<b>Empty blocks:</b> {act_stats['empty_blocks']}", styles["Indent"]))
+        relements.append(Paragraph(f"<b>Cancelled blocks:</b> {act_stats['cancelled_blocks']}", styles["Indent"]))
 
-        lelements.append(Paragraph("<b>Total signups:</b> {}".format(act_stats["total_signups"]), styles["Normal"]))
-        lelements.append(Paragraph("<b>Average signups per block:</b> {}".format(act_stats["average_signups"]), styles["Indent"]))
-        lelements.append(Paragraph("<b>Average signups per student:</b> {}".format(act_stats["average_user_signups"]), styles["Indent"]))
-        lelements.append(
-            Paragraph("<b>Unique students:</b> {}, <b>Capacity:</b> {}".format(act_stats["students"], act_stats["capacity"]), styles["Normal"])
-        )
+        lelements.append(Paragraph(f"<b>Total signups:</b> {act_stats['total_signups']}", styles["Normal"]))
+        lelements.append(Paragraph(f"<b>Average signups per block:</b> {act_stats['average_signups']}", styles["Indent"]))
+        lelements.append(Paragraph(f"<b>Average signups per student:</b> {act_stats['average_user_signups']}", styles["Indent"]))
+        lelements.append(Paragraph(f"<b>Unique students:</b> {act_stats['students']}, <b>Capacity:</b> {act_stats['capacity']}", styles["Normal"]))
 
         elements.append(
             Table(
@@ -130,20 +128,20 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
             ]
             elements.append(Table([parsed_members], style=[("VALIGN", (-1, -1), (-1, -1), "TOP")]))
             if act_stats["students"] - 90 > 0:
-                elements.append(Paragraph("<b>{}</b> students were not shown on this page. ".format(act_stats["students"] - 90), styles["Normal"]))
+                elements.append(Paragraph(f"<b>{act_stats['students'] - 90}</b> students were not shown on this page. ", styles["Normal"]))
         else:
             elements.append(Spacer(0, 0.20 * inch))
 
         if start_date is not None:
             elements.append(
                 Paragraph(
-                    "<b>{}</b> block(s) are past the start date and are not included on this page.".format(act_stats["past_start_date"]),
+                    f"<b>{act_stats['past_start_date']}</b> block(s) are past the start date and are not included on this page.",
                     styles["Normal"],
                 )
             )
         elements.append(
             Paragraph(
-                "<b>{}</b> block(s) not in the {}-{} school year are not included on this page.".format(act_stats["old_blocks"], year - 1, year),
+                f"<b>{act_stats['old_blocks']}</b> block(s) not in the {year - 1}-{year} school year are not included on this page.",
                 styles["Normal"],
             )
         )
@@ -159,13 +157,13 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
             Table(x, style=[("FONT", (0, 0), (-1, 0), "Helvetica-Bold"), ("LEFTPADDING", (0, 0), (-1, -1), 0)]) for x in empty_activities
         ]
         for i in range(0, len(empty_activities), 2):
-            elements.append(Paragraph("Empty Activities (Page {})".format(i // 2 + 1), styles["Title"]))
+            elements.append(Paragraph(f"Empty Activities (Page {i // 2 + 1})", styles["Title"]))
             if all_years:
                 elements.append(Paragraph("The following activities have no 8th period blocks assigned to them.", styles["Normal"]))
             else:
                 elements.append(
                     Paragraph(
-                        "The following activities have no 8th period blocks assigned to them for the {}-{} school year.".format(year - 1, year),
+                        f"The following activities have no 8th period blocks assigned to them for the {year - 1}-{year} school year.",
                         styles["Normal"],
                     )
                 )
@@ -184,7 +182,7 @@ def generate_statistics_pdf(activities=None, start_date=None, all_years=False, y
 
     def first_page(canvas, _):
         if len(activities) == 1:
-            canvas.setTitle("{} Statistics".format(activities[0].name))
+            canvas.setTitle(f"{activities[0].name} Statistics")
         else:
             canvas.setTitle("8th Period Activity Statistics")
         canvas.setAuthor("Generated by Ion")

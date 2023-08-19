@@ -16,9 +16,9 @@ def period_start_end_data(request):
     blocks = ctx["sched_ctx"]["blocks"]
     point, block = at_period_point(blocks)
     if point == 1:
-        return {"title": "{} has started".format(block.name), "text": "{}".format(block)}
+        return {"title": f"{block.name} has started", "text": f"{block}"}
     elif point == 2:
-        return {"title": "{} has ended".format(block.name), "text": "{}".format(block)}
+        return {"title": f"{block.name} has ended", "text": f"{block}"}
     else:
         return None
 

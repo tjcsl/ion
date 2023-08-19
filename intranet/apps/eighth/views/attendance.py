@@ -159,7 +159,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         try:
             scheduled_activity = EighthScheduledActivity.objects.get(block=block, activity=activity)
         except EighthScheduledActivity.DoesNotExist as e:
-            raise http.Http404("The scheduled activity with block {} and activity {} does not exist.".format(block, activity)) from e
+            raise http.Http404(f"The scheduled activity with block {block} and activity {activity} does not exist.") from e
 
         if "admin" in self.request.path:
             url_name = "eighth_admin_take_attendance"
@@ -282,12 +282,12 @@ def take_attendance_view(request, scheduled_activity_id):
             scheduled_activity.save()
             invalidate_obj(scheduled_activity)
 
-            messages.success(request, "Attendance bit cleared for {}".format(scheduled_activity))
+            messages.success(request, f"Attendance bit cleared for {scheduled_activity}")
 
             redirect_url = reverse(url_name, args=[scheduled_activity.id])
 
             if "no_attendance" in request.GET:
-                redirect_url += "?no_attendance={}".format(request.GET["no_attendance"])
+                redirect_url += f"?no_attendance={request.GET['no_attendance']}"
 
             return redirect(redirect_url)
 
@@ -318,7 +318,7 @@ def take_attendance_view(request, scheduled_activity_id):
                         else:
                             present_user_ids.append(user[0])
                     except KeyError:
-                        messages.info(request, "Error on line containing {}. If this line isn't blank, please contact an admin.".format(u))
+                        messages.info(request, f"Error on line containing {u}. If this line isn't blank, please contact an admin.")
                 if unfound_users:
                     messages.success(
                         request,
@@ -363,7 +363,7 @@ def take_attendance_view(request, scheduled_activity_id):
         redirect_url = reverse(url_name, args=[scheduled_activity.id])
 
         if "no_attendance" in request.GET:
-            redirect_url += "?no_attendance={}".format(request.GET["no_attendance"])
+            redirect_url += f"?no_attendance={request.GET['no_attendance']}"
 
         return redirect(redirect_url)
     else:
@@ -450,7 +450,7 @@ def take_attendance_view(request, scheduled_activity_id):
                 row.append(member["email"])
                 row.append(scheduled_activity.block.locked)
                 rooms = scheduled_activity.get_true_rooms()
-                row.append(", ".join(["{} ({})".format(room.name, room.capacity) for room in rooms]))
+                row.append(", ".join([f"{room.name} ({room.capacity})" for room in rooms]))
                 sponsors = scheduled_activity.get_true_sponsors()
                 row.append(" ,".join([sponsor.name for sponsor in sponsors]))
                 row.append(scheduled_activity.attendance_taken)
@@ -582,10 +582,8 @@ def generate_roster_pdf(sched_act_ids):
 
         header_data = [
             [
-                Paragraph("<b>Activity ID: {}<br/>Scheduled ID: {}</b>".format(sact.activity.id, sact.id), styles["Normal"]),
-                Paragraph(
-                    "{}<br/>{}<br/>{}".format(sponsors_str, rooms_str, sact.block.date.strftime("%A, %B %-d, %Y")), styles["ActivityAttribute"]
-                ),
+                Paragraph(f"<b>Activity ID: {sact.activity.id}<br/>Scheduled ID: {sact.id}</b>", styles["Normal"]),
+                Paragraph(f"{sponsors_str}<br/>{rooms_str}<br/>{sact.block.date.strftime('%A, %B %-d, %Y')}", styles["ActivityAttribute"]),
                 Paragraph(block_letter, styles[block_letter_style]),
             ]
         ]
@@ -603,7 +601,7 @@ def generate_roster_pdf(sched_act_ids):
         elements.append(Paragraph(sact.full_title, styles["Title"]))
 
         num_members = sact.members.count()
-        num_members_label = "{} Student{}".format(num_members, "s" if num_members != 1 else "")
+        num_members_label = f"{num_members} Student{'s' if num_members != 1 else ''}"
         elements.append(Paragraph(num_members_label, styles["Center"]))
         elements.append(Spacer(0, 5))
 
@@ -616,14 +614,14 @@ def generate_roster_pdf(sched_act_ids):
             members.append(
                 (
                     member.last_name + ", " + member.first_name,
-                    (member.student_id if member.student_id else "User {}".format(member.id)),
+                    (member.student_id if member.student_id else f"User {member.id}"),
                     int(member.grade) if member.grade else "?",
                 )
             )
         members = sorted(members)
 
         for member_name, member_id, member_grade in members:
-            row = ["", "{} ({})".format(member_name, member_id), member_grade]
+            row = ["", f"{member_name} ({member_id})", member_grade]
             attendance_data.append(row)
 
         # Line commands are like this:
@@ -727,7 +725,7 @@ def email_students_view(request, scheduled_activity_id):
         raise Http404
 
     if request.method == "POST" and request.POST.get("body"):
-        subject = settings.EMAIL_SUBJECT_PREFIX + "{}: Message from {}".format(scheduled_activity, request.user.full_name)
+        subject = settings.EMAIL_SUBJECT_PREFIX + f"{scheduled_activity}: Message from {request.user.full_name}"
         if request.POST.get("subject"):
             subject += ": " + request.POST["subject"]
 

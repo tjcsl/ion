@@ -48,7 +48,7 @@ def seniors_add_view(request):
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
-            messages.success(request, "Your information was {}".format("modified" if senior else "added"))
+            messages.success(request, f"Your information was {'modified' if senior else 'added'}")
             return redirect("seniors")
     else:
         if senior:

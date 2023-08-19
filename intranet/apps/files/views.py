@@ -125,7 +125,7 @@ def windows_dir_format(host_dir, user):
         return host_dir
 
     if grade in range(9, 13):
-        win_path = "/{}/".format(user.username)
+        win_path = f"/{user.username}/"
     else:
         win_path = ""
     return host_dir.replace("{win}", win_path)
@@ -150,7 +150,7 @@ def files_type(request, fstype=None):
     authinfo = get_authinfo(request)
 
     if not authinfo:
-        return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
+        return redirect(f"{reverse('files_auth')}?next={request.get_full_path()}")
 
     try:
         sftp = create_session(host.address, authinfo["username"], authinfo["password"])
@@ -174,13 +174,13 @@ def files_type(request, fstype=None):
             try:
                 sftp.chdir(host_dir)
             except exceptions as e:
-                if "NoSuchFile" in "{}".format(e):
+                if "NoSuchFile" in f"{e}":
                     host_dir = "/"
                     try:
                         sftp.chdir(host_dir)
                     except exceptions as e2:
                         messages.error(request, e)
-                        messages.error(request, "Root directory: {}".format(e2))
+                        messages.error(request, f"Root directory: {e2}")
                         return redirect("files")
                     else:
                         messages.error(request, "Unable to access home folder -- showing root directory instead.")
@@ -209,26 +209,26 @@ def files_type(request, fstype=None):
             try:
                 fstat = sftp.stat(filepath)
             except exceptions as e:
-                messages.error(request, "Unable to access {}: {}".format(filebase, e))
-                return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+                messages.error(request, f"Unable to access {filebase}: {e}")
+                return redirect(f"/files/{fstype}?dir={os.path.dirname(filepath)}")
 
             if fstat.st_size > settings.FILES_MAX_DOWNLOAD_SIZE:
                 messages.error(request, "Too large to download (>200MB)")
-                return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+                return redirect(f"/files/{fstype}?dir={os.path.dirname(filepath)}")
 
-            with tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, filebase_escaped)) as tmpfile:
+            with tempfile.TemporaryFile(prefix=f"ion_filecenter_{request.user.username}_{filebase_escaped}") as tmpfile:
                 try:
                     sftp.getfo(filepath, tmpfile)
                 except exceptions as e:
                     messages.error(request, e)
-                    return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+                    return redirect(f"/files/{fstype}?dir={os.path.dirname(filepath)}")
 
                 content_len = tmpfile.tell()
                 tmpfile.seek(0)
                 chunk_size = 8192
                 response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
                 response["Content-Length"] = content_len
-                response["Content-Disposition"] = "attachment; filename={}".format(filebase_escaped)
+                response["Content-Disposition"] = f"attachment; filename={filebase_escaped}"
                 return response
 
     fsdir = request.GET.get("dir")
@@ -242,15 +242,15 @@ def files_type(request, fstype=None):
                 return redirect("files")
         else:
             messages.error(request, "Access to the path you provided is restricted.")
-            return redirect("/files/{}/?dir={}".format(fstype, default_dir))
+            return redirect(f"/files/{fstype}/?dir={default_dir}")
 
     if "zip" in request.GET:
         dirbase_escaped = os.path.basename(fsdir)
         dirbase_escaped = slugify(dirbase_escaped)
 
-        with tempfile.TemporaryDirectory(
-            prefix="ion_filecenter_{}_{}_zip".format(request.user.username, dirbase_escaped)
-        ) as tmpdir, tempfile.TemporaryFile(prefix="ion_filecenter_{}_{}".format(request.user.username, dirbase_escaped)) as tmpfile:
+        with tempfile.TemporaryDirectory(prefix=f"ion_filecenter_{request.user.username}_{dirbase_escaped}_zip") as tmpdir, tempfile.TemporaryFile(
+            prefix=f"ion_filecenter_{request.user.username}_{dirbase_escaped}"
+        ) as tmpfile:
             remote_directories = [fsdir]
             totalsize = 0
             while remote_directories:
@@ -275,7 +275,7 @@ def files_type(request, fstype=None):
                     totalsize += fstat.st_size
                     if totalsize > settings.FILES_MAX_DOWNLOAD_SIZE:
                         messages.error(request, "Too large to download (>200MB)")
-                        return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(fsdir)))
+                        return redirect(f"/files/{fstype}?dir={os.path.dirname(fsdir)}")
 
                     try:
                         localpath = os.path.join(tmpdir, os.path.relpath(rd, fsdir))
@@ -299,7 +299,7 @@ def files_type(request, fstype=None):
             response["Content-Length"] = content_len
             if not dirbase_escaped:
                 dirbase_escaped = "files"
-            response["Content-Disposition"] = "attachment; filename={}".format(dirbase_escaped + ".zip")
+            response["Content-Disposition"] = f"attachment; filename={dirbase_escaped + '.zip'}"
             return response
 
     try:
@@ -372,7 +372,7 @@ def files_delete(request, fstype=None):
     authinfo = get_authinfo(request)
 
     if not authinfo:
-        return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
+        return redirect(f"{reverse('files_auth')}?next={request.get_full_path()}")
 
     try:
         sftp = create_session(host.address, authinfo["username"], authinfo["password"])
@@ -410,11 +410,11 @@ def files_delete(request, fstype=None):
             fstat = sftp.stat(filepath)
             is_directory = stat.S_ISDIR(fstat.st_mode)
         except exceptions as e:
-            messages.error(request, "Unable to access {}: {}".format(filepath, e))
-            return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+            messages.error(request, f"Unable to access {filepath}: {e}")
+            return redirect(f"/files/{fstype}?dir={os.path.dirname(filepath)}")
     else:
-        messages.error(request, "Unable to access {}".format(filepath))
-        return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+        messages.error(request, f"Unable to access {filepath}")
+        return redirect(f"/files/{fstype}?dir={os.path.dirname(filepath)}")
 
     def rmtree(sftp, path):
         for f in sftp.listdir_attr(path):
@@ -435,8 +435,8 @@ def files_delete(request, fstype=None):
         except PermissionError:
             messages.error(request, "You are not allowed to delete this " + ("folder" if is_directory else "file") + "!")
         except exceptions as e:
-            messages.error(request, "{}".format(e))
-        return redirect("/files/{}?dir={}".format(fstype, os.path.dirname(filepath)))
+            messages.error(request, f"{e}")
+        return redirect(f"/files/{fstype}?dir={os.path.dirname(filepath)}")
 
     context = {"host": host, "remote_dir": os.path.dirname(filepath), "is_directory": is_directory}
     return render(request, "files/delete.html", context)
@@ -463,7 +463,7 @@ def files_upload(request, fstype=None):
     authinfo = get_authinfo(request)
 
     if not authinfo:
-        return redirect("{}?next={}".format(reverse("files_auth"), request.get_full_path()))
+        return redirect(f"{reverse('files_auth')}?next={request.get_full_path()}")
 
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -498,10 +498,10 @@ def files_upload(request, fstype=None):
             fsdir = normpath(fsdir)
             if not can_access_path(fsdir):
                 messages.error(request, "Access to the path you provided is restricted.")
-                return redirect("/files/{}?dir={}".format(fstype, default_dir))
+                return redirect(f"/files/{fstype}?dir={default_dir}")
 
             handle_file_upload(request.FILES["file"], fsdir, sftp, request)
-            return redirect("/files/{}?dir={}".format(fstype, fsdir))
+            return redirect(f"/files/{fstype}?dir={fsdir}")
     else:
         form = UploadFileForm()
     context = {"host": host, "remote_dir": fsdir, "form": form, "max_upload_mb": (settings.FILES_MAX_UPLOAD_SIZE / 1024 / 1024)}
@@ -515,12 +515,12 @@ def handle_file_upload(file, fsdir, sftp, request=None):
         messages.error(request, e)
         return
 
-    remote_path = "{}/{}".format(fsdir, file.name)
+    remote_path = f"{fsdir}/{file.name}"
     try:
         sftp.putfo(file, remote_path)
     except exceptions as e:
         # Remote path does not exist
-        messages.error(request, "Unable to upload: {}".format(e))
+        messages.error(request, f"Unable to upload: {e}")
         return
 
-    messages.success(request, "Uploaded {} to {}".format(file.name, fsdir))
+    messages.success(request, f"Uploaded {file.name} to {fsdir}")

@@ -31,7 +31,7 @@ def request_announcement_email(request, form, obj):
         teacher_ids = [teacher_ids]
     teachers = get_user_model().objects.filter(id__in=teacher_ids)
 
-    subject = "News Post Confirmation Request from {}".format(request.user.full_name)
+    subject = f"News Post Confirmation Request from {request.user.full_name}"
     emails = []
     for teacher in teachers:
         emails.append(teacher.tj_email)
@@ -56,7 +56,7 @@ def admin_request_announcement_email(request, form, obj):
 
     """
 
-    subject = "News Post Approval Needed ({})".format(obj.title)
+    subject = f"News Post Approval Needed ({obj.title})"
     emails = [settings.APPROVAL_EMAIL]
     base_url = request.build_absolute_uri(reverse("index"))
     data = {
@@ -80,7 +80,7 @@ def announcement_approved_email(request, obj, req):
     if not settings.PRODUCTION:
         logger.debug("Not in production. Ignoring email for approved announcement.")
         return
-    subject = "Announcement Approved: {}".format(obj.title)
+    subject = f"Announcement Approved: {obj.title}"
     """ Email to teachers who approved. """
     teachers = req.teachers_approved.all()
 
@@ -94,7 +94,7 @@ def announcement_approved_email(request, obj, req):
         email_send_task.delay(
             "announcements/emails/announcement_approved.txt", "announcements/emails/announcement_approved.html", data, subject, teacher_emails
         )
-        messages.success(request, "Sent teacher approved email to {} users".format(len(teacher_emails)))
+        messages.success(request, f"Sent teacher approved email to {len(teacher_emails)} users")
     """ Email to submitter. """
     submitter = req.user
     data = {"announcement": obj, "request": req, "info_link": url, "base_url": base_url, "role": "submitted"}
@@ -112,7 +112,7 @@ def announcement_posted_email(request, obj, send_all=False):
     """
 
     if settings.EMAIL_ANNOUNCEMENTS:
-        subject = "Announcement: {}".format(obj.title)
+        subject = f"Announcement: {obj.title}"
         if send_all:
             users = (
                 get_user_model()
@@ -145,7 +145,7 @@ def announcement_posted_email(request, obj, send_all=False):
         email_send_task.delay(
             "announcements/emails/announcement_posted.txt", "announcements/emails/announcement_posted.html", data, subject, emails, bcc=True
         )
-        messages.success(request, "Sent email to {} users".format(len(users_send)))
+        messages.success(request, f"Sent email to {len(users_send)} users")
     else:
         logger.info("Emailing announcements disabled")
 
@@ -159,9 +159,9 @@ def announcement_posted_twitter(request, obj):
             content = re.sub("<[^>]*>", "", obj.content)
             content = content.replace("&nbsp;", " ")
             content_len = 139 - (len(title) + 2 + 3 + 3 + 22)
-            text = "{}: {}... - {}".format(title, content[:content_len], url)
+            text = f"{title}: {content[:content_len]}... - {url}"
         else:
-            text = "{}... - {}".format(title[:110], url)
+            text = f"{title[:110]}... - {url}"
         logger.info("Posting tweet: %s", text)
 
         try:
@@ -174,8 +174,8 @@ def announcement_posted_twitter(request, obj):
             capture_exception(e)
         else:
             if respobj and "id" in respobj:
-                messages.success(request, "Posted tweet: {}".format(text))
-                messages.success(request, "https://twitter.com/tjintranet/status/{}".format(respobj["id"]))
+                messages.success(request, f"Posted tweet: {text}")
+                messages.success(request, f"https://twitter.com/tjintranet/status/{respobj['id']}")
             else:
                 messages.error(request, resp)
                 try:

@@ -28,13 +28,13 @@ def get_personal_info(user):
     personal_info = {}
 
     for i in range(num_phones):
-        personal_info["phone_{}".format(i)] = user.phones.all()[i]
+        personal_info[f"phone_{i}"] = user.phones.all()[i]
 
     for i in range(num_emails):
-        personal_info["email_{}".format(i)] = user.emails.all()[i]
+        personal_info[f"email_{i}"] = user.emails.all()[i]
 
     for i in range(num_websites):
-        personal_info["website_{}".format(i)] = user.websites.all()[i]
+        personal_info[f"website_{i}"] = user.websites.all()[i]
 
     num_fields = {"phones": num_phones, "emails": num_emails, "websites": num_websites}
 
@@ -99,7 +99,7 @@ def save_preferred_pic(request, user):
                             user.preferred_photo = user.photos.get(grade_number=new_preferred_pic)
                         user.save()
                     except Exception as e:
-                        messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
+                        messages.error(request, f"Unable to set field preferred_pic with value {new_preferred_pic}: {e}")
                         logger.debug("Unable to set field preferred_pic with value %s: %s", new_preferred_pic, e)
                     else:
                         messages.success(
@@ -119,7 +119,7 @@ def get_privacy_options(user):
     for ptype in user.permissions:
         for field in user.permissions[ptype]:
             if ptype == "self":
-                privacy_options["{}-{}".format(field, ptype)] = user.permissions[ptype][field]
+                privacy_options[f"{field}-{ptype}"] = user.permissions[ptype][field]
             else:
                 privacy_options[field] = user.permissions[ptype][field]
 
@@ -155,12 +155,12 @@ def save_privacy_options(request, user):
                         if not success:
                             raise Exception("You cannot override the parent field.")
                     except Exception as e:
-                        messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                        messages.error(request, f"Unable to set field {field} with value {fields[field]}: {e}")
                         logger.debug("Unable to set field %s with value %s: %s", field, fields[field], e)
                     else:
                         messages.success(
                             request,
-                            "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])),
+                            f"Set field {field} to {fields[field] if not isinstance(fields[field], list) else ', '.join(fields[field])}",
                         )
     return privacy_options_form
 
@@ -197,7 +197,7 @@ def save_notification_options(request, user):
                     try:
                         messages.success(
                             request,
-                            "Set field {} to {}".format(field, fields[field] if not isinstance(fields[field], list) else ", ".join(fields[field])),
+                            f"Set field {field} to {fields[field] if not isinstance(fields[field], list) else ', '.join(fields[field])}",
                         )
                     except TypeError:
                         pass
@@ -240,7 +240,7 @@ def save_bus_route(request, user):
                                 ),
                             )
                         else:
-                            messages.success(request, "Cleared field {}".format(field))
+                            messages.success(request, f"Cleared field {field}")
                     except TypeError:
                         pass
     return bus_route_form

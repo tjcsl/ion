@@ -23,8 +23,8 @@ class YearCleanupTest(IonTestCase):
         call_command("year_cleanup", stdout=out, senior_grad_year=year + 1)
         output = [
             "In pretend mode.",
-            "Turnover date set to: {}".format(turnover_date.strftime("%c")),
-            "OK: senior_grad_year = {}".format(year + 1),
+            f"Turnover date set to: {turnover_date.strftime('%c')}",
+            f"OK: senior_grad_year = {year + 1}",
             "Resolving absences",
             "Updating welcome state",
             "Deleting graduated users",

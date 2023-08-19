@@ -32,7 +32,7 @@ def signup_status_email(user, next_blocks, use_celery=True):
     block_date = next_blocks[0].date
     block_signup_time = next_blocks[0].signup_time
     if block_signup_time:
-        block_signup_time = "{}:{}".format(block_signup_time.hour, block_signup_time.minute)
+        block_signup_time = f"{block_signup_time.hour}:{block_signup_time.minute}"
 
     date_str = block_date.strftime("%A, %B %-d")
 
@@ -50,7 +50,7 @@ def signup_status_email(user, next_blocks, use_celery=True):
         "info_link": base_url + reverse("eighth_signup"),
     }
 
-    args = ("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, "Signup Status for {}".format(date_str), emails)
+    args = ("eighth/emails/signup_status.txt", "eighth/emails/signup_status.html", data, f"Signup Status for {date_str}", emails)
     if use_celery:
         email_send_task.delay(*args)
         return None
@@ -81,7 +81,7 @@ def activity_cancelled_email(sched_act: EighthScheduledActivity):
         "eighth/emails/activity_cancelled.txt",
         "eighth/emails/activity_cancelled.html",
         data,
-        "Activity Cancelled on {}".format(date_str),
+        f"Activity Cancelled on {date_str}",
         emails,
         bcc=True,
     )

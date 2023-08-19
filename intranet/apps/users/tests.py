@@ -25,16 +25,16 @@ class CourseTest(IonTestCase):
 
     def create_schedule_test(self):
         for i in range(9):
-            course = Course.objects.create(name="Test Course {}".format(i), course_id="1111{}".format(i))
+            course = Course.objects.create(name=f"Test Course {i}", course_id=f"1111{i}")
             for pd in range(1, 8):
-                Section.objects.create(course=course, room="Room {}".format(i), period=pd, section_id="{}-{}".format(course.course_id, pd), sem="F")
+                Section.objects.create(course=course, room=f"Room {i}", period=pd, section_id=f"{course.course_id}-{pd}", sem="F")
 
     def test_section_course_attributes(self):
         course = Course.objects.first()
-        self.assertEqual(str(course), "{} ({})".format(course.name, course.course_id))
+        self.assertEqual(str(course), f"{course.name} ({course.course_id})")
 
         section = Section.objects.first()
-        self.assertEqual(str(section), "{} ({}) - {} Pd. {}".format(section.course.name, section.section_id, "Unknown", section.period))
+        self.assertEqual(str(section), f"{section.course.name} ({section.section_id}) - Unknown Pd. {section.period}")
 
     def test_all_courses_view(self):
         _ = self.login()
@@ -258,7 +258,7 @@ class UserTest(IonTestCase):
 
         self.assertEqual(user.primary_email, None)
         self.assertFalse(user.emails.exists())
-        self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.tj_email, f"{user.username}@tjhsst.edu")
         self.assertEqual(user.notification_email, user.tj_email)
 
         email = Email.objects.create(user=user, address="test@example.com")
@@ -437,16 +437,16 @@ class UserTest(IonTestCase):
 
         self.assertEqual(user.primary_email, None)
         self.assertFalse(user.emails.exists())
-        self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.tj_email, f"{user.username}@tjhsst.edu")
         self.assertEqual(user.non_tj_email, None)
 
         personal_email = Email.objects.create(user=user, address="abc@example.com")
-        self.assertEqual(user.tj_email, "{}@tjhsst.edu".format(user.username))
+        self.assertEqual(user.tj_email, f"{user.username}@tjhsst.edu")
         self.assertEqual(user.non_tj_email, personal_email.address)
 
         user.user_type = "teacher"
         user.save()
-        self.assertEqual(user.tj_email, "{}@fcps.edu".format(user.username))
+        self.assertEqual(user.tj_email, f"{user.username}@fcps.edu")
         self.assertEqual(user.non_tj_email, personal_email.address)
         user.user_type = "student"
         user.save()
@@ -529,7 +529,7 @@ class ProfileTest(IonTestCase):
         tok = AccessToken.objects.create(
             user=self.user, token="1234567890", application=self.application, scope="read write", expires=timezone.now() + datetime.timedelta(days=1)
         )
-        self.auth = "Bearer {}".format(tok.token)  # pylint: disable=attribute-defined-outside-init
+        self.auth = f"Bearer {tok.token}"  # pylint: disable=attribute-defined-outside-init
 
     def test_get_profile_api(self):
         self.make_admin()
@@ -545,10 +545,10 @@ class ProfileTest(IonTestCase):
 
         # Verify that response is the same
         response_with_username = self.client.get(
-            reverse("api_user_myprofile_detail") + "?username={}".format(self.user.username), HTTP_AUTHORIZATION=self.auth
+            reverse("api_user_myprofile_detail") + f"?username={self.user.username}", HTTP_AUTHORIZATION=self.auth
         )
         self.assertEqual(response_with_username.json(), response.json())
-        response_with_pk = self.client.get(reverse("api_user_myprofile_detail") + "?pk={}".format(self.user.pk), HTTP_AUTHORIZATION=self.auth)
+        response_with_pk = self.client.get(reverse("api_user_myprofile_detail") + f"?pk={self.user.pk}", HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response_with_pk.json(), response.json())
 
     def test_get_profile_picture_api(self):

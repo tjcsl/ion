@@ -21,18 +21,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         PHOTO_ROOT_DIRECTORY = options["directory"]
         PHOTO_ROOT_PATH = Path(PHOTO_ROOT_DIRECTORY)
-        sys.stdout.write("Preparing to import photos from directory {}\n".format(PHOTO_ROOT_DIRECTORY))
+        sys.stdout.write(f"Preparing to import photos from directory {PHOTO_ROOT_DIRECTORY}\n")
         messages = []
         all_photos = list(PHOTO_ROOT_PATH.glob("*.jpg"))
         for path in all_photos:
             try:
                 int(path.stem)
             except ValueError:
-                print("IGNORING {}".format(path.name))
+                print(f"IGNORING {path.name}")
                 continue
             user = get_user_model().objects.user_with_student_id(path.stem)
             if user is None:
-                print("IGNORING {}".format(path.name))
+                print(f"IGNORING {path.name}")
                 continue
 
             grade_number = user.grade.number
@@ -40,7 +40,7 @@ class Command(BaseCommand):
             img_arr = io.BytesIO()
             img.save(img_arr, format="JPEG")
             value = img_arr.getvalue()
-            message = "Creating photo for {} grade {}".format(user, grade_number)
+            message = f"Creating photo for {user} grade {grade_number}"
             print(message)
             messages.append(message)
             Photo.objects.create(user=user, grade_number=grade_number, _binary=value)

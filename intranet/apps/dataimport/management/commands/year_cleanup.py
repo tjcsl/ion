@@ -24,7 +24,7 @@ class Command(BaseCommand):
         )
 
     def ask(self, q):
-        if input("{} [Yy]: ".format(q)).lower() != "y":
+        if input(f"{q} [Yy]: ").lower() != "y":
             self.stdout.write("Abort.")
             sys.exit()
 
@@ -54,11 +54,11 @@ class Command(BaseCommand):
         current_year = timezone.now().year
         new_senior_year = current_year + 1
         turnover_date = datetime.datetime(current_year, 7, 1)
-        self.stdout.write("Turnover date set to: {}".format(turnover_date.strftime("%c")))
+        self.stdout.write(f"Turnover date set to: {turnover_date.strftime('%c')}")
 
         senior_grad_year = options["senior_grad_year"]
 
-        if not self.chk("senior_grad_year = {}".format(new_senior_year), senior_grad_year == new_senior_year):
+        if not self.chk(f"senior_grad_year = {new_senior_year}", senior_grad_year == new_senior_year):
             return
         """
         EIGHTH:
@@ -91,7 +91,7 @@ class Command(BaseCommand):
 
     def clear_absences(self):
         absents = EighthSignup.objects.filter(was_absent=True)
-        self.stdout.write("{} absent eighth signups".format(absents.count()))
+        self.stdout.write(f"{absents.count()} absent eighth signups")
         for a in absents:
             a.archive_remove_absence()
         self.stdout.write("Archived absences")
@@ -111,4 +111,4 @@ class Command(BaseCommand):
             else:
                 usr.user_type = "alum"
                 usr.save()
-                self.stdout.write("User {} KEEP".format(usr.username))
+                self.stdout.write(f"User {usr.username} KEEP")

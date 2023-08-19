@@ -62,7 +62,7 @@ def room_changed_single_email(
         "eighth/emails/room_changed_single.txt",
         "eighth/emails/room_changed_single.html",
         data,
-        "Room change for {} on {}".format(sched_act.activity.name, date_str),
+        f"Room change for {sched_act.activity.name} on {date_str}",
         emails,
         bcc=True,
     )
@@ -108,7 +108,7 @@ def transferred_activity_email(
         "eighth/emails/transferred_activity.txt",
         "eighth/emails/transferred_activity.html",
         data,
-        "8th Period Transfer to {} on {}".format(dest_act.activity.name, date_str),
+        f"8th Period Transfer to {dest_act.activity.name} on {date_str}",
         emails,
         bcc=True,
     )
@@ -156,15 +156,14 @@ def room_changed_activity_email(
 
     for user in users:
         data["date_strs"] = [
-            "{}, {} block".format(sa.block.date.strftime("%A, %B %-d"), sa.block.block_letter)
-            for sa in sched_acts.filter(eighthsignup_set__user=user)
+            f"{sa.block.date.strftime('%A, %B %-d')}, {sa.block.block_letter} block" for sa in sched_acts.filter(eighthsignup_set__user=user)
         ]
 
         email_send(
             "eighth/emails/room_changed_activity.txt",
             "eighth/emails/room_changed_activity.html",
             data,
-            "Room changes for {}".format(act.name),
+            f"Room changes for {act.name}",
             [user.notification_email],
             bcc=True,
         )
@@ -326,7 +325,7 @@ def follow_up_absence_emails():
                 "eighth/emails/absence_monthly.txt",
                 "eighth/emails/absence_monthly.html",
                 data,
-                "{} Uncleared Eighth Period Absences".format(num_absences),
+                f"{num_absences} Uncleared Eighth Period Absences",
                 [student.notification_email],
                 bcc=True,
             )

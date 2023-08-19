@@ -77,7 +77,7 @@ class AnnouncementUserMap(models.Model):
     users_seen = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="announcements_seen")
 
     def __str__(self):
-        return "UserMap: {}".format(self.announcement.title)
+        return f"UserMap: {self.announcement.title}"
 
 
 class Announcement(models.Model):

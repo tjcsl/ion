@@ -115,7 +115,7 @@ def convert_soffice(tmpfile_name: str) -> Optional[str]:
 
 
 def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> Optional[str]:
-    new_name = "{}.pdf".format(tmpfile_name)
+    new_name = f"{tmpfile_name}.pdf"
     try:
         output = subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
     except subprocess.CalledProcessError as e:
@@ -179,7 +179,7 @@ def get_mimetype(tmpfile_name: str) -> str:
 def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
     detected = get_mimetype(tmpfile_name)
 
-    add_breadcrumb(category="printing", message="Detected file type {}".format(detected), level="debug")
+    add_breadcrumb(category="printing", message=f"Detected file type {detected}", level="debug")
 
     no_conversion = ["application/pdf", "text/plain"]
     soffice_convert = [
@@ -205,7 +205,7 @@ def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
             "recommend that you convert to a PDF before printing.".format(detected)
         )
 
-    raise InvalidInputPrintingError("Invalid file type {}".format(detected))
+    raise InvalidInputPrintingError(f"Invalid file type {detected}")
 
 
 def check_page_range(page_range: str, max_pages: int) -> Optional[int]:
@@ -265,7 +265,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
     # This needs to be a set because we may add duplicate entries to it
     delete_filenames = set()
     try:
-        tmpfile_fd, tmpfile_name = tempfile.mkstemp(prefix="ion_print_{}_{}".format(obj.user.username, filebase_escaped), text=False)
+        tmpfile_fd, tmpfile_name = tempfile.mkstemp(prefix=f"ion_print_{obj.user.username}_{filebase_escaped}", text=False)
         delete_filenames.add(tmpfile_name)
 
         # This implicitly closes tmpfile_fd when it's done writing
@@ -309,7 +309,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
         else:
             num_pages = get_numpages(final_filename)
             if num_pages < 0:
-                raise Exception("Could not get number of pages in {}".format(filebase))
+                raise Exception(f"Could not get number of pages in {filebase}")
 
         if re.search(r"\d\s+\d", obj.page_range) is not None:
             # Make sure that when removing spaces in the page range we don't accidentally combine two numbers
@@ -335,14 +335,14 @@ def print_job(obj: PrintJob, do_print: bool = True):
                 )
         elif num_pages > settings.PRINTING_PAGES_LIMIT:
             raise InvalidInputPrintingError(
-                "This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT)
+                f"This file contains {num_pages} pages. You may only print up to {settings.PRINTING_PAGES_LIMIT} pages using this tool."
             )
 
         if do_print:
             args = ["lpr", "-P", printer, final_filename]
 
             if obj.page_range:
-                args.extend(["-o", "page-ranges={}".format(obj.page_range)])
+                args.extend(["-o", f"page-ranges={obj.page_range}"])
 
             if obj.duplex:
                 args.extend(["-o", "sides=two-sided-long-edge"])
@@ -359,7 +359,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
                     raise Exception(e.output.strip()) from e
 
                 logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
-                raise Exception("An error occured while printing your file: {}".format(e.output.strip())) from e
+                raise Exception(f"An error occured while printing your file: {e.output.strip()}") from e
 
         obj.printed = True
         obj.save()

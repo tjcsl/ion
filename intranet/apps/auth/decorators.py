@@ -59,6 +59,6 @@ def reauthentication_required(wrapped):
         ):
             return wrapped(*args, **kwargs)
         else:
-            return redirect("{}?next={}".format(reverse("reauth"), request.path))
+            return redirect(f"{reverse('reauth')}?next={request.path}")
 
     return inner

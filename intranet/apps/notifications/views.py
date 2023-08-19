@@ -141,7 +141,7 @@ def gcm_post(nc_users, data, user=None, request=None):
         else:
             fail_ids.append(ncid)
 
-    headers = {"Content-Type": "application/json", "project_id": settings.GCM_PROJECT_ID, "Authorization": "key={}".format(settings.GCM_AUTH_KEY)}
+    headers = {"Content-Type": "application/json", "project_id": settings.GCM_PROJECT_ID, "Authorization": f"key={settings.GCM_AUTH_KEY}"}
     postdata = {"registration_ids": reg_ids, "data": data}
     postjson = json.dumps(postdata)
     req = requests.post("https://android.googleapis.com/gcm/send", headers=headers, data=postjson, timeout=15)
@@ -191,9 +191,9 @@ def gcm_post_view(request):
         nc_users = request.POST.getlist("nc_users")
         post, reqtext = gcm_post(nc_users, data, request.user)
         if post:
-            messages.success(request, "Delivered message: {} success, {} failure".format(post["success"], post["failure"]))
+            messages.success(request, f"Delivered message: {post['success']} success, {post['failure']} failure")
         else:
-            messages.error(request, "Failed. {}".format(reqtext))
+            messages.error(request, f"Failed. {reqtext}")
     return render(request, "notifications/gcm_post.html", context)
 
 

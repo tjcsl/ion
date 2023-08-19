@@ -65,4 +65,4 @@ class GroupProperties(models.Model):
     student_visible = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{}".format(self.group)
+        return f"{self.group}"

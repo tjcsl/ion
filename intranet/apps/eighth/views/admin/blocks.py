@@ -47,7 +47,7 @@ def add_block_view(request):
     if date:
         date_format = re.compile(r"([0-9]{2})\/([0-9]{2})\/([0-9]{4})")
         fmtdate = date_format.sub(r"\3-\1-\2", date)
-        title_suffix = " - {}".format(fmtdate)
+        title_suffix = f" - {fmtdate}"
         show_letters = True
 
         if "modify_blocks" in request.POST:
@@ -62,19 +62,19 @@ def add_block_view(request):
                 if ltr not in current_letters:
                     EighthBlock.objects.create(date=fmtdate, block_letter=ltr, signup_time=signup_time)
                     messages.success(
-                        request, "Successfully added {} Block on {} with signups shown to students as closing at {}".format(ltr, fmtdate, signup_time)
+                        request, f"Successfully added {ltr} Block on {fmtdate} with signups shown to students as closing at {signup_time}"
                     )
             for ltr in current_letters:
                 if not ltr:
                     continue
                 if ltr not in letters:
                     EighthBlock.objects.get(date=fmtdate, block_letter=ltr).delete()
-                    messages.success(request, "Successfully removed {} Block on {}".format(ltr, fmtdate))
+                    messages.success(request, f"Successfully removed {ltr} Block on {fmtdate}")
                 else:
                     blk = EighthBlock.objects.get(date=fmtdate, block_letter=ltr)
                     blk.signup_time = signup_time
                     blk.save()
-                    messages.success(request, "Successfully changed the signup time of {} Block on {}".format(ltr, fmtdate))
+                    messages.success(request, f"Successfully changed the signup time of {ltr} Block on {fmtdate}")
 
             invalidate_model(EighthBlock)
 
@@ -130,7 +130,7 @@ def add_block_view(request):
                 letters.append({"name": blk.block_letter, "exists": True})
 
     context = {
-        "admin_page_title": "Add or Remove Blocks{}".format(title_suffix),
+        "admin_page_title": f"Add or Remove Blocks{title_suffix}",
         "date": date,
         "letters": letters,
         "show_letters": show_letters,
@@ -282,7 +282,7 @@ def copy_block_view(request, block_id):
                     "new_activities": EighthScheduledActivity.objects.filter(block=block).count(),
                     "new_signups": EighthSignup.objects.filter(scheduled_activity__block=block).count(),
                     "success": True,
-                    "admin_page_title": "Finished Copy Block - {} ({})".format(block.formatted_date, block.block_letter),
+                    "admin_page_title": f"Finished Copy Block - {block.formatted_date} ({block.block_letter})",
                     "block_id": block_id,
                 }
                 return render(request, "eighth/admin/copy_form.html", context)
@@ -294,8 +294,8 @@ def copy_block_view(request, block_id):
         "existing_activities": EighthScheduledActivity.objects.filter(block=block).count(),
         "existing_signups": EighthSignup.objects.filter(scheduled_activity__block=block).count(),
         "blocks": EighthBlock.objects.all().order_by("date"),
-        "admin_page_title": "Copy Block - {} ({})".format(block.formatted_date, block.block_letter),
-        "to_block": "{}: {} ({})".format(block.id, block.formatted_date, block.block_letter),
+        "admin_page_title": f"Copy Block - {block.formatted_date} ({block.block_letter})",
+        "to_block": f"{block.id}: {block.formatted_date} ({block.block_letter})",
         "block_id": block_id,
         "locked": block.locked,
         "success": False,
@@ -329,7 +329,7 @@ def delete_block_view(request, block_id):
 def print_block_rosters_view(request, block_id):
     if "schact_id" in request.POST:
         response = HttpResponse(content_type="application/pdf")
-        response["Content-Disposition"] = 'inline; filename="block_{}_rosters.pdf"'.format(block_id)
+        response["Content-Disposition"] = f'inline; filename="block_{block_id}_rosters.pdf"'
         sched_act_ids = request.POST.getlist("schact_id")
 
         pdf_buffer = generate_roster_pdf(sched_act_ids)
@@ -340,7 +340,7 @@ def print_block_rosters_view(request, block_id):
         try:
             block = EighthBlock.objects.get(id=block_id)
             schacts = EighthScheduledActivity.objects.filter(block=block)
-            schacts = sorted(schacts, key=lambda x: "{}".format(x.get_true_sponsors()))
+            schacts = sorted(schacts, key=lambda x: f"{x.get_true_sponsors()}")
         except (EighthBlock.DoesNotExist, EighthScheduledActivity.DoesNotExist) as e:
             raise http.Http404 from e
         context = {"eighthblock": block, "admin_page_title": "Choose activities to print", "schacts": schacts}

@@ -24,7 +24,7 @@ class Command(BaseCommand):
         parser.add_argument("--confirm", action="store_true", dest="confirm", default=False, help="Skip confirmation.")
 
     def ask(self, q):
-        if input("{} [Yy]: ".format(q)).lower() != "y":
+        if input(f"{q} [Yy]: ").lower() != "y":
             self.stdout.write(self.style.ERROR("Abort."))
             sys.exit()
 

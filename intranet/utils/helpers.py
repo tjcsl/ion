@@ -86,7 +86,7 @@ def get_current_commit_date():
 
 
 def get_current_commit_github_url(workdir):
-    return "https://github.com/tjcsl/ion/commit/{}".format(get_current_commit_short_hash(workdir))
+    return f"https://github.com/tjcsl/ion/commit/{get_current_commit_short_hash(workdir)}"
 
 
 class InvalidString(str):

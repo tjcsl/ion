@@ -142,7 +142,7 @@ def picture_view(request, user_id, year=None):
         image_buffer = io.BytesIO(data)
 
     response = HttpResponse(content_type="image/jpeg")
-    response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id, year or preferred)
+    response["Content-Disposition"] = f"filename={user_id}_{year or preferred}.jpg"
 
     if img is None:
         try:

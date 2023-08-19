@@ -178,8 +178,8 @@ def no_signups_roster(request, block_id):
 
         for user in unsigned:
             row = []
-            row.append("{}".format(block.id))
-            row.append("{}".format(block))
+            row.append(f"{block.id}")
+            row.append(f"{block}")
             row.append(user.last_name)
             row.append(user.first_name)
             row.append(user.student_id)
@@ -285,10 +285,10 @@ def activities_without_attendance_view(request):
             logger.debug(zero_students)
             if signups.count() == 0:
                 zero_students.update(attendance_taken=True)
-                messages.success(request, "Took attendance for {} empty activities.".format(zero_students.count()))
+                messages.success(request, f"Took attendance for {zero_students.count()} empty activities.")
             else:
-                messages.error(request, "Apparently there were actually {} signups. Maybe one is no longer empty?".format(signups.count()))
-            return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
+                messages.error(request, f"Apparently there were actually {signups.count()} signups. Maybe one is no longer empty?")
+            return redirect(f"/eighth/admin/attendance/no_attendance?block={block.id}")
 
         if request.POST.get("take_attendance_cancelled", False) is not False:
             cancelled = scheduled_activities.filter(cancelled=True)
@@ -297,10 +297,8 @@ def activities_without_attendance_view(request):
             logger.debug(signups)
             signups.update(was_absent=True)
             cancelled.update(attendance_taken=True)
-            messages.success(
-                request, "Took attendance for {} cancelled activities. {} students marked absent.".format(cancelled.count(), signups.count())
-            )
-            return redirect("/eighth/admin/attendance/no_attendance?block={}".format(block.id))
+            messages.success(request, f"Took attendance for {cancelled.count()} cancelled activities. {signups.count()} students marked absent.")
+            return redirect(f"/eighth/admin/attendance/no_attendance?block={block.id}")
 
     context["admin_page_title"] = "Activities That Haven't Taken Attendance"
     return render(request, "eighth/admin/activities_without_attendance.html", context)
@@ -376,7 +374,7 @@ def out_of_building_schedules_view(request, block_id=None):
     else:
         response = http.HttpResponse(content_type="text/csv")
         block_date_str = datetime.strftime(block.date, "%m_%d_%Y")
-        filename = '"out_of_building_schedules_{}.csv"'.format(block_date_str)
+        filename = f'"out_of_building_schedules_{block_date_str}.csv"'
         response["Content-Disposition"] = "attachment; filename=" + filename
 
         writer = csv.writer(response)
@@ -436,7 +434,7 @@ def open_passes_view(request):
                 rejected += 1
             invalidate_obj(signup)
 
-        messages.success(request, "Accepted {} and rejected {} passes.".format(accepted, rejected))
+        messages.success(request, f"Accepted {accepted} and rejected {rejected} passes.")
 
     if request.resolver_match.url_name == "eighth_admin_view_open_passes_csv":
         response = http.HttpResponse(content_type="text/csv")
@@ -450,7 +448,7 @@ def open_passes_view(request):
             row = []
             row.append(p.scheduled_activity.block)
             row.append(p.scheduled_activity.activity)
-            row.append("{}, {} {}".format(p.user.last_name, p.user.first_name, p.user.nickname if p.user.nickname else ""))
+            row.append(f"{p.user.last_name}, {p.user.first_name} {p.user.nickname if p.user.nickname else ''}")
             row.append(int(p.user.grade))
             row.append(p.user.absence_count())
             row.append(p.last_modified_time)

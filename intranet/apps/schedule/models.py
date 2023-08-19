@@ -10,12 +10,12 @@ class Time(models.Model):
 
     def __str__(self):
         minute = "0" + str(self.minute) if self.minute < 10 else self.minute
-        return "{}:{}".format(self.hour, minute)
+        return f"{self.hour}:{minute}"
 
     def str_12_hr(self):
         hour = self.hour if self.hour <= 12 else (self.hour - 12)
         minute = "0" + str(self.minute) if self.minute < 10 else self.minute
-        return "{}:{}".format(hour, minute)
+        return f"{hour}:{minute}"
 
     def date_obj(self, date):
         return datetime.datetime(date.year, date.month, date.day, self.hour, self.minute)
@@ -32,7 +32,7 @@ class Block(models.Model):
     order = models.IntegerField(default=0)
 
     def __str__(self):
-        return "{}: {} - {}".format(self.name, self.start, self.end)
+        return f"{self.name}: {self.start} - {self.end}"
 
     class Meta:
         unique_together = ("order", "name", "start", "end")
@@ -70,9 +70,9 @@ class DayType(models.Model):
             t = "anchor"
 
         if self.special:
-            return "day-type-{} day-special".format(t)
+            return f"day-type-{t} day-special"
         else:
-            return "day-type-{}".format(t)
+            return f"day-type-{t}"
 
     @property
     def start_time(self) -> Time:
@@ -145,7 +145,7 @@ class Day(models.Model):
         return self.day_type.end_time
 
     def __str__(self):
-        return "{}: {}".format(str(self.date), self.day_type)
+        return f"{str(self.date)}: {self.day_type}"
 
     class Meta:
         ordering = ("date",)

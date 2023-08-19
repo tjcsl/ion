@@ -18,7 +18,7 @@ class NotificationConfig(models.Model):
         return hashlib.sha256(self.gcm_token.encode()).hexdigest()
 
     def __str__(self):
-        return "{}".format(self.user)
+        return f"{self.user}"
 
 
 class GCMNotification(models.Model):
@@ -31,7 +31,7 @@ class GCMNotification(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "{} at {}".format(self.multicast_id, self.time)
+        return f"{self.multicast_id} at {self.time}"
 
     @property
     def data(self):

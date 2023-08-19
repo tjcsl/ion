@@ -187,7 +187,7 @@ class LoginView(View):
             # Initial load into session
             logger.info("Login succeeded as %s", request.POST.get("username", "unknown"))
 
-            log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
+            log_auth(request, f"success{' - first login' if not request.user.first_login else ''}")
 
             default_next_page = "index"
 

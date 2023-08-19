@@ -22,14 +22,14 @@ class ActivityDisplayField(forms.ModelChoiceField):
 
     def label_from_instance(self, obj):
         if self.cancelled_acts and obj in self.cancelled_acts:
-            return "{}: {} (CANCELLED)".format(obj.aid, obj.name)
+            return f"{obj.aid}: {obj.name} (CANCELLED)"
 
-        return "{}: {}".format(obj.aid, obj.name)
+        return f"{obj.aid}: {obj.name}"
 
 
 class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return "{}: {}".format(obj.aid, obj.name)
+        return f"{obj.aid}: {obj.name}"
 
 
 class ActivitySelectionForm(forms.Form):

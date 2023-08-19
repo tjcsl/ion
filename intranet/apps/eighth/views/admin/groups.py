@@ -69,7 +69,7 @@ def edit_group_view(request, group_id):
                 group.user_set.remove(u)
             group.save()
             invalidate_obj(group)
-            messages.success(request, "Successfully deleted {} members of the group.".format(num))
+            messages.success(request, f"Successfully deleted {num} members of the group.")
             return redirect("eighth_admin_edit_group", group.id)
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
@@ -275,15 +275,15 @@ def upload_group_members_view(request, group_id):
             for uid in userids:
                 user = get_user_model().objects.get(id=uid)
                 if user is None:
-                    messages.error(request, "User with ID {} does not exist".format(uid))
+                    messages.error(request, f"User with ID {uid} does not exist")
                 elif user.groups.filter(id=group.id).exists():
-                    messages.warning(request, "User {} is already in group".format(user.username))
+                    messages.warning(request, f"User {user.username} is already in group")
                 else:
                     user.groups.add(group)
                     user.save()
                     num_added += 1
             invalidate_obj(group)
-            messages.success(request, "{} added to group {}".format(num_added, group))
+            messages.success(request, f"{num_added} added to group {group}")
             return redirect("eighth_admin_edit_group", group.id)
         elif "import_group" in request.POST:
             try:
@@ -294,19 +294,19 @@ def upload_group_members_view(request, group_id):
             if "import_confirm" in request.POST:
                 for member in import_group.user_set.all():
                     if member.groups.filter(id=group.id).exists():
-                        messages.warning(request, "User {} is already in group".format(member.username))
+                        messages.warning(request, f"User {member.username} is already in group")
                     else:
                         member.groups.add(group)
                         member.save()
                         num_users += 1
                 invalidate_obj(group)
-                messages.success(request, "Added {} users from {} to {}".format(num_users, import_group, group))
+                messages.success(request, f"Added {num_users} users from {import_group} to {group}")
                 return redirect("eighth_admin_edit_group", group.id)
             return render(
                 request,
                 "eighth/admin/upload_group.html",
                 {
-                    "admin_page_title": "Import Group Members: {}".format(group),
+                    "admin_page_title": f"Import Group Members: {group}",
                     "stage": "import_confirm",
                     "group": group,
                     "import_group": import_group,
@@ -318,7 +318,7 @@ def upload_group_members_view(request, group_id):
         form = UploadGroupForm()
     all_groups = Group.objects.order_by("name")
     context = {
-        "admin_page_title": "Upload/Import Group Members: {}".format(group),
+        "admin_page_title": f"Upload/Import Group Members: {group}",
         "form": form,
         "stage": stage,
         "data": data,
@@ -367,7 +367,7 @@ def download_group_csv_view(request, group_id):
         raise http.Http404 from e
 
     response = http.HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="{}.csv"'.format(group.name)
+    response["Content-Disposition"] = f'attachment; filename="{group.name}.csv"'
 
     writer = csv.writer(response)
     writer.writerow(["Last Name", "First Name", "Student ID", "Grade", "Email"])
@@ -558,18 +558,16 @@ class EighthAdminDistributeGroupWizard(SessionWizardView):
             except EighthScheduledActivity.DoesNotExist as e:
                 raise http.Http404 from e
 
-        args = ""
-        for said in schact_ids:
-            args += "&schact={}".format(said)
+        args = "".join(f"&schact={said}" for said in schact_ids)
 
         if "group_id" in kwargs:
             gid = kwargs["group_id"]
-            args += "&group={}".format(gid)
+            args += f"&group={gid}"
 
         if self.request.resolver_match.url_name == "eighth_admin_distribute_unsigned":
-            args += "&unsigned=1&block={}".format(block.id)
+            args += f"&unsigned=1&block={block.id}"
 
-        return redirect("/eighth/admin/groups/distribute_action?{}".format(args))
+        return redirect(f"/eighth/admin/groups/distribute_action?{args}")
 
 
 eighth_admin_distribute_group = eighth_admin_required(EighthAdminDistributeGroupWizard.as_view(EighthAdminDistributeGroupWizard.FORMS))
@@ -587,7 +585,7 @@ def eighth_admin_distribute_action(request):
                     sid = int(item[6:])
                     schact = EighthScheduledActivity.objects.get(id=sid)
                 except EighthScheduledActivity.DoesNotExist:
-                    messages.error(request, "ScheduledActivity does not exist with id {}".format(sid))
+                    messages.error(request, f"ScheduledActivity does not exist with id {sid}")
 
                 userids = request.POST.getlist(item)
                 activity_user_map[schact] = userids
@@ -598,7 +596,7 @@ def eighth_admin_distribute_action(request):
                 changes += 1
                 schact.add_user(get_user_model().objects.get(id=int(uid)), request=request, force=True, no_after_deadline=True)
 
-        messages.success(request, "Successfully completed {} activity signups.".format(changes))
+        messages.success(request, f"Successfully completed {changes} activity signups.")
 
         return redirect("eighth_admin_dashboard")
     elif "schact" in request.GET:
@@ -678,9 +676,9 @@ def add_member_to_group_view(request, group_id):
             user.groups.add(group)
             user.save()
             if len(user_objects) < 25:
-                next_url += "added={}&".format(user.id)
+                next_url += f"added={user.id}&"
         invalidate_obj(group)
-        messages.success(request, "Successfully added {} user{} to the group.".format(len(user_objects), "s" if len(user_objects) != 1 else ""))
+        messages.success(request, f"Successfully added {len(user_objects)} user{'s' if len(user_objects) != 1 else ''} to the group.")
         return redirect(next_url)
 
     if "query" not in request.POST:
@@ -692,7 +690,7 @@ def add_member_to_group_view(request, group_id):
         if not from_sid.groups.filter(id=group.id).exists():
             from_sid.groups.add(group)
             from_sid.save()
-        messages.success(request, 'Successfully added user "{}" to the group.'.format(from_sid.full_name))
+        messages.success(request, f'Successfully added user "{from_sid.full_name}" to the group.')
         return redirect(next_url + "?added=" + str(from_sid.id))
 
     errors, results = get_search_results(query)
@@ -736,7 +734,7 @@ def remove_member_from_group_view(request, group_id, user_id):
     group.user_set.remove(user)
     group.save()
     invalidate_obj(group)
-    messages.success(request, 'Successfully removed user "{}" from the group.'.format(user.full_name))
+    messages.success(request, f'Successfully removed user "{user.full_name}" from the group.')
 
     return redirect(next_url)
 

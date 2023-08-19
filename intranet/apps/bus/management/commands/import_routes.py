@@ -16,6 +16,6 @@ class Command(BaseCommand):
                 (name,) = row
                 _, created = Route.objects.get_or_create(route_name=name)
                 if created:
-                    print("Created route {}".format(name))
+                    print(f"Created route {name}")
                 else:
                     print("Route {} already exists")

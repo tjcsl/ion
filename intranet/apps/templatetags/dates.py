@@ -39,14 +39,14 @@ def fuzzy_date(date):
         if minutes <= 1:
             return "moments ago"
         elif minutes < 60:
-            return "{} minutes ago".format(int(seconds // 60))
+            return f"{int(seconds // 60)} minutes ago"
         elif hours < 24:
             hrs = int(diff.seconds // (60 * 60))
-            return "{} hour{} ago".format(hrs, "s" if hrs != 1 else "")
+            return f"{hrs} hour{'s' if hrs != 1 else ''} ago"
         elif diff.days == 1:
             return "yesterday"
         elif diff.days < 7:
-            return "{} days ago".format(int(seconds // (60 * 60 * 24)))
+            return f"{int(seconds // (60 * 60 * 24))} days ago"
         elif diff.days < 14:
             return date.strftime("last %A")
         else:
@@ -61,14 +61,14 @@ def fuzzy_date(date):
         if minutes <= 1:
             return "moments ago"
         elif minutes < 60:
-            return "in {} minutes".format(int(seconds // 60))
+            return f"in {int(seconds // 60)} minutes"
         elif hours < 24:
             hrs = int(diff.seconds // (60 * 60))
-            return "in {} hour{}".format(hrs, "s" if hrs != 1 else "")
+            return f"in {hrs} hour{'s' if hrs != 1 else ''}"
         elif diff.days == 1:
             return "tomorrow"
         elif diff.days < 7:
-            return "in {} days".format(int(seconds // (60 * 60 * 24)))
+            return f"in {int(seconds // (60 * 60 * 24))} days"
         elif diff.days < 14:
             return date.strftime("next %A")
         else:

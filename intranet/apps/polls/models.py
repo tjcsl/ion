@@ -104,13 +104,13 @@ class Poll(models.Model):
             return get_user_model().objects.exclude(user_type="service").count()
 
     def get_percentage_voted(self, voted, able):
-        return "{:.1%}".format(0 if able == 0 else voted / able)
+        return f"{0 if able == 0 else voted / able:.1%}"
 
     def get_voted_string(self):
         users_voted = len(self.get_users_voted())
         users_able = self.get_num_eligible_voters()
         percent = self.get_percentage_voted(users_voted, users_able)
-        return "{} out of {} ({}) eligible users voted in this poll.".format(users_voted, users_able, percent)
+        return f"{users_voted} out of {users_able} ({percent}) eligible users voted in this poll."
 
     def has_user_voted(self, user):
         return Answer.objects.filter(question__in=self.question_set.all(), user=user).count() == self.question_set.count()
@@ -216,7 +216,7 @@ class Question(models.Model):
 
     def __str__(self):
         # return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())
-        return "Question #{}: '{}'".format(self.num, self.trunc_question())
+        return f"Question #{self.num}: '{self.trunc_question()}'"
 
     @classmethod
     def get_question_types(cls):
@@ -261,7 +261,7 @@ class Choice(models.Model):  # individual answer choices
 
     def __str__(self):
         # return "{} + O#{}('{}')".format(self.question, self.num, self.trunc_info())
-        return "Option #{}: {}".format(self.num, self.trunc_info())
+        return f"Option #{self.num}: {self.trunc_info()}"
 
     class Meta:
         ordering = ["num"]
@@ -285,13 +285,13 @@ class Answer(models.Model):  # individual answer choices selected
 
     def __str__(self):
         if self.choice:
-            return "{} {}".format(self.user, self.choice)
+            return f"{self.user} {self.choice}"
         elif self.answer:
-            return "{} {}".format(self.user, self.answer[:25])
+            return f"{self.user} {self.answer[:25]}"
         elif self.clear_vote:
-            return "{} Clear".format(self.user)
+            return f"{self.user} Clear"
         else:
-            return "{} None".format(self.user)
+            return f"{self.user} None"
 
 
 class AnswerVote(models.Model):  # record of total selection of a given answer choice

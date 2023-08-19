@@ -82,7 +82,7 @@ class EnrichmentActivity(models.Model):
         return (now < (activity_date - presign_period), activity_date - presign_period)
 
     def __str__(self):
-        return "{} - {}".format(self.title, self.time)
+        return f"{self.title} - {self.time}"
 
     class Meta:
         ordering = ["time"]

@@ -43,11 +43,11 @@ class Command(BaseCommand):
             counselor = counselors.get(last_name=counselor)
             u = get_user_model().objects.user_with_student_id(sid)
             if u is None:
-                sys.stdout.write("There is no Ion account found for SID {}\n".format(sid))
+                sys.stdout.write(f"There is no Ion account found for SID {sid}\n")
                 continue
 
             if counselor != u.counselor:
-                sys.stdout.write("Switching counselor for SID {} from {} to {}\n".format(sid, u.counselor, counselor))
+                sys.stdout.write(f"Switching counselor for SID {sid} from {u.counselor} to {counselor}\n")
                 if to_run:
                     u.counselor = counselor
                     u.save()

@@ -30,4 +30,4 @@ class PrintJob(models.Model):
     fit = models.BooleanField(default=False, verbose_name="Fit-to-page")
 
     def __str__(self):
-        return "{} by {} to {}".format(self.file, self.user, self.printer)
+        return f"{self.file} by {self.user} to {self.printer}"

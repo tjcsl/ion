@@ -70,7 +70,7 @@ def pull_sports_schedules(month=None) -> None:
 
     for line in reader:
         try:
-            time = timezone.make_aware(datetime.strptime("{} {}".format(line.get("Start Date"), line.get("Start Time")), "%m/%d/%Y %I:%M%p"))
+            time = timezone.make_aware(datetime.strptime(f"{line.get('Start Date')} {line.get('Start Time')}", "%m/%d/%Y %I:%M%p"))
             assert time is not None
             Event.objects.get_or_create(
                 title=line.get("Subject").split("(")[0].strip(),
