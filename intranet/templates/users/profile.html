@@ -198,7 +198,7 @@
                             <th>Username</th>
                             <td>{{ profile_user.ion_username }}</td>
                         </tr>
-                        {% if request.user.is_teacher and profile_user.student_id %}
+                        {% if request.user.is_teacher or request.user.is_eighth_admin and profile_user.student_id %}
                             <tr>
                                 <th>Student ID</th>
                                 <td>{{ profile_user.student_id }}</td>
@@ -212,18 +212,22 @@
                                 </a></td>
                             </tr>
                         {% endif %}
+                        {% comment "Removing for privacy reasons" %}
                         {% if profile_user.birthday %}
                         <tr>
                             <th>Birthday</th>
                             <td>{{ profile_user.birthday|date:"F j, Y" }}</td>
                         </tr>
                         {% endif %}
-                        {% if profile_user.user_type == "student" and profile_user.counselor %}
+                        {% endcomment %}
+                        {% if profile_user.user_type == "student" and profile_user.counselor and request.user.is_teacher or request.user.is_eighth_admin %}
                             <tr>
                                 <th>Counselor</th>
                                 <td> {{ profile_user.counselor.last_name }} </td>
                             </div>
                         {% endif %}
+
+                        {% comment "Removing for privacy reasons" %}
                         {% if profile_user.emails.exists %}
                         {% if request.user.is_teacher and not profile_user.non_tj_email or request.user.is_eighth_admin and not profile_user.non_tj_email %}
                             <!-- Don't duplicate TJ email -->
@@ -247,6 +251,7 @@
                         </tr>
                         {% endif %}
                         {% endif %}
+
                         {% if profile_user.websites.exists %}
                         <tr>
                             <th>
@@ -261,7 +266,6 @@
                         </tr>
                         {% endif %}
 
-                        {% comment %}
                         {% if profile_user.skype or profile_user.google_talk %}
                         <tr>
                             <th>Social</th>
@@ -280,7 +284,6 @@
                             </td>
                         </tr>
                         {% endif %}
-                        {% endcomment %}
 
                         {% if profile_user.phones.exists %}
                         {% if profile_user.can_view_phone or request.user == profile_user or request.user.is_teacher or request.user.is_eighth_admin %}
@@ -311,6 +314,8 @@
                                 </a></td>
                         </tr>
                         {% endif %}
+                        {% endcomment %}
+
                         {% if profile_user.has_senior %}
                         {% with senior=profile_user.senior %}
                             {% if senior.college %}

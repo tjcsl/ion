@@ -11,30 +11,42 @@ from django.shortcuts import redirect, render
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
 from ..users.models import Email
-from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
-                    WebsiteFormset)
+from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
+
+# from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
+#                    WebsiteFormset)
+
 
 logger = logging.getLogger(__name__)
+
+
+"""
+    NOTE: Phone and website information have been disabled because of privacy reasons.
+"""
 
 
 def get_personal_info(user):
     """Get a user's personal info attributes to pass as an initial value to a
     PersonalInformationForm."""
     # change this to not use other_phones
-    num_phones = len(user.phones.all() or [])
+    # num_phones = len(user.phones.all() or [])
+    num_phones = 0
+
     num_emails = len(user.emails.all() or [])
-    num_websites = len(user.websites.all() or [])
+
+    # num_websites = len(user.websites.all() or [])
+    num_websites = 0
 
     personal_info = {}
 
-    for i in range(num_phones):
-        personal_info["phone_{}".format(i)] = user.phones.all()[i]
+    # for i in range(num_phones):
+    #     personal_info["phone_{}".format(i)] = user.phones.all()[i]
 
     for i in range(num_emails):
         personal_info["email_{}".format(i)] = user.emails.all()[i]
 
-    for i in range(num_websites):
-        personal_info["website_{}".format(i)] = user.websites.all()[i]
+    # for i in range(num_websites):
+    #     personal_info["website_{}".format(i)] = user.websites.all()[i]
 
     num_fields = {"phones": num_phones, "emails": num_emails, "websites": num_websites}
 
@@ -42,16 +54,20 @@ def get_personal_info(user):
 
 
 def save_personal_info(request, user):
-    phone_formset = PhoneFormset(request.POST, instance=user, prefix="pf")
+    # phone_formset = PhoneFormset(request.POST, instance=user, prefix="pf")
+    phone_formset = None
+
     email_formset = EmailFormset(request.POST, instance=user, prefix="ef")
-    website_formset = WebsiteFormset(request.POST, instance=user, prefix="wf")
+
+    # website_formset = WebsiteFormset(request.POST, instance=user, prefix="wf")
+    website_formset = None
 
     errors = []
 
-    if phone_formset.is_valid():
-        phone_formset.save()
-    else:
-        errors.append("Could not set phone numbers.")
+    # if phone_formset.is_valid():
+    #     phone_formset.save()
+    # else:
+    #     errors.append("Could not set phone numbers.")
     if email_formset.is_valid():
         email_formset.save()
     else:
@@ -59,10 +75,10 @@ def save_personal_info(request, user):
             if isinstance(error.get("address"), list):
                 errors.append(error["address"][0])
         errors.append("Could not set emails.")
-    if website_formset.is_valid():
-        website_formset.save()
-    else:
-        errors.append("Could not set websites.")
+    # if website_formset.is_valid():
+    #     website_formset.save()
+    # else:
+    #     errors.append("Could not set websites.")
 
     return phone_formset, email_formset, website_formset, errors
 
@@ -282,7 +298,8 @@ def preferences_view(request):
 
     if request.method == "POST":
         logger.debug("Preparing to update user preferences for user %s", request.user.id)
-        phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
+        # phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
+        _, email_formset, _, errors = save_personal_info(request, user)
         if user.is_student:
             preferred_pic_form = save_preferred_pic(request, user)
             bus_route_form = save_bus_route(request, user)
@@ -311,9 +328,9 @@ def preferences_view(request):
         return redirect("preferences")
 
     else:
-        phone_formset = PhoneFormset(instance=user, prefix="pf")
+        # phone_formset = PhoneFormset(instance=user, prefix="pf")
         email_formset = EmailFormset(instance=user, prefix="ef")
-        website_formset = WebsiteFormset(instance=user, prefix="wf")
+        # website_formset = WebsiteFormset(instance=user, prefix="wf")
 
         if user.is_student:
             preferred_pic = get_preferred_pic(user)
@@ -342,9 +359,9 @@ def preferences_view(request):
         dark_mode_form = DarkModeForm(user, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
 
     context = {
-        "phone_formset": phone_formset,
+        # "phone_formset": phone_formset,
         "email_formset": email_formset,
-        "website_formset": website_formset,
+        # "website_formset": website_formset,
         "preferred_pic_form": preferred_pic_form,
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
