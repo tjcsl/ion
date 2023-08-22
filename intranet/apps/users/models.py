@@ -1280,7 +1280,10 @@ class Email(models.Model):
 
 
 class Phone(models.Model):
-    """Represents a phone number"""
+    """Represents a phone number
+
+    NOTE: This model is no longer used because of privacy reasons.
+    """
 
     PURPOSES = (("h", "Home Phone"), ("m", "Mobile Phone"), ("o", "Other Phone"))
 
@@ -1309,7 +1312,10 @@ class Phone(models.Model):
 
 
 class Website(models.Model):
-    """Represents a user's website"""
+    """Represents a user's website
+
+    NOTE: This model is no longer used because of privacy reasons.
+    """
 
     url = models.URLField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="websites", on_delete=models.CASCADE)
@@ -1334,6 +1340,7 @@ class Address(models.Model):
         postal_code
             The zip code of the address.
 
+    NOTE: This model is no longer used because of privacy reasons.
     """
 
     street = models.CharField(max_length=255)
@@ -1468,7 +1475,10 @@ class Grade:
 
 
 class Course(models.Model):
-    """Represents a course at TJ (not to be confused with section)"""
+    """Represents a course at TJ (not to be confused with section)
+
+    NOTE: This model is no longer used because of privacy reasons.
+    """
 
     name = models.CharField(max_length=50)
     course_id = models.CharField(max_length=12, unique=True)
@@ -1481,7 +1491,10 @@ class Course(models.Model):
 
 
 class Section(models.Model):
-    """Represents a section - a class with teacher, period, and room assignments"""
+    """Represents a section - a class with teacher, period, and room assignments
+
+    NOTE: This model is no longer used because of privacy reasons.
+    """
 
     course = models.ForeignKey(Course, related_name="sections", on_delete=models.CASCADE)
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)

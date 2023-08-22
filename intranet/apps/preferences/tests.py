@@ -5,7 +5,8 @@ from django.urls import reverse
 from ...test.ion_test import IonTestCase
 from ...utils.date import get_senior_graduation_year
 from ..bus.models import Route
-from ..users.models import Email, Phone, Photo, User, UserProperties, Website
+# from ..users.models import Email, Phone, Photo, User, UserProperties, Website
+from ..users.models import Email, Photo, User, UserProperties
 from .forms import EmailForm
 from .views import get_personal_info, get_privacy_options, save_bus_route
 
@@ -147,25 +148,29 @@ class PreferencesTest(IonTestCase):
         user = User.objects.get_or_create(username="awilliam1")[0]
 
         # Add some details
-        phone = Phone.objects.create(user=user, purpose="m", _number="5551231234")
-        phone2 = Phone.objects.create(user=user, purpose="h", _number="5551243245")
+
+        # Disabling Phone and Website tests because they are no longer used due to privacy reasons
+        # phone = Phone.objects.create(user=user, purpose="m", _number="5551231234")
+        # phone2 = Phone.objects.create(user=user, purpose="h", _number="5551243245")
 
         email = Email.objects.create(user=user, address="test@example.com")
 
-        website = Website.objects.create(user=user, url="www.example.com")
+        # website = Website.objects.create(user=user, url="www.example.com")
 
         # There are two phones, one email, and one website
-        personal_info, num_fields = get_personal_info(user)
+        # personal_info, num_fields = get_personal_info(user)
+        personal_info, _ = get_personal_info(user)
 
-        self.assertEqual({"phones": 2, "emails": 1, "websites": 1}, num_fields)
+        # self.assertEqual({"phones": 2, "emails": 1, "websites": 1}, num_fields)
 
         # It is unpredictable which order the phones appear in, so this will do
-        for user_object in [phone, phone2, email, website]:
+        # for user_object in [phone, phone2, email, website]:
+        for user_object in [email]:
             self.assertIn(user_object, personal_info.values())
 
         # Then, check the email and the website
         self.assertEqual(email, personal_info["email_0"])
-        self.assertEqual(website, personal_info["website_0"])
+        # self.assertEqual(website, personal_info["website_0"])
 
     def test_privacy_options_view(self):
         """Test the get privacy options views and associated methods."""
