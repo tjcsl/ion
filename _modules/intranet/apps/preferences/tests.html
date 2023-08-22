@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #1833) documentation</title>
+    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #1836) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -128,7 +128,8 @@
 <span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="kn">import</span> <span class="n">Route</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Phone</span><span class="p">,</span> <span class="n">Photo</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserProperties</span><span class="p">,</span> <span class="n">Website</span>
+<span class="c1"># from ..users.models import Email, Phone, Photo, User, UserProperties, Website</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Photo</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserProperties</span>
 <span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">EmailForm</span>
 <span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">get_personal_info</span><span class="p">,</span> <span class="n">get_privacy_options</span><span class="p">,</span> <span class="n">save_bus_route</span>
 
@@ -270,25 +271,29 @@
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Add some details</span>
-        <span class="n">phone</span> <span class="o">=</span> <span class="n">Phone</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">purpose</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">_number</span><span class="o">=</span><span class="s2">&quot;5551231234&quot;</span><span class="p">)</span>
-        <span class="n">phone2</span> <span class="o">=</span> <span class="n">Phone</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">purpose</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">_number</span><span class="o">=</span><span class="s2">&quot;5551243245&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Disabling Phone and Website tests because they are no longer used due to privacy reasons</span>
+        <span class="c1"># phone = Phone.objects.create(user=user, purpose=&quot;m&quot;, _number=&quot;5551231234&quot;)</span>
+        <span class="c1"># phone2 = Phone.objects.create(user=user, purpose=&quot;h&quot;, _number=&quot;5551243245&quot;)</span>
 
         <span class="n">email</span> <span class="o">=</span> <span class="n">Email</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">&quot;test@example.com&quot;</span><span class="p">)</span>
 
-        <span class="n">website</span> <span class="o">=</span> <span class="n">Website</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;www.example.com&quot;</span><span class="p">)</span>
+        <span class="c1"># website = Website.objects.create(user=user, url=&quot;www.example.com&quot;)</span>
 
         <span class="c1"># There are two phones, one email, and one website</span>
-        <span class="n">personal_info</span><span class="p">,</span> <span class="n">num_fields</span> <span class="o">=</span> <span class="n">get_personal_info</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="c1"># personal_info, num_fields = get_personal_info(user)</span>
+        <span class="n">personal_info</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_personal_info</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">({</span><span class="s2">&quot;phones&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;emails&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;websites&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="n">num_fields</span><span class="p">)</span>
+        <span class="c1"># self.assertEqual({&quot;phones&quot;: 2, &quot;emails&quot;: 1, &quot;websites&quot;: 1}, num_fields)</span>
 
         <span class="c1"># It is unpredictable which order the phones appear in, so this will do</span>
-        <span class="k">for</span> <span class="n">user_object</span> <span class="ow">in</span> <span class="p">[</span><span class="n">phone</span><span class="p">,</span> <span class="n">phone2</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">website</span><span class="p">]:</span>
+        <span class="c1"># for user_object in [phone, phone2, email, website]:</span>
+        <span class="k">for</span> <span class="n">user_object</span> <span class="ow">in</span> <span class="p">[</span><span class="n">email</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user_object</span><span class="p">,</span> <span class="n">personal_info</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
         <span class="c1"># Then, check the email and the website</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_0&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">website</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;website_0&quot;</span><span class="p">])</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_0&quot;</span><span class="p">])</span></div>
+        <span class="c1"># self.assertEqual(website, personal_info[&quot;website_0&quot;])</span>
 
 <div class="viewcode-block" id="PreferencesTest.test_privacy_options_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_privacy_options_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_privacy_options_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Test the get privacy options views and associated methods.&quot;&quot;&quot;</span>

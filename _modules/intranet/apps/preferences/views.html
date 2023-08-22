@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #1833) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #1836) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -134,30 +134,42 @@
 <span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">eighth_admin_required</span>
 <span class="kn">from</span> <span class="nn">..bus.models</span> <span class="kn">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Email</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BusRouteForm</span><span class="p">,</span> <span class="n">DarkModeForm</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span> <span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PhoneFormset</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span><span class="p">,</span>
-                    <span class="n">WebsiteFormset</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">BusRouteForm</span><span class="p">,</span> <span class="n">DarkModeForm</span><span class="p">,</span> <span class="n">EmailFormset</span><span class="p">,</span> <span class="n">NotificationOptionsForm</span><span class="p">,</span> <span class="n">PreferredPictureForm</span><span class="p">,</span> <span class="n">PrivacyOptionsForm</span>
+
+<span class="c1"># from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,</span>
+<span class="c1">#                    WebsiteFormset)</span>
+
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    NOTE: Phone and website information have been disabled because of privacy reasons.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="get_personal_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.get_personal_info">[docs]</a><span class="k">def</span> <span class="nf">get_personal_info</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a user&#39;s personal info attributes to pass as an initial value to a</span>
 <span class="sd">    PersonalInformationForm.&quot;&quot;&quot;</span>
     <span class="c1"># change this to not use other_phones</span>
-    <span class="n">num_phones</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">phones</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[])</span>
+    <span class="c1"># num_phones = len(user.phones.all() or [])</span>
+    <span class="n">num_phones</span> <span class="o">=</span> <span class="mi">0</span>
+
     <span class="n">num_emails</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[])</span>
-    <span class="n">num_websites</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">websites</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="p">[])</span>
+
+    <span class="c1"># num_websites = len(user.websites.all() or [])</span>
+    <span class="n">num_websites</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">personal_info</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_phones</span><span class="p">):</span>
-        <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;phone_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">phones</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
+    <span class="c1"># for i in range(num_phones):</span>
+    <span class="c1">#     personal_info[&quot;phone_{}&quot;.format(i)] = user.phones.all()[i]</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_emails</span><span class="p">):</span>
         <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_websites</span><span class="p">):</span>
-        <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;website_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">websites</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
+    <span class="c1"># for i in range(num_websites):</span>
+    <span class="c1">#     personal_info[&quot;website_{}&quot;.format(i)] = user.websites.all()[i]</span>
 
     <span class="n">num_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;phones&quot;</span><span class="p">:</span> <span class="n">num_phones</span><span class="p">,</span> <span class="s2">&quot;emails&quot;</span><span class="p">:</span> <span class="n">num_emails</span><span class="p">,</span> <span class="s2">&quot;websites&quot;</span><span class="p">:</span> <span class="n">num_websites</span><span class="p">}</span>
 
@@ -165,16 +177,20 @@
 
 
 <div class="viewcode-block" id="save_personal_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.views.save_personal_info">[docs]</a><span class="k">def</span> <span class="nf">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-    <span class="n">phone_formset</span> <span class="o">=</span> <span class="n">PhoneFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;pf&quot;</span><span class="p">)</span>
+    <span class="c1"># phone_formset = PhoneFormset(request.POST, instance=user, prefix=&quot;pf&quot;)</span>
+    <span class="n">phone_formset</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="n">email_formset</span> <span class="o">=</span> <span class="n">EmailFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ef&quot;</span><span class="p">)</span>
-    <span class="n">website_formset</span> <span class="o">=</span> <span class="n">WebsiteFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;wf&quot;</span><span class="p">)</span>
+
+    <span class="c1"># website_formset = WebsiteFormset(request.POST, instance=user, prefix=&quot;wf&quot;)</span>
+    <span class="n">website_formset</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">if</span> <span class="n">phone_formset</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-        <span class="n">phone_formset</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Could not set phone numbers.&quot;</span><span class="p">)</span>
+    <span class="c1"># if phone_formset.is_valid():</span>
+    <span class="c1">#     phone_formset.save()</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     errors.append(&quot;Could not set phone numbers.&quot;)</span>
     <span class="k">if</span> <span class="n">email_formset</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
         <span class="n">email_formset</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
@@ -182,10 +198,10 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Could not set emails.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">website_formset</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-        <span class="n">website_formset</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Could not set websites.&quot;</span><span class="p">)</span>
+    <span class="c1"># if website_formset.is_valid():</span>
+    <span class="c1">#     website_formset.save()</span>
+    <span class="c1"># else:</span>
+    <span class="c1">#     errors.append(&quot;Could not set websites.&quot;)</span>
 
     <span class="k">return</span> <span class="n">phone_formset</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">website_formset</span><span class="p">,</span> <span class="n">errors</span></div>
 
@@ -405,7 +421,8 @@
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Preparing to update user preferences for user </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="n">phone_formset</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">website_formset</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="c1"># phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">save_preferred_pic</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
@@ -434,9 +451,9 @@
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">phone_formset</span> <span class="o">=</span> <span class="n">PhoneFormset</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;pf&quot;</span><span class="p">)</span>
+        <span class="c1"># phone_formset = PhoneFormset(instance=user, prefix=&quot;pf&quot;)</span>
         <span class="n">email_formset</span> <span class="o">=</span> <span class="n">EmailFormset</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ef&quot;</span><span class="p">)</span>
-        <span class="n">website_formset</span> <span class="o">=</span> <span class="n">WebsiteFormset</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;wf&quot;</span><span class="p">)</span>
+        <span class="c1"># website_formset = WebsiteFormset(instance=user, prefix=&quot;wf&quot;)</span>
 
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="n">get_preferred_pic</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
@@ -465,9 +482,9 @@
         <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;phone_formset&quot;</span><span class="p">:</span> <span class="n">phone_formset</span><span class="p">,</span>
+        <span class="c1"># &quot;phone_formset&quot;: phone_formset,</span>
         <span class="s2">&quot;email_formset&quot;</span><span class="p">:</span> <span class="n">email_formset</span><span class="p">,</span>
-        <span class="s2">&quot;website_formset&quot;</span><span class="p">:</span> <span class="n">website_formset</span><span class="p">,</span>
+        <span class="c1"># &quot;website_formset&quot;: website_formset,</span>
         <span class="s2">&quot;preferred_pic_form&quot;</span><span class="p">:</span> <span class="n">preferred_pic_form</span><span class="p">,</span>
         <span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span>
         <span class="s2">&quot;notification_options_form&quot;</span><span class="p">:</span> <span class="n">notification_options_form</span><span class="p">,</span>
