@@ -1,13 +1,38 @@
 $(document).ready(function() {
-    $.get("https://homecoming.tjhsst.edu/api/", function(data) {
-        console.log(data.senior_total ? data.senior_total : 0);
-        $("#score-senior").text(data.senior_total ? data.senior_total : 0);
-        $("#score-sophomore").text(data.sophomore_total ? data.sophomore_total : 0);
-        $("#score-junior").text(data.junior_total ? data.junior_total : 0);
-        $("#score-freshman").text(data.freshman_total ? data.freshman_total : 0);
-        giveRibbons();
-        $("#hoco-scores").fadeIn();
-    });
+    let hocoScoresRef;  // stores a reference to the scores div when disconnected
+    let numDisconnected = 0;
+    let didConnect = false;  // whether we've successfully connected at least once
+    function loadScores() {
+        $.get("https://homecoming.tjhsst.edu/api/", function(data) {
+            didConnect = true;
+            if (hocoScoresRef) {  // on reconnect
+                $("#hoco-scores").replaceWith(hocoScoresRef).fadeIn();  // restore the backup
+                hocoScoresRef = null;
+            }
+            $("#score-senior").text(data.senior_total ? data.senior_total : 0);
+            $("#score-sophomore").text(data.sophomore_total ? data.sophomore_total : 0);
+            $("#score-junior").text(data.junior_total ? data.junior_total : 0);
+            $("#score-freshman").text(data.freshman_total ? data.freshman_total : 0);
+            removeRibbons();
+            giveRibbons();
+            $("#hoco-scores").delay(2000).fadeIn();
+        }).fail(function() {
+            if (didConnect) {  // only track failed attempts after first successful attempt
+                numDisconnected += 1;
+                if (numDisconnected < 5) {
+                    return;  // don't hide yet
+                }
+            }
+            if (!hocoScoresRef) {  // on disconnect, after 5 failed attempts
+                hocoScoresRef = $("#hoco-scores").clone().hide();  // save a hidden backup
+                $("#hoco-scores").fadeOut(function() {
+                    $(this).empty();  // keep the div but remove its contents
+                });
+            }
+        });
+    }
+    window.setInterval(loadScores, 5 * 60 * 1000);  // every 5 minutes
+    loadScores();
 });
 function giveRibbons() {
     var arr = [];
@@ -33,4 +58,8 @@ function giveRibbons() {
             v[0].find(".corner-ribbon").addClass("bronze").text("3rd");
         }
     });
+}
+
+function removeRibbons() {
+    $("#hoco-scores .corner-ribbon").removeClass("gold silver bronze").text("");
 }
