@@ -23,7 +23,7 @@ env:
   # and change that version in the "if" to the latest version
   # you put here.
   python_versions: &python_versions
-    - 3.8
+    - 3.8.18
   node_versions: &node_versions
     - 12.x
 
@@ -150,7 +150,7 @@ jobs:
         run: ./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh
       - name: Push docs
         # Only run for pushes to the main Ion repo
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.8
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == '3.8.18'
         run: ./scripts/push_docs.sh
         env:
           GH_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}
