@@ -276,7 +276,7 @@ def paginate_announcements_list(request, context, items):
     else:
         start_num = 0
 
-    display_num = 10
+    display_num = 15
     end_num = start_num + display_num
     prev_page = start_num - display_num
     more_items = (len(items) - start_num) > display_num
