@@ -218,6 +218,10 @@ def enrichment_signup_view(request, enrichment_id):
                 )
                 return redirect("enrichment")
 
+        if enrichment.attending.count() >= enrichment.capacity:
+            messages.error(request, "The capacity for this enrichment activity has been reached. You may not sign up for it at this time.")
+            return redirect("enrichment")
+
         if request.POST.get("attending") == "true":
             enrichment.attending.add(request.user)
             messages.success(request, "Successfully signed up.")
