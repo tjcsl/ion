@@ -341,7 +341,6 @@ def add_widgets_context(request, context):
                 "last_displayed_block": schedule[-1] if schedule else None,
                 "no_signup_today": no_signup_today,
                 "senior_graduation": get_senior_graduation_date().strftime("%B %d %Y %H:%M:%S"),
-                "senior_graduation_year": get_senior_graduation_year(),
             }
         )
 
@@ -373,6 +372,7 @@ def add_widgets_context(request, context):
             )
             if settings.ENABLE_ENRICHMENT_APP
             else [],
+            "senior_graduation_year": get_senior_graduation_year(),
         }
     )
 
