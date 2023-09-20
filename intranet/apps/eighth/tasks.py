@@ -185,7 +185,7 @@ def eighth_admin_assign_hybrid_sticky_blocks(fmtdate: str) -> None:
 
 
 @shared_task
-def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: int) -> None:
+def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: int, skip_users: set) -> None:
     """Sign all users in a specific group up for a specific scheduled activity
     (in the background), sending an email to the user who requested the operation when
     it is done.
@@ -194,7 +194,8 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
         user_id: The ID of the user who requested that this operation be performed.
         group_id: The ID of the group to sign up for the activity.
         schact_id:.The ID of the EighthScheduledActivity to add the group members to.
-
+        skip_users: A list of users that should not be signed up for the activity,
+            usually because they are stickied into another activity.
     """
     # Circular dependency
     from .views.admin.groups import eighth_admin_perform_group_signup  # pylint: disable=import-outside-toplevel
@@ -208,7 +209,7 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
     }
 
     try:
-        eighth_admin_perform_group_signup(group_id=group_id, schact_id=schact_id, request=None)
+        eighth_admin_perform_group_signup(group_id=group_id, schact_id=schact_id, request=None, skip_users=skip_users)
     except Exception:
         email_send(
             "eighth/emails/group_signup_error.txt",
