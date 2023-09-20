@@ -41,19 +41,68 @@
 {% block admin_main %}
     {% if show_selection %}
         <form action="{% url 'eighth_admin_distribute_action' %}" method="post">
-
+            {% csrf_token %}
             {% if users_type == "unsigned" %}
                 <p>{{ users|length }} user{{ users|length|pluralize }} have not signed up for any activities on {{ eighthblock }}.</p>
             {% elif users_type == "group" %}
                 <b>Group:</b> {{ group }} - {{ users|length }} member{{ users|length|pluralize }}<br>
                 <a href="{% url 'eighth_admin_edit_group' group.id %}" class="button">Modify Group</a> &nbsp;
             {% endif %}
-            <button onclick="distribute(); return false">Evenly Distribute</button>
             <br>
+
+            {% if sticky_users_and_activities %}
             <br>
+            <hr>
+            <i class="fas fa-exclamation-triangle" style="color:red"></i>
+            There are {{ sticky_users_and_activities|length }} users signed up for sticky activities in the selected block.
+            <br>
+            Select whether you want to remove them from their sticky activity and sign them up for this activity instead.
+            <br>
+            Students not selected here will remain in their sticky activity regardless of what is indicated in the
+            activity signup registration table.
+            <br><br>
+            <table class="sticky-check-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Email</th>
+                        <th>Grade</ht>
+                        <th>Sticky Activity</th>
+                        <th>
+                            <input type="checkbox" id="select_all_sticky" onclick="$('.sticky-check-table input[type=checkbox]').prop('checked', this.checked);">
+                            Remove From Sticky Activity
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user, sticky_activity in sticky_users_and_activities.items %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user_profile' user.id %}">{{ user.last_name }}, {{ user.first_name }}</a>
+                        </td>
+                        <td>{{ user.student_id }}</td>
+                        <td>
+                            <a href="mailto:{{ user.tj_email }}">{{ user.tj_email }}</a>
+                        </td>
+                        <td>{{ user.grade_number }}</td>
+                        <td>
+                            <a href="{% url 'eighth_roster' sticky_activity.id %}">
+                                {{ sticky_activity.activity.id }}: {{ sticky_activity.activity.name }}
+                            </a>
+                        </td>
+                        <td><input type="checkbox" name="remove_from_sticky" value="{{ user.id }}"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <hr>
+            <br>
+            {% endif %}
+
             <input type="hidden" name="users" value="true">
             <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false;">
-            {% csrf_token %}
+            <button onclick="distribute(); return false">Evenly Distribute</button>
             <br>
             Click on column titles to sort.
             <table data-sortable class="sortable distribute-group-grid fancy-table">

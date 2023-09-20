@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -21,7 +22,7 @@ from ....users.models import User
 from ...forms.admin.activities import ActivitySelectionForm, ScheduledActivityMultiSelectForm
 from ...forms.admin.blocks import BlockSelectionForm
 from ...forms.admin.groups import GroupForm, QuickGroupForm, UploadGroupForm
-from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ...tasks import eighth_admin_signup_group_task
 from ...utils import get_start_date
 
@@ -441,28 +442,52 @@ def eighth_admin_signup_group_action(request, group_id, schact_id):
 
     users = group.user_set.all()
 
+    # Sticky check
+    sticky_users_and_activities = {}
+    for user in users:
+        sticky_activity_signup = EighthSignup.objects.filter(user=user, scheduled_activity__block=scheduled_activity.block).filter(
+            Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True)
+        )
+        if sticky_activity_signup.exists():
+            sticky_users_and_activities[user] = sticky_activity_signup[0].scheduled_activity
+    sticky_users_and_activities = dict(sorted(sticky_users_and_activities.items(), key=lambda x: x[0].last_name))
+
     if not users.exists():
         messages.info(request, "The group you have selected has no members.")
         return redirect("eighth_admin_dashboard")
 
     if "confirm" in request.POST:
+        skip_users = set(sticky_users_and_activities.keys())
+        for user in request.POST.getlist("remove_from_sticky"):
+            try:
+                user = User.objects.get(username=user)
+                skip_users.remove(user)
+            except (User.DoesNotExist, ValueError):
+                messages.warning(request, f"Error signing up user {user} for activity.")
+
         if request.POST.get("run_in_background"):
-            eighth_admin_signup_group_task.delay(user_id=request.user.id, group_id=group_id, schact_id=schact_id)
+            eighth_admin_signup_group_task.delay(user_id=request.user.id, group_id=group_id, schact_id=schact_id, skip_users=skip_users)
             messages.success(request, "Group members are being signed up in the background.")
             return redirect("eighth_admin_dashboard")
         else:
-            eighth_admin_perform_group_signup(group_id=group_id, schact_id=schact_id, request=request)
+            eighth_admin_perform_group_signup(group_id=group_id, schact_id=schact_id, request=request, skip_users=skip_users)
             messages.success(request, "Successfully signed up group for activity.")
             return redirect("eighth_admin_dashboard")
 
     return render(
         request,
         "eighth/admin/sign_up_group.html",
-        {"admin_page_title": "Confirm Group Signup", "scheduled_activity": scheduled_activity, "group": group, "users_num": users.count()},
+        {
+            "admin_page_title": "Confirm Group Signup",
+            "scheduled_activity": scheduled_activity,
+            "group": group,
+            "users_num": users.count(),
+            "sticky_users_and_activities": sticky_users_and_activities,
+        },
     )
 
 
-def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request: Optional[http.HttpRequest]):
+def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request: Optional[http.HttpRequest], skip_users: set):
     """Performs sign up of all users in a specific group up for a
     specific scheduled activity.
 
@@ -471,7 +496,8 @@ def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request:
         schact_id: The ID of the EighthScheduledActivity all the users in the group
             should be signed up for.
         request: If possible, the request object associated with the operation.
-
+        skip_users: A list of users that should not be signed up for the activity,
+            usually because they are stickied into another activity.
     """
 
     # We assume these exist
@@ -479,7 +505,8 @@ def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request:
     group = Group.objects.get(id=group_id)
 
     for user in group.user_set.all():
-        scheduled_activity.add_user(user, request=request, force=True, no_after_deadline=True)
+        if user not in skip_users:
+            scheduled_activity.add_user(user, request=request, force=True, no_after_deadline=True)
 
 
 class EighthAdminDistributeGroupWizard(SessionWizardView):
@@ -592,11 +619,26 @@ def eighth_admin_distribute_action(request):
                 userids = request.POST.getlist(item)
                 activity_user_map[schact] = userids
 
+        sticky_users_and_activities = {}
+        for schact, userids in activity_user_map.items():
+            for uid in userids:
+                user = get_user_model().objects.get(id=uid)
+                sticky_activity_signup = EighthSignup.objects.filter(user=user, scheduled_activity__block=schact.block).filter(
+                    Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True)
+                )
+                if sticky_activity_signup.exists():
+                    sticky_users_and_activities[uid] = sticky_activity_signup[0].scheduled_activity
+
+        skip_users = set(sticky_users_and_activities.keys())
+        for uid in request.POST.getlist("remove_from_sticky"):
+            skip_users.remove(uid)
+
         changes = 0
         for schact, userids in activity_user_map.items():
             for uid in userids:
-                changes += 1
-                schact.add_user(get_user_model().objects.get(id=int(uid)), request=request, force=True, no_after_deadline=True)
+                if uid not in skip_users:
+                    changes += 1
+                    schact.add_user(get_user_model().objects.get(id=int(uid)), request=request, force=True, no_after_deadline=True)
 
         messages.success(request, "Successfully completed {} activity signups.".format(changes))
 
@@ -639,6 +681,16 @@ def eighth_admin_distribute_action(request):
         # Sort by last name
         users = sorted(list(users), key=lambda x: x.last_name)
 
+        # Sticky check
+        sticky_users_and_activities = {}
+        for user in users:
+            sticky_activity_signup = EighthSignup.objects.filter(
+                user=user, scheduled_activity__block=block if users_type == "unsigned" else schacts[0].block
+            ).filter(Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True))
+            if sticky_activity_signup.exists():
+                sticky_users_and_activities[user] = sticky_activity_signup[0].scheduled_activity
+        sticky_users_and_activities = dict(sorted(sticky_users_and_activities.items(), key=lambda x: x[0].last_name))
+
         context = {
             "admin_page_title": "Distribute Group Members Across Activities",
             "users_type": users_type,
@@ -647,6 +699,7 @@ def eighth_admin_distribute_action(request):
             "schacts": schacts,
             "users": users,
             "show_selection": True,
+            "sticky_users_and_activities": sticky_users_and_activities,
         }
 
         return render(request, "eighth/admin/distribute_group.html", context)
