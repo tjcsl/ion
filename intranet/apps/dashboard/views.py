@@ -309,7 +309,7 @@ def add_widgets_context(request, context):
     * Bell schedule (ALL)
     * Administration (ADMIN)
     * Links (ALL)
-    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise)
+    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise) if settings.ENABLE_SENIOR_DESTINATIONS
     """
 
     user = context["user"]

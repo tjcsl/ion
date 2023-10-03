@@ -1,5 +1,6 @@
 from unittest.mock import mock_open, patch
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.urls import reverse
@@ -12,6 +13,8 @@ from .models import College, Senior
 class SeniorsTestCase(IonTestCase):
 
     """Test cases for the seniors app."""
+
+    settings.ENABLE_SENIOR_DESTINATIONS = True
 
     def test_seniors_home_view(self):
         """Tests the seniors home view, listing seniors and their destinations."""
