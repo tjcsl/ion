@@ -87,6 +87,18 @@
                 {% endfor %}
                 </tbody>
             </table>
+        {% elif enrichment_is_today and request.user in enrichment.attending.all %}
+            <div class="attending-badge">
+                <i class="fas fa-check"></i>
+                <br>
+                <b style="font-size: 18pt">{{ enrichment.title }}</b> <br>
+                <hr>
+                {{ enrichment.time|date:"l, F j"}} <br>
+                {{ enrichment.time|date:"P"|title}} <br>
+                <hr>
+                {{ request.user.first_name }} {{ request.user.last_name }} <br>
+                <i style="font-style: italic; font-size: 12pt">Signed up</i>
+            </div>
         {% endif %}
     </div>
 
