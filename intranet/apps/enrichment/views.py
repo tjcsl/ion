@@ -214,20 +214,21 @@ def enrichment_signup_view(request, enrichment_id):
             if too_early_to_signup[0]:
                 messages.error(
                     request,
-                    "You may not sign up for this enrichment activity until " f"{too_early_to_signup[1].strftime('%A, %B %d at %-I:%M %p')}.",
+                    "You may not sign up for this enrichment activity until " f"{too_early_to_signup[1].strftime('%A, %B %-d at %-I:%M %p')}.",
                 )
                 return redirect("enrichment")
 
-        if enrichment.attending.count() >= enrichment.capacity:
+        if request.user not in enrichment.attending.all() and enrichment.attending.count() >= enrichment.capacity:
             messages.error(request, "The capacity for this enrichment activity has been reached. You may not sign up for it at this time.")
             return redirect("enrichment")
 
+        enrichment_date = enrichment.time.astimezone(timezone.get_default_timezone()).strftime("%A, %B %-d at %-I:%M %p")
         if request.POST.get("attending") == "true":
             enrichment.attending.add(request.user)
-            messages.success(request, "Successfully signed up.")
+            messages.success(request, f"Signed up for {enrichment.title} on {enrichment_date}.")
         else:
             enrichment.attending.remove(request.user)
-            messages.warning(request, "Removed signup.")
+            messages.warning(request, f"Removed signup for {enrichment.title} on {enrichment_date}.")
     return redirect("enrichment")
 
 
@@ -242,9 +243,14 @@ def enrichment_roster_view(request, enrichment_id):
     is_enrichment_admin = request.user.has_admin_permission("enrichment")
 
     enrichment = get_object_or_404(EnrichmentActivity, id=enrichment_id)
+    enrichment_is_today = (
+        enrichment.time.astimezone(timezone.get_default_timezone()).date() == timezone.now().astimezone(timezone.get_default_timezone()).date()
+    )
 
     context = {
         "enrichment": enrichment,
+        "enrichment_time": enrichment.time.astimezone(timezone.get_default_timezone()),
+        "enrichment_is_today": enrichment_is_today,
         "roster": enrichment.attending.all().order_by("first_name", "last_name"),
         "is_enrichment_admin": is_enrichment_admin,
         "today": timezone.now().date(),
