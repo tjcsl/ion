@@ -111,6 +111,8 @@ ENABLE_PRE_DISMISSAL_BUS_REDIRECT = True  # Redirect to bus page around dismissa
 ENABLE_HYBRID_EIGHTH = None  # Enable hybrid eighth period code
 
 ENABLE_ENRICHMENT_APP = True
+
+ENABLE_SENIOR_DESTINATIONS = False  # Disabled per school policy, October 2023
 # End toggles
 
 NOTIFY_ADMIN_EMAILS = None
