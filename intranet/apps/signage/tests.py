@@ -14,7 +14,7 @@ from .views import check_internal_ip
 
 class SignageTestCase(IonTestCase):
     def test_check_internal_ip(self):
-        with self.settings(INTERNAL_IPS=helpers.GlobList(["165.45.34.0/24"])):  # arbitrary
+        with self.settings(TJ_IPS=helpers.GlobList(["165.45.34.0/24"])):  # arbitrary
             factory = RequestFactory()
             request = factory.get("/signage/display/cs-nobel/", REMOTE_ADDR="165.45.34.120")
             request.user = AnonymousUser()
