@@ -31,7 +31,7 @@ def check_internal_ip(request) -> Optional[HttpResponse]:
         a 403 if the request is unauthorized or None if the request is authorized
     """
     remote_addr = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
-    if (not request.user.is_authenticated or request.user.is_restricted) and remote_addr not in settings.INTERNAL_IPS:
+    if (not request.user.is_authenticated or request.user.is_restricted) and remote_addr not in settings.TJ_IPS:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
     return None
