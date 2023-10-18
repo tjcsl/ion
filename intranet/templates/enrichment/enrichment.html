@@ -63,7 +63,9 @@
         <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post" style="font-size: 12px">
             {% csrf_token %}
             {% if request.user in enrichment.attending.all %}
-                    <span style="color: green"><i class="fas fa-check"></i> You are signed up for this activity.</span>
+                <span {% if enrichment_is_today %} style="color: green" {% endif %}>
+                    <i class="fas fa-check"></i> You are signed up for this activity.
+                </span>
                 <br>
                 <a data-form-attend="{{ enrichment.id }}" class="button small-button no-attend-button attend-button">
                     <i class="fas fa-times"></i>
@@ -79,7 +81,7 @@
     {% else %}
         <div class="enrichment-content" style="font-size:12px;">
             {% if request.user in enrichment.attending.all %}
-                {% if not enrichment.time.date == today %}
+                {% if not enrichment_is_today %}
                     <i class="fas fa-check"></i>
                     You signed up for this activity.
 
