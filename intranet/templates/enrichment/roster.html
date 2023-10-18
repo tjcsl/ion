@@ -35,9 +35,7 @@
     <div class="primary-content enrichment events">
 
         <div class="enrichment-container">
-        {% with show_date_icon=True %}
             {% include "enrichment/enrichment.html" %}
-        {% endwith %}
         </div>
 
         {% if is_enrichment_admin %}
@@ -96,7 +94,7 @@
                 {{ enrichment.time|date:"l, F j"}} <br>
                 {{ enrichment.time|date:"P"|title}} <br>
                 <hr>
-                {{ request.user.first_name }} {{ request.user.last_name }} <br>
+                <b>{{ request.user.first_name }} {{ request.user.last_name }}</b> <br>
                 <i style="font-style: italic; font-size: 12pt">Signed up</i>
             </div>
         {% endif %}

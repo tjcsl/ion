@@ -186,7 +186,7 @@ def enrichment_view(request):
         "show_icon": False,
         "show_all": show_all,
         "classic": classic,
-        "today": timezone.now().date(),
+        "today": date_format(today),
     }
     context["week_data"] = week_data(request)
     context["month_data"] = month_data(request)

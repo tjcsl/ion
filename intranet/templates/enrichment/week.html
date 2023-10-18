@@ -22,11 +22,15 @@
                     <h2 class="schedule-date">{{ day.enrichment_ctx.date|date:"D, N j" }}</h2>
                     {% if day.enrichment_ctx.has_enrichments %}
                         {% for enrichment in day.enrichment_ctx.enrichments %}
-
-                            {% with not_show_attend_form=True %}
-                                {% include "enrichment/enrichment.html" %}
-                            {% endwith %}
-
+                            {% if day.enrichment_ctx.date_today == today %}
+                                {% with enrichment_is_today=True %}
+                                    {% include "enrichment/enrichment.html" %}
+                                {% endwith %}
+                            {% else %}
+                                {% with enrichment_is_today=False %}
+                                    {% include "enrichment/enrichment.html" %}
+                                {% endwith %}
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <p class="no-enrichment no-events">No enrichment activities.</p>
