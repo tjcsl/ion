@@ -52,7 +52,7 @@ def get_printers() -> Dict[str, str]:
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             return []
 
-        PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)", re.ASCII)
+        PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)\s+(?!disabled)", re.ASCII)
         DESCRIPTION_LINE_RE = re.compile(r"^\s+Description:\s+(.*)\s*$", re.ASCII)
 
         printers = {}
