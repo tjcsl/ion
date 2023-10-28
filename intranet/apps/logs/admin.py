@@ -48,11 +48,67 @@ class TruncatedUserAgentFilter(admin.SimpleListFilter):
         return queryset
 
 
+class MethodFilter(admin.SimpleListFilter):
+    title = "method"
+    parameter_name = "method"
+    methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
+
+    def lookups(self, request, model_admin):
+        return zip(self.methods, gettext_lazy(self.methods))
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(method=self.value())
+        return queryset
+
+
+class PathFilter(admin.SimpleListFilter):
+    title = "path"
+    parameter_name = "path"
+    url_paths = [
+        "index",
+        "login",
+        "logout",
+        "eighth_signup",
+        "eighth_admin_dashboard",
+        "view_announcements",
+        "request_announcement",
+        "bus",
+        "calendar",
+        "user_profile",
+        "events",
+        "enrichment",
+        "printing",
+        "send_feedback",
+        "signage_display",
+    ]
+    url_paths_looked_up = []
+
+    def lookups(self, request, model_admin):
+        # from ...urls import urlpatterns
+        # urlpatterns = [url for url in urlpatterns]
+        # return list(zip(urlpatterns, gettext_lazy(urlpatterns)))
+        if not self.url_paths_looked_up:
+            for path in self.url_paths:
+                try:
+                    self.url_paths_looked_up.append(reverse(path))
+                except Exception as e:
+                    logger.exception("Failed to lookup path: %s: %s", path, e)
+        return zip(self.url_paths_looked_up, gettext_lazy(self.url_paths_looked_up))
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(path__startswith=self.value())
+        return queryset
+
+
 class RequestAdmin(admin.ModelAdmin):
     def truncated_path(self):
         return self.path[:80] + "..." if len(self.path) > 80 else self.path  # pylint: disable=no-member
 
     truncated_path.short_description = "Path"
+
+    list_per_page = 500
 
     list_display = (
         "timestamp",
@@ -66,11 +122,13 @@ class RequestAdmin(admin.ModelAdmin):
     list_filter = (
         "flag",
         "timestamp",
-        "method",
-        "user",
-        "ip",
-        TruncatedPathFilter,
-        TruncatedUserAgentFilter,
+        MethodFilter,
+        PathFilter,
+        # "method",
+        # "user",
+        # "ip",
+        # TruncatedPathFilter,
+        # TruncatedUserAgentFilter,
     )
     search_fields = (
         "user__username",
