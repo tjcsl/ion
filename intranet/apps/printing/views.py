@@ -4,16 +4,20 @@ import os
 import re
 import subprocess
 import tempfile
+from io import BytesIO
 from typing import Dict, Optional
 
 import magic
 from sentry_sdk import add_breadcrumb, capture_exception
+from xhtml2pdf import pisa
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import redirect, render
+from django.template.loader import get_template
+from django.utils import timezone
 from django.utils.text import slugify
 
 from ..auth.decorators import deny_restricted
@@ -248,6 +252,23 @@ def check_page_range(page_range: str, max_pages: int) -> Optional[int]:
     return pages
 
 
+def html_to_pdf(template_src, filename, context=None):
+    if context is None:
+        context = {}
+    template = get_template(template_src)
+    html = template.render(context)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        filename_without_extension = os.path.basename(os.path.splitext(filename)[0])
+        filename = filename_without_extension + ".pdf"
+        title_tmpfile_fd, title_tmpfile_name = tempfile.mkstemp(prefix=f"ion_title_print_{filename}")
+        with open(title_tmpfile_fd, "wb") as f:
+            f.write(result.getvalue())
+        return title_tmpfile_name
+    return None
+
+
 def print_job(obj: PrintJob, do_print: bool = True):
     printer = obj.printer
     if printer not in get_printers().keys():
@@ -352,14 +373,28 @@ def print_job(obj: PrintJob, do_print: bool = True):
             if obj.fit:
                 args.extend(["-o", "fit-to-page"])
 
+            title_page = html_to_pdf(
+                "printing/title_page.html",
+                final_filename,
+                {
+                    "obj": obj,
+                    "filename": filebase,
+                    "time": timezone.now(),
+                    "pages": num_pages,
+                },
+            )
+
+            delete_filenames.add(title_page)
+
             try:
+                subprocess.check_output(["lpr", "-P", printer, title_page], stderr=subprocess.STDOUT, universal_newlines=True)
                 subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
             except subprocess.CalledProcessError as e:
                 if "is not accepting jobs" in e.output:
                     raise Exception(e.output.strip()) from e
 
                 logger.error("Could not run lpr (returned %d): %s", e.returncode, e.output.strip())
-                raise Exception("An error occured while printing your file: {}".format(e.output.strip())) from e
+                raise Exception("An error occurred while printing your file: {}".format(e.output.strip())) from e
 
         obj.printed = True
         obj.save()
@@ -394,9 +429,11 @@ def print_view(request):
                 messages.success(
                     request,
                     "Your file was submitted to the printer. "
-                    "If the printers are experiencing trouble, please contact the "
-                    "Student Systems Administrators by filling out the feedback "
-                    "form.",
+                    "Do not re-print this job if it does not come out of the printer - "
+                    "in nearly all cases, the job has been received and re-printing"
+                    "will cause multiple copies to be printed."
+                    "Ask for help instead by contacting the "
+                    "Student Systems Administrators by filling out the feedback form.",
                 )
     else:
         form = PrintJobForm(printers=printers)

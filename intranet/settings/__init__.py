@@ -210,7 +210,8 @@ FILE_UPLOAD_HANDLERS = ["django.core.files.uploadhandler.MemoryFileUploadHandler
 
 # The maximum number of pages in one document that can be
 # printed through the printing functionality (determined through pdfinfo)
-PRINTING_PAGES_LIMIT = 15
+# even number preferred to allow for maximum utilization of duplex printing
+PRINTING_PAGES_LIMIT = 16
 
 # The maximum file upload and download size for files
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024

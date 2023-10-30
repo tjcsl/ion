@@ -26,7 +26,7 @@ class PrintJob(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     printed = models.BooleanField(default=False)
     num_pages = models.IntegerField(default=0)
-    duplex = models.BooleanField(default=True)
+    duplex = models.BooleanField(default=True, verbose_name="Double-sided")
     fit = models.BooleanField(default=False, verbose_name="Fit-to-page")
 
     def __str__(self):
