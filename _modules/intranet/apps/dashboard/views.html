@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #1836) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #1925) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -399,7 +399,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">start_num</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">display_num</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">display_num</span> <span class="o">=</span> <span class="mi">15</span>
     <span class="n">end_num</span> <span class="o">=</span> <span class="n">start_num</span> <span class="o">+</span> <span class="n">display_num</span>
     <span class="n">prev_page</span> <span class="o">=</span> <span class="n">start_num</span> <span class="o">-</span> <span class="n">display_num</span>
     <span class="n">more_items</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">-</span> <span class="n">start_num</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">display_num</span>
@@ -432,7 +432,7 @@
 <span class="sd">    * Bell schedule (ALL)</span>
 <span class="sd">    * Administration (ADMIN)</span>
 <span class="sd">    * Links (ALL)</span>
-<span class="sd">    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise)</span>
+<span class="sd">    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise) if settings.ENABLE_SENIOR_DESTINATIONS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
@@ -464,7 +464,6 @@
                 <span class="s2">&quot;last_displayed_block&quot;</span><span class="p">:</span> <span class="n">schedule</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">schedule</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="s2">&quot;no_signup_today&quot;</span><span class="p">:</span> <span class="n">no_signup_today</span><span class="p">,</span>
                 <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
@@ -496,6 +495,7 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_ENRICHMENT_APP</span>
             <span class="k">else</span> <span class="p">[],</span>
+            <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
         <span class="p">}</span>
     <span class="p">)</span>
 

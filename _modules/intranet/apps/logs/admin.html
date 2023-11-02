@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.logs.admin &#8212; TJ Intranet v3 (Build #1836) documentation</title>
+    <title>intranet.apps.logs.admin &#8212; TJ Intranet v3 (Build #1925) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -171,11 +171,67 @@
         <span class="k">return</span> <span class="n">queryset</span></div></div>
 
 
+<div class="viewcode-block" id="MethodFilter"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.MethodFilter">[docs]</a><span class="k">class</span> <span class="nc">MethodFilter</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">SimpleListFilter</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;method&quot;</span>
+    <span class="n">parameter_name</span> <span class="o">=</span> <span class="s2">&quot;method&quot;</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span> <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span> <span class="s2">&quot;OPTIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="MethodFilter.lookups"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.MethodFilter.lookups">[docs]</a>    <span class="k">def</span> <span class="nf">lookups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">model_admin</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">,</span> <span class="n">gettext_lazy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">methods</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MethodFilter.queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.MethodFilter.queryset">[docs]</a>    <span class="k">def</span> <span class="nf">queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">queryset</span></div></div>
+
+
+<div class="viewcode-block" id="PathFilter"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.PathFilter">[docs]</a><span class="k">class</span> <span class="nc">PathFilter</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">SimpleListFilter</span><span class="p">):</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;path&quot;</span>
+    <span class="n">parameter_name</span> <span class="o">=</span> <span class="s2">&quot;path&quot;</span>
+    <span class="n">url_paths</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;login&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;logout&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;eighth_signup&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;view_announcements&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;request_announcement&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;bus&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;calendar&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;user_profile&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;events&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;enrichment&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;printing&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;send_feedback&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;signage_display&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">url_paths_looked_up</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="PathFilter.lookups"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.PathFilter.lookups">[docs]</a>    <span class="k">def</span> <span class="nf">lookups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">model_admin</span><span class="p">):</span>
+        <span class="c1"># from ...urls import urlpatterns</span>
+        <span class="c1"># urlpatterns = [url for url in urlpatterns]</span>
+        <span class="c1"># return list(zip(urlpatterns, gettext_lazy(urlpatterns)))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_paths_looked_up</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">url_paths</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">url_paths_looked_up</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to lookup path: </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_paths_looked_up</span><span class="p">,</span> <span class="n">gettext_lazy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url_paths_looked_up</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PathFilter.queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.PathFilter.queryset">[docs]</a>    <span class="k">def</span> <span class="nf">queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">queryset</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">queryset</span></div></div>
+
+
 <div class="viewcode-block" id="RequestAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.RequestAdmin">[docs]</a><span class="k">class</span> <span class="nc">RequestAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
 <div class="viewcode-block" id="RequestAdmin.truncated_path"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.admin.RequestAdmin.truncated_path">[docs]</a>    <span class="k">def</span> <span class="nf">truncated_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">80</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span>  <span class="c1"># pylint: disable=no-member</span></div>
 
     <span class="n">truncated_path</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;Path&quot;</span>
+
+    <span class="n">list_per_page</span> <span class="o">=</span> <span class="mi">500</span>
 
     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
@@ -189,11 +245,13 @@
     <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;flag&quot;</span><span class="p">,</span>
         <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;user&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ip&quot;</span><span class="p">,</span>
-        <span class="n">TruncatedPathFilter</span><span class="p">,</span>
-        <span class="n">TruncatedUserAgentFilter</span><span class="p">,</span>
+        <span class="n">MethodFilter</span><span class="p">,</span>
+        <span class="n">PathFilter</span><span class="p">,</span>
+        <span class="c1"># &quot;method&quot;,</span>
+        <span class="c1"># &quot;user&quot;,</span>
+        <span class="c1"># &quot;ip&quot;,</span>
+        <span class="c1"># TruncatedPathFilter,</span>
+        <span class="c1"># TruncatedUserAgentFilter,</span>
     <span class="p">)</span>
     <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;user__username&quot;</span><span class="p">,</span>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.logs package &#8212; TJ Intranet v3 (Build #1836) documentation</title>
+    <title>intranet.apps.logs package &#8212; TJ Intranet v3 (Build #1925) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -95,6 +95,23 @@
 <li><a class="reference internal" href="#">intranet.apps.logs package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.logs.admin">intranet.apps.logs.admin module</a><ul>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.MethodFilter"><code class="docutils literal notranslate"><span class="pre">MethodFilter</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.MethodFilter.lookups"><code class="docutils literal notranslate"><span class="pre">MethodFilter.lookups()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.MethodFilter.methods"><code class="docutils literal notranslate"><span class="pre">MethodFilter.methods</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.MethodFilter.parameter_name"><code class="docutils literal notranslate"><span class="pre">MethodFilter.parameter_name</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.MethodFilter.queryset"><code class="docutils literal notranslate"><span class="pre">MethodFilter.queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.MethodFilter.title"><code class="docutils literal notranslate"><span class="pre">MethodFilter.title</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter"><code class="docutils literal notranslate"><span class="pre">PathFilter</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter.lookups"><code class="docutils literal notranslate"><span class="pre">PathFilter.lookups()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter.parameter_name"><code class="docutils literal notranslate"><span class="pre">PathFilter.parameter_name</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter.queryset"><code class="docutils literal notranslate"><span class="pre">PathFilter.queryset()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter.title"><code class="docutils literal notranslate"><span class="pre">PathFilter.title</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter.url_paths"><code class="docutils literal notranslate"><span class="pre">PathFilter.url_paths</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.PathFilter.url_paths_looked_up"><code class="docutils literal notranslate"><span class="pre">PathFilter.url_paths_looked_up</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin"><code class="docutils literal notranslate"><span class="pre">RequestAdmin</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.Media"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.Media</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.Media.css"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.Media.css</span></code></a></li>
@@ -105,6 +122,7 @@
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.flag_requests"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.flag_requests()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.list_display</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.list_filter"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.list_filter</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.list_per_page"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.list_per_page</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.readonly_fields"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.readonly_fields</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.request_json"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.request_json()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.logs.admin.RequestAdmin.search_fields"><code class="docutils literal notranslate"><span class="pre">RequestAdmin.search_fields</span></code></a></li>
@@ -200,13 +218,80 @@
 <section id="module-intranet.apps.logs.admin">
 <span id="intranet-apps-logs-admin-module"></span><h2>intranet.apps.logs.admin module<a class="headerlink" href="#module-intranet.apps.logs.admin" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.MethodFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.logs.admin.</span></span><span class="sig-name descname"><span class="pre">MethodFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_admin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#MethodFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.MethodFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleListFilter</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.MethodFilter.lookups">
+<span class="sig-name descname"><span class="pre">lookups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_admin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#MethodFilter.lookups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.MethodFilter.lookups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.MethodFilter.methods">
+<span class="sig-name descname"><span class="pre">methods</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['GET',</span> <span class="pre">'POST',</span> <span class="pre">'PUT',</span> <span class="pre">'DELETE',</span> <span class="pre">'PATCH',</span> <span class="pre">'OPTIONS',</span> <span class="pre">'HEAD']</span></em><a class="headerlink" href="#intranet.apps.logs.admin.MethodFilter.methods" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.MethodFilter.parameter_name">
+<span class="sig-name descname"><span class="pre">parameter_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'method'</span></em><a class="headerlink" href="#intranet.apps.logs.admin.MethodFilter.parameter_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.MethodFilter.queryset">
+<span class="sig-name descname"><span class="pre">queryset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#MethodFilter.queryset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.MethodFilter.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.MethodFilter.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'method'</span></em><a class="headerlink" href="#intranet.apps.logs.admin.MethodFilter.title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.logs.admin.</span></span><span class="sig-name descname"><span class="pre">PathFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_admin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#PathFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleListFilter</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter.lookups">
+<span class="sig-name descname"><span class="pre">lookups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_admin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#PathFilter.lookups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter.lookups" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter.parameter_name">
+<span class="sig-name descname"><span class="pre">parameter_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path'</span></em><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter.parameter_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter.queryset">
+<span class="sig-name descname"><span class="pre">queryset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queryset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#PathFilter.queryset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path'</span></em><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter.title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter.url_paths">
+<span class="sig-name descname"><span class="pre">url_paths</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['index',</span> <span class="pre">'login',</span> <span class="pre">'logout',</span> <span class="pre">'eighth_signup',</span> <span class="pre">'eighth_admin_dashboard',</span> <span class="pre">'view_announcements',</span> <span class="pre">'request_announcement',</span> <span class="pre">'bus',</span> <span class="pre">'calendar',</span> <span class="pre">'user_profile',</span> <span class="pre">'events',</span> <span class="pre">'enrichment',</span> <span class="pre">'printing',</span> <span class="pre">'send_feedback',</span> <span class="pre">'signage_display']</span></em><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter.url_paths" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.PathFilter.url_paths_looked_up">
+<span class="sig-name descname"><span class="pre">url_paths_looked_up</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#intranet.apps.logs.admin.PathFilter.url_paths_looked_up" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.logs.admin.</span></span><span class="sig-name descname"><span class="pre">RequestAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#RequestAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelAdmin</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.Media">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Media</span></span><a class="reference internal" href="../_modules/intranet/apps/logs/admin.html#RequestAdmin.Media"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.Media" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.Media.css">
 <span class="sig-name descname"><span class="pre">css</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'all':</span> <span class="pre">('css/admin.css',)}</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.Media.css" title="Permalink to this definition">¶</a></dt>
@@ -236,7 +321,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.list_filter">
-<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('flag',</span> <span class="pre">'timestamp',</span> <span class="pre">'method',</span> <span class="pre">'user',</span> <span class="pre">'ip',</span> <span class="pre">&lt;class</span> <span class="pre">'intranet.apps.logs.admin.TruncatedPathFilter'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'intranet.apps.logs.admin.TruncatedUserAgentFilter'&gt;)</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">list_filter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('flag',</span> <span class="pre">'timestamp',</span> <span class="pre">&lt;class</span> <span class="pre">'intranet.apps.logs.admin.MethodFilter'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'intranet.apps.logs.admin.PathFilter'&gt;)</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.logs.admin.RequestAdmin.list_per_page">
+<span class="sig-name descname"><span class="pre">list_per_page</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">500</span></em><a class="headerlink" href="#intranet.apps.logs.admin.RequestAdmin.list_per_page" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -339,13 +429,13 @@ part of the intranet.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.logs.models.Request.DoesNotExist">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#intranet.apps.logs.models.Request.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.logs.models.Request.MultipleObjectsReturned">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#intranet.apps.logs.models.Request.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">

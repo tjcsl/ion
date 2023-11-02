@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #1836) documentation</title>
+    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #1925) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -309,7 +309,7 @@
         <span class="s2">&quot;show_icon&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
         <span class="s2">&quot;classic&quot;</span><span class="p">:</span> <span class="n">classic</span><span class="p">,</span>
-        <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+        <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">today</span><span class="p">),</span>
     <span class="p">}</span>
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;week_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">context</span><span class="p">[</span><span class="s2">&quot;month_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
@@ -337,16 +337,21 @@
             <span class="k">if</span> <span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="n">request</span><span class="p">,</span>
-                    <span class="s2">&quot;You may not sign up for this enrichment activity until &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A, %B </span><span class="si">%d</span><span class="s1"> at %-I:%M %p&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;You may not sign up for this enrichment activity until &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A, %B </span><span class="si">%-d</span><span class="s1"> at %-I:%M %p&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">capacity</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;The capacity for this enrichment activity has been reached. You may not sign up for it at this time.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+
+        <span class="n">enrichment_date</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%A, %B </span><span class="si">%-d</span><span class="s2"> at %-I:%M %p&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attending&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
             <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully signed up.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Signed up for </span><span class="si">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">enrichment_date</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Removed signup.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Removed signup for </span><span class="si">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">enrichment_date</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
 
 
@@ -361,9 +366,14 @@
     <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
 
     <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
+    <span class="n">enrichment_is_today</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span>
+        <span class="s2">&quot;enrichment_time&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">()),</span>
+        <span class="s2">&quot;enrichment_is_today&quot;</span><span class="p">:</span> <span class="n">enrichment_is_today</span><span class="p">,</span>
         <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">),</span>
         <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
         <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
