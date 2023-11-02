@@ -430,8 +430,8 @@ def print_view(request):
                     request,
                     "Your file was submitted to the printer. "
                     "Do not re-print this job if it does not come out of the printer - "
-                    "in nearly all cases, the job has been received and re-printing"
-                    "will cause multiple copies to be printed."
+                    "in nearly all cases, the job has been received and re-printing "
+                    "will cause multiple copies to be printed. "
                     "Ask for help instead by contacting the "
                     "Student Systems Administrators by filling out the feedback form.",
                 )
