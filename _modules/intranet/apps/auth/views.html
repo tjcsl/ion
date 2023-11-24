@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1932) documentation</title>
+    <title>intranet.apps.auth.views &#8212; TJ Intranet v3 (Build #1935) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -357,7 +357,18 @@
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;welcome&quot;</span><span class="p">)</span>
 
             <span class="n">next_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next&quot;</span><span class="p">,</span> <span class="n">default_next_page</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_page</span><span class="p">)</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_page</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span>
+                <span class="s2">&quot;ion_authenticated&quot;</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">ION_AUTHENTICATED_COOKIE_VALUE</span><span class="p">,</span>
+                <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span>  <span class="c1"># 5 years</span>
+                <span class="n">secure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">httponly</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">samesite</span><span class="o">=</span><span class="s2">&quot;Lax&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">response</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">log_auth</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Login failed as </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">))</span>
