@@ -156,6 +156,8 @@ FORCE_EMAIL_SEND = False
 SESSION_COOKIE_SECURE = PRODUCTION
 CSRF_COOKIE_SECURE = PRODUCTION
 
+ION_AUTHENTICATED_COOKIE_VALUE = "ion_dev_test"  # Set to a random value in production. Used for balancer rate limiting.
+
 if not PRODUCTION:
     # We don't care about session security when running a testing instance.
     SECRET_KEY = "_5kc##e7(!4=4)h4slxlgm010l+43zd_84g@82771ay6no-1&i"
