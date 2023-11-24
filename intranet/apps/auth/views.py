@@ -234,7 +234,18 @@ class LoginView(View):
                 return redirect("welcome")
 
             next_page = request.POST.get("next", request.GET.get("next", default_next_page))
-            return redirect(next_page)
+
+            response = redirect(next_page)
+            response.set_cookie(
+                "ion_authenticated",
+                value=settings.ION_AUTHENTICATED_COOKIE_VALUE,
+                max_age=60 * 60 * 24 * 365 * 5,  # 5 years
+                secure=True,
+                httponly=True,
+                samesite="Lax",
+            )
+
+            return response
         else:
             log_auth(request, "failed")
             logger.info("Login failed as %s", request.POST.get("username", "unknown"))
