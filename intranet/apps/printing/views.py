@@ -82,6 +82,7 @@ def get_printers() -> Dict[str, str]:
                         # And make sure we don't set an empty description
                         if description:
                             printers[last_name] = description
+                            last_name = None
 
         cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
         return printers
