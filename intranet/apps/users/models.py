@@ -486,17 +486,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         if preferred is not None:
             return preferred.binary
 
-        if preferred is None:
-            if self.user_type == "teacher":
-                current_grade = 12
-            else:
-                current_grade = min(int(self.grade), 12)
-            for i in reversed(range(9, current_grade + 1)):
-                data = None
-                if self.photos.filter(grade_number=i).exists():
-                    data = self.photos.filter(grade_number=i).first().binary
-                if data:
-                    return data
+        if self.user_type == "teacher":
+            current_grade = 13
+        else:
+            current_grade = min(int(self.grade), 12)
+        for i in reversed(range(9, current_grade + 1)):
+            data = None
+            if self.photos.filter(grade_number=i).exists():
+                data = self.photos.filter(grade_number=i).last().binary
+            if data:
+                return data
 
         return None
 
