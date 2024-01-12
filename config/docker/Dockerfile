@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.18 
 
 ENV TZ America/New_York
 ENV C_FORCE_ROOT true
