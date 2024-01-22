@@ -13,6 +13,7 @@
     <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
     <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.csv.min.js' %}"></script>
     <script src="{% static 'js/polls.js' %}"></script>
     <script>
         var poll_questions = $.parseJSON("{{ poll_questions|escapejs }}");
@@ -111,6 +112,17 @@
             </div>
             <button id="add_question"><i class="fas fa-plus"></i> Add Question</button>
         </td>
+    </tr>
+    <tr id="csv_wrapper">
+        <td>From CSV:</td>
+        <td>
+            <button id="import_from_csv">
+                <i class="fas fa-plus"></i>
+                Load from CSV
+            </button>
+            <a id="csv_error"></a>
+        </td>
+        <input id="csv_input" type="file"/>
     </tr>
     <tr><td>&nbsp;</td><td>
         <input type="submit" style="width:200px">
