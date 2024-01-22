@@ -58,6 +58,74 @@ $(function() {
         addInline(v);
     });
 
+    $("#import_from_csv").click(async function (e) {
+        e.preventDefault();
+        $("#csv_input").click();
+    });
+
+    $("#csv_input").on("change", function (e) {
+        e.preventDefault();
+        let file = $("#csv_input").prop("files")[0];
+        let file_reader = new FileReader();
+        file_reader.onload = async function (e) {
+            // csv should have the following headers
+            // name, position, platform, slogan
+            let csv_data = $.csv.toArrays(file_reader.result);
+            if (csv_data.length === 0) {
+                $("#csv_error").text("Empty CSV");
+                return;
+            }
+
+            let required_labels = ["position", "name", "platform", "slogan"]
+            let labels = csv_data[0].map(l => l.toLowerCase());
+            if (!required_labels.every(l => labels.includes(l))) {
+                let missing_labels = required_labels.filter(l => !labels.includes(l))
+                $("#csv_error").text(`Missing required label(s): ${missing_labels.join(", ")}`)
+                return;
+            }
+            $("#csv_error").text("");
+
+            let content = csv_data.slice(1);
+            let map = {}; // (position) -> (name, platform, slogan)
+            for (let line of content) {
+                let position = line[labels.indexOf("position")];
+                let name = line[labels.indexOf("name")];
+                let platform = line[labels.indexOf("platform")];
+                let slogan = line[labels.indexOf("slogan")];
+
+                if (!(position in map)) {
+                    map[position] = [];
+                }
+                map[position].push([name, platform, slogan]);
+            }
+
+            let sleep = async () => { await new Promise(resolve => setTimeout(resolve, 0)); };
+
+            for (let [position, choices] of Object.entries(map)) {
+                $("#add_question").click();
+                let question_element = $("#questions .question:last-child");
+                await sleep();
+
+                // set position, type, and max choices of question
+                question_element.find(".text").html(position);
+                question_element.find(".type").data('selectize').setValue("RAN");
+                question_element.find(".max").val(`${Math.min(choices.length, 3)}`);
+
+                for (let choice of choices) {
+                    let [name, platform, slogan] = choice;
+
+                    question_element.find(".add_choice").click();
+                    await sleep();
+
+                    let text_field = question_element.find(".choices .choice:last-child .info");
+                    let text = $(`<a href="${platform}">${name} | ${slogan}</a>`)
+                    text_field.html(text);
+                }
+            }
+        };
+        file_reader.readAsText(file);
+    });
+
     $("#poll-form").submit(function() {
         var out = [];
         $("#questions .question").each(function() {
