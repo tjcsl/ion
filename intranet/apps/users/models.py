@@ -925,6 +925,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSponsor.objects.filter(user=self).exists()
 
     @property
+    def is_eighth_officer(self) -> bool:
+        """Checks if this user is an officer of an eighth period activity.
+
+        Returns:
+            Whether this user is an officer of an eighth period activity.
+
+        """
+        return self.officer_for_set.exists()
+
+    @property
     def frequent_signups(self):
         """Return a QuerySet of activity id's and counts for the activities that a given user
         has signed up for more than `settings.SIMILAR_THRESHOLD` times"""
