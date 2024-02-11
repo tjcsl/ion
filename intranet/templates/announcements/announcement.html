@@ -25,7 +25,21 @@
             {{ announcement.title }}
         {% endif %}
 
-            <div class="announcement-icon-wrapper">
+        <div class="announcement-icon-wrapper">
+            {% if announcement.is_club_announcement %}
+                {% if request.user in announcement.activity.subscribers.all %}
+                    <a class="button small-button unsubscribe-button" id="unsubscribe-button" href="{% url 'unsubscribe_from_club' announcement.activity.id %}">
+                        <i class="fas fa-times"></i>
+                        Unsubscribe
+                    </a>
+                {% else %}
+                    <a class="button small-button subscribe-button" id="subscribe-button" href="{% url 'subscribe_to_club' announcement.activity.id %}">
+                        <i class="fas fa-check"></i>
+                        Subscribe
+                    </a>
+                {% endif %}
+            {% endif %}
+        
             {% if hide_announcements %}
                 <a href="#" class="announcement-toggle">
                 {% if announcement.id in user_hidden_announcements %}
@@ -48,17 +62,21 @@
                     <i class="announcement-icon far fa-trash-alt"></i>
                 </a>
             {% endif %}
-            </div>
+        </div>
     </h3>
 
     <div class="announcement-metadata">
         by {{ announcement.get_author|escape }} &bull; <time class="timeago" datetime="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</time> &bull; to
-        {% for group in announcement.groups.all %}
-            {{ group }}
-            {% if not forloop.last %},{% endif %}
-        {% empty %}
-            everyone
-        {% endfor %}
+        {% if announcement.is_club_announcement %}
+            {{ announcement.activity.name }}
+        {% else %}
+            {% for group in announcement.groups.all %}
+                {{ group }}
+                {% if not forloop.last %},{% endif %}
+            {% empty %}
+                everyone
+            {% endfor %}
+        {% endif %}
 
         {% if announcement|argument_request_user:"is_visible_requester" %}
             &bull; You approved this announcement.

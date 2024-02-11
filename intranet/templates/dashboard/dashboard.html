@@ -116,8 +116,15 @@
                     Request Post
                 </a>
             {% else %}
+            {% if more_club_items and not club_items and view_announcements_url != "club_announcements" %}
+                <a class="button club-announcements-button" href="{% url 'club_announcements' %}">
+                    <i class="fas fa-users"></i>
+                    Club Announcements
+                </a>
+            {% endif %}
             {% if announcements_admin %}
-                {% if "show_all" not in request.GET %}
+                {% if view_announcements_url == "club_announcements" %}
+                {% elif "show_all" not in request.GET %}
                     <a class="button" href="{% url view_announcements_url %}?show_all=1">
                         Show All
                     </a>
@@ -131,10 +138,21 @@
                     Add
                 </a>
             {% else %}
+              
+            {% if view_announcements_url == "club_announcements" %}
+                {% if request.user.is_eighth_officer %}
+                    <a class="button announcement-request" href="{% url 'post_club_announcement' %}">
+                        <i class="fas fa-plus"></i>
+                        New
+                    </a>
+                {% endif %}
+            {% else %}  
                 <a class="button announcement-request" href="{% url 'request_announcement' %}">
                     <i class="far fa-file-alt"></i>
                     Request Post
                 </a>
+            {% endif %}
+
             {% endif %}
             {% endif %}
             </span>
@@ -180,6 +198,36 @@
             </div>
         {% endif %}
 
+        {% if club_items %}
+            <div class="announcement club-announcements">
+                <h3 class="club-announcements-header">
+                    <i class="fas fa-chevron-down club-announcements-toggle-icon"></i>&nbsp;
+                    You have {{ club_items|length }} new club announcement{{ club_items|length|pluralize }}
+                </h3>
+                <div class="club-announcements-content">
+                    {% for item in club_items %}
+                        {% if not hide_announcements or not item.id in user_hidden_announcements %}
+                            {% with announcement=item show_icon=True %}
+                                {% include "announcements/announcement.html" %}
+                            {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if more_club_items and view_announcements_url != "club_announcements" %}
+                        <a class="button" href="{% url 'club_announcements' %}">
+                            <i class="fas fa-users"></i>
+                            Show All Club Announcements
+                        </a>
+                        {% if request.user.is_eighth_officer %}
+                            <a class="button announcement-request" href="{% url 'post_club_announcement' %}">
+                                <i class="fas fa-plus"></i>
+                                New
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
         {% if show_near_graduation_message %}
             {% include "dashboard/senior_forwarding.html" %}
         {% endif %}
@@ -206,7 +254,7 @@
             </div>
         {% endfor %}
         {% if not request.user.is_restricted %}
-        {% if start_num == 0 and view_announcements_url != 'announcements_archive' %}
+        {% if start_num == 0 and view_announcements_url != "announcements_archive" and view_announcements_url != "club_announcements" %}
             <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fas fa-archive" style="width: 13px"></i> View Archive</a>
         {% endif %}
 
