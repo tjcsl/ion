@@ -8,23 +8,6 @@ from .models import Announcement, AnnouncementRequest
 class AnnouncementForm(forms.ModelForm):
     """A form for generating an announcement."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
-
-        self.fields["notify_post"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
-
-        self.fields["notify_email_all"].help_text = (
-            "This will send an email notification to all of the users who can see this post. This option "
-            "does NOT take users' email notification preferences into account, so please use with care."
-        )
-
-        self.fields["update_added_date"].help_text = (
-            "If this announcement has already been added, update the added date to now so that the "
-            "announcement is pushed to the top. If this option is not selected, the announcement will stay in "
-            "its current position."
-        )
-
     expiration_date = forms.DateTimeInput()
     notify_email_all = forms.BooleanField(required=False, label="Send Email to All")
     update_added_date = forms.BooleanField(required=False, label="Update Added Date")
@@ -32,6 +15,31 @@ class AnnouncementForm(forms.ModelForm):
     class Meta:
         model = Announcement
         fields = ["title", "author", "content", "groups", "expiration_date", "notify_post", "notify_email_all", "update_added_date", "pinned"]
+        help_texts = {
+            "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
+            "notify_post": "If this box is checked, students who have signed up for notifications will receive an email.",
+            "notify_email_all": "This will send an email notification to all of the users who can see this post. This option does NOT take users' email notification preferences into account, so please use with care.",
+            "update_added_date": "If this announcement has already been added, update the added date to now so that the announcement is pushed to the top. If this option is not selected, the announcement will stay in its current position.",
+        }
+
+
+class ClubAnnouncementForm(forms.ModelForm):
+    """A form for posting a club announcement."""
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["activity"].queryset = user.officer_for_set
+
+    expiration_date = forms.DateTimeInput()
+    update_added_date = forms.BooleanField(required=False, label="Update Added Date")
+
+    class Meta:
+        model = Announcement
+        fields = ["title", "author", "content", "activity", "expiration_date", "update_added_date"]
+        help_texts = {
+            "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
+            "update_added_date": "If this announcement has already been added, update the added date to now so that the announcement is pushed to the top. If this option is not selected, the announcement will stay in its current position.",
+        }
 
 
 class AnnouncementEditForm(forms.ModelForm):

@@ -11,6 +11,8 @@ from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
 from ...utils.html import nullify_links
 
+from ..eighth.models import EighthActivity
+
 
 class AnnouncementManager(Manager):
     def visible_to_user(self, user):
@@ -110,6 +112,8 @@ class Announcement(models.Model):
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
+    activity = models.ForeignKey(EighthActivity, null=True, blank=True, on_delete=models.CASCADE)
+
     expiration_date = models.DateTimeField(auto_now=False, default=timezone.make_aware(datetime(3000, 1, 1)))
 
     notify_post = models.BooleanField(default=True)
@@ -140,6 +144,10 @@ class Announcement(models.Model):
     def is_this_year(self):
         """Return whether the announcement was created after July 1st of this school year."""
         return is_current_year(self.added)
+
+    @property
+    def is_club_announcement(self):
+        return self.activity is not None
 
     def is_visible(self, user):
         return self in Announcement.objects.visible_to_user(user)
