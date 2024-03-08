@@ -1,6 +1,7 @@
 import datetime
 
 from django.conf import settings
+from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager
 from django.utils import timezone
@@ -51,6 +52,25 @@ class EnrichmentActivity(models.Model):
 
     presign = models.BooleanField(default=False)
 
+    groups_allowed = models.ManyToManyField(DjangoGroup, related_name="allowed_enrichments_set", blank=True)
+    groups_blacklisted = models.ManyToManyField(DjangoGroup, related_name="blacklisted_enrichments_set", blank=True)
+
+    def user_can_signup(self, user):
+        """Return whether a user can sign up for an enrichment activity.
+
+        Args:
+            user: The user to check.
+
+        Returns:
+            Whether the user can sign up for the enrichment activity.
+        """
+        return (not self.groups_allowed.exists() or any(group in user.groups.all() for group in self.groups_allowed.all())) and not any(
+            group in user.groups.all() for group in self.groups_blacklisted.all()
+        )
+
+    def user_is_blacklisted(self, user):
+        return any(group in user.groups.all() for group in self.groups_blacklisted.all())
+
     @property
     def is_this_year(self):
         """Return whether the enrichment activity was created after the start of the school year."""
@@ -60,6 +80,10 @@ class EnrichmentActivity(models.Model):
     def happened(self):
         """Return whether an enrichment activity has happened."""
         return self.time < timezone.now()
+
+    @property
+    def restricted(self):
+        return self.groups_allowed.exists()
 
     @property
     def is_too_early_to_signup(self):

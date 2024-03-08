@@ -160,11 +160,12 @@ def enrichment_view(request):
         {"title": "This month", "enrichments": viewable_enrichments.filter(time__gte=this_month[0], time__lt=this_month[1])},
     ]
 
+    week_and_month = viewable_enrichments.filter(time__gte=this_week[0], time__lt=this_month[1])
     if not show_all and not classic:
         enrichments_categories.append(
             {
                 "title": "Week and month",
-                "enrichments": viewable_enrichments.filter(time__gte=this_week[0], time__lt=this_month[1]),
+                "enrichments": week_and_month,
             }
         )
 
@@ -180,6 +181,8 @@ def enrichment_view(request):
 
     context = {
         "enrichments": enrichments_categories,
+        "authorized_enrichments": {e.id for e in week_and_month if e.user_can_signup(request.user)},
+        "blacklisted_enrichments": {e.id for e in week_and_month if e.user_is_blacklisted(request.user)},
         "num_enrichments": num_enrichments,
         "is_enrichment_admin": is_enrichment_admin,
         "show_attend": True,
@@ -207,6 +210,10 @@ def enrichment_signup_view(request, enrichment_id):
 
         if enrichment.happened:  # and request.POST.get("attending") == "true":
             messages.error(request, "Signups are locked for this enrichment activity.")
+            return redirect("enrichment")
+
+        if not enrichment.user_can_signup(request.user):
+            messages.error(request, "You do not have permission to sign up for this enrichment activity.")
             return redirect("enrichment")
 
         if enrichment.presign:
@@ -249,6 +256,8 @@ def enrichment_roster_view(request, enrichment_id):
 
     context = {
         "enrichment": enrichment,
+        "authorized_enrichments": {enrichment.id if enrichment.user_can_signup(request.user) else None},
+        "blacklisted_enrichments": {enrichment.id if enrichment.user_is_blacklisted(request.user) else None},
         "enrichment_time": enrichment.time.astimezone(timezone.get_default_timezone()),
         "enrichment_is_today": enrichment_is_today,
         "roster": enrichment.attending.all().order_by("first_name", "last_name"),

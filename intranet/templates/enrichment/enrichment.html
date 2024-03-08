@@ -43,15 +43,26 @@
     </div>
     <div class="enrichment-metadata event-metadata">
         {{ enrichment.attending.all|length }}/{{ enrichment.capacity }} signups
-
-        {% if enrichment.presign %}
+        {% if enrichment.presign or enrichment.restricted %}
             &bull;
+        {% endif %}
+        {% if enrichment.presign %}
             <span
                 class="badge yellow clickable"
-                data-append-search="is:p"
                 title="Signups for this enrichment activity open on {{ enrichment.is_too_early_to_signup.1|date:'l, F j' }} at {{ enrichment.is_too_early_to_signup.1|date:'P' }}">
                 2 day
             </span>
+        {% endif %}
+        {% if enrichment.restricted %}
+            {% if enrichment.id in authorized_enrichments %}
+            <span class="badge green clickable" title="You are authorized to sign up for this restricted activity.">
+                Authorized
+            </span>
+            {% else %}
+            <span class="badge purple clickable" title="This activity is restricted to those on the authorized list.">
+                Restricted
+            </span>
+            {% endif %}
         {% endif %}
     </div>
     <div class="enrichment-content" style="font-size:14px;">
@@ -60,50 +71,70 @@
 </div>
 <div class="enrichment enrichment-bottom event {% if request.user in enrichment.attending.all %}signed-up{% endif %}">
     {% if not enrichment.happened %}
-        <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post" style="font-size: 12px">
-            {% csrf_token %}
-            {% if request.user in enrichment.attending.all %}
-                <span {% if enrichment_is_today %} style="color: green" {% endif %}>
-                    <i class="fas fa-check"></i> You are signed up for this activity.
-                </span>
-                <br>
-                <a data-form-attend="{{ enrichment.id }}" class="button small-button no-attend-button attend-button">
-                    <i class="fas fa-times"></i>
-                    Remove Signup
-                </a>
-            {% else %}
-                <input type="hidden" name="attending" value="true">
-                <a data-form-attend="{{ enrichment.id }}" class="button attend-button">
-                    Sign Up
-                </a>
-            {% endif %}
-        </form>
-    {% else %}
-        <div class="enrichment-content" style="font-size:12px;">
-            {% if request.user in enrichment.attending.all %}
-                {% if not enrichment_is_today %}
-                    <i class="fas fa-check"></i>
-                    You signed up for this activity.
-
-                {% else %}
-                <span style="color: green">
-                    <i class="fas fa-check"></i>
-                    You are signed up for this activity.
-                </span>
-                {% comment %} <br>
-                <hr>
-                <span class="remove-signup-text">
-                    You can still remove your signup, but you will not be able to sign up again.
-                </span>
-                <br>
-
-                <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post">
-                    {% csrf_token %}
-                    <a data-form-attend="{{ enrichment.id }}" style="margin-top: 3px" class="button small-button no-attend-button attend-button">
+        {% if enrichment.id in blacklisted_enrichments %}
+            <div class="enrichment-content" style="font-size:12px;">
+                <i class="fas fa-times" style="color: red"></i>
+                You have been blocked from signing up for this activity.
+                Contact the activity sponsor for more information.
+            </div>
+        {% elif enrichment.restricted and enrichment.id not in authorized_enrichments %}
+            <div class="enrichment-content" style="font-size:12px;">
+                <i class="fas fa-times"></i>
+                Signups for this activity are restricted to those on the authorized list.
+            </div>
+        {% else %}
+            <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post" style="font-size: 12px">
+                {% csrf_token %}
+                {% if request.user in enrichment.attending.all %}
+                    <span {% if enrichment_is_today %} style="color: green" {% endif %}>
+                        <i class="fas fa-check"></i> You are signed up for this activity.
+                    </span>
+                    <br>
+                    <a data-form-attend="{{ enrichment.id }}" class="button small-button no-attend-button attend-button">
                         <i class="fas fa-times"></i>
                         Remove Signup
                     </a>
-                </form> {% endcomment %}
+                {% else %}
+                    <input type="hidden" name="attending" value="true">
+                    <a data-form-attend="{{ enrichment.id }}" class="button attend-button">
+                        Sign Up
+                    </a>
+                {% endif %}
+            </form>
+        {% endif %}
+    {% else %}
+        <div class="enrichment-content" style="font-size:12px;">
+            {% if request.user in enrichment.attending.all %}
+                {% if enrichment.id in blacklisted_enrichments %}
+                    <div class="enrichment-content" style="font-size:12px;">
+                        <i class="fas fa-times" style="color: red"></i>
+                        You have been blocked from signing up for this activity.
+                        Contact the activity sponsor for more information.
+                    </div>
+                {% else %}
+                    {% if not enrichment_is_today %}  {# This shouldn't happen, but just in case #}
+                        <i class="fas fa-check"></i>
+                        You signed up for this activity.
+                    {% else %}
+                    <span style="color: green">
+                        <i class="fas fa-check"></i>
+                        You are signed up for this activity.
+                    </span>
+                    {% comment %} <br>
+                    <hr>
+                    <span class="remove-signup-text">
+                        You can still remove your signup, but you will not be able to sign up again.
+                    </span>
+                    <br>
+
+                    <form data-form-attend="{{ enrichment.id }}" action="{% url 'enrichment_signup' enrichment.id %}" method="post">
+                        {% csrf_token %}
+                        <a data-form-attend="{{ enrichment.id }}" style="margin-top: 3px" class="button small-button no-attend-button attend-button">
+                            <i class="fas fa-times"></i>
+                            Remove Signup
+                        </a>
+                    </form> {% endcomment %}
+                    {% endif %}
                 {% endif %}
             {% else %}
                 <i class="fas fa-times"></i>
