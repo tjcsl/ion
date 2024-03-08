@@ -12,11 +12,4 @@ class EnrichmentActivityForm(forms.ModelForm):
     class Meta:
         model = EnrichmentActivity
 
-        fields = [
-            "title",
-            "description",
-            "time",
-            "location",
-            "capacity",
-            "presign",
-        ]
+        fields = ["title", "description", "time", "location", "capacity", "presign", "groups_allowed", "groups_blacklisted"]
