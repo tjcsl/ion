@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #1980) documentation</title>
+    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #1993) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -283,11 +283,12 @@
         <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;This month&quot;</span><span class="p">,</span> <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
     <span class="p">]</span>
 
+    <span class="n">week_and_month</span> <span class="o">=</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">show_all</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">classic</span><span class="p">:</span>
         <span class="n">enrichments_categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Week and month&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">week_and_month</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
@@ -303,6 +304,8 @@
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">enrichments_categories</span><span class="p">,</span>
+        <span class="s2">&quot;authorized_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">week_and_month</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)},</span>
+        <span class="s2">&quot;blacklisted_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">week_and_month</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)},</span>
         <span class="s2">&quot;num_enrichments&quot;</span><span class="p">:</span> <span class="n">num_enrichments</span><span class="p">,</span>
         <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
         <span class="s2">&quot;show_attend&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -330,6 +333,10 @@
 
         <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">happened</span><span class="p">:</span>  <span class="c1"># and request.POST.get(&quot;attending&quot;) == &quot;true&quot;:</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Signups are locked for this enrichment activity.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to sign up for this enrichment activity.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">presign</span><span class="p">:</span>
@@ -372,6 +379,8 @@
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span>
+        <span class="s2">&quot;authorized_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
+        <span class="s2">&quot;blacklisted_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
         <span class="s2">&quot;enrichment_time&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">()),</span>
         <span class="s2">&quot;enrichment_is_today&quot;</span><span class="p">:</span> <span class="n">enrichment_is_today</span><span class="p">,</span>
         <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">),</span>
