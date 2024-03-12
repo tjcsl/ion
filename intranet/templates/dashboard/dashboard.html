@@ -116,7 +116,7 @@
                     Request Post
                 </a>
             {% else %}
-            {% if more_club_items and not club_items and view_announcements_url != "club_announcements" %}
+            {% if view_announcements_url != "club_announcements" %}
                 <a class="button club-announcements-button" href="{% url 'club_announcements' %}">
                     <i class="fas fa-users"></i>
                     Club Announcements
@@ -202,7 +202,7 @@
             <div class="announcement club-announcements">
                 <h3 class="club-announcements-header">
                     <i class="fas fa-chevron-down club-announcements-toggle-icon"></i>&nbsp;
-                    You have {{ club_items|length }} new club announcement{{ club_items|length|pluralize }}
+                  You have <span class="num-club-announcements">{{ club_items|length }}</span> new club announcement{{ club_items|length|pluralize }}
                 </h3>
                 <div class="club-announcements-content">
                     {% for item in club_items %}
@@ -212,18 +212,6 @@
                             {% endwith %}
                         {% endif %}
                     {% endfor %}
-                    {% if more_club_items and view_announcements_url != "club_announcements" %}
-                        <a class="button" href="{% url 'club_announcements' %}">
-                            <i class="fas fa-users"></i>
-                            Show All Club Announcements
-                        </a>
-                        {% if request.user.is_eighth_officer %}
-                            <a class="button announcement-request" href="{% url 'post_club_announcement' %}">
-                                <i class="fas fa-plus"></i>
-                                New
-                            </a>
-                        {% endif %}
-                    {% endif %}
                 </div>
             </div>
         {% endif %}
