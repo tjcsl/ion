@@ -93,11 +93,23 @@ $(document).ready(function() {
                 .addClass("fa-expand")
                 .attr("title", icon.attr("data-hidden-title"));
 
-            setTimeout(function() {
-                announcement.addClass("hidden");
-            }, 450);
-            announcementContent.css("display", "");
-            announcementContent.slideUp(350);
+            if (announcement.hasClass("remove-on-collapse")) {
+                announcement.slideUp(350);
+                setTimeout(function() {
+                    announcement.remove();
+                    const numAnnouncementsSpan = $(".num-club-announcements");
+                    console.log(numAnnouncementsSpan);
+                    const numAnnouncements = numAnnouncementsSpan.text().match(/\d+/);
+                    numAnnouncementsSpan.text(numAnnouncements - 1);
+                    $(".club-announcements:has(.club-announcements-content:not(:has(.announcement)))").slideUp(350);
+                }, 450);
+            } else {
+                setTimeout(function() {
+                    announcement.addClass("hidden");
+                }, 450);
+                announcementContent.css("display", "");
+                announcementContent.slideUp(350);
+            }
         }
     };
 
