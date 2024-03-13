@@ -116,8 +116,8 @@
                     Request Post
                 </a>
             {% else %}
-            {% if view_announcements_url != "club_announcements" %}
-                <a class="button club-announcements-button" href="{% url 'club_announcements' %}">
+            {% if view_announcements_url != "club_announcements" and more_club_items %}
+                <a class="button club-announcements-button" href="{% url 'club_announcements' %}{% if "show_all" in request.GET %}?show_all=1{% endif %}">
                     <i class="fas fa-users"></i>
                     Club Announcements
                 </a>
@@ -218,6 +218,13 @@
 
         {% if show_near_graduation_message %}
             {% include "dashboard/senior_forwarding.html" %}
+        {% endif %}
+    
+        {% if view_announcements_url == "club_announcements" %}
+            <div class="club-announcement-filters">
+                <div class="club-announcement-filter subscribed-filter active">Your Subscriptions</div>
+                <div class="club-announcement-filter unsubscribed-filter">Other Club Announcements</div>
+            </div>
         {% endif %}
 
         {% for item in items %}

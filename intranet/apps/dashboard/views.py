@@ -273,19 +273,21 @@ def split_club_announcements(items):
     return standard, club
 
 
-def filter_hidden_club_announcements(user, user_hidden_announcements, club_items):
-    visible, hidden = [], []
+def filter_club_announcements(user, user_hidden_announcements, club_items):
+    visible, hidden, unsubscribed = [], [], []
 
     for item in club_items:
-        if item.id in user_hidden_announcements or user not in item.activity.subscribers.all():
+        if user not in item.activity.subscribers.all():
+            unsubscribed.append(item)
+        elif item.id in user_hidden_announcements:
             hidden.append(item)
         else:
             visible.append(item)
 
-    return visible, hidden
+    return visible, hidden, unsubscribed
 
 
-def paginate_announcements_list(request, context, items, visible_club_items, hidden_club_items):
+def paginate_announcements_list(request, context, items, visible_club_items, more_club_items):
     """
     ***TODO*** Migrate to django Paginator (see lostitems)
 
@@ -312,11 +314,6 @@ def paginate_announcements_list(request, context, items, visible_club_items, hid
         items = items_sorted
 
     club_items = visible_club_items[:display_num]
-
-    if hidden_club_items:
-        more_club_items = True
-    else:
-        more_club_items = False
 
     context.update(
         {
@@ -500,11 +497,12 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
 
     items, club_items = split_club_announcements(items)
 
-    # Paginate announcements list
     if not show_hidden_club:
-        visible_club_items, hidden_club_items = filter_hidden_club_announcements(user, user_hidden_announcements, club_items)
-        context, items = paginate_announcements_list(request, context, items, visible_club_items, hidden_club_items)
+        # Dashboard
+        visible_club_items, hidden_club_items, other_club_items = filter_club_announcements(user, user_hidden_announcements, club_items)
+        context, items = paginate_announcements_list(request, context, items, visible_club_items, hidden_club_items or other_club_items)
     else:
+        # Club announcements only
         context, items = paginate_announcements_list(request, context, club_items, [], [])
 
     if ignore_dashboard_types is None:
