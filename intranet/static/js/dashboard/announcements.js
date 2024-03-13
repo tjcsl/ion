@@ -129,4 +129,40 @@ $(document).ready(function() {
         var btn = $(".announcement-toggle", $(this).parent());
         announcementToggle.call(btn);
     });
+
+    const subscribedFilter = $(".subscribed-filter");
+    const unsubscribedFilter = $(".unsubscribed-filter");
+
+    function filterClubAnnouncements() {
+        if (subscribedFilter.hasClass("active")) {
+            $(".announcement").each(function() {
+                if ($(this).hasClass("subscribed")) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        } else if (unsubscribedFilter.hasClass("active")) {
+            $(".announcement").each(function() {
+                if ($(this).hasClass("subscribed")) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        }
+    }
+    filterClubAnnouncements();
+
+    subscribedFilter.click(function() {
+        $(".unsubscribed-filter").removeClass("active");
+        $(this).addClass("active");
+        filterClubAnnouncements();
+    });
+
+    unsubscribedFilter.click(function() {
+        $(".subscribed-filter").removeClass("active");
+        $(this).addClass("active");
+        filterClubAnnouncements();
+    });
 });
