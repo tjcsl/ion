@@ -172,7 +172,7 @@
     float: right;
     display: none;
 
-    .announcement:hover & {
+    .announcement:not(.club-announcements):hover & {
         display: block;
     }
 
@@ -187,11 +187,44 @@
     }
 }
 
-a.button {
-    &:hover {
-        color: white !important;
-    }
+.club-announcement-filters {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
 
+    > .club-announcement-filter {
+        background-color: white;
+        border: 1px solid rgb(216, 216, 216);
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        position: relative;
+
+        text-align: center;
+        font-size: 14px;
+        width: 100%;
+
+        cursor: pointer;
+        font-weight: bolder;
+
+        &.active {
+            background-color: rgb(44, 103, 186);
+            color: white;
+        }
+
+        &.subscribed-filter {
+            border-right: none;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        &.unsubscribed-filter {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    }
+}
+
+a.button {
     &.subscribe-button {
         color: green;
         float: right;
