@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 "url": "https://othello.tjhsst.edu/",
                 "oauth_application": CSLApplication.objects.get_or_create(name="Othello", sanctioned=True)[0],
                 "auth_url": "https://othello.tjhsst.edu/oauth/login/ion/",
-                "image_url": "/static/img/cslapps/othello.ico",
+                "image_url": "/static/img/cslapps/othello.png",
             },
             {
                 "order": 80,
