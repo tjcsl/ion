@@ -13,7 +13,7 @@ class ContainsGradeMeta(EnumMeta):
         elif isinstance(val, str):
             return val in {grade.name for grade in cls}  # noqa: E1133 pylint: disable=not-an-iterable
         elif isinstance(val, int):
-            return val in {grade.name for grade in cls}  # noqa: E1133 pylint: disable=not-an-iterable
+            return val in {grade.value for grade in cls}  # noqa: E1133 pylint: disable=not-an-iterable
 
         return False
 
