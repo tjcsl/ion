@@ -24,11 +24,10 @@ from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor
 from ..groups.models import Group
 from ..polls.models import Poll
 from ..preferences.fields import PhoneField
+from .enums import GradeLevel
 
 logger = logging.getLogger(__name__)
 
-# TODO: this is disgusting
-GRADE_NUMBERS = ((9, "freshman"), (10, "sophomore"), (11, "junior"), (12, "senior"), (13, "staff"))
 # Eighth Office/Demo Student user IDs that should be excluded from teacher/student lists
 EXTRA = [9996, 8888, 7011]
 
@@ -1355,7 +1354,7 @@ class Address(models.Model):
 class Photo(models.Model):
     """Represents a user photo"""
 
-    grade_number = models.IntegerField(choices=GRADE_NUMBERS)
+    grade_number = models.IntegerField(choices=[(grade.value, grade.name) for grade in GradeLevel])
     _binary = models.BinaryField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="photos", on_delete=models.CASCADE)
 
@@ -1390,8 +1389,6 @@ class Photo(models.Model):
 class Grade:
     """Represents a user's grade."""
 
-    names = [elem[1] for elem in GRADE_NUMBERS]
-
     def __init__(self, graduation_year):
         """Initialize the Grade object.
 
@@ -1406,7 +1403,7 @@ class Grade:
             self._number = get_senior_graduation_year() - int(graduation_year) + 12
 
         if 9 <= self._number <= 12:
-            self._name = [elem[1] for elem in GRADE_NUMBERS if elem[0] == self._number][0]
+            self._name = GradeLevel(self._number).name
         else:
             self._name = "graduate"
 
@@ -1428,7 +1425,7 @@ class Grade:
     @property
     def name_plural(self) -> str:
         """Return the grade's plural name (e.g. freshmen)"""
-        return "freshmen" if (self._number and self._number == 9) else "{}s".format(self._name) if self._name else ""
+        return "freshmen" if (self._number and self._number == GradeLevel.freshman) else "{}s".format(self._name) if self._name else ""
 
     @property
     def text(self) -> str:
@@ -1440,8 +1437,8 @@ class Grade:
 
     @staticmethod
     def number_from_name(name: str) -> Optional[int]:
-        if name in Grade.names:
-            return Grade.names.index(name) + 9
+        if hasattr(GradeLevel, name):
+            return getattr(GradeLevel, name)
         return None
 
     @classmethod
