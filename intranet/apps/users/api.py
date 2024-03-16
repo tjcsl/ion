@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 from intranet.apps.search.views import get_search_results
 
 from ..auth.rest_permissions import ApiAndOauthPermission, DenyRestrictedPermission
+from .enums import GradeLevel
 from .models import Grade
 from .renderers import JPEGRenderer
 from .serializers import CounselorTeacherSerializer, StudentSerializer, UserSerializer
@@ -82,7 +83,7 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
         binary = None
         if "photo_year" in kwargs:
             photo_year = kwargs["photo_year"]
-            if photo_year in Grade.names:
+            if photo_year in GradeLevel:
                 grade_number = Grade.number_from_name(photo_year)
                 if user.photos.filter(grade_number=grade_number).exists():
                     binary = user.photos.filter(grade_number=grade_number).first().binary

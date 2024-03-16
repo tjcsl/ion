@@ -4,7 +4,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 
 from ..bus.models import Route
-from ..users.models import Email, Grade, Phone, Website
+from ..users.enums import GradeLevel
+from ..users.models import Email, Phone, Website
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class PreferredPictureForm(forms.Form):
 
         for i in range(4):
             try:
-                grade = Grade.names[i]
+                grade = GradeLevel(i + 9).name
                 user.photos.get(grade_number=i + 9)  # Only display option if the photo exists
                 self.PREFERRED_PICTURE_CHOICES += [(i + 9, grade.title() + " Photo")]
             except Exception:

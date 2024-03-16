@@ -1425,7 +1425,7 @@ class Grade:
     @property
     def name_plural(self) -> str:
         """Return the grade's plural name (e.g. freshmen)"""
-        return "freshmen" if (self._number and self._number == GradeLevel.freshman) else "{}s".format(self._name) if self._name else ""
+        return "freshmen" if (self._number and self._number == GradeLevel.freshman) else f"{self._name}s" if self._name else ""
 
     @property
     def text(self) -> str:
@@ -1437,7 +1437,7 @@ class Grade:
 
     @staticmethod
     def number_from_name(name: str) -> Optional[int]:
-        if hasattr(GradeLevel, name):
+        if name in GradeLevel:
             return getattr(GradeLevel, name)
         return None
 
