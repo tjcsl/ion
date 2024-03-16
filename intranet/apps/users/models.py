@@ -1437,8 +1437,8 @@ class Grade:
 
     @staticmethod
     def number_from_name(name: str) -> Optional[int]:
-        if name in GradeLevel:
-            return getattr(GradeLevel, name)
+        if name in {grade.name for grade in GradeLevel}:
+            return getattr(GradeLevel, name).value
         return None
 
     @classmethod
