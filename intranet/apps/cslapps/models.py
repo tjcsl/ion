@@ -39,7 +39,7 @@ class App(models.Model):
     oauth_application = models.ForeignKey("oauth.CSLApplication", on_delete=models.CASCADE, null=True, blank=True)
     auth_url = models.URLField(blank=True)
     url = models.URLField(max_length=2048, blank=False)
-    image_url = models.URLField(max_length=2097152, blank=True)
+    image_url = models.CharField(max_length=2048, blank=True)
     html_icon = models.CharField(max_length=2048, blank=True)
     invert_image_color_for_dark_mode = models.BooleanField(default=False)
 
