@@ -3,6 +3,7 @@
 {% load dates %}
 {% load cacheops %}
 {% load pipeline %}
+{% load paginate %}
 
 {% block title %}
     {{ block.super }} - {{ dashboard_title }}
@@ -118,7 +119,7 @@
             {% else %}
             {% if announcements_admin %}
                 {% if "show_all" not in request.GET %}
-                    <a class="button" href="{% url view_announcements_url %}?show_all=1">
+                    <a class="button" href="{% url view_announcements_url %}?{% query_transform request show_all=1 %}">
                         Show All
                     </a>
                 {% else %}
@@ -206,15 +207,43 @@
             </div>
         {% endfor %}
         {% if not request.user.is_restricted %}
-        {% if start_num == 0 and view_announcements_url != 'announcements_archive' %}
+        {% if page_num == 1 and view_announcements_url != 'announcements_archive' %}
             <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fas fa-archive" style="width: 13px"></i> View Archive</a>
         {% endif %}
+        {% if page_obj.num_pages > 1 %}
+            <div style="display:grid;grid-template-columns:1fr max-content 1fr">
+                <div style="text-align:center;grid-column-start:2">
+                  <a {% if prev_page > 0 %}
+                    href="{% url view_announcements_url %}?{% query_transform request page=prev_page %}"
+                    {% else %}
+                    disabled
+                    {% endif %}
+                    class="button"
+                  >&lt;</a>
 
-        {% if start_num > 0 %}
-            <a href="{% url view_announcements_url %}?start={{ prev_page }}{{ paginate_link_suffix }}" class="button" style="float:left">&larr; Newer Posts</a>
-        {% endif %}
-        {% if more_items %}
-            <a href="{% url view_announcements_url %}?start={{ end_num }}{{ paginate_link_suffix }}" class="button" style="float:right">Older Posts &rarr;</a>
+                {% for page in page_obj|page_list:items %}
+                <a {% if page %} class="button" {% else %} class="ellipses" {% endif %}
+                  {% if page == items.number %} style="background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;" {% endif %}
+                  href="{% url view_announcements_url %}{% if page %}?{% query_transform request page=page %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
+                {% endfor %}
+
+                <a {% if more_items %}
+                  href="{% url view_announcements_url %}?{% query_transform request page=next_page %}"
+                  {% else %}
+                  disabled
+                  {% endif %}
+                  class="button"
+                >&gt;</a>
+            </div>
+            <div style="text-align:right">
+                <form action="{% url view_announcements_url %}" method="get" style="display:inline;float:right">
+                    <input name="page" type="number"
+                    min="1" max={{ page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
+                    placeholder={{ items.number }}> of {{ page_obj.num_pages }}
+                    <input type="submit" value="Go"/>
+                </form>
+                </div>
+            </div>
         {% endif %}
         {% endif %}
     </div>

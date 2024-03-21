@@ -4,6 +4,7 @@ from itertools import chain
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -255,39 +256,42 @@ def get_announcements_list(request, context):
             midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
             events = Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True)
 
-    items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
-    items.reverse()
+    def announcements_sorting_key(item):
+        if context["show_expired"] or context["show_all"]:
+            return item.added
+        # otherwise sort by pinned and then added date
+        return (item.pinned, item.added)
+
+    items = sorted(chain(announcements, events), key=announcements_sorting_key, reverse=True)
 
     return items
 
 
 def paginate_announcements_list(request, context, items):
     """
-    ***TODO*** Migrate to django Paginator (see lostitems)
+    Paginate ``items`` in groups of 15
 
     """
+    DEFAULT_PAGE_NUM = 1
 
-    # pagination
-    if "start" in request.GET:
-        try:
-            start_num = int(request.GET.get("start"))
-        except ValueError:
-            start_num = 0
+    if request.GET.get("page", "INVALID").isdigit():
+        page_num = int(request.GET["page"])
     else:
-        start_num = 0
+        page_num = DEFAULT_PAGE_NUM
 
-    display_num = 15
-    end_num = start_num + display_num
-    prev_page = start_num - display_num
-    more_items = (len(items) - start_num) > display_num
-    try:
-        items_sorted = items[start_num:end_num]
-    except (ValueError, AssertionError):
-        items_sorted = items[:display_num]
-    else:
-        items = items_sorted
+    paginator = Paginator(items, 15)
+    if page_num not in paginator.page_range:
+        page_num = DEFAULT_PAGE_NUM
 
-    context.update({"items": items, "start_num": start_num, "end_num": end_num, "prev_page": prev_page, "more_items": more_items})
+    items = paginator.page(page_num)
+
+    more_items = items.has_next()
+    prev_page = items.previous_page_number() if items.has_previous() else 0
+    next_page = items.next_page_number() if more_items else 0
+
+    context.update(
+        {"items": items, "page_num": page_num, "prev_page": prev_page, "next_page": next_page, "more_items": more_items, "page_obj": paginator}
+    )
 
     return context, items
 
@@ -431,8 +435,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         # Show all by default to 8th period office
         show_all = True
 
-    # Include show_all postfix on next/prev links
-    paginate_link_suffix = "&show_all=1" if show_all else ""
     is_index_page = request.path_info in ["/", ""]
 
     context = {
@@ -442,7 +444,6 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "events_admin": events_admin,
         "is_index_page": is_index_page,
         "show_all": show_all,
-        "paginate_link_suffix": paginate_link_suffix,
         "show_expired": show_expired,
         "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= now.date() <= settings.TJSTAR_DATE,
     }

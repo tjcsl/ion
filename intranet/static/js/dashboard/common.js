@@ -12,6 +12,8 @@ $(function() {
         if(e.keyCode === 9) {
             e.preventDefault();
         }
-        $("#searchbox").focus();
+        if(!$(".dashboard-textinput").is(":focus")) {
+            $("#searchbox").focus();
+        }
     });
 });
