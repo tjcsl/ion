@@ -52,6 +52,14 @@ intranet.apps.templatetags.newtab\_links module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.templatetags.paginate module
+------------------------------------------
+
+.. automodule:: intranet.apps.templatetags.paginate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.templatetags.strings module
 -----------------------------------------
 
