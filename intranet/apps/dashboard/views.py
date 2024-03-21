@@ -255,8 +255,8 @@ def get_announcements_list(request, context):
             midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
             events = Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True)
 
-    items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
-    items.reverse()
+    # sort items first by expiration date then by added date
+    items = sorted(chain(announcements, events), key=lambda item: (item.expiration_date, item.added), reverse=True)
 
     return items
 
