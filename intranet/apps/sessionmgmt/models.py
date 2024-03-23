@@ -4,8 +4,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 
-# Create your models here.
-
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 
@@ -35,6 +33,9 @@ class TrustedSession(models.Model):
         for trusted_session in trusted_sessions:
             if not SessionStore(session_key=trusted_session.session_key).exists(trusted_session.session_key):
                 trusted_session.delete()
+
+    def __str__(self):
+        return f"{self.user} - {self.description} - {self.first_trusted_date}"
 
     class Meta:
         unique_together = (("user", "session_key"),)
