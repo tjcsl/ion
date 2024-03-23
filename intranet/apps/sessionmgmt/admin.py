@@ -1,3 +1,12 @@
-from django.contrib import admin  # pylint: disable=unused-import # noqa
+from django.contrib import admin
 
-# Register your models here.
+from .models import TrustedSession
+
+
+class TrustedSessionAdmin(admin.ModelAdmin):
+    list_display = ("user", "description", "device_type", "first_trusted_date")
+    list_filter = ("device_type", "description", "first_trusted_date")
+    search_fields = ("user__username", "user__first_name", "user__last_name", "description")
+
+
+admin.site.register(TrustedSession, TrustedSessionAdmin)
