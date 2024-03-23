@@ -1,6 +1,7 @@
 """
 Sets up application for channels
 """
+
 import os
 
 from channels.routing import get_default_application

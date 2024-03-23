@@ -2,6 +2,7 @@
 Views that render different pages depending on the user that
 requests them.
 """
+
 from django.contrib.auth.decorators import login_required
 from django.urls import resolve, reverse
 

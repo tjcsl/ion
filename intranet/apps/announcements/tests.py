@@ -11,7 +11,6 @@ from .models import Announcement, AnnouncementRequest
 
 
 class AnnouncementTest(IonTestCase):
-
     """Tests for the announcements module."""
 
     def setUp(self):

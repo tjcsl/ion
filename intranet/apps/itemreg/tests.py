@@ -7,7 +7,6 @@ from .models import CalculatorRegistration, ComputerRegistration, PhoneRegistrat
 
 
 class ItemRegTestCase(IonTestCase):
-
     """Test cases for the itemreg app."""
 
     def test_home_view(self):

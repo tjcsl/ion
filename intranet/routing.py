@@ -2,6 +2,7 @@
 Defines routes for channels
 https://channels.readthedocs.io/en/latest/topics/routing.html
 """
+
 from typing import Optional
 
 from channels.auth import AuthMiddlewareStack

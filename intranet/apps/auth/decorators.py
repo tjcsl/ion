@@ -1,4 +1,5 @@
 """Decorators that restrict views to certain types of users."""
+
 import time
 
 from django.conf import settings
