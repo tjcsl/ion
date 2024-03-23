@@ -9,29 +9,33 @@ class EighthSponsorAdmin(SimpleHistoryAdmin):
     list_display = ("first_name", "last_name", "user", "department", "full_time", "contracted_eighth", "online_attendance", "show_full_name")
     list_filter = ("department", "full_time", "contracted_eighth", "online_attendance", "show_full_name")
     ordering = ("last_name", "first_name")
+    search_fields = ("first_name", "last_name", "user__username")
 
 
 class EighthRoomAdmin(SimpleHistoryAdmin):
     list_display = ("name", "capacity", "available_for_eighth")
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 class EighthActivityAdmin(SimpleHistoryAdmin):
     list_display = ("name", "special", "administrative", "deleted", "sticky", "wed_a", "wed_b", "fri_a", "fri_b")
     list_filter = ("special", "administrative", "deleted", "sticky", "wed_a", "wed_b", "fri_a", "fri_b")
     ordering = ("name",)
+    search_fields = ("name",)
 
 
 class EighthBlockAdmin(SimpleHistoryAdmin):
     list_display = ("date", "block_letter", "comments", "signup_time", "locked")
     list_filter = ("locked",)
-    ordering = ("date", "block_letter")
+    ordering = ("-date", "block_letter")
 
 
 class EighthScheduledActivityAdmin(SimpleHistoryAdmin):
     list_display = ("activity", "block", "comments", "admin_comments", "cancelled", "attendance_taken")
-    list_filter = ("block", "cancelled", "attendance_taken")
-    ordering = ("block", "activity")
+    list_filter = ("attendance_taken", "cancelled", "block")
+    ordering = ("-block", "activity__name")
+    search_fields = ("activity__name",)
 
 
 class EighthSignupAdmin(SimpleHistoryAdmin):
@@ -48,9 +52,10 @@ class EighthSignupAdmin(SimpleHistoryAdmin):
     get_block.admin_order_field = "scheduled_activity__block"  # type: ignore
 
     list_display = ("user", "get_activity", "get_block", "after_deadline", "was_absent")
-    list_filter = ("scheduled_activity__block",)
-    ordering = ("scheduled_activity", "user")
+    list_filter = ("was_absent", "after_deadline", "scheduled_activity__block", "scheduled_activity__activity")
+    ordering = ("-scheduled_activity__block", "user__username")
     raw_id_fields = ("user", "scheduled_activity")
+    search_fields = ("user__username", "user__first_name", "user__last_name", "scheduled_activity__activity__name")
 
 
 admin.site.register(EighthSponsor, EighthSponsorAdmin)
