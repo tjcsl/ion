@@ -1,6 +1,7 @@
 """
 Tests for the filecenter.
 """
+
 from unittest.mock import MagicMock, patch
 
 from django.urls import reverse

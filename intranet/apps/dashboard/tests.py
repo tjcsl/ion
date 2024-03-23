@@ -9,7 +9,6 @@ from .views import gen_schedule, gen_sponsor_schedule
 
 
 class DashboardTest(IonTestCase):
-
     """Test for dashboard module"""
 
     def setUp(self) -> None:

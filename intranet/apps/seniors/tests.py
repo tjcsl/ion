@@ -11,7 +11,6 @@ from .models import College, Senior
 
 
 class SeniorsTestCase(IonTestCase):
-
     """Test cases for the seniors app."""
 
     settings.ENABLE_SENIOR_DESTINATIONS = True
@@ -115,7 +114,6 @@ class SeniorsTestCase(IonTestCase):
 
 
 class SeniorsCommandsTestCase(IonTestCase):
-
     """Test cases for the commands to manage the seniors app."""
 
     def test_import_colleges(self):

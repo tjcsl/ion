@@ -366,12 +366,14 @@ def add_widgets_context(request, context):
     today_midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
     context.update(
         {
-            "enrichments": EnrichmentActivity.objects.visible_to_user(user).filter(
-                time__gte=today_midnight,
-                time__lte=today_midnight + timedelta(days=1),
-            )
-            if settings.ENABLE_ENRICHMENT_APP
-            else [],
+            "enrichments": (
+                EnrichmentActivity.objects.visible_to_user(user).filter(
+                    time__gte=today_midnight,
+                    time__lte=today_midnight + timedelta(days=1),
+                )
+                if settings.ENABLE_ENRICHMENT_APP
+                else []
+            ),
             "senior_graduation_year": get_senior_graduation_year(),
         }
     )
