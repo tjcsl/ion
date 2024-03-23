@@ -4,6 +4,14 @@ intranet.apps.files package
 Submodules
 ----------
 
+intranet.apps.files.admin module
+--------------------------------
+
+.. automodule:: intranet.apps.files.admin
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.files.forms module
 --------------------------------
 
