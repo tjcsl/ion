@@ -741,6 +741,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.has_admin_permission("board")
 
+    @property
+    def is_global_admin(self) -> bool:
+        """Checks if user is a global admin.
+
+        Returns:
+            Whether this user is a global admin, defined as having admin_all, Django staff, and Django superuser.
+
+        """
+
+        return self.member_of("admin_all") and self.is_staff and self.is_superuser
+
     def can_manage_group(self, group: Union[Group, str]) -> bool:
         """Checks whether this user has permission to edit/manage the given group (either
         a Group or a group name).
