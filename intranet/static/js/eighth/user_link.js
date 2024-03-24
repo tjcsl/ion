@@ -29,8 +29,14 @@ $(function() {
     $(document).mousemove(function(e) {
         var posx = window.mouseX = e.pageX,
             posy = window.mouseY = e.pageY;
-        posx += 30;
-        posy -= 215 - 10;
+        posx += 150;
+        posy -= 230;
+        if (posx + 150 > $(window).width()) {
+            posx  = $(window).width() - 200;
+        }
+        else if (posx > $("table.take-attendance-roster").width() + 120) {
+            posx = $("table.take-attendance-roster").width() + 120;
+        }
         $("img.user-pic.active").css({
             left: posx,
             top: posy
