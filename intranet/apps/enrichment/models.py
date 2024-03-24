@@ -50,6 +50,9 @@ class EnrichmentActivity(models.Model):
     capacity = models.SmallIntegerField(default=28)
     attending = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="enrichments_attending")
 
+    attended = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="enrichments_attended")
+    attendance_taken = models.BooleanField(default=False)
+
     presign = models.BooleanField(default=False)
 
     groups_allowed = models.ManyToManyField(DjangoGroup, related_name="allowed_enrichments_set", blank=True)

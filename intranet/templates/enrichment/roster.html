@@ -46,10 +46,27 @@
                 </p>
                 <br>
             {% endif %}
+
+            <form method="post">
+            {% csrf_token %}
             <table class="take-attendance-roster{% if not roster %} no-members{% endif %}" style="margin-left: 12px;">
                 <thead>
                 {% if roster %}
+                    <input type="submit" class="attendance-button print-hide" value="{% if enrichment.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                    {% if enrichment.attendance_taken %}
+                        <b class="attendance-status" style="color: rgb(0, 180, 0)">
+                            <i class="fas fa-check"></i> Attendance Taken
+                        </b>
+                    {% else %}
+                        <b class="attendance-status">
+                            <i class="fas fa-exclamation-triangle"></i> Attendance Not Taken
+                        </b>
+                    {% endif %}
                     <tr class="members-header">
+                        <br>
+                        <th class="cb-col">
+                            <input type="checkbox" class="print-hide"> Present
+                        </th>
                         <th class="user-col" width="250">Student</th>
                         <th class="sid-col">Student ID</th>
                         <th class="grade-col">Grade</th>
@@ -60,21 +77,24 @@
                 <tbody>
                 {% for member in roster %}
                     <tr class="student-attendance-row bbcu-selector">
-                        <td class="user-col user-link" data-user-id="{{ member.id }}">
-                            <a class="user-name-eighth" href="{% url 'user_profile' member.id %}">
-                                {{ member.full_name }}
+                        <td class="present-checkbox">
+                            <input type="checkbox" name="{{ member.user.id }}"{% if member.present %} checked{% endif %}>
+                        </td>
+                        <td class="user-col user-link" data-user-id="{{ member.user.id }}">
+                            <a class="user-name-eighth" href="{% url 'user_profile' member.user.id %}">
+                                {{ member.user.full_name }}
                             </a>
                         </td>
                         <td class="sid-col id">
-                            {% if member.student_id %}
-                                {{ member.student_id }}
+                            {% if member.user.student_id %}
+                                {{ member.user.student_id }}
                             {% else %}
-                                (Ion {{ member.id }})
+                                (Ion {{ member.user.id }})
                             {% endif %}
                         </td>
-                        <td style="text-align: center">{{ member.grade.number }}</td>
-                        <td class="email-col">{{ member.tj_email }}</td>
-                        <img class='user-pic' data-user-id="{{ member.id }}" src="/profile/picture/{{ member.id }}" width="172" height="215" style="display:none">
+                        <td style="text-align: center">{{ member.user.grade.number }}</td>
+                        <td class="email-col">{{ member.user.tj_email }}</td>
+                        <img class='user-pic' data-user-id="{{ member.user.id }}" src="/profile/picture/{{ member.user.id }}" width="172" height="215" style="display:none">
                     </tr>
                 {% empty %}
                     <tr>
@@ -85,6 +105,12 @@
                 {% endfor %}
                 </tbody>
             </table>
+
+            {% if roster %}
+                <input type="submit" class="attendance-button print-hide" style="margin-top: 10px" value="{% if enrichment.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+            {% endif %}
+
+            </form>
         {% elif enrichment_is_today and request.user in enrichment.attending.all %}
             <div class="attending-badge">
                 <i class="fas fa-check"></i>

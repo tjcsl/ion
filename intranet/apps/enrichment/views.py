@@ -242,17 +242,30 @@ def enrichment_signup_view(request, enrichment_id):
 @login_required
 @deny_restricted
 def enrichment_roster_view(request, enrichment_id):
-    """Show the enrichment activity roster.
-
-    Args:
-        enrichment_id (int): the enrichment activity id
-    """
     is_enrichment_admin = request.user.has_admin_permission("enrichment")
-
     enrichment = get_object_or_404(EnrichmentActivity, id=enrichment_id)
+
+    if request.method == "POST":
+        if not is_enrichment_admin:
+            raise http.Http404
+        present_user_ids = set(request.POST.keys())
+        present_user_ids.remove("csrfmiddlewaretoken")
+        present_users = enrichment.attending.filter(id__in=present_user_ids)
+        enrichment.attended.set(present_users)
+        enrichment.attendance_taken = True
+        enrichment.save()
+        return redirect("enrichment_roster", enrichment_id=enrichment_id)
+
     enrichment_is_today = (
         enrichment.time.astimezone(timezone.get_default_timezone()).date() == timezone.now().astimezone(timezone.get_default_timezone()).date()
     )
+    roster = [
+        {
+            "user": user,
+            "present": enrichment.attended.filter(id=user.id).exists(),
+        }
+        for user in enrichment.attending.all().order_by("first_name", "last_name")
+    ]
 
     context = {
         "enrichment": enrichment,
@@ -260,7 +273,7 @@ def enrichment_roster_view(request, enrichment_id):
         "blacklisted_enrichments": {enrichment.id if enrichment.user_is_blacklisted(request.user) else None},
         "enrichment_time": enrichment.time.astimezone(timezone.get_default_timezone()),
         "enrichment_is_today": enrichment_is_today,
-        "roster": enrichment.attending.all().order_by("first_name", "last_name"),
+        "roster": roster,
         "is_enrichment_admin": is_enrichment_admin,
         "today": timezone.now().date(),
     }
