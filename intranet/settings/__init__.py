@@ -6,6 +6,7 @@ import sys
 from typing import Any, Dict, List, Tuple  # noqa
 
 import celery.schedules
+import pytz
 import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -241,6 +242,7 @@ SILENCED_SYSTEM_CHECKS = [
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
 TIME_ZONE = "America/New_York"
+PYTZ_TIME_ZONE = pytz.timezone(TIME_ZONE)
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -358,6 +360,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "signage.page",
     "courses",
     "sessionmgmt",
+    "logs",
     "dark/base",
     "dark/login",
     "dark/schedule",
@@ -930,7 +933,7 @@ USER_AGENTS_CACHE = "default"
 # The Referrer-policy header
 REFERRER_POLICY = "strict-origin-when-cross-origin"
 
-REAUTHENTICATION_EXPIRE_TIMEOUT = 2 * 60 * 60  # seconds
+REAUTHENTICATION_EXPIRE_TIMEOUT = 15 * 60  # seconds
 
 EIGHTH_COORDINATOR_NAME = "Laura Slonina"
 

@@ -1,0 +1,152 @@
+{% extends "page_with_header.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Logs
+    {% if current_page > 1 %}
+        - Page {{ current_page }}
+    {% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'logs' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/logs.js' %}"></script>
+    <script>
+        $(function() {
+            $("select[name=user], select[name=method], select[name=path-type], select[name=user-agent-type]").selectize({create: false});
+            $("select[name=ip]").selectize({create: true});
+            $("input.datetimepicker").datetimepicker({format: 'Y-m-d H:i:s'});
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="primary-content logs">
+    <h2>Logs Dashboard</h2>
+    <div class="button-container">
+        NOTICE: Access logs are confidential and may contain sensitive information. Disclosure to unauthorized parties is prohibited.
+        <br>
+        <a href="?" style="float: right"><button class="button small-button">Reset</button></a>
+    </div>
+    <br>
+    <form method="GET">
+    <table class="query-table">
+        <thead>
+        <tr>
+            <th>User</th>
+            <th>IP Address</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Method</th>
+            <th colspan="2">Path</th>
+            <th colspan="3">User Agent</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="user">
+                <select multiple name="user">
+                    <option value="">Any</option>
+                    <option value="anonymous" {% if "anonymous" in selected_users %} selected {% endif %}>Anonymous</option>
+                    {% for query_user in all_users %}
+                        <option value="{{ query_user }}" {% if query_user.username in selected_users %} selected {% endif %}>{{ query_user }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="ip">
+                <select multiple name="ip">
+                    <option value="">Any - CIDR format</option>
+                    {% for selected_ip in selected_ips %}
+                        <option value="{{ selected_ip }}" selected>{{ selected_ip }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="time">
+                <input type="text" name="from" class="datetimepicker" placeholder="All Time" value="{{ selected_from }}">
+            </td>
+            <td class="time">
+                <input type="text" name="to" class="datetimepicker" placeholder="All Time" value="{{ selected_to }}">
+            </td>
+            <td class="method">
+                <select multiple name="method">
+                    <option value="">Any</option>
+                    {% for query_method in all_methods %}
+                        <option value="{{ query_method }}" {% if query_method in selected_methods %} selected {% endif %}>{{ query_method }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="path-type">
+                <select name="path-type">
+                    {% for search_type in text_search_types %}
+                        <option value="{{ search_type.0 }}" {% if search_type.0 == selected_path_type %} selected {% endif %}>{{ search_type.1 }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="path">
+                <input type="text" name="path" placeholder="Any" value="{{ selected_path }}">
+            </td>
+            <td class="user-agent-type">
+                <select name="user-agent-type">
+                    {% for search_type in text_search_types %}
+                        <option value="{{ search_type.0 }}" {% if search_type.0 == selected_user_agent_type %} selected {% endif %}>{{ search_type.1 }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td class="user-agent">
+                <input type="text" name="user-agent" placeholder="Any" value="{{ selected_user_agent }}">
+            </td>
+            <td class="submit">
+                <input type="submit" value="Search">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </form>
+    <br>
+    <p>&nbsp;Showing {{ start }} to {{ end }} of {{ total }} results.</p>
+    {% include 'logs/pagination.html' %}
+    <table class="logs-table">
+        <thead>
+            <tr>
+                <th class="sticky">ID</th>
+                <th class="sticky">Time</th>
+                <th class="sticky">User</th>
+                <th class="sticky">IP Address</th>
+                <th class="sticky">Method</th>
+                <th class="sticky">Path</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rq in rqs %}
+            <tr class="shade" data-id="{{ rq.id }}">
+                <td><a href="{% url 'request' rq.id %}" target="_blank">{{ rq.id }}</a></td>
+                <td>{{ rq.timestamp|date:"D, M d Y, H:i:s" }}</td>
+                <td>{{ rq.username }}</td>
+                <td>{{ rq.ip|truncatechars:39 }}</td>
+                <td>{{ rq.method }}</td>
+                <td>{{ rq.path|truncatechars:67 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include 'logs/pagination.html' %}
+    <p>&nbsp;Showing {{ start }} to {{ end }} of {{ total }} requests.</p>
+</div>
+{% endblock %}

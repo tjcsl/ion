@@ -154,7 +154,7 @@ class RequestAdmin(admin.ModelAdmin):
     actions = ["flag_requests"]
 
     def request_json(self, obj):
-        return json.dumps(json.loads(obj.request), indent=4, sort_keys=True)
+        return json.dumps(json.loads(obj.request), indent=4, sort_keys=True).replace('\\"', "'")
 
     @admin.action(description="Flag selected requests for review")
     def flag_requests(self, request, queryset):

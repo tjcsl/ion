@@ -28,6 +28,22 @@ intranet.apps.logs.models module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.logs.urls module
+------------------------------
+
+.. automodule:: intranet.apps.logs.urls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.logs.views module
+-------------------------------
+
+.. automodule:: intranet.apps.logs.views
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
