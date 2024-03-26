@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.db import models
 
@@ -20,12 +22,18 @@ class Request(models.Model):
 
     @property
     def username(self):
-        if self.user:
-            return self.user.username
-        return "unknown_user"
+        return self.user.username if self.user else "anonymous"
+
+    @property
+    def request_json(self):
+        return json.dumps(json.loads(self.request), indent=4, sort_keys=True).replace('\\"', "'")
+
+    @property
+    def request_json_obj(self):
+        return json.loads(self.request)
 
     def __str__(self):
-        return f"""{self.ip} - {self.user} - [{self.timestamp}] "{self.path}" "{self.user_agent}" """
+        return f'{self.timestamp.astimezone(settings.PYTZ_TIME_ZONE).strftime("%b %d %Y %H:%M:%S")} - {self.username} - {self.ip} - {self.method} "{self.path}"'  # noqa: E501 pylint: disable=line-too-long
 
     class Meta:
         ordering = ["-timestamp"]

@@ -1,0 +1,47 @@
+{% extends "page_with_header.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Logs - Query
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'logs' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/logs.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="primary-content logs">
+    <h2>Logs Query</h2>
+     <div class="button-container">
+        <a href="{% url 'logs' %}" class="button">
+            Logs Dashboard
+        </a>
+    </div>
+
+    {% for param, values in query_params.items %}
+        <select>
+            <option value="{{ param }}">Any</option>
+            {% if param == "user" %}
+                <option value="anonymous">Anonymous</option>
+            {% endif %}
+            {% for value in values %}
+                <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+        </select>
+    {% endfor %}
+</div>
+{% endblock %}

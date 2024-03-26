@@ -1,0 +1,113 @@
+{% extends "page_with_header.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'logs' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/logs.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ rq.timestamp|date:"H:i:s" }} - {{ rq.username }}
+{% endblock %}
+
+{% block content %}
+<div class="primary-content logs request-log">
+    <h3>Request {{ rq.id }} - {{ rq }} </h3>
+    <table class="request-table">
+        <tr class="shade">
+            <td><b>Time</b></td>
+            <td>{{ rq.timestamp|date:"D, M d Y, H:i:s" }}</td>
+        </tr>
+        <tr class="shade">
+            <td><b>User</b></td>
+            {% if rq.user %}
+                <td>
+                    <a href="{% url 'user_profile' rq.user.id %}" target="_blank">
+                        {{ rq.user.full_name }} ({{ rq.user.username }})
+                    </a>
+                </td>
+            {% else %}
+                <td>Anonymous</td>
+            {% endif %}
+        </tr>
+        <tr class="shade">
+            <td><b>IP Address</b></td>
+            <td>
+                <a href="https://whatismyipaddress.com/ip/{{ rq.ip }}" target="_blank">{{ rq.ip }}</a>
+            </td>
+        </tr>
+        <tr class="shade">
+            <td><b>Path</b></td>
+            <td>
+                <a href="{{ rq.path }}" target="_blank">{{ rq.path }}</a>
+            </td>
+        </tr>
+        <tr class="shade">
+            <td><b>Method</b></td>
+            <td>{{ rq.method }}</td>
+        </tr>
+        <tr class="shade">
+            <td><b>User Agent</b></td>
+            <td>{{ rq.user_agent }}</td>
+        </tr>
+        <tr class="shade">
+            <td><b>ID</b></td>
+            <td><a href="/djangoadmin/logs/request/{{ rq.id }}" target="_blank">{{ rq.id }}</a></td>
+        </tr>
+    </table>
+    <br><br>
+    <table class="mono">
+        <tr><td><b>Request</b></td></tr>
+        {% for key, value in rq.request_json_obj.items %}
+            {% if value.items %}
+            <tr>
+                <td class="key-green">{{ key }}</td>
+                <td class="no-left-padding">
+                    <table>
+                        {% for k, v in value.items %}
+                            <tr class="shade">
+                                <td class="key-red">{{ k }}</td>
+                                <td>{{ v }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+            {% else %}
+            <tr class="shade">
+                <td class="key-green">{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <br>
+    <div class="raw-json">
+        <div class="raw-json-header">
+            <b>Raw JSON</b>
+            <i class="fas fa-angle-down"></i>
+        </div>
+        <pre class="raw-json-container">{{ rq.request_json }}</pre>
+    </div>
+</div>
+<div class="iframe-container">
+    <div class="iframe-container-header">
+        <b>IP Address Lookup</b>
+        <i class="fas fa-angle-up"></i>
+    </div>
+    <iframe sandbox="allow-scripts allow-forms" seamless class="ip-iframe" src="https://whatismyipaddress.com/ip/{{ rq.ip }}"></iframe>
+</div>
+{% endblock %}

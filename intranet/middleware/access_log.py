@@ -70,13 +70,13 @@ class AccessLogMiddleWare:
             # Redact passwords
             r_request = json.loads(r.request)
             if "password" in r_request["POST"]:
-                r_request["POST"]["password"] = "********"
+                r_request["POST"]["password"] = "***REDACTED***"
                 r.request = json.dumps(r_request)
                 r.save()
             if "password" in r_request["body"]:
                 idx = r_request["body"].index("password=")
                 length = r_request["body"][idx:].index("&") if "&" in r_request["body"][idx:] else len(r_request["body"][idx:])
-                r_request["body"] = r_request["body"][:idx] + "password=********" + r_request["body"][idx + length:]
+                r_request["body"] = r_request["body"][:idx] + "password=***REDACTED***" + r_request["body"][idx + length:]
                 r.request = json.dumps(r_request)
                 r.save()
 
