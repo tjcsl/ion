@@ -261,7 +261,33 @@ def get_announcements_list(request, context):
     return items
 
 
-def paginate_announcements_list(request, context, items):
+def split_club_announcements(items):
+    standard, club = [], []
+
+    for item in items:
+        if item.dashboard_type == "announcement" and item.is_club_announcement:
+            club.append(item)
+        else:
+            standard.append(item)
+
+    return standard, club
+
+
+def filter_club_announcements(user, user_hidden_announcements, club_items):
+    visible, hidden, unsubscribed = [], [], []
+
+    for item in club_items:
+        if user not in item.activity.subscribers.all():
+            unsubscribed.append(item)
+        elif item.id in user_hidden_announcements:
+            hidden.append(item)
+        else:
+            visible.append(item)
+
+    return visible, hidden, unsubscribed
+
+
+def paginate_announcements_list(request, context, items, visible_club_items, more_club_items):
     """
     ***TODO*** Migrate to django Paginator (see lostitems)
 
@@ -287,7 +313,19 @@ def paginate_announcements_list(request, context, items):
     else:
         items = items_sorted
 
-    context.update({"items": items, "start_num": start_num, "end_num": end_num, "prev_page": prev_page, "more_items": more_items})
+    club_items = visible_club_items[:display_num]
+
+    context.update(
+        {
+            "club_items": club_items,
+            "more_club_items": more_club_items,
+            "items": items,
+            "start_num": start_num,
+            "end_num": end_num,
+            "prev_page": prev_page,
+            "more_items": more_items,
+        }
+    )
 
     return context, items
 
@@ -382,7 +420,7 @@ def add_widgets_context(request, context):
 
 
 @login_required
-def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashboard_types=None, show_welcome=False):
+def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_club=False, ignore_dashboard_types=None, show_welcome=False):
     """Process and show the dashboard, which includes activities, events, and widgets."""
 
     user = request.user
@@ -431,6 +469,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         # Show all by default to 8th period office
         show_all = True
 
+    if not show_hidden_club:
+        show_hidden_club = "show_hidden_club" in request.GET
+
     # Include show_all postfix on next/prev links
     paginate_link_suffix = "&show_all=1" if show_all else ""
     is_index_page = request.path_info in ["/", ""]
@@ -442,19 +483,27 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
         "events_admin": events_admin,
         "is_index_page": is_index_page,
         "show_all": show_all,
+        "show_hidden_club": show_hidden_club,
         "paginate_link_suffix": paginate_link_suffix,
         "show_expired": show_expired,
         "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= now.date() <= settings.TJSTAR_DATE,
     }
 
+    user_hidden_announcements = Announcement.objects.hidden_announcements(user).values_list("id", flat=True)
+    user_hidden_events = Event.objects.hidden_events(user).values_list("id", flat=True)
+
     # Get list of announcements
     items = get_announcements_list(request, context)
 
-    # Paginate announcements list
-    context, items = paginate_announcements_list(request, context, items)
+    items, club_items = split_club_announcements(items)
 
-    user_hidden_announcements = Announcement.objects.hidden_announcements(user).values_list("id", flat=True)
-    user_hidden_events = Event.objects.hidden_events(user).values_list("id", flat=True)
+    if not show_hidden_club:
+        # Dashboard
+        visible_club_items, hidden_club_items, other_club_items = filter_club_announcements(user, user_hidden_announcements, club_items)
+        context, items = paginate_announcements_list(request, context, items, visible_club_items, hidden_club_items or other_club_items)
+    else:
+        # Club announcements only
+        context, items = paginate_announcements_list(request, context, club_items, [], [])
 
     if ignore_dashboard_types is None:
         ignore_dashboard_types = []
@@ -484,6 +533,9 @@ def dashboard_view(request, show_widgets=True, show_expired=False, ignore_dashbo
     elif show_expired:
         dashboard_title = dashboard_header = "Announcement Archive"
         view_announcements_url = "announcements_archive"
+    elif show_hidden_club:
+        dashboard_title = dashboard_header = "Club Announcements"
+        view_announcements_url = "club_announcements"
     else:
         dashboard_title = dashboard_header = "Announcements"
 

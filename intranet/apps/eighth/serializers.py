@@ -93,7 +93,14 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     comments = serializers.CharField(max_length=100)
 
     def process_scheduled_activity(
-        self, scheduled_activity, request=None, user=None, favorited_activities=None, recommended_activities=None, available_restricted_acts=None
+        self,
+        scheduled_activity,
+        request=None,
+        user=None,
+        favorited_activities=None,
+        subscribed_activities=None,
+        recommended_activities=None,
+        available_restricted_acts=None,
     ):
         activity = scheduled_activity.activity
         if user:
@@ -128,6 +135,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "description": activity.description,
             "cancelled": scheduled_activity.cancelled,
             "favorited": activity.id in favorited_activities,
+            "subscribed_to": activity.id in subscribed_activities,
+            "subscriptions_enabled": activity.subscriptions_enabled,
             "roster": {
                 "count": 0,
                 "capacity": 0,
@@ -162,12 +171,26 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         return activity_info
 
     def get_activity(
-        self, user, favorited_activities, recommended_activities, available_restricted_acts, block_id, activity_id, scheduled_activity=None
+        self,
+        user,
+        favorited_activities,
+        subscribed_activities,
+        recommended_activities,
+        available_restricted_acts,
+        block_id,
+        activity_id,
+        scheduled_activity=None,
     ):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(block_id=block_id, activity_id=activity_id)
         return self.process_scheduled_activity(
-            scheduled_activity, self.context["request"], user, favorited_activities, recommended_activities, available_restricted_acts
+            scheduled_activity,
+            self.context["request"],
+            user,
+            favorited_activities,
+            subscribed_activities,
+            recommended_activities,
+            available_restricted_acts,
         )
 
     def get_scheduled_activity(self, scheduled_activity_id):
@@ -180,9 +203,11 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         if user:
             favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
             recommended_activities = user.recommended_activities
+            subscribed_activities = set(user.subscribed_activity_set.values_list("id", flat=True))
         else:
             favorited_activities = set()
             recommended_activities = set()
+            subscribed_activities = set()
 
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
@@ -203,7 +228,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.
             activity_info = self.get_activity(
-                user, favorited_activities, recommended_activities, available_restricted_acts, None, None, scheduled_activity
+                user, favorited_activities, subscribed_activities, recommended_activities, available_restricted_acts, None, None, scheduled_activity
             )
             activity = scheduled_activity.activity
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id

@@ -127,31 +127,27 @@
 {% block main %}
 <div class="announcements primary-content" style="padding: 0">
     <h2>
-        {% if action != "add" %}{{ action|title }} {% endif %}Announcement Request
+        {% if action != "add" %}{{ action|title }} {% endif %}Post Club Announcement
     </h2>
     <p>
-    Do you want to post an informational news article or announcement on Intranet? This page allows you to easily submit news for approval.
+      Are you an 8th period officer looking to post an announcement for interested students? This page allows you to easily submit club announcements.
     </p>
     {% if not request.user.is_restricted %}
-    <p>Want to make an announcement for a specific event or activity? <b><a href="{% url 'request_event' %}">Submit an event for approval instead!</a></b></p>
-    <p>Want to post an announcement for your club's subscribers? <b><a href="{% url 'post_club_announcement' %}">Submit a club announcement instead!</a></b></p>
-    <br />  
+      <p>Want to make an announcement for the whole student body? <b><a href="{% url 'request_announcement' %}">Request an announcement instead!</a></b></p>
+      <p>Want to make an announcement for a specific event or activity? <b><a href="{% url 'request_event' %}">Submit an event for approval instead!</a></b></p>
+      <br />
     {% endif %}
-    <strong>Guidelines for News Posts:</strong><br>
-    To increase the chances that your post comes up quickly, please mind the following:<br>
+    <strong>Guidelines for Club Announcements:</strong><br>
     <ol>
         <li>Use correct English grammar, punctuation, and spelling; do not use all caps; keep posts concise when possible, and use active voice for better clarity.</li>
-        <li>Embedded images are not permitted directly in news posts except in special circumstances.</li>
         <li>If you have a link to an external website in your post, make sure that it can be accessed without having to register for that site or provide any personal information. Facebook links that require you to sign in cannot be used for this reason, and may be omitted. This is to improve compliance with the FCPS Network User Guidelines.</li>
-        <li>If you are talking about a club, activity, or event in your post, please put the location and time in your post body. Otherwise people will have no idea where or when it is.  Please also try to make your post unique; we do not need twenty posts all titled "Free food!"</li>
-        <li>If there's a well-defined group, such as "The Class of 2016" that you'd like to limit your post to, add that as a note in the notes field. If we have that group in the system, then we will post it to that group; otherwise, we will do the best that we can. If you do not specify a group, your news post will be visible to all students and faculty.</li>
-        <li>Please do not make requests for lost-and-found-type notices.</li>
+        <li>If you are talking about an activity or event in your post, please put the location and time in your post body. Otherwise people will have no idea where or when it is.</li>
         <li>Please ensure your announcement meets all of our guidelines <a target="_blank" href="https://guides.tjhsst.edu/ion/ion-announcement-guidelines">here</a>.</li>
     </ol>
     <br>
-    We reserve the right to edit requests at our discretion (e.g. to correct formatting or spelling errors). Please make sure your post complies with the guidelines.
+    We reserve the right to edit announcements at our discretion (e.g. to correct formatting or spelling errors). Please make sure your post complies with the guidelines.
     <br><br>
-    <form action="" method="post" id="announcement_form">
+    <form action="" method="post" id="club_announcement_form">
         <table>
             {% csrf_token %}
             {{ form.as_table }}

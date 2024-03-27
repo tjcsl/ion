@@ -186,6 +186,7 @@ class EighthActivity(AbstractBaseEighthModel):
         sponsors (:obj:`list` of :obj:`EighthSponsor`): The default activity-level sponsors for the activity.
             On an EighthScheduledActivity basis, you should NOT query this field.
             Instead, use scheduled_activity.get_true_sponsors()
+        officers (:obj:`list` of :obj:`User`): The activity's officers as chosen by a club sponsor.
         rooms (:obj:`list` of :obj:`EighthRoom`): The default activity-level rooms for the activity.
             On an EighthScheduledActivity basis, you should NOT query this field.
             Use scheduled_activity.get_true_rooms()
@@ -232,6 +233,7 @@ class EighthActivity(AbstractBaseEighthModel):
         favorites (:obj:`list` of :obj:`User`): A ManyToManyField of User objects who have favorited the activity.
         similarities (:obj:`list` of :obj:`EighthActivitySimilarity`): A ManyToManyField of EighthActivitySimilarity
             objects which are similar to this activity.
+        subscribers (:obj:`list` of :obj:`User`): Individual users subscribed to this activity's announcements.
         deleted (bool): Whether the activity still technically exists in the system, but was marked to be deleted.
     """
 
@@ -241,6 +243,7 @@ class EighthActivity(AbstractBaseEighthModel):
     name = models.CharField(max_length=100, validators=[validators.MinLengthValidator(4)])  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
+    officers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="officer_for_set", blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
     default_capacity = models.SmallIntegerField(null=True, blank=True)
 
@@ -274,6 +277,9 @@ class EighthActivity(AbstractBaseEighthModel):
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="favorited_activity_set", blank=True)
 
     similarities = models.ManyToManyField("EighthActivitySimilarity", related_name="activity_set", blank=True)
+
+    subscriptions_enabled = models.BooleanField(default=False)
+    subscribers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="subscribed_activity_set", blank=True)
 
     deleted = models.BooleanField(blank=True, default=False)
 

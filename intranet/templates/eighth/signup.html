@@ -66,6 +66,7 @@
         }
         window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
         window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
+        window.subscribedTo = {% if subscribed_to %}true{% else %}false{% endif %};
         window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
         window.signupTime = new Date({{ active_block.date|date:'Y,m-1,j' }},{{ active_block.signup_time|time:'G,i' }});
         window.isSelfSignup = {% if request.user == user %}true{% else %}false{% endif %};
@@ -334,6 +335,21 @@
                             <% } %>
                         <% } %>
                     <%}%>
+                    <br />
+                    <% if (subscriptions_enabled || true) { %>
+                        <!-- TODO -->
+                        <% if (subscribed_to) { %>
+                            <a class="button" id="unsubscribe-button" href="/eighth/signup/unsubscribe/<%= id %>">
+                                <i class="fas fa-rss"></i>
+                                Unsubscribe
+                            </a>
+                        <% } else { %>
+                            <a class="button" id="subscribe-button" href="/eighth/signup/subscribe/<%= id %>">
+                                <i class="fas fa-rss"></i>
+                                Subscribe
+                            </a>
+                        <% } %>
+                    <% } %>
                 <%}%>
 
                 <div class="error-feedback">

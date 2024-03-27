@@ -5,8 +5,10 @@ from . import views
 urlpatterns = [
     re_path(r"^$", views.view_announcements, name="view_announcements"),
     re_path(r"^/archive$", views.view_announcements_archive, name="announcements_archive"),
+    re_path(r"^/club$", views.view_club_announcements, name="club_announcements"),
     re_path(r"^/add$", views.add_announcement_view, name="add_announcement"),
     re_path(r"^/request$", views.request_announcement_view, name="request_announcement"),
+    re_path(r"^/club/post$", views.post_club_announcement_view, name="post_club_announcement"),
     re_path(r"^/request/success$", views.request_announcement_success_view, name="request_announcement_success"),
     re_path(r"^/request/success_self$", views.request_announcement_success_self_view, name="request_announcement_success_self"),
     re_path(r"^/approve/(?P<req_id>\d+)$", views.approve_announcement_view, name="approve_announcement"),

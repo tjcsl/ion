@@ -52,6 +52,10 @@ $(function() {
         $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
         $.cookie("collapseWarning", !collapseWarning, {path: "/", expires: 14})
     });
+    $(".club-announcements-header").click(function() {
+        $(".club-announcements-content").slideToggle();
+        $(".club-announcements-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
+    });
     if(!collapseWarning) {
         $(".warning-content").show();
         $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");

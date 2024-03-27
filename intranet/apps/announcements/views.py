@@ -13,10 +13,15 @@ from ...utils.html import safe_html
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
-from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm
+from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm, ClubAnnouncementForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
-                            request_announcement_email)
+from .notifications import (
+    admin_request_announcement_email,
+    announcement_approved_email,
+    announcement_posted_email,
+    announcement_posted_twitter,
+    request_announcement_email,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +38,13 @@ def view_announcements(request):
 def view_announcements_archive(request):
     """Show the dashboard with only announcements, showing expired posts."""
     return dashboard_view(request, show_widgets=False, show_expired=True, ignore_dashboard_types=["event"])
+
+
+@login_required
+@deny_restricted
+def view_club_announcements(request):
+    """Show the dashboard with only club posts."""
+    return dashboard_view(request, show_widgets=False, show_hidden_club=True, ignore_dashboard_types=["event"])
 
 
 def announcement_posted_hook(request, obj):
@@ -116,6 +128,26 @@ def request_announcement_view(request):
     else:
         form = AnnouncementRequestForm()
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
+
+
+def post_club_announcement_view(request):
+    if request.method == "POST":
+        form = ClubAnnouncementForm(request.user, request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=True)
+            obj.user = request.user
+            # SAFE HTML
+            obj.content = safe_html(obj.content)
+
+            obj.save()
+
+            return redirect("index")
+        else:
+            messages.error(request, "Error adding announcement")
+    else:
+        form = ClubAnnouncementForm(request.user)
+    return render(request, "announcements/club-request.html", {"form": form, "action": "add"})
 
 
 @login_required

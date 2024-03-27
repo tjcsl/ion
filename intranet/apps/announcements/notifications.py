@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core import exceptions
+from django.db.models import Q
 from django.urls import reverse
 
 from ...utils.date import get_senior_graduation_year
@@ -119,6 +120,16 @@ def announcement_posted_email(request, obj, send_all=False):
                 .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
                 .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"]))
             )
+        elif obj.club:
+            filter = Q(subscribed_to_set__contains=obj.club) & (
+                Q(user_type="student") & Q(graduation_year__gte=get_senior_graduation_year()) | Q(user_type__in=["teacher", "counselor"])
+            )
+            users = (
+                get_user_model()
+                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year(), subscribed_to_set__contains=obj.club)
+                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"], subscribed_to_set__contains=obj.club))
+            )
+
         else:
             users = (
                 get_user_model()
