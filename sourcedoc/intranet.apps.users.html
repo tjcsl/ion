@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #2020) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #2058) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -302,6 +302,7 @@
 <li><a class="reference internal" href="#intranet.apps.users.models.User.emails"><code class="docutils literal notranslate"><span class="pre">User.emails</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.enable_april_fools"><code class="docutils literal notranslate"><span class="pre">User.enable_april_fools</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.enrichmentactivity_set"><code class="docutils literal notranslate"><span class="pre">User.enrichmentactivity_set</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.models.User.enrichments_attended"><code class="docutils literal notranslate"><span class="pre">User.enrichments_attended</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.enrichments_attending"><code class="docutils literal notranslate"><span class="pre">User.enrichments_attending</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.event_set"><code class="docutils literal notranslate"><span class="pre">User.event_set</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.events_hidden"><code class="docutils literal notranslate"><span class="pre">User.events_hidden</span></code></a></li>
@@ -348,6 +349,7 @@
 <li><a class="reference internal" href="#intranet.apps.users.models.User.is_enrichment_admin"><code class="docutils literal notranslate"><span class="pre">User.is_enrichment_admin</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.is_events_admin"><code class="docutils literal notranslate"><span class="pre">User.is_events_admin</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.is_female"><code class="docutils literal notranslate"><span class="pre">User.is_female</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.models.User.is_global_admin"><code class="docutils literal notranslate"><span class="pre">User.is_global_admin</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.is_male"><code class="docutils literal notranslate"><span class="pre">User.is_male</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.is_nonbinary"><code class="docutils literal notranslate"><span class="pre">User.is_nonbinary</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.is_parking_admin"><code class="docutils literal notranslate"><span class="pre">User.is_parking_admin</span></code></a></li>
@@ -1954,6 +1956,22 @@ class built by <code class="docutils literal notranslate"><span class="pre">crea
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.users.models.User.enrichments_attended">
+<span class="sig-name descname"><span class="pre">enrichments_attended</span></span><a class="headerlink" href="#intranet.apps.users.models.User.enrichments_attended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.users.models.User.enrichments_attending">
 <span class="sig-name descname"><span class="pre">enrichments_attending</span></span><a class="headerlink" href="#intranet.apps.users.models.User.enrichments_attending" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the forward and reverse sides of
@@ -2468,6 +2486,17 @@ of user.id == 9999 or user.username == “eighthoffice”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Whether this user is female.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="intranet.apps.users.models.User.is_global_admin">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_global_admin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#intranet.apps.users.models.User.is_global_admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if user is a global admin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether this user is a global admin, defined as having admin_all, Django staff, and Django superuser.</p>
 </dd>
 </dl>
 </dd></dl>

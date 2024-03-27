@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>intranet.apps.logs.views &#8212; TJ Intranet v3 (Build #2058) documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/server.html">Setting up the Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html#technologies">Technologies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/eighth-models.html">Understanding the Eighth models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Testing Ion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/updates.html">Keeping things up-to-date</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for intranet.apps.logs.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">ipaddress</span>
+
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">make_aware</span>
+
+<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">reauthentication_required</span>
+<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Request</span>
+
+<span class="n">DISPLAY_NUM</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">PAGE_RANGE</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">HTTP_METHODS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;HEAD&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OPTIONS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CONNECT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;TRACE&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">TEXT_SEARCH_TYPES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;equals&quot;</span><span class="p">,</span> <span class="s2">&quot;Equals&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;contains&quot;</span><span class="p">,</span> <span class="s2">&quot;Contains&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;starts&quot;</span><span class="p">,</span> <span class="s2">&quot;Starts with&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;ends&quot;</span><span class="p">,</span> <span class="s2">&quot;Ends with&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="logs_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.logs.html#intranet.apps.logs.views.logs_context">[docs]</a><span class="k">def</span> <span class="nf">logs_context</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="n">total</span> <span class="o">//</span> <span class="n">DISPLAY_NUM</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">last</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">DISPLAY_NUM</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">page</span> <span class="o">*</span> <span class="n">DISPLAY_NUM</span>
+    <span class="n">rqs</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;rqs&quot;</span><span class="p">:</span> <span class="n">rqs</span><span class="p">,</span>
+        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">total</span><span class="p">),</span>
+        <span class="s2">&quot;last_page&quot;</span><span class="p">:</span> <span class="n">last</span><span class="p">,</span>
+        <span class="s2">&quot;current_page&quot;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+        <span class="s2">&quot;show_first_page&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;show_first_page_dot&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">&quot;show_last_page&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="o">-</span> <span class="n">PAGE_RANGE</span><span class="p">,</span>
+        <span class="s2">&quot;show_last_page_dot&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="o">-</span> <span class="n">PAGE_RANGE</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">context</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;next_page_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span> <span class="o">+</span> <span class="n">i</span> <span class="k">if</span> <span class="n">page</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">last</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">context</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;prev_page_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span> <span class="o">-</span> <span class="n">i</span> <span class="k">if</span> <span class="n">page</span> <span class="o">-</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">context</span></div>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@reauthentication_required</span>
+<span class="k">def</span> <span class="nf">logs_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_global_admin</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;all_users&quot;</span><span class="p">:</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+        <span class="s2">&quot;all_methods&quot;</span><span class="p">:</span> <span class="n">HTTP_METHODS</span><span class="p">,</span>
+        <span class="s2">&quot;text_search_types&quot;</span><span class="p">:</span> <span class="n">TEXT_SEARCH_TYPES</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">queries</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">&quot;anonymous&quot;</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+            <span class="n">users</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;anonymous&quot;</span><span class="p">)</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user__isnull&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Searching only for anonymous users. Ignoring other users.&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username__in</span><span class="o">=</span><span class="n">users</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user__in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ip&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">ips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;ip&quot;</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_ips&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">to_expand</span> <span class="o">=</span> <span class="p">[</span><span class="n">ip</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ips</span> <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">ip</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">to_expand</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">network</span> <span class="o">=</span> <span class="n">ipaddress</span><span class="o">.</span><span class="n">ip_network</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">ips</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">num_addresses</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">16</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Subnet too large: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ips</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">hosts</span><span class="p">())</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Invalid IP network: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;ip__in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">selected_methods</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_methods&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_methods</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;method__in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">from_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_from&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_time</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">from_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">from_time</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">from_time</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">from_time</span><span class="p">)</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;timestamp__gte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_time</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid from time.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">to_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;to&quot;</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_to&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_time</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">to_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">to_time</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">to_time</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">to_time</span><span class="p">)</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;timestamp__lte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_time</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid to time.&quot;</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_to&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;to&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path-type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">path_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;path-type&quot;</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_path_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_type</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+
+            <span class="k">if</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path__contains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">elif</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">&quot;starts&quot;</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path__startswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">elif</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">&quot;ends&quot;</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path__endswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user-agent-type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">user_agent_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;user-agent-type&quot;</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_user_agent_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent_type</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user-agent&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">user_agent</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;user-agent&quot;</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_user_agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+
+            <span class="k">if</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent__contains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+            <span class="k">elif</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">&quot;starts&quot;</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent__startswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+            <span class="k">elif</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">&quot;ends&quot;</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent__endswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">queries</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">|=</span> <span class="n">logs_context</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;logs/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+
+<span class="nd">@login_required</span>
+<span class="nd">@reauthentication_required</span>
+<span class="k">def</span> <span class="nf">request_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_global_admin</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Http404</span>
+
+    <span class="n">rq</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">request_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;logs/request.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;rq&quot;</span><span class="p">:</span> <span class="n">rq</span><span class="p">})</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

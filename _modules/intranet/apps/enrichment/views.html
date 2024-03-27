@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #2020) documentation</title>
+    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #2058) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -365,17 +365,30 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span> <span class="nf">enrichment_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show the enrichment activity roster.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        enrichment_id (int): the enrichment activity id</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
-
     <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_enrichment_admin</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
+        <span class="n">present_user_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">present_user_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;csrfmiddlewaretoken&quot;</span><span class="p">)</span>
+        <span class="n">present_users</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">present_user_ids</span><span class="p">)</span>
+        <span class="n">enrichment</span><span class="o">.</span><span class="n">attended</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">present_users</span><span class="p">)</span>
+        <span class="n">enrichment</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">enrichment</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment_roster&quot;</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
+
     <span class="n">enrichment_is_today</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="p">)</span>
+    <span class="n">roster</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+            <span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attended</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span>
@@ -383,7 +396,7 @@
         <span class="s2">&quot;blacklisted_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
         <span class="s2">&quot;enrichment_time&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">()),</span>
         <span class="s2">&quot;enrichment_is_today&quot;</span><span class="p">:</span> <span class="n">enrichment_is_today</span><span class="p">,</span>
-        <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="n">roster</span><span class="p">,</span>
         <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
         <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
     <span class="p">}</span>
