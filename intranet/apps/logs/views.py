@@ -188,7 +188,7 @@ def logs_view(request):
                 queries["user_agent"] = user_agent
 
     queryset = Request.objects.filter(**queries)
-    context |= logs_context(queryset, request)
+    context.update(logs_context(queryset, request))
 
     return render(request, "logs/home.html", context)
 
