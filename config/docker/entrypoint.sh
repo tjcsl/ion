@@ -7,6 +7,7 @@ fi
 
 sass --watch intranet/static/css:intranet/collected_static/css &  # Automatically compile modified scss files
 
+export PYTHONUNBUFFERED=1  # Don't buffer Django output
 
 # Wrap the run command in a loop so that it restarts if it crashes, e.g. due to a syntax error
 while true
