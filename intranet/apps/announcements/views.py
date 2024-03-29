@@ -84,6 +84,7 @@ def announcement_approved_hook(request, obj, req):
 
 
 @login_required
+@deny_restricted
 def request_announcement_view(request):
     """The request announcement page."""
     if request.method == "POST":
@@ -142,7 +143,8 @@ def post_club_announcement_view(request):
 
             obj.save()
 
-            return redirect("index")
+            messages.success(request, "Successfully posted announcement.")
+            return redirect("club_announcements")
         else:
             messages.error(request, "Error adding announcement")
     else:
@@ -151,11 +153,13 @@ def post_club_announcement_view(request):
 
 
 @login_required
+@deny_restricted
 def request_announcement_success_view(request):
     return render(request, "announcements/success.html", {"type": "request"})
 
 
 @login_required
+@deny_restricted
 def request_announcement_success_self_view(request):
     return render(request, "announcements/success.html", {"type": "request", "self": True})
 
@@ -276,11 +280,12 @@ def admin_approve_announcement_view(request, req_id):
 @announcements_admin_required
 @deny_restricted
 def admin_request_status_view(request):
-    all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year()
+    prefetch_fields = ["user", "teachers_requested", "teachers_approved", "posted", "posted_by", "rejected_by"]
+    all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year().prefetch_related(*prefetch_fields)
     awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
     awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
-    approved = AnnouncementRequest.objects.exclude(posted=None).this_year()
-    rejected = AnnouncementRequest.objects.filter(rejected=True).this_year()
+    approved = AnnouncementRequest.objects.exclude(posted=None).this_year().prefetch_related(*prefetch_fields)
+    rejected = AnnouncementRequest.objects.filter(rejected=True).this_year().prefetch_related(*prefetch_fields)
 
     context = {"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval, "approved": approved, "rejected": rejected}
 
