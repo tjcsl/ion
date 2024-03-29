@@ -103,4 +103,47 @@ $(function() {
             $(".exp-list").append(`<li><a class='exp-suggest-item' data-date='${use_date}'>"${dates[i].text}" - ${use_date}</a></li>`);
         }
     });
+
+    var exp = $("#id_expiration_date");
+
+    dateReset(exp);
+
+    $(".helptext", exp.parent()).before("<h5 style='display: none' class='exp-header'><b>Suggested Expiration Dates</b></h4><ul class='exp-list'></ul>");
+    $(".helptext", exp.parent()).before("<span class='exp-buttons'>" +
+        "<a id='date-reset-btn' class='button small-button'>Reset to Default</a>" +
+        "<a id='no-expire-btn' class='button small-button'>Don't Expire</a>" +
+        "</span>");
+
+    $(".exp-list").on("click", "a", function () {
+        exp.val(dateFormat(new Date($(this).data("date"))));
+    })
+
+    $("#date-reset-btn").click(function () {
+        dateReset(exp);
+    });
+
+    $("#no-expire-btn").click(function () {
+        date3000(exp);
+    });
 });
+
+function dateReset(exp) {
+    var date = new Date();
+    date.setDate(date.getDate() + 14);
+    exp.val(dateFormat(date));
+}
+
+function date3000(exp) {
+    var date = new Date("3000-01-01 00:00:00");
+    exp.val(dateFormat(date));
+}
+
+function dateFormat(date) {
+    return (date.getFullYear() + "-" +
+        zero(date.getMonth() + 1) + "-" +
+        zero(date.getDate()) + " 23:59:59");
+}
+
+function zero(v) {
+    return v < 10 ? "0" + v : v;
+}
