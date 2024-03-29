@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from ..users.forms import SortedTeacherMultipleChoiceField
@@ -77,10 +78,7 @@ class AnnouncementRequestForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["title"].help_text = (
-            "The title of the announcement that will appear on Intranet. Please enter "
-            "a title more specific than just \"[Club name]'s Intranet Posting'."
-        )
+        self.fields["title"].help_text = "The title of the announcement that will appear on Intranet."
         self.fields["author"].help_text = (
             "If you want this post to have a custom author entry, such as "
             '"Basket Weaving Club" or "TJ Faculty," enter that name here. '
@@ -91,7 +89,7 @@ class AnnouncementRequestForm(forms.ModelForm):
         self.fields["notes"].help_text = (
             "Any information about this announcement you wish to share with the Intranet "
             "administrators and teachers selected above. If you want to restrict this posting "
-            "to a specific group of students, such as the Class of 2016, enter that request here."
+            f"to a specific group of students, such as the Class of {settings.SENIOR_GRADUATION_YEAR}, enter that request here."
         )
         self.fields["teachers_requested"] = SortedTeacherMultipleChoiceField(
             queryset=get_user_model().objects.get_approve_announcements_users_sorted(), show_username=True
