@@ -44,7 +44,9 @@ $(function() {
             "click button#leave-waitlist": "leaveWaitlistClickHandler",
             "click a#roster-button": "rosterClickHandler",
             "click a#roster-waitlist-button": "rosterWaitlistClickHandler",
-            "click button#close-activity-detail": "closeActivityDetail"
+            "click button#close-activity-detail": "closeActivityDetail",
+            "click a#subscribe-button": "subscribeClickHandler",
+            "click a#unsubscribe-button": "unsubscribeClickHandler"
         },
 
         render: function() {
@@ -142,6 +144,62 @@ $(function() {
             $(".primary-content.eighth-signup").removeClass("activity-detail-selected");
             $("#activity-detail").removeClass("selected");
             $("li.selected[data-activity-id]").removeClass("selected");
+        },
+
+        subscribeClickHandler: function(e) {
+            e.preventDefault();
+            var target = e.target;
+            var spinnerEl = document.getElementById("signup-spinner");
+            var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
+            var url = $(target).attr("href");
+            var name = $(target).parent().parent().parent().find(".activity-detail-link").text().trim();
+            $.post(url, function(data) {
+                spinner.spin(false);
+                $(target).html("<i class='fas fa-rss'></i> Unsubscribe");
+                $(target).attr("id", "unsubscribe-button");
+                $(target).attr("href", url.replace("subscribe", "unsubscribe"));
+                Messenger().success({
+                    message: 'Subscribed to club announcements for ' + name + '.',
+                    hideAfter: 2,
+                    showCloseButton: true
+                });
+            }).fail(function (xhr, status, error) {
+                spinner.spin(false);
+                console.error(xhr.responseText);
+                Messenger().error({
+                    message: 'An error occurred subscribing to club announcements for ' + name + '. Try refreshing the page.',
+                    hideAfter: 5,
+                    showCloseButton: false
+                });
+            });
+        },
+
+        unsubscribeClickHandler: function (e) {
+            e.preventDefault();
+            var target = e.target;
+            var spinnerEl = document.getElementById("signup-spinner");
+            var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
+            var url = $(target).attr("href");
+            var name = $(target).parent().parent().parent().find(".activity-detail-link").text().trim();
+            $.post(url, function (data) {
+                spinner.spin(false);
+                $(target).html("<i class='fas fa-rss'></i> Subscribe");
+                $(target).attr("id", "subscribe-button");
+                $(target).attr("href", url.replace("unsubscribe", "subscribe"));
+                Messenger().error({
+                    message: 'Unsubscribed from club announcements for ' + name + '.',
+                    hideAfter: 2,
+                    showCloseButton: true
+                });
+            }).fail(function (xhr, status, error) {
+                spinner.spin(false);
+                console.error(xhr.responseText);
+                Messenger().error({
+                    message: 'An error occurred unsubscribing from club announcements for ' + name + '. Try refreshing the page.',
+                    hideAfter: 5,
+                    showCloseButton: false
+                });
+            });
         }
     });
 

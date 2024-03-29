@@ -1,9 +1,14 @@
+import logging
+
 from django import forms
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from ..eighth.models import EighthActivity
 from ..users.forms import SortedTeacherMultipleChoiceField
 from .models import Announcement, AnnouncementRequest
+
+logger = logging.getLogger(__name__)
 
 
 class AnnouncementForm(forms.ModelForm):
@@ -29,17 +34,28 @@ class ClubAnnouncementForm(forms.ModelForm):
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["activity"].queryset = user.officer_for_set
+
+        if user.is_announcements_admin:
+            self.fields["activity"].queryset = EighthActivity.objects.filter(subscriptions_enabled=True)
+        elif user.is_club_officer:
+            self.fields["activity"].queryset = EighthActivity.objects.filter(subscriptions_enabled=True, officers=user)
+        elif user.is_club_sponsor:
+            self.fields["activity"].queryset = user.club_sponsor_for_set.filter(subscriptions_enabled=True)
+        else:
+            self.fields["activity"].queryset = []
+        self.fields["activity"].required = True
+
+        if "instance" in kwargs:  # Don't allow changing the activity once the announcement has been created
+            self.fields["activity"].widget.attrs["disabled"] = True
+            self.fields["activity"].required = False
 
     expiration_date = forms.DateTimeInput()
-    update_added_date = forms.BooleanField(required=False, label="Update Added Date")
 
     class Meta:
         model = Announcement
-        fields = ["title", "author", "content", "activity", "expiration_date", "update_added_date"]
+        fields = ["activity", "title", "content", "expiration_date"]
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
-            "update_added_date": "If this announcement has already been added, update the added date to now so that the announcement is pushed to the top. If this option is not selected, the announcement will stay in its current position.",
         }
 
 

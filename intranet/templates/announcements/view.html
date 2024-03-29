@@ -30,11 +30,21 @@
 {% block main %}
 <div class="announcements primary-content">
     <div class="announcements-header">
-        <h2>Announcement: {{ announcement.title|escape }}</h2>
+        <h2>
+            {% if announcement.is_club_announcement %}
+                Club Announcement for
+                <a href="{% url 'eighth_activity' announcement.activity.id %}">{{ announcement.activity|escape }}</a>:
+            {% else %}
+            Announcement:
+            {% endif %}
+            {{ announcement.title|escape }}
+        </h2>
     </div>
 
     <div class="announcements-container">
-        {% include "announcements/announcement.html" %}
+        {% with show_icon=True %}
+            {% include "announcements/announcement.html" %}
+        {% endwith %}
     </div>
 </div>
 {% endblock %}
