@@ -338,6 +338,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "groups",
     "board",
     "announcements.form",
+    "announcements.request",
     "polls.form",
     "preferences",
     "signage.base",
