@@ -7,14 +7,36 @@
     <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
 {% endblock %}
 
-<div class="announcement{% if view_announcements_url == "club_announcements" %}{% if request.user in announcement.activity.subscribers.all %} subscribed{% else %} unsubscribed{% endif %}{% endif %}{% if announcement.is_club_announcement and view_announcements_url != "club_announcements" %} remove-on-collapse{% endif %}{% if hide_announcements and announcement.id in user_hidden_announcements %} hidden{% endif %}{% if announcement.pinned %} pinned{% endif %}" data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}">
+<div data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}"
+    class="announcement
+    {% if view_announcements_url == "club_announcements" %}
+        {% if request.user in announcement.activity.subscribers.all %}
+            subscribed
+        {% else %}
+            unsubscribed
+        {% endif %}
+    {% endif %}
+    {% if announcement.is_club_announcement and view_announcements_url != "club_announcements" %}
+        remove-on-collapse
+    {% endif %}
+    {% if hide_announcements and announcement.id in user_hidden_announcements %}
+        hidden
+    {% endif %}
+    {% if announcement.pinned %}
+        pinned
+    {% endif %}">
+
     <h3>
-        {% if show_icon and not announcement.pinned %}
+        {% if show_icon and not announcement.pinned and not announcement.is_club_announcement %}
             <i class="far fa-file-alt dashboard-item-icon" title="Announcement"></i>
         {% endif %}
 
         {% if announcement.pinned %}
             <i class="fas fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
+        {% endif %}
+
+        {% if announcement.is_club_announcement %}
+            <i class="fas fa-users dashboard-item-icon" title="Club announcement"></i>
         {% endif %}
 
         {% if link_to_announcement and not request.user.is_restricted %}
@@ -28,12 +50,18 @@
         <div class="announcement-icon-wrapper">
             {% if announcement.is_club_announcement %}
                 {% if request.user in announcement.activity.subscribers.all %}
-                    <a class="button small-button unsubscribe-button" id="unsubscribe-button" href="{% url 'unsubscribe_from_club' announcement.activity.id %}">
+                    <a class="button small-button unsubscribe-button"
+                        id="unsubscribe-button"
+                        href="{% url 'unsubscribe_from_club' announcement.activity.id %}"
+                        title="Unsubscribe from {{ announcement.activity.name }} club announcements">
                         <i class="fas fa-times"></i>
                         Unsubscribe
                     </a>
                 {% else %}
-                    <a class="button small-button subscribe-button" id="subscribe-button" href="{% url 'subscribe_to_club' announcement.activity.id %}">
+                    <a class="button small-button subscribe-button"
+                        id="subscribe-button"
+                        href="{% url 'subscribe_to_club' announcement.activity.id %}"
+                        title="Subscribe to {{ announcement.activity.name }} club announcements">
                         <i class="fas fa-check"></i>
                         Subscribe
                     </a>
@@ -53,10 +81,16 @@
                     <i class="fas fa-paperclip fa-flip-horizontal"></i>
                 </a>
             {% endif %}
-            {% if request.user.is_announcements_admin %}
+            {% if announcement|argument_request_user:"can_modify" %}
+                {% if announcement.is_club_announcement %}
+                    <a href="{% url 'modify_club_announcement' announcement.id %}" title="Modify club announcement">
+                        <i class="announcement-icon fas fa-pencil-alt"></i>
+                    </a>
+                {% else %}
                 <a href="{% url 'modify_announcement' announcement.id %}" title="Modify announcement">
                     <i class="announcement-icon fas fa-pencil-alt"></i>
                 </a>
+                {% endif %}
                 <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete" title="Delete announcement">
                     <i class="announcement-icon far fa-trash-alt"></i>
                 </a>
@@ -67,7 +101,7 @@
     <div class="announcement-metadata">
         by {{ announcement.get_author|escape }} &bull; <time class="timeago" datetime="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</time> &bull; to
         {% if announcement.is_club_announcement %}
-            {{ announcement.activity.name }}
+            <a class="club-announcement-meta-link" href="{% url 'eighth_activity' announcement.activity.id %}">{{ announcement.activity.name }}</a>
         {% else %}
             {% for group in announcement.groups.all %}
                 {{ group }}

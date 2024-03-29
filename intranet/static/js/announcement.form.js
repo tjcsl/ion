@@ -5,11 +5,12 @@ $(function() {
         placeholder: "Everyone"
     });
 
-    var reset = $("#id_expiration_date").val() !== "3000-01-01 00:00:00";
     $("#id_expiration_date").datetimepicker({
         lazyInit: true,
         format: "Y-m-d H:i:s"
     });
+
+    $("select#id_activity").selectize();
 
     // for approval page
     $("select#id_teachers_requested").selectize({
@@ -44,7 +45,6 @@ $(function() {
     var editor = CKEDITOR.replace("content", {
         width: "600px"
     });
-    var end_index = 0;
 
     editor.on("instanceReady", function () {
         // TODO: Don't duplicate this function. Bad!

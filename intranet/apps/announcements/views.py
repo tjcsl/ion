@@ -15,13 +15,8 @@ from ..dashboard.views import dashboard_view
 from ..groups.models import Group
 from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm, ClubAnnouncementForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (
-    admin_request_announcement_email,
-    announcement_approved_email,
-    announcement_posted_email,
-    announcement_posted_twitter,
-    request_announcement_email,
-)
+from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
+                            request_announcement_email)
 
 logger = logging.getLogger(__name__)
 
@@ -131,7 +126,13 @@ def request_announcement_view(request):
     return render(request, "announcements/request.html", {"form": form, "action": "add"})
 
 
-def post_club_announcement_view(request):
+@login_required
+@deny_restricted
+def add_club_announcement_view(request):
+    if not (request.user.is_announcements_admin or request.user.is_club_officer or request.user.is_club_sponsor):
+        messages.error(request, "You do not have permission to post club announcements.")
+        return redirect("club_announcements")
+
     if request.method == "POST":
         form = ClubAnnouncementForm(request.user, request.POST)
 
@@ -143,13 +144,47 @@ def post_club_announcement_view(request):
 
             obj.save()
 
-            messages.success(request, "Successfully posted announcement.")
+            messages.success(request, "Successfully posted club announcement.")
             return redirect("club_announcements")
         else:
-            messages.error(request, "Error adding announcement")
+            messages.error(request, "Error adding club announcement")
     else:
         form = ClubAnnouncementForm(request.user)
-    return render(request, "announcements/club-request.html", {"form": form, "action": "add"})
+    return render(request, "announcements/club-request.html", {"form": form, "action": "post"})
+
+
+@login_required
+@deny_restricted
+def modify_club_announcement_view(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+
+    if not announcement.is_club_announcement:
+        messages.error(request, "This announcement is not a club announcement.")
+        return redirect("club_announcements")
+
+    if not announcement.can_modify(request.user):
+        messages.error(request, "You do not have permission to modify this club announcement.")
+        return redirect("club_announcements")
+
+    if request.method == "POST":
+        form = ClubAnnouncementForm(request.user, request.POST, instance=announcement)
+
+        if form.is_valid():
+            obj = form.save(commit=True)
+            obj.user = request.user
+            obj.activity = announcement.activity
+            # SAFE HTML
+            obj.content = safe_html(obj.content)
+
+            obj.save()
+
+            messages.success(request, "Successfully modified club announcement.")
+            return redirect("club_announcements")
+        else:
+            messages.error(request, "Error modifying club announcement")
+    else:
+        form = ClubAnnouncementForm(request.user, instance=announcement)
+    return render(request, "announcements/club-request.html", {"form": form, "action": "modify"})
 
 
 @login_required
@@ -355,7 +390,7 @@ def modify_announcement_view(request, announcement_id=None):
             logger.info("Admin %s modified announcement: %s (%s)", request.user, announcement, announcement.id)
             return redirect("index")
         else:
-            messages.error(request, "Error adding announcement")
+            messages.error(request, "Error modifying announcement")
     else:
         announcement = get_object_or_404(Announcement, id=announcement_id)
         form = AnnouncementEditForm(instance=announcement)

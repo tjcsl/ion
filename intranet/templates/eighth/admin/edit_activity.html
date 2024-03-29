@@ -142,7 +142,7 @@ textarea {
             {{ hidden }}
         {% endfor %}
         {% for field in form.visible_fields %}
-            {% if field.name not in form.right_fields %}
+            {% if field.name not in form.right_fields and field.name not in form.club_announcements_fields %}
                 <tr>
                     <th>{{ field.label }}</th><td>{{ field.errors }} {{ field }} {% if field.help_text %}<br><span class="helptext">{{ field.help_text }}</span>{% endif %}</td>
                 </tr>
@@ -232,6 +232,19 @@ textarea {
             <br>
             <button onclick="addGroup()">Add A Group</button>
         {% endif %}
+
+        <br>
+        <h2>Club Announcements:</h2>
+        <table class="edit-table">
+        {% for field in form.visible_fields %}
+            {% if field.name in form.club_announcements_fields %}
+                <tr class="club-announcements-field">
+                    <th>{{ field.label }}</th>
+                    <td>{{ field.errors }} {{ field }} {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </table>
     </div>
 </form>
 {% endblock %}

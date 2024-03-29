@@ -29,10 +29,6 @@
     transition: max-height 0.2s ease-in-out;
     text-align: left;
 
-    &:hover {
-        cursor: pointer;
-    }
-
     &.collapsed {
         max-height: 90px !important;
         overflow: hidden;
@@ -66,10 +62,32 @@
 
 .club-announcements-header {
     text-align: center;
+    margin-bottom: 0;
 }
 
 .club-announcements-content {
     display: none;
+    margin-top: 5px;
+}
+
+.club-announcements-container {
+    .announcement, .announcement-meta {
+        display: none;
+    }
+}
+
+a.club-announcement-meta-link, a.club-announcement-meta-link:visited {
+    color: rgb(144, 144, 144);
+    text-decoration: underline;
+
+    &:hover {
+        color: rgb(66, 66, 66);
+    }
+}
+
+.club-announcements-toggle-icon {
+    float: right;
+    margin-top: 4px;
 }
 
 .announcements-icon-wrapper:has(> .club-announcements-button) {
@@ -77,9 +95,13 @@
         display: block !important;
         width: 100%;
     }
+
+    @media (max-width: 550px) {
+        margin-bottom: 6px;
+    }
 }
 
-.announcement {
+.announcement, .club-announcements, .announcement-meta {
     background-color: white;
     -webkit--radius: 5px;
     -moz--radius: 5px;
@@ -97,6 +119,16 @@
         > a.announcement-link {
             cursor: pointer;
             color: $grey !important;
+        }
+
+        &:hover .announcement-icon-wrapper .announcement-toggle,
+        .announcement-icon-wrapper .announcement-toggle:hover,
+        .announcement-icon-wrapper:hover .announcement-toggle:hover {
+            color: rgb(32, 66, 224);
+        }
+
+        .announcement-icon-wrapper:hover .announcement-toggle {
+            color: $grey;
         }
     }
 
@@ -154,6 +186,18 @@
                 height: 5em;
             }
         }
+    }
+
+    &.club-announcements {
+        background-color: rgb(231, 231, 231);
+    }
+
+    &-icon {
+        cursor: pointer;
+    }
+
+    &.hidden .announcement-toggle-content {
+        display: none;
     }
 }
 
@@ -235,28 +279,6 @@ a.button {
         color: red;
         float: right;
         margin-left: 5px;
-    }
-}
-
-.announcement {
-    h3 {
-        &:hover .announcement-icon-wrapper .announcement-toggle,
-        .announcement-icon-wrapper .announcement-toggle:hover,
-        .announcement-icon-wrapper:hover .announcement-toggle:hover {
-            color: rgb(32, 66, 224);
-        }
-
-        .announcement-icon-wrapper:hover .announcement-toggle {
-            color: $grey;
-        }
-    }
-
-    &-icon {
-        cursor: pointer;
-    }
-
-    &.hidden .announcement-toggle-content {
-        display: none;
     }
 }
 
@@ -348,6 +370,13 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     .announcement h3:hover &,
     .event h3:hover & {
         opacity: 1;
+    }
+
+    &.fa-users {
+        width: 36px;
+        font-size: 28px;
+        position: relative;
+        top: 2px;
     }
 }
 

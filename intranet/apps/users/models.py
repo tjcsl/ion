@@ -929,7 +929,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return EighthSponsor.objects.filter(user=self).exists()
 
     @property
-    def is_eighth_officer(self) -> bool:
+    def is_club_officer(self) -> bool:
         """Checks if this user is an officer of an eighth period activity.
 
         Returns:
@@ -937,6 +937,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
         return self.officer_for_set.exists()
+
+    @property
+    def is_club_sponsor(self) -> bool:
+        """Used only for club announcements permissions. Not used for eighth period scheduling.
+        Use User.is_eighth_sponsor for that instead."""
+        return self.club_sponsor_for_set.exists()
 
     @property
     def frequent_signups(self):
@@ -1270,7 +1276,7 @@ class UserProperties(models.Model):
 
 
 PERMISSIONS_NAMES = {
-    prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
+    prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
 }
 
 

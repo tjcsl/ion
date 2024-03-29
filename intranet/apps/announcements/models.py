@@ -10,7 +10,6 @@ from django.utils import timezone
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
 from ...utils.html import nullify_links
-
 from ..eighth.models import EighthActivity
 
 
@@ -90,7 +89,7 @@ class Announcement(models.Model):
             The title of the announcement
         content
             The HTML content of the news post
-        authors
+        author
             The name of the author
         added
             The date the announcement was added
@@ -152,6 +151,13 @@ class Announcement(models.Model):
     def is_visible(self, user):
         return self in Announcement.objects.visible_to_user(user)
 
+    def can_modify(self, user):
+        return (
+            user.is_announcements_admin
+            or self.is_club_announcement
+            and (self.is_visible_submitter(user) or user.club_sponsor_for_set.filter(id=self.activity.id).exists())
+        )
+
     # False, not None. This can be None if no AnnouncementRequest exists for this Announcement,
     # and we should not reevaluate in that case.
     _announcementrequest = False  # type: AnnouncementRequest
@@ -165,13 +171,13 @@ class Announcement(models.Model):
 
     def is_visible_requester(self, user):
         try:
-            return self.announcementrequest_set.filter(teachers_requested__id=user.id).exists()
+            return self.announcementrequest_set.filter(teachers_requested=user).exists()
         except get_user_model().DoesNotExist:
             return False
 
     def is_visible_submitter(self, user):
         try:
-            return (self.announcementrequest and user.id == self.announcementrequest.user_id) or self.user_id == user.id
+            return self.user == user or self.announcementrequest and user == self.announcementrequest.user
         except get_user_model().DoesNotExist:
             return False
 

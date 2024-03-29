@@ -239,11 +239,11 @@ def get_announcements_list(request, context):
 
     # Load information on the user who posted the announcement
     # Unless the announcement has a custom author (some do, but not all), we will need the user information to construct the byline,
-    announcements = announcements.select_related("user")
+    announcements = announcements.select_related("user", "activity")
 
     # We may query the announcement request multiple times while checking if the user submitted or approved the announcement.
     # prefetch_related() will still make a separate query for each request, but the results are cached if we check them multiple times
-    announcements = announcements.prefetch_related("announcementrequest_set")
+    announcements = announcements.prefetch_related("announcementrequest_set", "groups")
 
     if context["events_admin"] and context["show_all"]:
         events = Event.objects.all()
@@ -254,6 +254,8 @@ def get_announcements_list(request, context):
             # Unlike announcements, show events for the rest of the day after they occur.
             midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
             events = Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True)
+
+    events = events.select_related("user").prefetch_related("groups")
 
     items = sorted(chain(announcements, events), key=lambda item: (item.pinned, item.added))
     items.reverse()
@@ -266,7 +268,8 @@ def split_club_announcements(items):
 
     for item in items:
         if item.dashboard_type == "announcement" and item.is_club_announcement:
-            club.append(item)
+            if item.activity.subscriptions_enabled:
+                club.append(item)
         else:
             standard.append(item)
 
@@ -277,12 +280,13 @@ def filter_club_announcements(user, user_hidden_announcements, club_items):
     visible, hidden, unsubscribed = [], [], []
 
     for item in club_items:
-        if user not in item.activity.subscribers.all():
-            unsubscribed.append(item)
-        elif item.id in user_hidden_announcements:
-            hidden.append(item)
-        else:
-            visible.append(item)
+        if item.activity.subscriptions_enabled:
+            if user not in item.activity.subscribers.all():
+                unsubscribed.append(item)
+            elif item.id in user_hidden_announcements:
+                hidden.append(item)
+            else:
+                visible.append(item)
 
     return visible, hidden, unsubscribed
 

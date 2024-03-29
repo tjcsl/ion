@@ -75,7 +75,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=set_historical_user)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=set_historical_user, related_name="sponsor_obj")
     department = models.CharField(max_length=20, choices=DEPARTMENTS, default="general")
     full_time = models.BooleanField(default=True)
     online_attendance = models.BooleanField(default=True)
@@ -243,7 +243,6 @@ class EighthActivity(AbstractBaseEighthModel):
     name = models.CharField(max_length=100, validators=[validators.MinLengthValidator(4)])  # This should really be unique
     description = models.CharField(max_length=2000, blank=True)
     sponsors = models.ManyToManyField(EighthSponsor, blank=True)
-    officers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="officer_for_set", blank=True)
     rooms = models.ManyToManyField(EighthRoom, blank=True)
     default_capacity = models.SmallIntegerField(null=True, blank=True)
 
@@ -272,14 +271,18 @@ class EighthActivity(AbstractBaseEighthModel):
     fri_a = models.BooleanField("Meets Friday A", default=False)
     fri_b = models.BooleanField("Meets Friday B", default=False)
 
+    # For club announcements
+    subscriptions_enabled = models.BooleanField(default=False)
+    subscribers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="subscribed_activity_set", blank=True)
+    officers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="officer_for_set", blank=True)
+    # Can be different from the sponsor(s) listed for scheduling purposes
+    club_sponsors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="club_sponsor_for_set", blank=True)
+
     admin_comments = models.CharField(max_length=1000, blank=True)
 
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="favorited_activity_set", blank=True)
 
     similarities = models.ManyToManyField("EighthActivitySimilarity", related_name="activity_set", blank=True)
-
-    subscriptions_enabled = models.BooleanField(default=False)
-    subscribers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="subscribed_activity_set", blank=True)
 
     deleted = models.BooleanField(blank=True, default=False)
 

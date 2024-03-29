@@ -135,9 +135,18 @@ class ActivityForm(forms.ModelForm):
         student_objects = get_user_model().objects.get_students()
         self.fields["users_allowed"].queryset = student_objects
         self.fields["users_blacklisted"].queryset = student_objects
+        self.fields["officers"].queryset = student_objects
+        self.fields["club_sponsors"].queryset = get_user_model().objects.filter(user_type__in=["teacher", "counselor"])
 
         self.fields["presign"].label = "2 day pre-signup"
         self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
+        self.fields["subscriptions_enabled"].label = "Enable club announcements"
+        self.fields["subscriptions_enabled"].help_text = "Allow students to subscribe to receive announcements for this activity through Ion."
+        self.fields["officers"].help_text = "Student officers can send club announcements to subscribers."
+        self.fields["club_sponsors"].help_text = (
+            "Club sponsors can manage this club's announcements. May be different from the activity's scheduled sponsors."
+        )
+        self.fields["subscribers"].help_text = "Students who subscribe to this activity will receive club announcements."
 
         # These fields are rendered on the right of the page on the edit activity page.
         self.right_fields = set(
@@ -150,6 +159,15 @@ class ActivityForm(forms.ModelForm):
                 "sophomores_allowed",
                 "juniors_allowed",
                 "seniors_allowed",
+            ]
+        )
+
+        self.club_announcements_fields = set(
+            [
+                "subscriptions_enabled",
+                "club_sponsors",
+                "officers",
+                "subscribers",
             ]
         )
 
@@ -182,6 +200,10 @@ class ActivityForm(forms.ModelForm):
             "fri_a",
             "fri_b",
             "admin_comments",
+            "subscriptions_enabled",
+            "club_sponsors",
+            "officers",
+            "subscribers",
         ]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 9, "cols": 46}),
