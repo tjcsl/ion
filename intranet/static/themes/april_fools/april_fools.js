@@ -1,6 +1,6 @@
 $(function() {
     // One in 10 chance of a hair appearing on the page
-    if (Math.random() < 1) {
+    if (Math.random() < 0.1) {
         const hairElem = $(`<div class="hair"><div class="hair-click"></div></div>`)
         $("body").append(hairElem);
 
