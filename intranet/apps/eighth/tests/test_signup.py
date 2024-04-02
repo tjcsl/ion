@@ -109,7 +109,7 @@ class EighthSignupTest(EighthAbstractTest):
         schactA.capacity = 1
         schactA.save()
 
-        # Add user to an activity with 48 hour presign before 48 hours (this should fail)
+        # Add user to an activity with 2 day presign before 2 days (this should fail)
         activity.presign = True
         activity.save()
 

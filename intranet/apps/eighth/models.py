@@ -191,7 +191,7 @@ class EighthActivity(AbstractBaseEighthModel):
             Use scheduled_activity.get_true_rooms()
         default_capacity (int): The default capacity, which overrides the sum of the default rooms when
             scheduling the activity. By default, this has a null value and is ignored.
-        presign (bool): If True, the activity can only be signed up for within 48 hours of the day that
+        presign (bool): If True, the activity can only be signed up for within 2 days of the day that
             the activity is scheduled.
         one_a_day (bool): If True, a student can only sign up for one instance of this activity per day.
         both_blocks (bool): If True, a signup for an EighthScheduledActivity during an A or B block will
@@ -978,7 +978,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def is_too_early_to_signup(self, now: Optional[datetime.datetime] = None) -> (bool, datetime):
         """Returns whether it is too early to sign up for the activity
         if it is a presign.
-        This contains the 48 hour presign logic.
+        This contains the 2 day pre-signup logic.
         Args:
             now: A datetime object to use for the check instead of the current time.
         Returns:
