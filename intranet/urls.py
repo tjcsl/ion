@@ -11,7 +11,7 @@ admin.autodiscover()
 admin.site.site_header = "Ion Administration"  # type: ignore
 
 urlpatterns = [
-    re_path(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon.ico"), name="favicon"),
+    re_path(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon/favicon.ico"), name="favicon"),
     re_path(r"^robots\.txt$", RedirectView.as_view(url="/static/robots.txt"), name="robots"),
     re_path(r"^manifest\.json$", RedirectView.as_view(url="/static/manifest.json"), name="chrome_manifest"),
     re_path(r"^serviceworker\.js$", RedirectView.as_view(url="/static/serviceworker.js"), name="chrome_serviceworker"),
