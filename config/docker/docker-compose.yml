@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   redis:
-    container_name: server
+    container_name: intranet_redis
     image: redis:latest
     networks:
       - intranet_net
@@ -10,7 +10,7 @@ services:
       - "6379"
 
   postgres:
-    container_name: database
+    container_name: intranet_postgres
     image: postgres:latest
     networks:
       - intranet_net
@@ -23,9 +23,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  application:
-    container_name: intranet
-    image: application
+  django:
+    container_name: intranet_django
+    image: intranet_image
     networks:
       - intranet_net
     entrypoint:
@@ -47,8 +47,8 @@ services:
       - postgres
 
   celery:
-    container_name: celery
-    image: application
+    container_name: intranet_celery
+    image: intranet_image
     networks:
       - intranet_net
     entrypoint:
@@ -59,13 +59,13 @@ services:
          celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"
       ]
     depends_on:
-      - application
+      - intranet_django
     volumes:
       - ../../:/ion:z
 
   celerybeat:
-    container_name: celerybeat
-    image: application
+    container_name: intranet_celerybeat
+    image: intranet_image
     networks:
       - intranet_net
     entrypoint:
@@ -76,7 +76,7 @@ services:
          celery --app intranet beat -l info"
       ]
     depends_on:
-      - application
+      - intranet_django
     volumes:
       - ../../:/ion:z
 
