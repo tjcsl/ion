@@ -89,7 +89,7 @@ def validate(username: str) -> str:
     return username
 
 
-def generate_names(args: argparse.Namespace) -> list[tuple[str]]:
+def generate_names(args: argparse.Namespace) -> "list[tuple[str]]":
     for i, name in enumerate(args.names):
         username = ""
         if not args.noyear and args.type != "teacher":
