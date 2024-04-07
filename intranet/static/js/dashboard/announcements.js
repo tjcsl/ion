@@ -158,6 +158,10 @@ function announcementToggle() {
 function filterClubAnnouncements() {
     if ($(".subscribed-filter").hasClass("active")) {
         $(".announcement").each(function () {
+            if ($(this).hasClass("exclude-subscribed-filer")) {
+                $(this).fadeIn();
+                return;
+            }
             if ($(this).hasClass("subscribed")) {
                 $(this).fadeIn();
             } else {
@@ -166,6 +170,10 @@ function filterClubAnnouncements() {
         });
     } else if ($(".unsubscribed-filter").hasClass("active")) {
         $(".announcement").each(function () {
+            if ($(this).hasClass("exclude-subscribed-filer")) {
+                $(this).fadeIn();
+                return;
+            }
             if ($(this).hasClass("subscribed")) {
                 $(this).hide();
             } else {
