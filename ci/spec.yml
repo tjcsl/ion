@@ -57,8 +57,7 @@ env:
 
       pip install -U pip setuptools wheel
       pip install -U \
-        flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \
-        coveralls pyyaml pytest-django
+        pre-commit coveralls pyyaml pytest-django
       pip install -U -r requirements.txt
 
       echo "PATH=$PATH" >> $GITHUB_ENV
@@ -83,30 +82,8 @@ jobs:
       - *setup_packages
       - *copy_secret
 
-      - name: Run flake8
-        run: 'flake8 --max-line-length 150 --exclude=*/migrations/* intranet/ scripts/ docs/ *.py'
-      - name: Run pylintx
-        run: pylint --jobs=0 --disable=fixme,broad-exception-caught,broad-exception-raised,unsupported-binary-operation,global-statement,attribute-defined-outside-init,cyclic-import,consider-using-f-string --django-settings-module=intranet.settings intranet/
-
-  formatting:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        python-version: *python_versions
-      fail-fast: false
-
-    steps:
-      - *repo_setup
-      - *python_setup
-      - *setup_pip_cache
-      - *setup_packages
-      - *copy_secret
-
-      - name: Format code
-        run: ./scripts/build_ensure_no_changes.sh ./scripts/format.sh
-      - name: Format static files and templates
-        run: ./scripts/build_ensure_no_changes.sh ./scripts/static_templates_format.sh
+      - name: Run pre-commit
+        run: 'pre-commit run --all-files'
 
   build:
     runs-on: ubuntu-latest
@@ -256,7 +233,6 @@ jobs:
   finish_success:
     needs:
       - linting
-      - formatting
       - build
       - tests
 
