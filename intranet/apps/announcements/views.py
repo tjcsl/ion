@@ -15,8 +15,13 @@ from ..dashboard.views import dashboard_view
 from ..groups.models import Group
 from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm, ClubAnnouncementForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
-                            request_announcement_email)
+from .notifications import (
+    admin_request_announcement_email,
+    announcement_approved_email,
+    announcement_posted_email,
+    announcement_posted_twitter,
+    request_announcement_email,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -129,7 +134,11 @@ def request_announcement_view(request):
 @login_required
 @deny_restricted
 def add_club_announcement_view(request):
-    if not (request.user.is_announcements_admin or request.user.is_club_officer or request.user.is_club_sponsor):
+    is_announcements_admin = request.user.is_announcements_admin
+    is_club_sponsor = request.user.is_club_sponsor
+    is_club_officer = request.user.is_club_officer
+
+    if not (is_announcements_admin or is_club_sponsor or is_club_officer):
         messages.error(request, "You do not have permission to post club announcements.")
         return redirect("club_announcements")
 
@@ -150,6 +159,16 @@ def add_club_announcement_view(request):
             messages.error(request, "Error adding club announcement")
     else:
         form = ClubAnnouncementForm(request.user)
+
+        if not form.fields["activity"].queryset.exists():
+            if is_announcements_admin:
+                messages.error(request, "No clubs have enabled this feature yet.")
+            elif is_club_sponsor:
+                messages.error(request, "Please enable club announcements for your club.")
+            else:
+                messages.error(request, "Please ask your club sponsor to enable posting announcements for your club.")
+            return redirect("club_announcements")
+
     return render(request, "announcements/club-request.html", {"form": form, "action": "post"})
 
 
