@@ -47,67 +47,15 @@
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \\\n  coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
                     "run": "cp intranet/settings/ci_secret.py intranet/settings/secret.py"
                 },
                 {
-                    "name": "Run flake8",
-                    "run": "flake8 --max-line-length 150 --exclude=*/migrations/* intranet/ scripts/ docs/ *.py"
-                },
-                {
-                    "name": "Run pylintx",
-                    "run": "pylint --jobs=0 --disable=fixme,broad-exception-caught,broad-exception-raised,unsupported-binary-operation,global-statement,attribute-defined-outside-init,cyclic-import,consider-using-f-string --django-settings-module=intranet.settings intranet/"
-                }
-            ]
-        },
-        "formatting": {
-            "runs-on": "ubuntu-latest",
-            "strategy": {
-                "matrix": {
-                    "python-version": [
-                        3.8
-                    ]
-                },
-                "fail-fast": false
-            },
-            "steps": [
-                {
-                    "name": "Set up repo",
-                    "uses": "actions/checkout@v2"
-                },
-                {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v2",
-                    "with": {
-                        "python-version": "${{ matrix.python-version }}"
-                    }
-                },
-                {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v2",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
-                },
-                {
-                    "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \\\n  coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
-                },
-                {
-                    "name": "Copy secret.py",
-                    "run": "cp intranet/settings/ci_secret.py intranet/settings/secret.py"
-                },
-                {
-                    "name": "Format code",
-                    "run": "./scripts/build_ensure_no_changes.sh ./scripts/format.sh"
-                },
-                {
-                    "name": "Format static files and templates",
-                    "run": "./scripts/build_ensure_no_changes.sh ./scripts/static_templates_format.sh"
+                    "name": "Run pre-commit",
+                    "run": "pre-commit run --all-files"
                 }
             ]
         },
@@ -146,7 +94,7 @@
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \\\n  coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -251,7 +199,7 @@
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  flake8 pylint pylint-django pylint-plugin-utils isort black autopep8 \\\n  coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -328,7 +276,6 @@
         "finish_success": {
             "needs": [
                 "linting",
-                "formatting",
                 "build",
                 "tests"
             ],
