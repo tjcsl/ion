@@ -9,6 +9,17 @@ Subpackages
 
    intranet.apps.eighth.forms.admin
 
+Submodules
+----------
+
+intranet.apps.eighth.forms.activities module
+--------------------------------------------
+
+.. automodule:: intranet.apps.eighth.forms.activities
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
