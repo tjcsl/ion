@@ -14,15 +14,15 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import HttpResponse, Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 
-from ..forms.activities import ActivitySettingsForm
 from ....utils.date import get_date_range_this_year, get_senior_graduation_year
 from ....utils.helpers import is_entirely_digit
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_sponsor_required
+from ..forms.activities import ActivitySettingsForm
 from ..forms.admin.activities import ActivityMultiSelectForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..utils import get_start_date
@@ -79,7 +79,7 @@ def settings_view(request, activity_id=None):
 
 def chunks(items, n):
     for i in range(0, len(items), n):
-        yield items[i : i + n]
+        yield items[i: i + n]
 
 
 def current_school_year():

@@ -15,13 +15,8 @@ from ..dashboard.views import dashboard_view
 from ..groups.models import Group
 from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm, ClubAnnouncementForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (
-    admin_request_announcement_email,
-    announcement_approved_email,
-    announcement_posted_email,
-    announcement_posted_twitter,
-    request_announcement_email,
-)
+from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
+                            request_announcement_email)
 
 logger = logging.getLogger(__name__)
 
