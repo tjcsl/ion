@@ -40,6 +40,7 @@ urlpatterns = [
     re_path(r"^/roster/raw/waitlist/(?P<scheduled_activity_id>\d+)$", attendance.raw_waitlist_view, name="eighth_raw_waitlist"),
     # Activity Info (for students/teachers)
     re_path(r"^/activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
+    re_path(r"^/activity/(?P<activity_id>\d+)/settings$", activities.settings_view, name="eighth_activity_settings"),
     re_path(r"^/activity/statistics/global$", activities.stats_global_view, name="eighth_statistics_global"),
     re_path(r"^/activity/statistics/multiple$", activities.stats_multiple_view, name="eighth_statistics_multiple"),
     re_path(r"^/activity/statistics/(?P<activity_id>\d+)$", activities.stats_view, name="eighth_statistics"),
