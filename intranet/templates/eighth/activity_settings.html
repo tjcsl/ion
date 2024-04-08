@@ -1,0 +1,78 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    <style>
+        .selectize-control {
+            margin-bottom: -18px;
+        }
+        td {
+            padding-bottom: 25px;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+    <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
+    <script src="{% static 'js/eighth/attendance.js' %}"></script>
+    <script src="{% static 'js/eighth/ui_init.js' %}"></script>
+    <script src="{% static 'js/eighth/user_link.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="eighth primary-content">
+    <a class="button" href="{% url 'eighth_take_attendance' activity.id %}">
+        <i class="fa fa-arrow-left"></i>
+        Back to Attendance
+    </a>
+    <h2>Club Announcements Settings for {{ activity }}</h2>
+    <p>
+      Club announcements are a way for eighth period activities to reach the TJ community.
+      Students receive these announcements on Ion and by email when they subscribe to the club.
+    </p>
+    <br>
+    <p>
+      Club officers can post announcements without an approval requirement.
+      However, teacher moderators and Ion admins can always review these posts.
+    </p>
+    <br>
+    <p>
+      You can enable the feature for your club below, and choose who can send announcements on your club's behalf.
+    </p>
+    <br>
+    <table>
+        <form action="" method="post" autocomplete="off">
+        {% csrf_token %}
+            <tr>
+                <td colspan="2">
+                    <hr>
+                </td>
+            </tr>
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <button type="submit" style="width: 200px;">Save</button>
+                </td>
+            </tr>
+        </form>
+    </table>
+</div>
+{% endblock %}

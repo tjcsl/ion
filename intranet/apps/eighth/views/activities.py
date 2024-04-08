@@ -5,10 +5,11 @@ from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta
 from io import BytesIO
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
 from reportlab.lib.pagesizes import letter
@@ -16,10 +17,11 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table
 
+from ..forms.activities import ActivitySettingsForm
 from ....utils.date import get_date_range_this_year, get_senior_graduation_year
 from ....utils.helpers import is_entirely_digit
 from ....utils.serialization import safe_json
-from ...auth.decorators import deny_restricted
+from ...auth.decorators import deny_restricted, eighth_sponsor_required
 from ..forms.admin.activities import ActivityMultiSelectForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..utils import get_start_date
@@ -48,6 +50,30 @@ def activity_view(request, activity_id=None):
     context = {"activity": activity, "scheduled_activities": scheduled_activities}
 
     return render(request, "eighth/activity.html", context)
+
+
+@eighth_sponsor_required
+def settings_view(request, activity_id=None):
+    activity = get_object_or_404(EighthActivity, id=activity_id)
+
+    if not request.user.sponsor_obj:
+        raise Http404
+
+    if request.user.sponsor_obj not in activity.sponsors.all():
+        raise Http404
+
+    if request.method == "POST":
+        form = ActivitySettingsForm(request.POST, instance=activity)
+        if form.is_valid():
+            form.save()
+        else:
+            messages.error(request, "There was an error saving the activity settings.")
+    else:
+        form = ActivitySettingsForm(instance=activity)
+
+    context = {"activity": activity, "form": form}
+
+    return render(request, "eighth/activity_settings.html", context)
 
 
 def chunks(items, n):
