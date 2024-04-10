@@ -23,6 +23,7 @@ for year in "freshman" "sophomore" "junior" "senior"; do
     python3 create_users.py -t admin -nw -y $year -n admin admin1 admin2 admin3 admin4 admin5
 done
 python3 create_users.py -nw -ny -t admin -n admin 
+python3 create_users.py -nw -ny -t teacher -n teacher 
 python3 create_users.py -t admin -c 10
 python3 create_users.py -t student -c 100
 python3 create_users.py -t teacher -c 20

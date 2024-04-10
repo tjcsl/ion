@@ -1,6 +1,8 @@
+import io
 import logging
 
 from cacheops import invalidate_obj
+from PIL import Image
 
 from django.conf import settings
 from django.contrib import messages
@@ -10,8 +12,9 @@ from django.shortcuts import redirect, render
 
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
-from ..users.models import Email
-from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
+from ..users.models import Email, Photo
+from .forms import (BusRouteForm, DarkModeForm, DeletePictureForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm,
+                    UploadPictureForm)
 
 # from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
 #                    WebsiteFormset)
@@ -90,7 +93,16 @@ def get_preferred_pic(user):
     # FIXME: remove this hardcoded junk
     preferred_pic = {"preferred_photo": "AUTO"}
     if user.preferred_photo:
-        preferred_pic["preferred_photo"] = user.preferred_photo.grade_number
+        if user.is_student:
+            preferred_pic["preferred_photo"] = user.preferred_photo.grade_number
+        else:
+            photo_idx = -1
+            for idx, photo in enumerate(user.photos.all()):
+                if photo.id == user.preferred_photo.id:
+                    photo_idx = idx
+                    break
+            if photo_idx != -1:
+                preferred_pic["preferred_photo"] = str(photo_idx)
 
     return preferred_pic
 
@@ -112,7 +124,11 @@ def save_preferred_pic(request, user):
                         if new_preferred_pic == "AUTO":
                             user.preferred_photo = None
                         else:
-                            user.preferred_photo = user.photos.get(grade_number=new_preferred_pic)
+                            if user.is_student:
+                                photo = user.photos.get(grade_number=new_preferred_pic)
+                            else:
+                                photo = user.photos.all()[int(new_preferred_pic)]
+                            user.preferred_photo = photo
                         user.save()
                     except Exception as e:
                         messages.error(request, "Unable to set field {} with value {}: {}".format("preferred_pic", new_preferred_pic, e))
@@ -291,6 +307,45 @@ def save_dark_mode_settings(request, user):
     return dark_mode_form
 
 
+def save_uploaded_picture(request, user):
+    upload_picture_form = UploadPictureForm(request.POST, request.FILES)
+    if upload_picture_form.is_valid():
+        try:
+            upload_photo = upload_picture_form.cleaned_data["uploaded_photo"]
+
+            img = Image.open(upload_photo)
+            current_size = img.size
+            new_size = (min(current_size[0], 200), min(current_size[1], 250))
+            img = img.resize(new_size)
+
+            img_arr = io.BytesIO()
+            img.save(img_arr, format="JPEG")
+
+            value = img_arr.getvalue()
+            Photo.objects.create(user=user, grade_number=13, _binary=value)
+        except Exception as e:
+            logger.error("Error saving uploaded image: %s", e)
+
+    return upload_picture_form
+
+
+def save_deleted_picture(request, user):
+    delete_picture_form = DeletePictureForm(user, data=request.POST)
+    if delete_picture_form.is_valid():
+        photo_idxs_to_delete = delete_picture_form.cleaned_data["photos_to_delete"]
+        photo_idxs_to_delete = [int(p_idx) for p_idx in photo_idxs_to_delete]
+
+        photos_to_delete = []
+        for idx, photo in enumerate(user.photos.all()):
+            if idx in photo_idxs_to_delete:
+                photos_to_delete.append(photo)
+
+        for photo in photos_to_delete:
+            photo.delete()
+
+    return delete_picture_form
+
+
 @login_required
 def preferences_view(request):
     """View and process updates to the preferences page."""
@@ -300,8 +355,15 @@ def preferences_view(request):
         logger.debug("Preparing to update user preferences for user %s", request.user.id)
         # phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
         _, email_formset, _, errors = save_personal_info(request, user)
-        if user.is_student:
+
+        if user.is_student or user.is_teacher:
             preferred_pic_form = save_preferred_pic(request, user)
+
+        if user.is_teacher:
+            upload_picture_form = save_uploaded_picture(request, user)
+            delete_picture_form = save_deleted_picture(request, user)
+
+        if user.is_student:
             bus_route_form = save_bus_route(request, user)
             """
             The privacy options form is disabled due to the
@@ -309,10 +371,7 @@ def preferences_view(request):
             """
             # privacy_options_form = save_privacy_options(request, user)
             privacy_options_form = None
-        else:
-            preferred_pic_form = None
-            bus_route_form = None
-            privacy_options_form = None
+
         notification_options_form = save_notification_options(request, user)
 
         dark_mode_form = save_dark_mode_settings(request, user)
@@ -332,10 +391,23 @@ def preferences_view(request):
         email_formset = EmailFormset(instance=user, prefix="ef")
         # website_formset = WebsiteFormset(instance=user, prefix="wf")
 
-        if user.is_student:
+        preferred_pic = None
+        preferred_pic_form = None
+        bus_route_form = None
+        privacy_options_form = None
+        upload_picture_form = None
+        delete_picture_form = None
+
+        if user.is_student or user.is_teacher:
             preferred_pic = get_preferred_pic(user)
-            bus_route = get_bus_route(user)
             preferred_pic_form = PreferredPictureForm(user, initial=preferred_pic)
+
+        if user.is_teacher:
+            upload_picture_form = UploadPictureForm()
+            delete_picture_form = DeletePictureForm(user)
+
+        if user.is_student:
+            bus_route = get_bus_route(user)
             bus_route_form = BusRouteForm(initial=bus_route)
 
             """
@@ -346,11 +418,6 @@ def preferences_view(request):
             privacy_options = get_privacy_options(user)
             privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)
             """
-            privacy_options_form = None
-        else:
-            bus_route_form = None
-            preferred_pic = None
-            preferred_pic_form = None
             privacy_options_form = None
 
         notification_options = get_notification_options(user)
@@ -367,6 +434,8 @@ def preferences_view(request):
         "notification_options_form": notification_options_form,
         "bus_route_form": bus_route_form if settings.ENABLE_BUS_APP else None,
         "dark_mode_form": dark_mode_form,
+        "upload_picture_form": upload_picture_form,
+        "delete_picture_form": delete_picture_form,
     }
     return render(request, "preferences/preferences.html", context)
 

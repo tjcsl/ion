@@ -32,7 +32,7 @@
 
 {% block js %}
     {{ block.super }}
-    {% if profile_user.is_student %}
+    {% if profile_user.is_student or profile_user.is_teacher %}
         <script>
             $(document).ready(function() {
                 $('.preferred-user-picture img, .preferred-user-picture span').click(function() {
@@ -124,13 +124,27 @@
                     </td>
                 </tr>
             </table>
+        {% elif profile_user.is_teacher %}
+            <table>
+                <tr>
+                    {% for photo in profile_user.photos.all %}
+                    {% with forloop.counter0|stringformat:"s" as s_idx %}
+                    <td>
+                        <img data-src="{% url 'profile_picture' profile_user.id 'teacher'|add:s_idx %}" alt="Picture {{forloop.counter}}" title="Picture {{forloop.counter}}">
+                        <br>
+                        Picture {{forloop.counter}}
+                    </td>
+                    {% endwith %}
+                    {% endfor %}
+                </tr>
+            </table>
         {% else %}
             No other pictures are available.
         {% endif %}
         </div>
-        <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">
+        <div class="{% if profile_user.is_student or profile_user.is_teacher %}multiple-pics{% endif %} preferred-user-picture">
             <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172">
-            {% if profile_user.is_student %}
+            {% if profile_user.is_student or profile_user.is_teacher %}
                 <span>
                     View all pictures
                 </span>
