@@ -646,7 +646,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("eighth")
 
     @property
-    def has_print_permission(self) -> bool:
+    def is_printing_admin(self) -> bool:
         """Checks if user has the admin permission 'printing'.
 
         Returns:
