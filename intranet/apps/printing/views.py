@@ -25,11 +25,31 @@ from ..context_processors import _get_current_ip
 from .forms import PrintJobForm
 from .models import PrintJob
 
+from rest_framework.decorators import throttle_classes, api_view
+from rest_framework.throttling import SimpleRateThrottle
+
 logger = logging.getLogger(__name__)
 
 
 class InvalidInputPrintingError(Exception):
     """An error occurred while printing, but it was due to invalid input from the user and is not worthy of a ``CRITICAL`` log message."""
+
+
+class PrintingThrottle(SimpleRateThrottle):
+    """Prevent an authenticated user from excessive printing. Only rate limits POST requests."""
+    rate = "10/minute"
+    def allow_request(self, request, view):
+        if request.method == "GET":
+            return True
+        # It's a post request, so call SimpleRateThrottle to either return True or False based on if the user
+        # needs to be throttled or not.
+        return super().allow_request(request, view)
+
+    def get_cache_key(self, request, view):
+        # Need to override this function since we are extending SimpleRateThrottle
+        # This is used to determine if the user needs to be throttled or not
+        # We can use 'user.id' as the user has to be authenticated due to @login_required in the print_view function
+        return f"throttle_{self.scope}_{request.user.id}"
 
 
 def get_printers() -> Dict[str, str]:
@@ -406,6 +426,8 @@ def print_job(obj: PrintJob, do_print: bool = True):
 
 @login_required
 @deny_restricted
+@api_view(['GET', 'POST'])
+@throttle_classes([PrintingThrottle])
 def print_view(request):
     if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
         messages.error(request, "You don't have printer access outside of the TJ network.")
