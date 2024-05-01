@@ -17,7 +17,7 @@ def email_send(
     headers: Mapping[str, str] = None,  # pylint: disable=unsubscriptable-object
     bcc: bool = False,
     *,
-    custom_logger: logging.Logger = None
+    custom_logger: logging.Logger = None,
 ) -> EmailMultiAlternatives:
     """Send an HTML/Plaintext email with the following fields.
     If we are not in production and settings.FORCE_EMAIL_SEND is not set, does not actually send the email
