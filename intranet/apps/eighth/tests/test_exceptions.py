@@ -31,4 +31,4 @@ class EighthExceptionTest(IonTestCase):
 
         # Test string representations
         self.assertEqual(str(signup_exception), "ScheduledActivityCancelled, SignupForbidden")
-        self.assertEqual(repr(signup_exception), "SignupException({})".format(str(signup_exception)))
+        self.assertEqual(repr(signup_exception), f"SignupException({signup_exception})")

@@ -127,7 +127,7 @@ def schedule_activity_view(request):
                     # EighthScheduledActivity instance. If there are students
                     # in the activity then error out.
                     if form["unschedule"].value() and instance.cancelled:
-                        name = "{}".format(instance)
+                        name = str(instance)
                         count = instance.eighthsignup_set.count()
                         bb_ok = True
                         sibling = False
@@ -141,13 +141,13 @@ def schedule_activity_view(request):
                             instance.delete()
                             if sibling:
                                 sibling.delete()
-                            messages.success(request, "Unscheduled {}".format(name))
+                            messages.success(request, f"Unscheduled {name}")
 
                             continue  # don't run instance.save()
                         elif count == 1:
-                            messages.error(request, "Did not unschedule {} because there is {} student signed up.".format(name, count))
+                            messages.error(request, f"Did not unschedule {name} because there is {count} student signed up.")
                         else:
-                            messages.error(request, "Did not unschedule {} because there are {} students signed up.".format(name, count))
+                            messages.error(request, f"Did not unschedule {name} because there are {count} students signed up.")
                     instance.save()
 
             messages.success(request, "Successfully updated schedule.")
@@ -333,7 +333,7 @@ class EighthAdminTransferStudentsWizard(SessionWizardView):
         dest_activity = form_list[3].cleaned_data["activity"]
         dest_scheduled_activity = EighthScheduledActivity.objects.get(block=dest_block, activity=dest_activity)
 
-        req = "source_act={}&dest_act={}".format(source_scheduled_activity.id, dest_scheduled_activity.id)
+        req = f"source_act={source_scheduled_activity.id}&dest_act={dest_scheduled_activity.id}"
 
         return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
 
@@ -374,7 +374,7 @@ class EighthAdminUnsignupStudentsWizard(SessionWizardView):
         source_activity = form_list[1].cleaned_data["activity"]
         source_scheduled_activity = EighthScheduledActivity.objects.get(block=source_block, activity=source_activity)
 
-        req = "source_act={}&dest_unsignup=1".format(source_scheduled_activity.id)
+        req = f"source_act={source_scheduled_activity.id}&dest_unsignup=1"
 
         return redirect("/eighth/admin/scheduling/transfer_students_action?" + req)
 
@@ -421,7 +421,7 @@ def transfer_students_action(request):
         if dest_unsignup and not dest_act:
             source_act.eighthsignup_set.all().delete()
             invalidate_obj(source_act)
-            messages.success(request, "Successfully removed signups for {} students.".format(num))
+            messages.success(request, f"Successfully removed signups for {num} students.")
         elif dest_act.block != source_act.block:
             # In order to prevent duplicate signups when transferring students between activities in different blocks,
             # we need to delete any `EighthSignup`s already present in the block of `dest_act` for transferred students.
@@ -442,7 +442,7 @@ def transfer_students_action(request):
 
             invalidate_obj(source_act)
             invalidate_obj(dest_act)
-            messages.success(request, "Successfully transfered {} students.".format(num))
+            messages.success(request, f"Successfully transferred {num} students.")
 
             if duplicate_sign_up_users:
                 if send_emails:
@@ -458,7 +458,7 @@ def transfer_students_action(request):
 
             invalidate_obj(source_act)
             invalidate_obj(dest_act)
-            messages.success(request, "Successfully transfered {} students.".format(num))
+            messages.success(request, f"Successfully transferred {num} students.")
 
             return redirect("eighth_admin_dashboard")
 
@@ -476,7 +476,7 @@ def remove_duplicates_view(request):
     if request.method == "POST":
         try:
             call_command("delete_duplicate_signups")
-            messages.success(request, "Successfully removed {} duplicate signups.".format(duplicates.count()))
+            messages.success(request, f"Successfully removed {duplicates.count()} duplicate signups.")
         except Exception as e:
             messages.error(request, e)
         return redirect("eighth_admin_dashboard")

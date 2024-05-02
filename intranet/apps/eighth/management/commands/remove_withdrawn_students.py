@@ -29,7 +29,7 @@ class Command(BaseCommand):
         base_url = "https://ion.tjhsst.edu"
         data = {
             "withdrawn_group_str": str(group),
-            "users": ["{} ({})".format(u.full_name, u.username) for u in group.user_set.all()],
+            "users": [f"{u.full_name} ({u.username})" for u in group.user_set.all()],
             "help_email": settings.FEEDBACK_EMAIL,
             "base_url": base_url,
             "info_link": base_url,
@@ -41,11 +41,11 @@ class Command(BaseCommand):
                 "eighth/emails/withdrawn_students.txt",
                 "eighth/emails/withdrawn_students.html",
                 data,
-                "Withdrawn Students on {}".format(str(timezone.localdate())),
+                f"Withdrawn Students on {timezone.localdate()}",
                 NOTIFY_EMAILS,
             )
 
         for user in group.user_set.all():
-            self.stdout.write("Deleting {}\n".format(user))
+            self.stdout.write(f"Deleting {user}\n")
             user.handle_delete()
             self.stdout.write(str(user.delete()) + "\n")

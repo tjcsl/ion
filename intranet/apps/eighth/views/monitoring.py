@@ -39,7 +39,7 @@ def metrics_view(request):
         .order_by("date", "block_letter")
         .nocache()
     ):
-        metrics['intranet_eighth_duplicate_signups{{block_id="{}"}}'.format(block_id)] = num_duplicates
+        metrics[f'intranet_eighth_duplicate_signups{{block_id="{block_id}"}}'] = num_duplicates
 
     context = {"metrics": metrics}
 

@@ -97,7 +97,7 @@ class EventUserMap(models.Model):
     users_hidden = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="events_hidden")
 
     def __str__(self):
-        return "UserMap: {}".format(self.event.title)
+        return f"UserMap: {self.event.title}"
 
 
 class Event(models.Model):
@@ -217,9 +217,9 @@ class Event(models.Model):
 
     def __str__(self):
         if not self.approved:
-            return "UNAPPROVED - {} - {}".format(self.title, self.time)
+            return f"UNAPPROVED - {self.title} - {self.time}"
         else:
-            return "{} - {}".format(self.title, self.time)
+            return f"{self.title} - {self.time}"
 
     class Meta:
         ordering = ["time"]

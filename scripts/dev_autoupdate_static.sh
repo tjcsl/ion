@@ -10,7 +10,7 @@ cd intranet/static
 sass --watch css:../collected_static/css &
 
 # Everything else
-inotifywait --format '%w%f %e' -rm -e modify -e create -e delete --exclude '\.scss$' . | 
+inotifywait --format '%w%f %e' -rm -e modify -e create -e delete --exclude '\.scss$' . |
 while read -r file action; do
     file=${file#./}  # Remove leading ./ from file path
     if [ "$action" = "CREATE" ] || [ "$action" = "MODIFY" ]; then

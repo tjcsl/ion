@@ -43,7 +43,7 @@ def get_personal_info(user):
     #     personal_info["phone_{}".format(i)] = user.phones.all()[i]
 
     for i in range(num_emails):
-        personal_info["email_{}".format(i)] = user.emails.all()[i]
+        personal_info[f"email_{i}"] = user.emails.all()[i]
 
     # for i in range(num_websites):
     #     personal_info["website_{}".format(i)] = user.websites.all()[i]
@@ -135,7 +135,7 @@ def get_privacy_options(user):
     for ptype in user.permissions:
         for field in user.permissions[ptype]:
             if ptype == "self":
-                privacy_options["{}-{}".format(field, ptype)] = user.permissions[ptype][field]
+                privacy_options[f"{field}-{ptype}"] = user.permissions[ptype][field]
             else:
                 privacy_options[field] = user.permissions[ptype][field]
 
@@ -171,7 +171,7 @@ def save_privacy_options(request, user):
                         if not success:
                             raise Exception("You cannot override the parent field.")
                     except Exception as e:
-                        messages.error(request, "Unable to set field {} with value {}: {}".format(field, fields[field], e))
+                        messages.error(request, f"Unable to set field {field} with value {fields[field]}: {e}")
                         logger.debug("Unable to set field %s with value %s: %s", field, fields[field], e)
                     else:
                         messages.success(
@@ -256,7 +256,7 @@ def save_bus_route(request, user):
                                 ),
                             )
                         else:
-                            messages.success(request, "Cleared field {}".format(field))
+                            messages.success(request, f"Cleared field {field}")
                     except TypeError:
                         pass
     return bus_route_form

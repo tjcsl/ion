@@ -25,7 +25,7 @@ def query(q, admin=False):
     if is_entirely_digit(q):
         results = list(get_user_model().objects.exclude_from_search().filter(Q(student_id=q) | Q(id=q)))
     elif ":" in q or ">" in q or "<" in q or "=" in q:
-        # A mapping between search keys and LDAP entires
+        # A mapping between search keys and LDAP entries
         map_attrs = {
             "firstname": ("first_name", "nickname"),
             "first": ("first_name", "nickname"),
@@ -93,14 +93,14 @@ def query(q, admin=False):
                 if exact:
                     # No implied wildcard
                     for cat in default_categories:
-                        sub_query |= Q(**{"{}__iexact".format(cat): p})
+                        sub_query |= Q(**{f"{cat}__iexact": p})
 
                 else:
                     # Search firstname, lastname, uid, nickname (+ middlename if admin) with
                     # implied wildcard at beginning and end of the search
                     # string
                     for cat in default_categories:
-                        sub_query |= Q(**{"{}__icontains".format(cat): p})
+                        sub_query |= Q(**{f"{cat}__icontains": p})
                 search_query &= sub_query
 
                 continue  # skip rest of processing
@@ -114,7 +114,7 @@ def query(q, admin=False):
 
             # fix grade, because LDAP only stores graduation year
             if cat == "grade" and is_entirely_digit(val):
-                val = "{}".format(Grade.year_from_grade(int(val)))
+                val = str(Grade.year_from_grade(int(val)))
             elif cat == "grade" and val == "staff":
                 cat = "type"
                 val = "teacher"
@@ -140,7 +140,7 @@ def query(q, admin=False):
             # for each of the possible LDAP fields, add to the search query
             sub_query = Q(pk=-1)
             for attr in attrs:
-                sub_query |= Q(**{"{}{}".format(attr, sep): val})
+                sub_query |= Q(**{f"{attr}{sep}": val})
             search_query &= sub_query
 
         results = list(get_user_model().objects.exclude_from_search().filter(search_query))
@@ -163,7 +163,7 @@ def query(q, admin=False):
             if exact:
                 # No implied wildcard
                 for cat in default_categories:
-                    sub_query |= Q(**{"{}__iexact".format(cat): p})
+                    sub_query |= Q(**{f"{cat}__iexact": p})
             else:
                 if p.endswith("*"):
                     p = p[:-1]
@@ -172,7 +172,7 @@ def query(q, admin=False):
                 # Search for first, last, middle, nickname uid, with implied
                 # wildcard at beginning and end
                 for cat in default_categories:
-                    sub_query |= Q(**{"{}__icontains".format(cat): p})
+                    sub_query |= Q(**{f"{cat}__icontains": p})
             search_query &= sub_query
 
             results = list(get_user_model().objects.exclude_from_search().filter(search_query))
@@ -201,12 +201,12 @@ def get_search_results(q, admin=False):
 
 def do_activities_search(q):
     filter_query = get_query(q, ["name", "description"])
-    entires = EighthActivity.objects.filter(filter_query).order_by("name")
-    final_entires = []
-    for e in entires:
+    entries = EighthActivity.objects.filter(filter_query).order_by("name")
+    final_entries = []
+    for e in entries:
         if e.is_active:
-            final_entires.append(e)
-    return final_entires
+            final_entries.append(e)
+    return final_entries
 
 
 def do_courses_search(q):
@@ -216,32 +216,32 @@ def do_courses_search(q):
 
 def do_announcements_search(q, user):
     filter_query = get_query(q, ["title", "content"])
-    entires = AnnouncementManager().visible_to_user(user).filter(filter_query).order_by("title")
-    final_entires = []
-    for e in entires:
+    entries = AnnouncementManager().visible_to_user(user).filter(filter_query).order_by("title")
+    final_entries = []
+    for e in entries:
         if e.is_this_year:
-            final_entires.append(e)
-    return final_entires
+            final_entries.append(e)
+    return final_entries
 
 
 def do_events_search(q):
     filter_query = get_query(q, ["title", "description"])
-    entires = Event.objects.filter(filter_query).order_by("title")
-    final_entires = []
-    for e in entires:
+    entries = Event.objects.filter(filter_query).order_by("title")
+    final_entries = []
+    for e in entries:
         if e.is_this_year:
-            final_entires.append(e)
-    return final_entires
+            final_entries.append(e)
+    return final_entries
 
 
 def do_enrichment_search(q):
     filter_query = get_query(q, ["title", "description"])
-    entires = EnrichmentActivity.objects.filter(filter_query).order_by("title")
-    final_entires = []
-    for e in entires:
+    entries = EnrichmentActivity.objects.filter(filter_query).order_by("title")
+    final_entries = []
+    for e in entries:
         if e.is_this_year:
-            final_entires.append(e)
-    return final_entires
+            final_entries.append(e)
+    return final_entries
 
 
 @login_required

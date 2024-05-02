@@ -9,10 +9,10 @@ echo -e "${BLUE}${BOLD}Copying over secret.py...${CLEAR}"
 cp -u config/docker/secret.py intranet/settings
 
 echo -e "${BLUE}${BOLD}Collecting static...${CLEAR}"
-python3 manage.py collectstatic --noinput 
+python3 manage.py collectstatic --noinput
 
 echo -e "${BLUE}${BOLD}Running migrations...${CLEAR}"
-python3 manage.py migrate 
+python3 manage.py migrate
 
 echo -e "${BLUE}${BOLD}Copying over scripts...${CLEAR}"
 cp config/scripts/*.py .
@@ -22,7 +22,7 @@ for year in "freshman" "sophomore" "junior" "senior"; do
     python3 create_users.py -t student -nw -y $year -n student student1 student2 student3 student4 student5
     python3 create_users.py -t admin -nw -y $year -n admin admin1 admin2 admin3 admin4 admin5
 done
-python3 create_users.py -nw -ny -t admin -n admin 
+python3 create_users.py -nw -ny -t admin -n admin
 python3 create_users.py -t admin -c 10
 python3 create_users.py -t student -c 100
 python3 create_users.py -t teacher -c 20

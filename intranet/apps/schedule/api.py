@@ -43,4 +43,4 @@ class DayDetail(generics.RetrieveAPIView):
             day.pk = -1  # The URL will be null unless pk is set
             return day
         except exceptions.ValidationError as e:
-            raise serializers.ValidationError(e)
+            raise serializers.ValidationError(e) from e

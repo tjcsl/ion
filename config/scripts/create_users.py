@@ -112,7 +112,7 @@ def generate_names(args: argparse.Namespace) -> "list[tuple[str]]":
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-n", "--names", nargs="+", default=[], help="Provide in format first_last, or as a username, ignores count if supplied, seperate with '_'"
+        "-n", "--names", nargs="+", default=[], help="Provide in format first_last, or as a username, ignores count if supplied, separate with '_'"
     )
     parser.add_argument("-c", "--count", type=int, default=10, help="Number of users to make, defaults to 10")
     parser.add_argument("-t", "--type", type=str, required=True, choices=["student", "teacher", "admin"], help="type of user to make")

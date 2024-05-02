@@ -114,7 +114,7 @@ def logs_view(request):
                 if network.num_addresses > 2**16:
                     messages.error(request, f"Subnet too large: {ip}.")
                 else:
-                    ips |= set(str(ip) for ip in network.hosts())
+                    ips |= {str(ip) for ip in network.hosts()}
 
             except ValueError:
                 messages.error(request, f"Invalid IP network: {ip}")

@@ -79,9 +79,7 @@ def edit_activity_view(request, activity_id):
                                     for sponsor in old_sponsors:
                                         sa.sponsors.add(sponsor)
                                     sa.save()
-                                messages.success(
-                                    request, "Overrode {} scheduled activities to old sponsor default".format(sched_acts_default.count())
-                                )
+                                messages.success(request, f"Overrode {sched_acts_default.count()} scheduled activities to old sponsor default")
                             elif change == "no":
                                 # Don't override
                                 messages.success(request, "Changing default sponsors globally")
@@ -126,7 +124,7 @@ def edit_activity_view(request, activity_id):
                                 # Override old entries
                                 for sa in sched_acts_default:
                                     sa.rooms.set(old_rooms)
-                                messages.success(request, "Overrode {} scheduled activities to old room default".format(sched_acts_default.count()))
+                                messages.success(request, f"Overrode {sched_acts_default.count()} scheduled activities to old room default")
                             elif change == "no":
                                 # Don't override
                                 messages.success(request, "Changing default rooms globally")
@@ -169,7 +167,7 @@ def edit_activity_view(request, activity_id):
                         EighthWaitlist.objects.filter(scheduled_activity=sa).delete()
                 messages.success(request, "Successfully edited activity.")
                 if "add_group" in request.POST:
-                    grp_name = "Activity: {}".format(activity.name)
+                    grp_name = f"Activity: {activity.name}"
                     grp, status = Group.objects.get_or_create(name=grp_name)
                     activity.restricted = True
                     activity.groups_allowed.add(grp)
@@ -190,7 +188,7 @@ def edit_activity_view(request, activity_id):
     for g in activity.groups_allowed.all():
         group = {}
         group["id"] = g.id
-        group["name"] = "{}".format(g)
+        group["name"] = str(g)
         group["members_alpha"] = sorted(g.user_set.all(), key=lambda x: (x.last_name, x.first_name))
         group["members_alpha_count"] = len(group["members_alpha"])
         activity_groups.append(group)

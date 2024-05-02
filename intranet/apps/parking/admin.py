@@ -23,14 +23,14 @@ for u in group.user_set.all():
 class ParkingAdmin(admin.ModelAdmin):
     def get_user(self, obj):
         u = obj.user
-        return mark_safe("{} {} ({})<br>{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
+        return mark_safe(f"{u.first_name} {u.last_name} ({u.grade.number})<br>{u.absence_count()} absences")
 
     get_user.short_description = "User"  # type: ignore
 
     def get_joint_user(self, obj):
         u = obj.joint_user
         if u:
-            return mark_safe("{} {} ({})<br>{} absences".format(u.first_name, u.last_name, u.grade.number, u.absence_count()))
+            return mark_safe(f"{u.first_name} {u.last_name} ({u.grade.number})<br>{u.absence_count()} absences")
         return "n/a"
 
     get_joint_user.short_description = "Joint User"  # type: ignore

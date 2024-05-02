@@ -20,7 +20,9 @@ logger = get_task_logger(__name__)
 
 @shared_task
 def room_changed_single_email(
-    sched_act: EighthScheduledActivity, old_rooms: Collection[EighthRoom], new_rooms: Collection[EighthRoom]  # pylint: disable=unsubscriptable-object
+    sched_act: EighthScheduledActivity,
+    old_rooms: Collection[EighthRoom],
+    new_rooms: Collection[EighthRoom],  # pylint: disable=unsubscriptable-object
 ):  # pylint: disable=unsubscriptable-object
     """Notifies all the users signed up for the given EighthScheduledActivity that it is changing rooms.
 
@@ -62,7 +64,7 @@ def room_changed_single_email(
         "eighth/emails/room_changed_single.txt",
         "eighth/emails/room_changed_single.html",
         data,
-        "Room change for {} on {}".format(sched_act.activity.name, date_str),
+        f"Room change for {sched_act.activity.name} on {date_str}",
         emails,
         bcc=True,
     )
@@ -70,7 +72,9 @@ def room_changed_single_email(
 
 @shared_task
 def transferred_activity_email(
-    dest_act: EighthScheduledActivity, source_act: EighthScheduledActivity, duplicate_students  # pylint: disable=unsubscriptable-object
+    dest_act: EighthScheduledActivity,
+    source_act: EighthScheduledActivity,
+    duplicate_students,  # pylint: disable=unsubscriptable-object
 ):  # pylint: disable=unsubscriptable-object
     """Notifies all the users already signed up for an EighthScheduledActivity that they have been transferred into a new activity.
 
@@ -108,7 +112,7 @@ def transferred_activity_email(
         "eighth/emails/transferred_activity.txt",
         "eighth/emails/transferred_activity.html",
         data,
-        "8th Period Transfer to {} on {}".format(dest_act.activity.name, date_str),
+        f"8th Period Transfer to {dest_act.activity.name} on {date_str}",
         emails,
         bcc=True,
     )
@@ -116,10 +120,12 @@ def transferred_activity_email(
 
 @shared_task
 def room_changed_activity_email(
-    act: EighthActivity, old_rooms: Collection[EighthRoom], new_rooms: Collection[EighthRoom]  # pylint: disable=unsubscriptable-object
+    act: EighthActivity,
+    old_rooms: Collection[EighthRoom],
+    new_rooms: Collection[EighthRoom],  # pylint: disable=unsubscriptable-object
 ):  # pylint: disable=unsubscriptable-object
     """Notifies all the users signed up for the given EighthActivity on the blocks for which the room
-    list is not overriden that it is changing rooms.
+    list is not overridden that it is changing rooms.
 
     Args:
         act: The activity that has changed rooms.
@@ -164,7 +170,7 @@ def room_changed_activity_email(
             "eighth/emails/room_changed_activity.txt",
             "eighth/emails/room_changed_activity.html",
             data,
-            "Room changes for {}".format(act.name),
+            f"Room changes for {act.name}",
             [user.notification_email],
             bcc=True,
         )
@@ -334,7 +340,7 @@ def follow_up_absence_emails():
                 "eighth/emails/absence_monthly.txt",
                 "eighth/emails/absence_monthly.html",
                 data,
-                "{} Uncleared Eighth Period Absences".format(num_absences),
+                f"{num_absences} Uncleared Eighth Period Absences",
                 [student.notification_email],
                 bcc=True,
             )

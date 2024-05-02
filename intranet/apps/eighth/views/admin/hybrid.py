@@ -25,7 +25,7 @@ def activities_without_attendance_view(request):
         eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky")
     ).filter(date__gte=get_start_date(request)):
         blocks_set.add((str(b.date), b.block_letter[0]))
-    blocks = sorted(list(blocks_set))
+    blocks = sorted(blocks_set)
 
     block_id = request.GET.get("block", None)
     block = None
@@ -62,10 +62,10 @@ def activities_without_attendance_view(request):
             logger.debug(zero_students)
             if signups.count() == 0:
                 zero_students.update(attendance_taken=True)
-                messages.success(request, "Took attendance for {} empty activities.".format(zero_students.count()))
+                messages.success(request, f"Took attendance for {zero_students.count()} empty activities.")
             else:
-                messages.error(request, "Apparently there were actually {} signups. Maybe one is no longer empty?".format(signups.count()))
-            return redirect("/eighth/admin/hybrid/no_attendance?block={},{}".format(block_id[0], block_id[1]))
+                messages.error(request, f"Apparently there were actually {signups.count()} signups. Maybe one is no longer empty?")
+            return redirect(f"/eighth/admin/hybrid/no_attendance?block={block_id[0]},{block_id[1]}")
 
         if request.POST.get("take_attendance_cancelled", False) is not False:
             cancelled = scheduled_activities.filter(cancelled=True)
@@ -74,10 +74,8 @@ def activities_without_attendance_view(request):
             logger.debug(signups)
             signups.update(was_absent=True)
             cancelled.update(attendance_taken=True)
-            messages.success(
-                request, "Took attendance for {} cancelled activities. {} students marked absent.".format(cancelled.count(), signups.count())
-            )
-            return redirect("/eighth/admin/hybrid/no_attendance?block={},{}".format(block_id[0], block_id[1]))
+            messages.success(request, f"Took attendance for {cancelled.count()} cancelled activities. {signups.count()} students marked absent.")
+            return redirect(f"/eighth/admin/hybrid/no_attendance?block={block_id[0]},{block_id[1]}")
 
     context["admin_page_title"] = "Hybrid Activities That Haven't Taken Attendance"
     return render(request, "eighth/admin/activities_without_attendance_hybrid.html", context)
@@ -95,7 +93,7 @@ def list_sponsor_view(request):
         )
     ):
         blocks_set.add((str(b.date), b.block_letter[0]))
-    blocks = sorted(list(blocks_set))
+    blocks = sorted(blocks_set)
 
     if block_id is not None:
         try:

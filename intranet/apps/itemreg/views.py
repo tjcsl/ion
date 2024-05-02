@@ -110,10 +110,10 @@ def register_view(request, item_type):
             obj = form.save()
             obj.user = request.user
             obj.save()
-            messages.success(request, "Successfully added {}.".format(item_type))
+            messages.success(request, f"Successfully added {item_type}.")
             return redirect("itemreg")
         else:
-            messages.error(request, "Error adding {}.".format(item_type))
+            messages.error(request, f"Error adding {item_type}.")
     else:
         form = form_class()
 
@@ -131,7 +131,7 @@ def register_delete_view(request, item_type, item_id):
 
     if request.method == "POST" and "confirm" in request.POST:
         obj.delete()
-        messages.success(request, "Deleted {}".format(item_type))
+        messages.success(request, f"Deleted {item_type}")
         return redirect("itemreg")
 
     return render(request, "itemreg/register_delete.html", {"type": item_type, "obj": obj})

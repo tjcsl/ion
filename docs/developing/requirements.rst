@@ -21,7 +21,7 @@ autobahn
 -----------------
 https://github.com/crossbario/autobahn-python
 
-This package provides `WebSocket <http://tools.ietf.org/html/rfc6455>_` & `Web Appplication Messaging Protocol (WAMP) <http://wamp-proto.org/>_` support.
+This package provides `WebSocket <http://tools.ietf.org/html/rfc6455>_` & `Web Application Messaging Protocol (WAMP) <http://wamp-proto.org/>_` support.
 
 It provides WebSocket support for Ion.
 
@@ -141,7 +141,7 @@ django
 ------------------
 https://github.com/django/django
 
-Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design. 
+Django is a high-level Python Web framework that encourages rapid development and clean, pragmatic design.
 
 It is used as our web framework.
 
@@ -153,7 +153,7 @@ https://github.com/Suor/django-cacheops
 
 This package is a Django app that supports automatic or manual queryset caching into a Redis ORM cache.
 
-It is used for queryset caching into a Redis databse.
+It is used for queryset caching into a Redis database.
 
 LICENSE: 3-clause BSD
 
@@ -259,7 +259,7 @@ django-redis-cache
 ---------------------
 https://github.com/sebleier/django-redis-cache
 
-This package provides the redis backend cache. 
+This package provides the redis backend cache.
 
 FIXME: Needs more specific info
 
@@ -323,7 +323,7 @@ docutils
 ---------
 https://sourceforge.net/p/docutils/code/HEAD/tree/trunk/docutils/
 
-This package provides a modular system for processing documentation into useful formats, such as HTML, XML, and LaTeX. 
+This package provides a modular system for processing documentation into useful formats, such as HTML, XML, and LaTeX.
 
 It is an optional dependency for admindocs and setuptools.
 
@@ -333,7 +333,7 @@ https://github.com/mathiasertl/fabric/
 
 This package provides a basic suite of operations for executing local or remote shell commands (normally or via sudo) and uploading/downloading files, as well as auxiliary functionality such as prompting the running user for input, or aborting execution.
 
-It is used to manage the Ion application in both developement and production (see ``fabfile.py``)
+It is used to manage the Ion application in both development and production (see ``fabfile.py``)
 
 NEEDSRELEASE
 

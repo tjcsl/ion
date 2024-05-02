@@ -23,11 +23,11 @@ class EighthAdminGeneralTest(EighthAbstractTest):
         user = self.make_admin()
 
         for i in range(1, 21):
-            self.add_activity(name="Test{}".format(i))
-            Group.objects.create(name="Test{}".format(i))
-            user = get_user_model().objects.create(username="awilliam{}".format(i))
-            EighthRoom.objects.create(name="Test{}".format(i))
-            EighthSponsor.objects.create(user=user, first_name="Angela{}".format(i), last_name="William")
+            self.add_activity(name=f"Test{i}")
+            Group.objects.create(name=f"Test{i}")
+            user = get_user_model().objects.create(username=f"awilliam{i}")
+            EighthRoom.objects.create(name=f"Test{i}")
+            EighthSponsor.objects.create(user=user, first_name=f"Angela{i}", last_name="William")
 
         self.add_block(date="9001-4-20", block_letter="A")
 

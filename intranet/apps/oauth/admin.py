@@ -62,8 +62,8 @@ class CSLApplicationAdmin(admin.ModelAdmin):
         self.message_user(
             request,
             ngettext(
-                f"Succesfully sanctioned {updated} application.",
-                f"Succesfully sanctioned {updated} applications.",
+                f"Successfully sanctioned {updated} application.",
+                f"Successfully sanctioned {updated} applications.",
                 updated,
             ),
             messages.SUCCESS,

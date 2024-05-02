@@ -5,7 +5,7 @@ from ..notifications.tasks import email_send_task
 
 
 def event_approval_request(request, event):
-    subject = "Event Approval Request from {}".format(event.user)
+    subject = f"Event Approval Request from {event.user}"
     emails = [settings.APPROVAL_EMAIL]
 
     base_url = request.build_absolute_uri(reverse("index"))

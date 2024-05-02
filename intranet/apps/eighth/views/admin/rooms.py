@@ -251,7 +251,7 @@ def room_utilization_action(request, start_id, end_id):
         else:
             rooms = all_rooms
 
-        sched_acts = sorted(sched_acts, key=lambda x: ("{}".format(x.block), "{}".format(x.get_true_rooms())))
+        sched_acts = sorted(sched_acts, key=lambda x: (str(x.block), str(x.get_true_rooms())))
 
         if show_all_rooms or show_available_for_eighth:
             used_rooms_ids = []

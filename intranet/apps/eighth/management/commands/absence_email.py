@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         for signup in absences:
             if log:
-                self.stdout.write("{}".format(signup))
+                self.stdout.write(str(signup))
             if not options["pretend"]:
                 absence_email(signup)
                 signup.absence_emailed = True

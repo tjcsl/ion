@@ -45,27 +45,27 @@ class Command(BaseCommand):
             blk_date = next_blocks[0].date
             if blk_date != tomorrow:
                 if log:
-                    self.stdout.write("Block {} on {} is not tomorrow ({}).".format(next_blocks[0], blk_date, tomorrow))
+                    self.stdout.write(f"Block {next_blocks[0]} on {blk_date} is not tomorrow ({tomorrow}).")
                 return
 
         if options["only-today"]:
             blk_date = next_blocks[0].date
             if blk_date != today:
                 if log:
-                    self.stdout.write("Block {} on {} is not today ({}).".format(next_blocks[0], blk_date, today))
+                    self.stdout.write(f"Block {next_blocks[0]} on {blk_date} is not today ({today}).")
                 return
 
         if log:
-            self.stdout.write("{}".format(next_blocks))
-            self.stdout.write("{}".format(options))
-            self.stdout.write("{}".format(users))
+            self.stdout.write(str(next_blocks))
+            self.stdout.write(str(options))
+            self.stdout.write(str(users))
 
         for user in users:
             user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks)
             if user_signups.count() < next_blocks.count():
                 """User hasn't signed up for a block."""
                 if log:
-                    self.stdout.write("User {} hasn't signed up for a block".format(user))
+                    self.stdout.write(f"User {user} hasn't signed up for a block")
                 if not options["pretend"]:
                     try:
                         signup_status_email(user, next_blocks)
@@ -74,7 +74,7 @@ class Command(BaseCommand):
             elif user_signups.filter(scheduled_activity__cancelled=True).count() > 0:
                 """User is in a cancelled activity."""
                 if log:
-                    self.stdout.write("User {} is in a cancelled activity.".format(user))
+                    self.stdout.write(f"User {user} is in a cancelled activity.")
                 if not options["pretend"]:
                     try:
                         signup_status_email(user, next_blocks)

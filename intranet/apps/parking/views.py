@@ -72,11 +72,10 @@ def parking_form_view(request):
             return redirect("parking_form")
         else:
             messages.error(request, "Error adding.")
+    elif app:
+        form = ParkingApplicationForm(instance=app)
     else:
-        if app:
-            form = ParkingApplicationForm(instance=app)
-        else:
-            form = ParkingApplicationForm()
+        form = ParkingApplicationForm()
     return render(request, "parking/form.html", {"form": form, "app": app, "in_joint": in_joint})
 
 
@@ -128,11 +127,10 @@ def parking_car_view(request):
             return redirect("parking_form")
         else:
             messages.error(request, "Error adding.")
+    elif car:
+        form = CarApplicationForm(instance=car)
     else:
-        if car:
-            form = CarApplicationForm(instance=car)
-        else:
-            form = CarApplicationForm()
+        form = CarApplicationForm()
     return render(request, "parking/car.html", {"form": form, "car": car, "app": app})
 
 

@@ -12,7 +12,7 @@ class CarApplication(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{} {} {} ({})".format(self.year, self.make, self.model, self.license_plate)
+        return f"{self.year} {self.make} {self.model} ({self.license_plate})"
 
 
 class ParkingApplication(models.Model):
@@ -25,7 +25,7 @@ class ParkingApplication(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        s = "Parking Application for {}".format(self.user)
+        s = f"Parking Application for {self.user}"
         if self.joint_user:
-            s += " and jointly {}".format(self.joint_user)
+            s += f" and jointly {self.joint_user}"
         return s

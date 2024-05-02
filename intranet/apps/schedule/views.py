@@ -59,7 +59,7 @@ def schedule_context(request=None, date=None, use_cache=True, show_tomorrow=True
                 date += timedelta(days=1)
 
     date_fmt = date_format(date)
-    key = "bell_schedule:{}".format(date_fmt)
+    key = f"bell_schedule:{date_fmt}"
     cached = cache.get(key)
     if cached and use_cache:
         return cached
@@ -340,7 +340,7 @@ def admin_add_view(request):
             messages.success(request, "{} is now a {}".format(date, form.cleaned_data["day_type"]))
             return redirect("schedule_admin")
         else:
-            messages.success(request, "{} has no schedule assigned".format(date))
+            messages.success(request, f"{date} has no schedule assigned")
             return redirect("schedule_admin")
     else:
         form = DayForm()
@@ -399,9 +399,9 @@ def admin_daytype_view(request, daytype_id=None):
 
             if "delete" in request.POST:
                 daytype = get_object_or_404(DayType, id=daytype_id)
-                name = "{}".format(daytype)
+                name = str(daytype)
                 daytype.delete()
-                messages.success(request, "Deleted {}".format(name))
+                messages.success(request, f"Deleted {name}")
                 return redirect("schedule_admin")
 
         if daytype_id:
@@ -436,7 +436,7 @@ def admin_daytype_view(request, daytype_id=None):
                 else:
                     dayobj.day_type = model
                     dayobj.save()
-                messages.success(request, "{} is now a {}".format(dayobj.date, dayobj.day_type))
+                messages.success(request, f"{dayobj.date} is now a {dayobj.day_type}")
 
             messages.success(request, "Successfully {} Day Type.".format("modified" if daytype_id else "added"))
             return redirect("schedule_daytype", model.id)

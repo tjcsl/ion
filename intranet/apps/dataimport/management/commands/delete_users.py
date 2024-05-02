@@ -24,7 +24,7 @@ class Command(BaseCommand):
         parser.add_argument("--confirm", action="store_true", dest="confirm", default=False, help="Skip confirmation.")
 
     def ask(self, q):
-        if input("{} [Yy]: ".format(q)).lower() != "y":
+        if input(f"{q} [Yy]: ").lower() != "y":
             self.stdout.write(self.style.ERROR("Abort."))
             sys.exit()
 
@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
         """
         ids = []
-        with open(filename, "r", encoding="utf-8") as csvfile:
+        with open(filename, encoding="utf-8") as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 ids.append(row[column_header])

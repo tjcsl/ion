@@ -29,8 +29,8 @@ from ..eighth.models import EighthBlock
 from ..events.models import Event
 from ..schedule.views import schedule_context
 from ..sessionmgmt.helpers import trust_session
-from . import backends  # pylint: disable=unused-import # noqa # Load it so the Prometheus metrics get added
-from . import signals  # pylint: disable=unused-import # noqa # Load it so the signals get registered
+# Load these so the Prometheus metrics get added
+from . import backends, signals  # pylint: disable=unused-import # noqa F401
 from .forms import AuthenticateForm
 from .helpers import change_password
 
@@ -65,7 +65,7 @@ def get_bg_pattern(request):
     files = [
         "brushed.png",
         "concrete_seamless.png",
-        "confectionary.png",
+        "confectionery.png",
         "contemporary_china.png",
         "crossword.png",
         # "fresh_snow.png",
