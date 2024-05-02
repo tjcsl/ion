@@ -59,7 +59,7 @@ services:
          celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"
       ]
     depends_on:
-      - intranet_django
+      - django
     volumes:
       - ../../:/ion:z
 
@@ -76,7 +76,7 @@ services:
          celery --app intranet beat -l info"
       ]
     depends_on:
-      - intranet_django
+      - django
     volumes:
       - ../../:/ion:z
 
