@@ -189,8 +189,8 @@ class PreferencesTest(IonTestCase):
                     self.assertIn(f"{permission}-{permission_type}", options.keys())
                     self.assertFalse(options[f"{permission}-{permission_type}"])
                 else:
-                    self.assertIn(f"{permission}", options.keys())
-                    self.assertFalse(options[f"{permission}"])
+                    self.assertIn(str(permission), options.keys())
+                    self.assertFalse(options[str(permission)])
 
         # Now, test loading the view
         user = self.login()

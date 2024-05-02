@@ -50,11 +50,10 @@ def seniors_add_view(request):
             obj.save()
             messages.success(request, "Your information was {}".format("modified" if senior else "added"))
             return redirect("seniors")
+    elif senior:
+        form = SeniorForm(instance=senior)
     else:
-        if senior:
-            form = SeniorForm(instance=senior)
-        else:
-            form = SeniorForm()
+        form = SeniorForm()
 
     context = {"form": form, "senior": senior}
 

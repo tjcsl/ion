@@ -54,7 +54,7 @@ class Host(models.Model):
         return self in Host.objects.visible_to_user(user)
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.code)
+        return f"{self.name} ({self.code})"
 
     class Meta:
         ordering = ["-linux", "name"]

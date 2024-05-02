@@ -33,9 +33,9 @@ def generate_activities(args: argparse.Namespace) -> None:
             if restriction == "senior":
                 activity.seniors_allowed = True
 
-        sponser = EighthSponsor.objects.get_or_create(user=random.choice(teachers))[0]
-        sponser.save()
-        activity.sponsors.set((sponser,))
+        sponsor = EighthSponsor.objects.get_or_create(user=random.choice(teachers))[0]
+        sponsor.save()
+        activity.sponsors.set((sponsor,))
 
         room = EighthRoom.objects.get_or_create(name=f"Room {random.randint(1, 100)}")[0]
         room.save()

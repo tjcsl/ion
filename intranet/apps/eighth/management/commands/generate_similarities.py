@@ -39,7 +39,7 @@ class Command(BaseCommand):
                         sim.activity_set.add(act, act2)
                         sim.count = 1
                     sim.save()
-            print("Finished similarities for {} in {} seconds".format(act, time.time() - start_act))
+            print(f"Finished similarities for {act} in {time.time() - start_act} seconds")
         for act in acts:
             if act.is_popular:
                 for sim in act.similarities.all():
@@ -47,4 +47,4 @@ class Command(BaseCommand):
                     sim.save()
         for sim in EighthActivitySimilarity.objects.all():
             sim.update_weighted()
-        print("Generated similarities in {} seconds".format(time.time() - start))
+        print(f"Generated similarities in {time.time() - start} seconds")

@@ -43,7 +43,7 @@ def eighth_signup_view(request, block_id=None):
         args = ""
         if "user" in request.GET:
             args = "?user={}".format(request.GET.get("user"))
-        return redirect("/eighth/signup/{}{}".format(block_id, args))
+        return redirect(f"/eighth/signup/{block_id}{args}")
 
     if request.method == "POST":
         if "unsignup" in request.POST and "aid" not in request.POST:
@@ -136,11 +136,10 @@ def eighth_signup_view(request, block_id=None):
                 user = get_user_model().objects.get(id=request.GET["user"])
             except (get_user_model().DoesNotExist, ValueError) as e:
                 raise http.Http404 from e
+        elif request.user.is_student:
+            user = request.user
         else:
-            if request.user.is_student:
-                user = request.user
-            else:
-                return redirect("eighth_admin_dashboard")
+            return redirect("eighth_admin_dashboard")
 
         if block is None:
             try:
@@ -262,28 +261,28 @@ def eighth_multi_signup_view(request):
                 try:
                     btxt = EighthBlock.objects.get(id=bid).short_text
                 except EighthBlock.DoesNotExist:
-                    return http.HttpResponse("{}: Block did not exist.".format(bid), status=403)
+                    return http.HttpResponse(f"{bid}: Block did not exist.", status=403)
                 except ValueError:
-                    return http.HttpResponse("{}: Invalid block ID.".format(bid), status=403)
+                    return http.HttpResponse(f"{bid}: Invalid block ID.", status=403)
 
                 try:
                     eighth_signup = EighthSignup.objects.get(scheduled_activity__block__id=bid, user__id=uid)
                     success_message = eighth_signup.remove_signup(request.user, force, request.session.get("disable_waitlist_transactions", False))
                 except EighthSignup.DoesNotExist:
                     status = 403
-                    display_messages.append("{}: Signup did not exist.".format(btxt))
+                    display_messages.append(f"{btxt}: Signup did not exist.")
 
                 except SignupException as e:
                     show_admin_messages = request.user.is_eighth_admin and not request.user.is_student
                     resp = e.as_response(admin=show_admin_messages)
                     status = 403
-                    display_messages.append("{}: {}".format(btxt, resp.content))
+                    display_messages.append(f"{btxt}: {resp.content}")
 
                 except Exception:
-                    display_messages.append("{}: Unknown error.".format(btxt))
+                    display_messages.append(f"{btxt}: Unknown error.")
 
                 else:
-                    display_messages.append("{}: {}".format(btxt, success_message))
+                    display_messages.append(f"{btxt}: {success_message}")
 
             return http.HttpResponse("\n".join(display_messages), status=status)
 
@@ -308,14 +307,14 @@ def eighth_multi_signup_view(request):
             try:
                 btxt = EighthBlock.objects.get(id=bid).short_text
             except EighthBlock.DoesNotExist:
-                return http.HttpResponse("{}: Block did not exist.".format(bid), status=403)
+                return http.HttpResponse(f"{bid}: Block did not exist.", status=403)
             try:
                 scheduled_activity = (
                     EighthScheduledActivity.objects.exclude(activity__deleted=True).exclude(cancelled=True).get(block=bid, activity=aid)
                 )
 
             except EighthScheduledActivity.DoesNotExist:
-                display_messages.append("{}: Activity was not scheduled for block".format(btxt))
+                display_messages.append(f"{btxt}: Activity was not scheduled for block")
             else:
                 try:
                     success_message = scheduled_activity.add_user(user, request)
@@ -323,9 +322,9 @@ def eighth_multi_signup_view(request):
                     show_admin_messages = request.user.is_eighth_admin and not request.user.is_student
                     resp = e.as_response(admin=show_admin_messages)
                     status = 403
-                    display_messages.append("{}: {}".format(btxt, resp.content))
+                    display_messages.append(f"{btxt}: {resp.content}")
                 else:
-                    display_messages.append("{}: {}".format(btxt, success_message))
+                    display_messages.append(f"{btxt}: {success_message}")
 
         return http.HttpResponse("<br>".join(display_messages), status=status)
     else:
@@ -334,11 +333,10 @@ def eighth_multi_signup_view(request):
                 user = get_user_model().objects.get(id=request.GET["user"])
             except (get_user_model().DoesNotExist, ValueError) as e:
                 raise http.Http404 from e
+        elif request.user.is_student:
+            user = request.user
         else:
-            if request.user.is_student:
-                user = request.user
-            else:
-                return redirect("eighth_admin_dashboard")
+            return redirect("eighth_admin_dashboard")
 
         block_ids = list(filter(None, request.GET.getlist("block")))
         try:

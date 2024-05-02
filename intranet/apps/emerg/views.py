@@ -34,7 +34,7 @@ def check_emerg():
     timeout = settings.EMERGENCY_TIMEOUT
 
     try:
-        r = requests.get("{}?{}".format(fcps_page, int(time.time() // 60)), timeout=timeout)
+        r = requests.get(f"{fcps_page}?{int(time.time() // 60)}", timeout=timeout)
     except requests.exceptions.Timeout:
         return False, None
 
@@ -128,7 +128,7 @@ def get_emerg():
     Timeout defined in settings.CACHE_AGE["emerg"]
 
     """
-    key = "emerg:{}".format(timezone.localdate())
+    key = f"emerg:{timezone.localdate()}"
     cached = cache.get(key)
     if cached:
         return cached
@@ -153,6 +153,6 @@ def update_emerg_cache(*, custom_logger=None) -> None:
             messages relating to the cache update.
 
     """
-    key = "emerg:{}".format(timezone.localdate())
+    key = f"emerg:{timezone.localdate()}"
     result = get_emerg_result(custom_logger=custom_logger)
     cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])

@@ -49,7 +49,7 @@ class ApiTest(IonTestCase):
         tok = AccessToken.objects.create(
             user=self.user, token="1234567890", application=self.application, scope="read write", expires=timezone.now() + datetime.timedelta(days=1)
         )
-        self.auth = "Bearer {}".format(tok.token)
+        self.auth = f"Bearer {tok.token}"
 
     def get_api_eighth_block_list(self, query=""):
         return self.client.get(reverse("api_eighth_block_list") + query, HTTP_AUTHORIZATION=self.auth)
@@ -115,7 +115,7 @@ class ApiTest(IonTestCase):
             scope="read write",
             expires=timezone.now() + datetime.timedelta(days=1),
         )
-        auth = "Bearer {}".format(tok.token)
+        auth = f"Bearer {tok.token}"
 
         # List announcements
         response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=auth)
@@ -156,7 +156,7 @@ class ApiTest(IonTestCase):
             scope="read write",
             expires=timezone.now() + datetime.timedelta(days=1),
         )
-        auth = "Bearer {}".format(tok.token)
+        auth = f"Bearer {tok.token}"
 
         # List announcements
         response = self.client.get(reverse("api_announcements_list_create"), HTTP_AUTHORIZATION=auth)

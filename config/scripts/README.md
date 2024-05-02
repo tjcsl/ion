@@ -8,7 +8,7 @@ A set of scripts to generate somewhat realistic student data for the Ion develop
 - To run manually and/or change data:
 
 - Delete `config/docker/first-run.log`
-  
+
   - Then, either:
     - Restart the container to load new data
     - Or manually run `config/docker/initial_setup.sh`

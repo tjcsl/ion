@@ -9,7 +9,7 @@ from ..schedule.models import Day
 
 
 def hello_world(page, sign, request):
-    return {"message": "{} from {} says Hello".format(page.name, sign.name)}
+    return {"message": f"{page.name} from {sign.name} says Hello"}
 
 
 def announcements(page, sign, request):  # pylint: disable=unused-argument

@@ -24,7 +24,7 @@ class CalculatorRegistration(models.Model):
     added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "{}'s {}".format(self.user.full_name, self.get_calc_type_display())  # get_FIELD_display() is defined by models.Model
+        return f"{self.user.full_name}'s {self.get_calc_type_display()}"  # get_FIELD_display() is defined by models.Model
 
 
 class ComputerRegistration(models.Model):
@@ -59,10 +59,10 @@ class ComputerRegistration(models.Model):
             A nicely formatted description of the computer.
 
         """
-        return '{}" {} {}'.format(self.screen_size, self.get_manufacturer_display(), self.model)
+        return f'{self.screen_size}" {self.get_manufacturer_display()} {self.model}'
 
     def __str__(self):
-        return "{}'s {}".format(self.user.full_name, self.computer_name)
+        return f"{self.user.full_name}'s {self.computer_name}"
 
 
 class PhoneRegistration(models.Model):
@@ -92,7 +92,7 @@ class PhoneRegistration(models.Model):
             A nicely formatted description of the phone.
 
         """
-        return "{} {}".format(self.get_manufacturer_display(), self.model)
+        return f"{self.get_manufacturer_display()} {self.model}"
 
     def __str__(self):
-        return "{}'s {}".format(self.user.full_name, self.model)
+        return f"{self.user.full_name}'s {self.model}"

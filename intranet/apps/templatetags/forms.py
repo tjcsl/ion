@@ -29,6 +29,6 @@ def field_array_size(field):
     prefix = m.groups()[0]
     count = 0
     for field_name in field.form.fields.keys():
-        if re.match(r"^{}_(\d+)$".format(prefix), field_name):
+        if re.match(rf"^{prefix}_(\d+)$", field_name):
             count += 1
     return count

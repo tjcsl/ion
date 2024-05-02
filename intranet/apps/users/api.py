@@ -1,4 +1,3 @@
-import io
 import os
 
 from rest_framework import generics
@@ -92,7 +91,7 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
             binary = user.default_photo
         if binary is None:
             default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
-            with io.open(default_image_path, mode="rb") as f:
+            with open(default_image_path, mode="rb") as f:
                 binary = f.read()
 
         return Response(binary, content_type="image/jpeg")

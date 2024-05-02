@@ -22,14 +22,14 @@ class ActivityDisplayField(forms.ModelChoiceField):
 
     def label_from_instance(self, obj):
         if self.cancelled_acts and obj in self.cancelled_acts:
-            return "{}: {} (CANCELLED)".format(obj.aid, obj.name)
+            return f"{obj.aid}: {obj.name} (CANCELLED)"
 
-        return "{}: {}".format(obj.aid, obj.name)
+        return f"{obj.aid}: {obj.name}"
 
 
 class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
-        return "{}: {}".format(obj.aid, obj.name)
+        return f"{obj.aid}: {obj.name}"
 
 
 class ActivitySelectionForm(forms.Form):
@@ -140,18 +140,16 @@ class ActivityForm(forms.ModelForm):
         self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
 
         # These fields are rendered on the right of the page on the edit activity page.
-        self.right_fields = set(
-            [
-                "restricted",
-                "users_allowed",
-                "groups_allowed",
-                "users_blacklisted",
-                "freshmen_allowed",
-                "sophomores_allowed",
-                "juniors_allowed",
-                "seniors_allowed",
-            ]
-        )
+        self.right_fields = {
+            "restricted",
+            "users_allowed",
+            "groups_allowed",
+            "users_blacklisted",
+            "freshmen_allowed",
+            "sophomores_allowed",
+            "juniors_allowed",
+            "seniors_allowed",
+        }
 
     class Meta:
         model = EighthActivity

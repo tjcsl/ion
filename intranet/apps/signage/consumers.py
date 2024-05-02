@@ -50,7 +50,7 @@ class SignageConsumer(JsonWebsocketConsumer):
         if not self.connected:
             return
 
-        self.connnected = False
+        self.connected = False
 
         if self.sign_obj is not None:
             self.sign_obj.refresh_from_db()

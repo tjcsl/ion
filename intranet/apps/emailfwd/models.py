@@ -7,4 +7,4 @@ class SeniorEmailForward(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return "{}".format(self.user)
+        return str(self.user)

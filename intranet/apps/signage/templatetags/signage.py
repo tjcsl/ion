@@ -11,7 +11,7 @@ def render_page(page, page_args):
     """Renders the template at page.template"""
     print(page_args)
     template_name = page.template if page.template else page.name
-    template_fname = "signage/pages/{}.html".format(template_name)
+    template_fname = f"signage/pages/{template_name}.html"
     if page.function:
         context_method = getattr(pages, page.function)
     else:

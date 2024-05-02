@@ -10,7 +10,7 @@ block_letter_validator = RegexValidator(
 
 class BlockDisplayField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return "{}: {}".format(obj.id, str(obj))
+        return f"{obj.id}: {obj}"
 
 
 class BlockSelectionForm(forms.Form):
@@ -47,7 +47,7 @@ class HybridBlockSelectionForm(forms.Form):
             eighthscheduledactivity__in=EighthScheduledActivity.objects.filter(activity__name="z - Hybrid Sticky")
         ):
             blocks_set.add((str(b.date), b.block_letter[0]))
-        queryset = [(b, "{} ({})".format(b[0], b[1])) for b in sorted(list(blocks_set))]
+        queryset = [(b, f"{b[0]} ({b[1]})") for b in sorted(blocks_set)]
         queryset.append(("", "Select or search for a block"))
 
         self.fields["block"] = forms.ChoiceField(choices=queryset, label=label)

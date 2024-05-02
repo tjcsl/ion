@@ -24,7 +24,7 @@ def email_send(
 
     Args:
         text_template: URL to a Django template for the text email's contents
-        html_template: URL to a Django tempalte for the HTML email's contents
+        html_template: URL to a Django template for the HTML email's contents
         data: The context to pass to the templates
         subject: The subject of the email
         emails: The addresses to send the email to
@@ -60,7 +60,7 @@ def email_send(
         msg.attach_alternative(html_content, "text/html")
         email_msg.append(msg)
 
-    logger.debug("Emailing %s to %s in %d seperate emails", subject, emails, len(email_msg))
+    logger.debug("Emailing %s to %s in %d separate emails", subject, emails, len(email_msg))
 
     # We only want to actually send emails if we are in production or explicitly force sending.
     if settings.PRODUCTION or settings.FORCE_EMAIL_SEND:

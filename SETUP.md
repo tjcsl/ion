@@ -14,7 +14,7 @@ The Git repository on the host computer is synced with ``~/intranet`` on the vir
 ## Set Up
 
 1. Create your own fork of the [``tjcsl/ion`` repository](https://github.com/tjcsl/ion.git).
-2. Clone the Ion repositiory from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
+2. Clone the Ion repository from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
 3. Run ``cd config/docker``
 4. Run `docker compose build ` (or use `docker-compose build` if this doesn't work)
 5. Run ``docker compose up``
@@ -35,7 +35,7 @@ Navigate to http://localhost:8080 in the web browser of your choice. You might h
 
 ### Interacting with the application:
 
-If you need to run a Django command like ``makemigrations``, ``collectstatic`` or ``shell_plus``, run ``docker exec -it intranet bash`` in your terminal. That wlll give you a shell into the application container. You can also use this to run scripts like ``build_sources.sh``. If you need to view the output from or restart ``runserver``, run ``docker attach application``.
+If you need to run a Django command like ``makemigrations``, ``collectstatic`` or ``shell_plus``, run ``docker exec -it intranet bash`` in your terminal. That will give you a shell into the application container. You can also use this to run scripts like ``build_sources.sh``. If you need to view the output from or restart ``runserver``, run ``docker attach application``.
 
 ### Attaching to logs
 
@@ -45,14 +45,14 @@ To view logs of a container, run `docker logs [CONTAINER NAME] -f`. For example,
 
 ## Prerequisites
 
-- [Virtualbox](https://www.virtualbox.org/) is a virtualization service that allows the creation of virtual machines. Installation is OS-specific and instructions can be found [here](https://www.virtualbox.org/wiki/Downloads). 
+- [Virtualbox](https://www.virtualbox.org/) is a virtualization service that allows the creation of virtual machines. Installation is OS-specific and instructions can be found [here](https://www.virtualbox.org/wiki/Downloads).
 - [Vagrant](https://www.vagrantup.com/) is a command line utility for managing and setting up virtual machines and environments. Installation is OS-specific and instructions can be found [here](https://developer.hashicorp.com/vagrant/downloads).
 - [GitHub](https://github.com) is the version control system used by the CSL. Make sure that you have an account and an SSH key tied to that account that will allow you to push and pull code. Ensure you have an SSH key set up with GitHub by running ``ssh -T git@github.com``. You should be greeted by your username. If not, set up an SSH key with GitHub by following [these instructions](https://help.github.com/articles/generating-an-ssh-key/).
 
 ## Set Up
 
 1. Create your own fork of the [``tjcsl/ion`` repository](https://github.com/tjcsl/ion.git).
-2. Clone the Ion repositiory from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
+2. Clone the Ion repository from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
 3. In the ``config/vagrant`` directory, copy the file ``devconfig.json.sample`` to ``devconfig.json`` and edit the properties in ``devconfig.json`` as appropriate. Ensure ``ssh_key`` is set to the same SSH key registered with GitHub (e.g. ``id_rsa``).
 4. Run ``vagrant plugin install vagrant-vbguest``. If you are on Windows, also run ``vagrant plugin install vagrant-winnfsd``.
 5. Run ``vagrant up && vagrant reload`` and wait while the development environment is set up. If you are asked to select a network interface for bridging, enter the number corresponding to one that is active. To automatically select this interface in the future, set the "network_interface" key in ``devconfig.json`` to the name of the interface you selected (e.g. ``"en0: Wi-Fi (AirPort)"``). There may be repeated warnings similar to "``Remote connection disconnect`` and ``Warning: Connection aborted. Retrying...`` on the second ``vagrant up``. After several minutes they will stop.
@@ -100,11 +100,11 @@ When you want to close the VM environment, make sure you have exited out of the 
 
 ## Changing Master Password
 
-The master password for vagrant development enviornment is ``swordfish``.
+The master password for vagrant development environment is ``swordfish``.
 
 In non-Vagrant environments, you should set a master password different from the default. Ideally, this password should have many bits of entropy and should be randomly generated.
 
-We use the secure Argon2 hashing algorithim to secure our master password. To set the master password, set ``MASTER_PASSWORD`` to the string output of the below script (after changing values as appropriate) in ``secret.py``. After changing this value, restart Ion.
+We use the secure Argon2 hashing algorithm to secure our master password. To set the master password, set ``MASTER_PASSWORD`` to the string output of the below script (after changing values as appropriate) in ``secret.py``. After changing this value, restart Ion.
 
 Currently, Ion requires that you use Argon2id to create the hash. You also must prepend ``argon2`` to the hash before putting it into ``secret.py``.
 

@@ -138,18 +138,18 @@ def picture_view(request, user_id, year=None):
             data = None
 
     if data is None:
-        img = io.open(default_image_path, mode="rb").read()
+        img = open(default_image_path, mode="rb").read()
     else:
         image_buffer = io.BytesIO(data)
 
     response = HttpResponse(content_type="image/jpeg")
-    response["Content-Disposition"] = "filename={}_{}.jpg".format(user_id, year or preferred)
+    response["Content-Disposition"] = f"filename={user_id}_{year or preferred}.jpg"
 
     if img is None:
         try:
             img = image_buffer.read()
         except UnicodeDecodeError:
-            img = io.open(default_image_path, mode="rb").read()
+            img = open(default_image_path, mode="rb").read()
         image_buffer.close()
     response.write(img)
 

@@ -38,11 +38,11 @@ class EventsTest(IonTestCase):
         self.assertTrue(EventUserMap.objects.filter(event=event).count(), 1)
         self.assertEqual(event.user_map, user_map)
 
-        self.assertEqual(str(event.user_map), "UserMap: {}".format(event.title))
+        self.assertEqual(str(event.user_map), f"UserMap: {event.title}")
 
-        self.assertEqual("UNAPPROVED - {} - {}".format(unapproved_event.title, unapproved_event.time), str(unapproved_event))
+        self.assertEqual(f"UNAPPROVED - {unapproved_event.title} - {unapproved_event.time}", str(unapproved_event))
 
-        self.assertEqual("{} - {}".format(event.title, event.time), str(event))
+        self.assertEqual(f"{event.title} - {event.time}", str(event))
 
         next_event = self.create_random_event(user, time=timezone.now() + timezone.timedelta(days=15))
         prev_event = self.create_random_event(user, time=timezone.now() - timezone.timedelta(days=15))
@@ -116,7 +116,7 @@ class EventsTest(IonTestCase):
         # Test with a few attendees
         num_users = 5
         for i in range(num_users):
-            user = get_user_model().objects.create(username="2020jdoe{}".format(i))
+            user = get_user_model().objects.create(username=f"2020jdoe{i}")
             event.attending.add(user)
         event.save()
 

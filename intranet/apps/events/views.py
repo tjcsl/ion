@@ -148,7 +148,7 @@ def events_view(request):
                 event.approved = True
                 event.approved_by = request.user
                 event.save()
-                messages.success(request, "Approved event {}".format(event))
+                messages.success(request, f"Approved event {event}")
                 logger.info("Admin %s approved event: %s (%s)", request.user, event, event.id)
             else:
                 raise http.Http404
@@ -161,7 +161,7 @@ def events_view(request):
                 event.rejected = True
                 event.rejected_by = request.user
                 event.save()
-                messages.success(request, "Rejected event {}".format(event))
+                messages.success(request, f"Rejected event {event}")
                 logger.info("Admin %s rejected event: %s (%s)", request.user, event, event.id)
             else:
                 raise http.Http404

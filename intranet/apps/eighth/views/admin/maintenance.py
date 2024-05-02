@@ -28,7 +28,7 @@ def start_of_year_view(request):
             context["output"] = content.read()
         except Exception as e:
             # TODO: capture exception
-            context["output"] = "An error occured while running the start of year scripts!\n\n{}".format(e)
+            context["output"] = f"An error occurred while running the start of year scripts!\n\n{e}"
         context["completed"] = True
     return render(request, "eighth/admin/start_of_year.html", context)
 

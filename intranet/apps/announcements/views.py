@@ -55,7 +55,7 @@ def announcement_posted_hook(request, obj):
                 announcement_posted_email(request, obj)
         except Exception as e:
             logger.error("Exception when emailing announcement: %s", e)
-            messages.error(request, "Exception when emailing announcement: {}".format(e))
+            messages.error(request, f"Exception when emailing announcement: {e}")
             raise e
     else:
         logger.debug("Announcement notify off")
@@ -308,7 +308,7 @@ def modify_announcement_view(request, announcement_id=None):
         form = AnnouncementEditForm(request.POST, instance=announcement)
         if form.is_valid():
             obj = form.save()
-            if "update_added_date" in form.cleaned_data and form.cleaned_data["update_added_date"]:
+            if form.cleaned_data.get("update_added_date"):
                 obj.added = timezone.now()
             if form.cleaned_data.get("notify_post_resend") or form.cleaned_data.get("notify_email_all_resend"):
                 obj.notify_post = form.cleaned_data["notify_post_resend"]

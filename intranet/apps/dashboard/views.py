@@ -231,12 +231,10 @@ def get_announcements_list(request, context):
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
         announcements = Announcement.objects.all()
+    elif context["show_expired"]:
+        announcements = Announcement.objects.visible_to_user(user)
     else:
-        # Only show announcements for groups that the user is enrolled in.
-        if context["show_expired"]:
-            announcements = Announcement.objects.visible_to_user(user)
-        else:
-            announcements = Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now())
+        announcements = Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now())
 
     # Load information on the user who posted the announcement
     # Unless the announcement has a custom author (some do, but not all), we will need the user information to construct the byline,
@@ -248,13 +246,12 @@ def get_announcements_list(request, context):
 
     if context["events_admin"] and context["show_all"]:
         events = Event.objects.all()
+    elif context["show_expired"]:
+        events = Event.objects.visible_to_user(user)
     else:
-        if context["show_expired"]:
-            events = Event.objects.visible_to_user(user)
-        else:
-            # Unlike announcements, show events for the rest of the day after they occur.
-            midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
-            events = Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True)
+        # Unlike announcements, show events for the rest of the day after they occur.
+        midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
+        events = Event.objects.visible_to_user(user).filter(time__gte=midnight, show_on_dashboard=True)
 
     def announcements_sorting_key(item):
         if context["show_expired"] or context["show_all"]:

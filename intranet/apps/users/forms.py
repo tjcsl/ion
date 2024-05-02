@@ -69,7 +69,7 @@ class SortedTeacherMultipleChoiceField(forms.ModelMultipleChoiceField):
 
     def label_from_instance(self, obj):
         name = obj.last_first_initial
-        return "{} ({})".format(name, obj.username) if self.show_username else name
+        return f"{name} ({obj.username})" if self.show_username else name
 
 
 class AddressForm(forms.ModelForm):

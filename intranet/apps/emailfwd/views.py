@@ -36,9 +36,8 @@ def senior_email_forward_view(request):
             return redirect("index")
         else:
             messages.error(request, "Error adding forwarding address.")
+    elif forward:
+        form = SeniorEmailForwardForm(instance=forward)
     else:
-        if forward:
-            form = SeniorEmailForwardForm(instance=forward)
-        else:
-            form = SeniorEmailForwardForm()
+        form = SeniorEmailForwardForm()
     return render(request, "emailfwd/senior_forward.html", {"form": form, "forward": forward})

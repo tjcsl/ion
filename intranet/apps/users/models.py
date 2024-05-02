@@ -170,7 +170,8 @@ class UserManager(DjangoUserManager):
         return self.get_approve_announcements_users().order_by("last_name", "first_name")
 
     def exclude_from_search(
-        self, existing_queryset: Optional[Union[Collection["User"], QuerySet]] = None  # pylint: disable=unsubscriptable-object
+        self,
+        existing_queryset: Optional[Union[Collection["User"], QuerySet]] = None,  # pylint: disable=unsubscriptable-object
     ) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
         if existing_queryset is None:
             existing_queryset = self
@@ -899,11 +900,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             current user.
 
         """
-        try:
-            self.senior
-        except AttributeError:
-            return False
-        return True
+        return hasattr(self, "senior")
 
     @property
     def is_attendance_taker(self) -> bool:
@@ -1260,7 +1257,7 @@ class UserProperties(models.Model):
 
 
 PERMISSIONS_NAMES = {
-    prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
+    prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]  # noqa: E501
 }
 
 
@@ -1417,7 +1414,7 @@ class Grade:
             self._number = get_senior_graduation_year() - int(graduation_year) + 12
 
         if 9 <= self._number <= 12:
-            self._name = [elem[1] for elem in GRADE_NUMBERS if elem[0] == self._number][0]
+            self._name = next(elem[1] for elem in GRADE_NUMBERS if elem[0] == self._number)
         else:
             self._name = "graduate"
 

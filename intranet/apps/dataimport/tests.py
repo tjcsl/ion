@@ -24,7 +24,7 @@ class YearCleanupTest(IonTestCase):
         output = [
             "In pretend mode.",
             "Turnover date set to: {}".format(turnover_date.strftime("%c")),
-            "OK: senior_grad_year = {}".format(year + 1),
+            f"OK: senior_grad_year = {year + 1}",
             "Resolving absences",
             "Updating welcome state",
             "Deleting graduated users",
@@ -106,7 +106,7 @@ class DeleteUsersTest(IonTestCase):
         with patch("intranet.apps.dataimport.management.commands.delete_users.open", mock_open(read_data=file_contents)) as m:
             call_command("delete_users", filename="foo.csv", header="Student ID", run=True, confirm=True)
 
-        m.assert_called_with("foo.csv", "r", encoding="utf-8")
+        m.assert_called_with("foo.csv", encoding="utf-8")
         with self.assertRaises(get_user_model().DoesNotExist):
             get_user_model().objects.get(username="2021ttester")
 
