@@ -33,7 +33,7 @@ end_school_year = start_school_year + 1
 Update this section annually after summer school ends and before school starts.
 School year last updated:  2023-08-16
 Hoco last updated:         2023-08-16
-tjSTAR last updated:       2023-05-10
+tjSTAR last updated:       2024-05-03
 """
 
 # When school is scheduled to start and end
@@ -54,8 +54,12 @@ HOCO_END_DATE = datetime.date(start_school_year,
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 22  # UPDATE THIS! Value when last updated: May 22, 2023         # noqa: E128
+    5, 21  # UPDATE THIS! Value when last updated: May 21, 2024         # noqa: E128
 )                                                                       # noqa: E124
+
+# When to start showing the tjSTAR banner
+TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
+
 """  -------- END UPDATE ANNUALLY --------  """
 # fmt: on
 
@@ -75,9 +79,6 @@ if datetime.date.today() < SCHOOL_START_DATE - datetime.timedelta(weeks=2):
     SCHOOL_END_HOUR = 15
     SCHOOL_END_MINUTE = 0
 
-
-# When to start showing the tjSTAR banner
-TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(weeks=2)
 
 """ !! In production, add a file called secret.py to the settings package that
 defines SECRET_KEY, SECRET_DATABASE_URL. !!
