@@ -75,7 +75,7 @@ class EighthSponsor(AbstractBaseEighthModel):
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=set_historical_user)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=set_historical_user, related_name="sponsor_obj")
     department = models.CharField(max_length=20, choices=DEPARTMENTS, default="general")
     full_time = models.BooleanField(default=True)
     online_attendance = models.BooleanField(default=True)
@@ -186,6 +186,7 @@ class EighthActivity(AbstractBaseEighthModel):
         sponsors (:obj:`list` of :obj:`EighthSponsor`): The default activity-level sponsors for the activity.
             On an EighthScheduledActivity basis, you should NOT query this field.
             Instead, use scheduled_activity.get_true_sponsors()
+        officers (:obj:`list` of :obj:`User`): The activity's officers as chosen by a club sponsor.
         rooms (:obj:`list` of :obj:`EighthRoom`): The default activity-level rooms for the activity.
             On an EighthScheduledActivity basis, you should NOT query this field.
             Use scheduled_activity.get_true_rooms()
@@ -232,6 +233,7 @@ class EighthActivity(AbstractBaseEighthModel):
         favorites (:obj:`list` of :obj:`User`): A ManyToManyField of User objects who have favorited the activity.
         similarities (:obj:`list` of :obj:`EighthActivitySimilarity`): A ManyToManyField of EighthActivitySimilarity
             objects which are similar to this activity.
+        subscribers (:obj:`list` of :obj:`User`): Individual users subscribed to this activity's announcements.
         deleted (bool): Whether the activity still technically exists in the system, but was marked to be deleted.
     """
 
@@ -268,6 +270,13 @@ class EighthActivity(AbstractBaseEighthModel):
     wed_b = models.BooleanField("Meets Wednesday B", default=False)
     fri_a = models.BooleanField("Meets Friday A", default=False)
     fri_b = models.BooleanField("Meets Friday B", default=False)
+
+    # For club announcements
+    subscriptions_enabled = models.BooleanField(default=False)
+    subscribers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="subscribed_activity_set", blank=True)
+    officers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="officer_for_set", blank=True)
+    # Can be different from the sponsor(s) listed for scheduling purposes
+    club_sponsors = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="club_sponsor_for_set", blank=True)
 
     admin_comments = models.CharField(max_length=1000, blank=True)
 

@@ -119,6 +119,14 @@ def announcement_posted_email(request, obj, send_all=False):
                 .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
                 .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"]))
             )
+        elif obj.activity:
+            subject = f"Club Announcement for {obj.activity.name}: {obj.title}"
+            users = (
+                get_user_model()
+                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year(), subscribed_to_set__contains=obj.activity)
+                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"], subscribed_to_set__contains=obj.activity))
+            )
+
         else:
             users = (
                 get_user_model()

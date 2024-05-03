@@ -128,15 +128,15 @@ $(function() {
     });
 
     // Disable *_allowed form elements if Restricted isn't checked
-    var updateRestrictedFormFields = function() {
-        var restricted = $("#id_restricted").prop("checked");
-        $("#id_restricted").parents("tr").nextAll().each(function(index, tr) {
-            $(tr).find("input").attr("readonly", !restricted);
+    function updateDisabledFormFields(el) {
+        var checked = $(el).prop("checked");
+        $(el).parents("tr").nextAll().each(function(index, tr) {
+            $(tr).find("input").attr("readonly", !checked);
             if ($(tr).find("input").attr("type") === "checkbox") {
-                $(tr).find("input").attr("disabled", !restricted);
+                $(tr).find("input").attr("disabled", !checked);
             }
             $(tr).find("select").each(function(index, select) {
-                if (restricted) {
+                if (checked) {
                     select.selectize.enable();
                 } else {
                     select.selectize.disable();
@@ -144,15 +144,25 @@ $(function() {
             }).attr('disabled', false);
         });
 
-        // Blacklist should be always enabled
+        // Blacklist should always be enabled
         $("#id_users_blacklisted").parent("td").find("input").attr("readonly", false);
-        var select = $("#id_users_blacklisted").parent("td").find("select")[0].selectize.enable();
+        $("#id_users_blacklisted").parent("td").find("select")[0].selectize.enable();
     }
 
-    $("#id_restricted").click(updateRestrictedFormFields);
+    $("#id_restricted").click(function() {
+        updateDisabledFormFields($(this));
+    });
+
+    $("#id_subscriptions_enabled").click(function() {
+        updateDisabledFormFields($(this));
+    });
 
     if ($("#id_restricted").length > 0) {
-        updateRestrictedFormFields();
+        updateDisabledFormFields($("#id_restricted"));
+    }
+
+    if ($("#id_subscriptions_enabled").length > 0) {
+        updateDisabledFormFields($("#id_subscriptions_enabled"));
     }
 
     $("#only-show-overbooked").click(function() {

@@ -10,6 +10,7 @@ from django.utils import timezone
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
 from ...utils.html import nullify_links
+from ..eighth.models import EighthActivity
 
 
 class AnnouncementManager(Manager):
@@ -88,7 +89,7 @@ class Announcement(models.Model):
             The title of the announcement
         content
             The HTML content of the news post
-        authors
+        author
             The name of the author
         added
             The date the announcement was added
@@ -109,6 +110,8 @@ class Announcement(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
+
+    activity = models.ForeignKey(EighthActivity, null=True, blank=True, on_delete=models.CASCADE)
 
     expiration_date = models.DateTimeField(auto_now=False, default=timezone.make_aware(datetime(3000, 1, 1)))
 
@@ -141,8 +144,19 @@ class Announcement(models.Model):
         """Return whether the announcement was created after July 1st of this school year."""
         return is_current_year(self.added)
 
+    @property
+    def is_club_announcement(self):
+        return self.activity is not None
+
     def is_visible(self, user):
         return self in Announcement.objects.visible_to_user(user)
+
+    def can_modify(self, user):
+        return (
+            user.is_announcements_admin
+            or self.is_club_announcement
+            and (self.is_visible_submitter(user) or user.club_sponsor_for_set.filter(id=self.activity.id).exists())
+        )
 
     # False, not None. This can be None if no AnnouncementRequest exists for this Announcement,
     # and we should not reevaluate in that case.
@@ -157,13 +171,13 @@ class Announcement(models.Model):
 
     def is_visible_requester(self, user):
         try:
-            return self.announcementrequest_set.filter(teachers_requested__id=user.id).exists()
+            return self.announcementrequest_set.filter(teachers_requested=user).exists()
         except get_user_model().DoesNotExist:
             return False
 
     def is_visible_submitter(self, user):
         try:
-            return (self.announcementrequest and user.id == self.announcementrequest.user_id) or self.user_id == user.id
+            return self.user == user or self.announcementrequest and user == self.announcementrequest.user
         except get_user_model().DoesNotExist:
             return False
 

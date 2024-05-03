@@ -391,6 +391,30 @@ def eighth_multi_signup_view(request):
 
 @login_required
 @deny_restricted
+def subscribe_to_club(request, activity_id):
+    activity = get_object_or_404(EighthActivity, id=activity_id)
+
+    if activity.subscriptions_enabled:
+        activity.subscribers.add(request.user)
+    else:
+        messages.error(request, "Subscriptions are not enabled for this activity.")
+
+    return redirect(request.META.get("HTTP_REFERER", "/"))
+
+
+@login_required
+@deny_restricted
+def unsubscribe_from_club(request, activity_id):
+    activity = get_object_or_404(EighthActivity, id=activity_id)
+
+    if request.user in activity.subscribers.all():
+        activity.subscribers.remove(request.user)
+
+    return redirect(request.META.get("HTTP_REFERER", "/"))
+
+
+@login_required
+@deny_restricted
 def toggle_favorite_view(request):
     if request.method != "POST":
         return http.HttpResponseNotAllowed(["POST"], "HTTP 405: METHOD NOT ALLOWED")

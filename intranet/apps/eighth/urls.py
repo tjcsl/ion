@@ -15,6 +15,8 @@ urlpatterns = [
     re_path(r"^/leave$", signup.leave_waitlist_view, name="leave_waitlist"),
     re_path(r"^/seen_feature$", signup.seen_new_feature_view, name="seen_new_feature"),
     re_path(r"^/signup/multi$", signup.eighth_multi_signup_view, name="eighth_multi_signup"),
+    re_path(r"^/signup/subscribe/(?P<activity_id>\d+)$", signup.subscribe_to_club, name="subscribe_to_club"),
+    re_path(r"^/signup/unsubscribe/(?P<activity_id>\d+)$", signup.unsubscribe_from_club, name="unsubscribe_from_club"),
     re_path(r"^/toggle_favorite$", signup.toggle_favorite_view, name="eighth_toggle_favorite"),
     re_path(r"^/absences$", attendance.eighth_absences_view, name="eighth_absences"),
     re_path(r"^/absences/(?P<user_id>\d+)$", attendance.eighth_absences_view, name="eighth_absences"),
@@ -38,6 +40,7 @@ urlpatterns = [
     re_path(r"^/roster/raw/waitlist/(?P<scheduled_activity_id>\d+)$", attendance.raw_waitlist_view, name="eighth_raw_waitlist"),
     # Activity Info (for students/teachers)
     re_path(r"^/activity/(?P<activity_id>\d+)$", activities.activity_view, name="eighth_activity"),
+    re_path(r"^/activity/(?P<activity_id>\d+)/settings$", activities.settings_view, name="eighth_activity_settings"),
     re_path(r"^/activity/statistics/global$", activities.stats_global_view, name="eighth_statistics_global"),
     re_path(r"^/activity/statistics/multiple$", activities.stats_multiple_view, name="eighth_statistics_multiple"),
     re_path(r"^/activity/statistics/(?P<activity_id>\d+)$", activities.stats_view, name="eighth_statistics"),

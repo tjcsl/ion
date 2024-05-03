@@ -82,11 +82,11 @@
     <script>
     {% if request.GET.activity %}
         $(function() {
-                $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+            $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
         })
     {% elif active_block_current_signup %}
         $(function() {
-                $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
+            $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
         })
     {% endif %}
     {% if not real_user.is_eighth_admin %}
@@ -311,6 +311,19 @@
                             Get Notifications
                         </button>
                         <% } %>
+                        <% if (subscriptions_enabled) { %>
+                            <% if (subscribed_to) { %>
+                                <a class="button" id="unsubscribe-button" href="/eighth/signup/unsubscribe/<%= id %>">
+                                    <i class="fas fa-rss"></i>
+                                    Unsubscribe
+                                </a>
+                            <% } else { %>
+                                <a class="button" id="subscribe-button" href="/eighth/signup/subscribe/<%= id %>">
+                                    <i class="fas fa-rss"></i>
+                                    Subscribe
+                                </a>
+                            <% } %>
+                        <% } %>
                         <div id="signup-spinner-container">
                             <div id="signup-spinner"></div>
                         </div>
@@ -340,6 +353,19 @@
                 </div>
             </div>
             <% if (!showingRosterButton) { %>
+                <% if (subscriptions_enabled) { %>
+                    <% if (subscribed_to) { %>
+                        <a class="button" id="unsubscribe-button" href="/eighth/signup/unsubscribe/<%= id %>">
+                            <i class="fas fa-rss"></i>
+                            Unsubscribe
+                        </a>
+                    <% } else { %>
+                        <a class="button" id="subscribe-button" href="/eighth/signup/subscribe/<%= id %>">
+                            <i class="fas fa-rss"></i>
+                            Subscribe
+                        </a>
+                    <% } %>
+                <% } %>
                 <% if(isEighthAdmin) { %>
                     <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
                         View Roster

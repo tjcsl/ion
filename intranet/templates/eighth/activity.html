@@ -64,6 +64,20 @@
         </a>
     {% endif %}
 
+    {% if activity.subscriptions_enabled %}
+        {% if request.user in activity.subscribers.all %}
+            <a class="button" href="{% url 'unsubscribe_from_club' activity.id %}">
+                <i class="fas fa-rss"></i>
+                Unsubscribe
+            </a>
+        {% else %}
+            <a class="button" href="{% url 'subscribe_to_club' activity.id %}">
+                <i class="fas fa-rss"></i>
+                Subscribe
+            </a>
+        {% endif %}
+    {% endif %}
+
     <h2 style="padding-bottom: 0">Activity: {{ activity }}</h2>
     {% if activity.special %}
         <span class="badge green" title="This is a special activity.">Special</span>
@@ -200,7 +214,7 @@
         </tbody>
         </table>
         <br>
-        All meetings of this activity are not guaranteed to appear on this page.
+        Not all meetings of this activity are guaranteed to appear on this page.
         <br>
         <b>Activity schedules are not fixed, and may change. Check Eighth Period schedules.</b>
         <br>

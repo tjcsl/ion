@@ -13,7 +13,7 @@ from ...utils.html import safe_html
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
-from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm
+from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm, ClubAnnouncementForm
 from .models import Announcement, AnnouncementRequest
 from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
                             request_announcement_email)
@@ -33,6 +33,13 @@ def view_announcements(request):
 def view_announcements_archive(request):
     """Show the dashboard with only announcements, showing expired posts."""
     return dashboard_view(request, show_widgets=False, show_expired=True, ignore_dashboard_types=["event"])
+
+
+@login_required
+@deny_restricted
+def view_club_announcements(request):
+    """Show the dashboard with only club posts."""
+    return dashboard_view(request, show_widgets=False, show_hidden_club=True, ignore_dashboard_types=["event"])
 
 
 def announcement_posted_hook(request, obj):
@@ -72,6 +79,7 @@ def announcement_approved_hook(request, obj, req):
 
 
 @login_required
+@deny_restricted
 def request_announcement_view(request):
     """The request announcement page."""
     if request.method == "POST":
@@ -119,11 +127,88 @@ def request_announcement_view(request):
 
 
 @login_required
+@deny_restricted
+def add_club_announcement_view(request):
+    is_announcements_admin = request.user.is_announcements_admin
+    is_club_sponsor = request.user.is_club_sponsor
+    is_club_officer = request.user.is_club_officer
+
+    if not (is_announcements_admin or is_club_sponsor or is_club_officer):
+        messages.error(request, "You do not have permission to post club announcements.")
+        return redirect("club_announcements")
+
+    if request.method == "POST":
+        form = ClubAnnouncementForm(request.user, request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=True)
+            obj.user = request.user
+            # SAFE HTML
+            obj.content = safe_html(obj.content)
+
+            obj.save()
+
+            messages.success(request, "Successfully posted club announcement.")
+            return redirect("club_announcements")
+        else:
+            messages.error(request, "Error adding club announcement")
+    else:
+        form = ClubAnnouncementForm(request.user)
+
+        if not form.fields["activity"].queryset.exists():
+            if is_announcements_admin:
+                messages.error(request, "No clubs have enabled this feature yet.")
+            elif is_club_sponsor:
+                messages.error(request, "Please enable club announcements for your club.")
+            else:
+                messages.error(request, "Please ask your club sponsor to enable posting announcements for your club.")
+            return redirect("club_announcements")
+
+    return render(request, "announcements/club-request.html", {"form": form, "action": "post"})
+
+
+@login_required
+@deny_restricted
+def modify_club_announcement_view(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+
+    if not announcement.is_club_announcement:
+        messages.error(request, "This announcement is not a club announcement.")
+        return redirect("club_announcements")
+
+    if not announcement.can_modify(request.user):
+        messages.error(request, "You do not have permission to modify this club announcement.")
+        return redirect("club_announcements")
+
+    if request.method == "POST":
+        form = ClubAnnouncementForm(request.user, request.POST, instance=announcement)
+
+        if form.is_valid():
+            obj = form.save(commit=True)
+            obj.user = request.user
+            obj.activity = announcement.activity
+            # SAFE HTML
+            obj.content = safe_html(obj.content)
+
+            obj.save()
+
+            messages.success(request, "Successfully modified club announcement.")
+            return redirect("club_announcements")
+        else:
+            messages.error(request, "Error modifying club announcement")
+    else:
+        form = ClubAnnouncementForm(request.user, instance=announcement)
+    return render(request, "announcements/club-request.html", {"form": form, "action": "modify"})
+
+
+@login_required
+@deny_restricted
 def request_announcement_success_view(request):
     return render(request, "announcements/success.html", {"type": "request"})
 
 
 @login_required
+@deny_restricted
 def request_announcement_success_self_view(request):
     return render(request, "announcements/success.html", {"type": "request", "self": True})
 
@@ -244,11 +329,12 @@ def admin_approve_announcement_view(request, req_id):
 @announcements_admin_required
 @deny_restricted
 def admin_request_status_view(request):
-    all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year()
+    prefetch_fields = ["user", "teachers_requested", "teachers_approved", "posted", "posted_by", "rejected_by"]
+    all_waiting = AnnouncementRequest.objects.filter(posted=None, rejected=False).this_year().prefetch_related(*prefetch_fields)
     awaiting_teacher = all_waiting.filter(teachers_approved__isnull=True)
     awaiting_approval = all_waiting.filter(teachers_approved__isnull=False)
-    approved = AnnouncementRequest.objects.exclude(posted=None).this_year()
-    rejected = AnnouncementRequest.objects.filter(rejected=True).this_year()
+    approved = AnnouncementRequest.objects.exclude(posted=None).this_year().prefetch_related(*prefetch_fields)
+    rejected = AnnouncementRequest.objects.filter(rejected=True).this_year().prefetch_related(*prefetch_fields)
 
     context = {"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval, "approved": approved, "rejected": rejected}
 
@@ -318,7 +404,7 @@ def modify_announcement_view(request, announcement_id=None):
             logger.info("Admin %s modified announcement: %s (%s)", request.user, announcement, announcement.id)
             return redirect("index")
         else:
-            messages.error(request, "Error adding announcement")
+            messages.error(request, "Error modifying announcement")
     else:
         announcement = get_object_or_404(Announcement, id=announcement_id)
         form = AnnouncementEditForm(instance=announcement)
