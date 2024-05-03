@@ -29,7 +29,7 @@ or another Alpine mirror to `/etc/apk/repositories` because `alpinelinux.org` ma
 
 ## Docker Post Set-Up
 
-Navigate to http://localhost:8080 in the web browser of your choice. You might have to wait up to 60 seconds the first time that you create the container. When presented with the login page, log in with your Ion username and the password "notfish" (without the quotes).
+Navigate to http://localhost:8080 in the web browser of your choice. You might have to wait up to 60 seconds the first time that you create the container. When presented with the login page, log in with the username "admin" or a [generated username](https://github.com/tjcsl/ion/blob/dev/USERNAMES.md) and the password "notfish" (without the quotes).
 
 ## Useful Commands
 
