@@ -206,6 +206,7 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
         "group": Group.objects.get(id=group_id),
         "scheduled_activity": EighthScheduledActivity.objects.get(id=schact_id),
         "help_email": settings.FEEDBACK_EMAIL,
+        "base_url": "https://ion.tjhsst.edu",
     }
 
     try:
@@ -256,6 +257,7 @@ def eighth_admin_signup_group_task_hybrid(*, user_id: int, group_id: int, schact
         "scheduled_activity_virtual": EighthScheduledActivity.objects.get(id=schact_virtual_id),
         "scheduled_activity_person": EighthScheduledActivity.objects.get(id=schact_person_id),
         "help_email": settings.FEEDBACK_EMAIL,
+        "base_url": "https://ion.tjhsst.edu",
     }
 
     try:
@@ -321,7 +323,12 @@ def follow_up_absence_emails():
         num_absences = absences.count()
 
         if num_absences > 0:
-            data = {"absences": absences, "info_link": "https://ion.tjhsst.edu/eighth/absences", "num_absences": num_absences}
+            data = {
+                "absences": absences,
+                "info_link": "https://ion.tjhsst.edu/eighth/absences",
+                "num_absences": num_absences,
+                "base_url": "https://ion.tjhsst.edu",
+            }
 
             email_send(
                 "eighth/emails/absence_monthly.txt",
