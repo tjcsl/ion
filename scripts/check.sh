@@ -8,10 +8,6 @@ echo "Formatting..."
 ./scripts/static_templates_format.sh
 echo
 
-echo "Building sources..."
-./scripts/build_sources.sh
-echo
-
 echo "Validating commit messages..."
 ./scripts/validate-commit-messages.py $(git rev-parse HEAD~1)
 echo
