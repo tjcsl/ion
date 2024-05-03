@@ -44,6 +44,14 @@ intranet.apps.dataimport.management.commands.import\_students module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.dataimport.management.commands.import\_tj\_star module
+--------------------------------------------------------------------
+
+.. automodule:: intranet.apps.dataimport.management.commands.import_tj_star
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.dataimport.management.commands.import\_users module
 -----------------------------------------------------------------
 
