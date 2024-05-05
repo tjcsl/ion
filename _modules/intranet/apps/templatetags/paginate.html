@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.templatetags.forms &#8212; TJ Intranet v3 (Build #2277) documentation</title>
+    <title>intranet.apps.templatetags.paginate &#8212; TJ Intranet v3 (Build #2277) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -120,41 +120,53 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <h1>Source code for intranet.apps.templatetags.forms</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">re</span>
+  <h1>Source code for intranet.apps.templatetags.paginate</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">template</span>
 
 <span class="n">register</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">Library</span><span class="p">()</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="is_array_field"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.forms.is_array_field">[docs]</a><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
-<span class="k">def</span> <span class="nf">is_array_field</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*_(\d+)$&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+<div class="viewcode-block" id="query_transform"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.paginate.query_transform">[docs]</a><span class="nd">@register</span><span class="o">.</span><span class="n">simple_tag</span>
+<span class="k">def</span> <span class="nf">query_transform</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">query</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="n">query</span><span class="o">.</span><span class="n">urlencode</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="field_array_index"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.forms.field_array_index">[docs]</a><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
-<span class="k">def</span> <span class="nf">field_array_index</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^.*_(\d+)$&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="page_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.paginate.page_list">[docs]</a><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>  <span class="c1"># TODO: replace return type with list[int | None]</span>
+<span class="k">def</span> <span class="nf">page_list</span><span class="p">(</span><span class="n">paginator</span><span class="p">,</span> <span class="n">current_page</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pagination</span>
 
+<span class="sd">    If there is a ``None`` in the output, it should be replaced</span>
+<span class="sd">    with ...&#39;s.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SURROUNDING_PAGES</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">BEGINNING_PAGES</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">END_PAGES</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">total_pages</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page_range</span>
 
-<div class="viewcode-block" id="field_array_size"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.templatetags.html#intranet.apps.templatetags.forms.field_array_size">[docs]</a><span class="nd">@register</span><span class="o">.</span><span class="n">filter</span>
-<span class="k">def</span> <span class="nf">field_array_size</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(.*)_\d+$&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1"># The page numbers to show</span>
+    <span class="n">actual_numbers</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">page</span>
+        <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">total_pages</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">page</span> <span class="o">&gt;=</span> <span class="n">total_pages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">END_PAGES</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="ow">or</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="n">BEGINNING_PAGES</span>
+            <span class="ow">or</span> <span class="p">(</span><span class="n">current_page</span><span class="o">.</span><span class="n">number</span> <span class="o">-</span> <span class="n">SURROUNDING_PAGES</span> <span class="o">&lt;=</span> <span class="n">page</span> <span class="o">&lt;=</span> <span class="n">current_page</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="n">SURROUNDING_PAGES</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
 
-    <span class="n">prefix</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^</span><span class="si">{}</span><span class="s2">_(\d+)$&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">),</span> <span class="n">field_name</span><span class="p">):</span>
-            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">count</span></div>
+    <span class="n">pages</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">actual_numbers</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+        <span class="c1"># if there is a mismatch, that means we should add a ...</span>
+        <span class="k">if</span> <span class="n">actual_numbers</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actual_numbers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">pages</span></div>
 </pre></div>
 
     </div>

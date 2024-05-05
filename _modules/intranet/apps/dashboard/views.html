@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #2137) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #2277) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -127,6 +127,7 @@
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
@@ -378,39 +379,42 @@
             <span class="n">midnight</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">midnight</span><span class="p">,</span> <span class="n">show_on_dashboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="n">announcements</span><span class="p">,</span> <span class="n">events</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">pinned</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">added</span><span class="p">))</span>
-    <span class="n">items</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">announcements_sorting_key</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_expired&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">added</span>
+        <span class="c1"># otherwise sort by pinned and then added date</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">pinned</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">added</span><span class="p">)</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">chain</span><span class="p">(</span><span class="n">announcements</span><span class="p">,</span> <span class="n">events</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">announcements_sorting_key</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">items</span></div>
 
 
 <div class="viewcode-block" id="paginate_announcements_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.paginate_announcements_list">[docs]</a><span class="k">def</span> <span class="nf">paginate_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ***TODO*** Migrate to django Paginator (see lostitems)</span>
+<span class="sd">    Paginate ``items`` in groups of 15</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DEFAULT_PAGE_NUM</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="c1"># pagination</span>
-    <span class="k">if</span> <span class="s2">&quot;start&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">start_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">start_num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">page_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">start_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">page_num</span> <span class="o">=</span> <span class="n">DEFAULT_PAGE_NUM</span>
 
-    <span class="n">display_num</span> <span class="o">=</span> <span class="mi">15</span>
-    <span class="n">end_num</span> <span class="o">=</span> <span class="n">start_num</span> <span class="o">+</span> <span class="n">display_num</span>
-    <span class="n">prev_page</span> <span class="o">=</span> <span class="n">start_num</span> <span class="o">-</span> <span class="n">display_num</span>
-    <span class="n">more_items</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">-</span> <span class="n">start_num</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">display_num</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">items_sorted</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">start_num</span><span class="p">:</span><span class="n">end_num</span><span class="p">]</span>
-    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
-        <span class="n">items_sorted</span> <span class="o">=</span> <span class="n">items</span><span class="p">[:</span><span class="n">display_num</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">items</span> <span class="o">=</span> <span class="n">items_sorted</span>
+    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">page_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page_range</span><span class="p">:</span>
+        <span class="n">page_num</span> <span class="o">=</span> <span class="n">DEFAULT_PAGE_NUM</span>
 
-    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="s2">&quot;start_num&quot;</span><span class="p">:</span> <span class="n">start_num</span><span class="p">,</span> <span class="s2">&quot;end_num&quot;</span><span class="p">:</span> <span class="n">end_num</span><span class="p">,</span> <span class="s2">&quot;prev_page&quot;</span><span class="p">:</span> <span class="n">prev_page</span><span class="p">,</span> <span class="s2">&quot;more_items&quot;</span><span class="p">:</span> <span class="n">more_items</span><span class="p">})</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page_num</span><span class="p">)</span>
+
+    <span class="n">more_items</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">has_next</span><span class="p">()</span>
+    <span class="n">prev_page</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">previous_page_number</span><span class="p">()</span> <span class="k">if</span> <span class="n">items</span><span class="o">.</span><span class="n">has_previous</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">next_page</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">next_page_number</span><span class="p">()</span> <span class="k">if</span> <span class="n">more_items</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="s2">&quot;page_num&quot;</span><span class="p">:</span> <span class="n">page_num</span><span class="p">,</span> <span class="s2">&quot;prev_page&quot;</span><span class="p">:</span> <span class="n">prev_page</span><span class="p">,</span> <span class="s2">&quot;next_page&quot;</span><span class="p">:</span> <span class="n">next_page</span><span class="p">,</span> <span class="s2">&quot;more_items&quot;</span><span class="p">:</span> <span class="n">more_items</span><span class="p">,</span> <span class="s2">&quot;page_obj&quot;</span><span class="p">:</span> <span class="n">paginator</span><span class="p">}</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">items</span></div>
 
@@ -554,8 +558,6 @@
         <span class="c1"># Show all by default to 8th period office</span>
         <span class="n">show_all</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="c1"># Include show_all postfix on next/prev links</span>
-    <span class="n">paginate_link_suffix</span> <span class="o">=</span> <span class="s2">&quot;&amp;show_all=1&quot;</span> <span class="k">if</span> <span class="n">show_all</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
     <span class="n">is_index_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
@@ -565,7 +567,6 @@
         <span class="s2">&quot;events_admin&quot;</span><span class="p">:</span> <span class="n">events_admin</span><span class="p">,</span>
         <span class="s2">&quot;is_index_page&quot;</span><span class="p">:</span> <span class="n">is_index_page</span><span class="p">,</span>
         <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
-        <span class="s2">&quot;paginate_link_suffix&quot;</span><span class="p">:</span> <span class="n">paginate_link_suffix</span><span class="p">,</span>
         <span class="s2">&quot;show_expired&quot;</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
         <span class="s2">&quot;show_tjstar&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_BANNER_START_DATE</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_DATE</span><span class="p">,</span>
     <span class="p">}</span>
