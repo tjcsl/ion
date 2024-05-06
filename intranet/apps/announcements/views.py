@@ -288,6 +288,10 @@ def view_announcement_view(request, announcement_id):
     """
     announcement = get_object_or_404(Announcement, id=announcement_id)
 
+    if not announcement.is_visible(request.user):
+        messages.error(request, "You don't have permission to view this announcement.")
+        return redirect("/")
+
     return render(request, "announcements/view.html", {"announcement": announcement})
 
 

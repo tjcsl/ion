@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from ...utils.helpers import is_entirely_digit
-from ..announcements.models import Announcement
+from ..announcements.models import AnnouncementManager
 from ..auth.decorators import deny_restricted
 from ..eighth.models import EighthActivity
 from ..enrichment.models import EnrichmentActivity
@@ -214,9 +214,9 @@ def do_courses_search(q):
     return Course.objects.filter(filter_query).order_by("name")
 
 
-def do_announcements_search(q):
+def do_announcements_search(q, user):
     filter_query = get_query(q, ["title", "content"])
-    entires = Announcement.objects.filter(filter_query).order_by("title")
+    entires = AnnouncementManager().visible_to_user(user).filter(filter_query).order_by("title")
     final_entires = []
     for e in entires:
         if e.is_this_year:
@@ -266,7 +266,7 @@ def search_view(request):
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))
 
         activities = do_activities_search(q)
-        announcements = do_announcements_search(q)
+        announcements = do_announcements_search(q, request.user)
         events = do_events_search(q)
         enrichments = do_enrichment_search(q) if settings.ENABLE_ENRICHMENT_APP else []
         classes = do_courses_search(q)
