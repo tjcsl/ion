@@ -51,7 +51,7 @@ def main():
 
         if (
             re.search(
-                r"^(build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\([a-z]+\))?: .*$",
+                r"^(build|chore|ci|docs|feat|fix|perf|refactor|style|test)(\([^()\n]+\))?: .*$",
                 lines[0],
             )
             is None
