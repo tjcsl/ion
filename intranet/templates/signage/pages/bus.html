@@ -1,266 +1,266 @@
-{% extends "page_base.html" %}
-{% load static %}
-{% load svg %}
-{% load pipeline %}
+    {% extends "page_base.html" %}
+    {% load static %}
+    {% load svg %}
+    {% load pipeline %}
 
-{% block title %}
-    {{ block.super }} - Bus
-{% endblock %}
+    {% block title %}
+        {{ block.super }} - Bus
+    {% endblock %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
-    {{ block.super }}
-    {% stylesheet 'bus' %}
-    {% stylesheet 'polls' %}
-    {% stylesheet 'dashboard' %}
-    <link rel="stylesheet" href="{% static 'vendor/messenger/build/css/messenger.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/messenger/build/css/messenger-theme-flat.css' %}">
-{% endblock %}
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+        {{ block.super }}
+        {% stylesheet 'bus' %}
+        {% stylesheet 'polls' %}
+        {% stylesheet 'dashboard' %}
+        <link rel="stylesheet" href="{% static 'vendor/messenger/build/css/messenger.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/messenger/build/css/messenger-theme-flat.css' %}">
+    {% endblock %}
 
-{% block js %}
-    {{ block.super }}
-    <script>
-        window.isAdmin = {{ admin | yesno:"true,false" }};
-        window.isSignage = {{ signage | yesno:"true,false" }};
-        window.websocketHost = "{{ ws_host }}";
-        window.websocketProtocol = "{{ ws_protocol }}";
-        window.endHour = "{{ school_end_hour }}";
-        window.endMinute = "{{ school_end_time }}";
-        window.enableBusDriver = false;
-        window.label_status_strings = {
-            "a": {
-                empty_text: "No buses have arrived yet.",
-                name: "Arrived",
-                personal: "has arrived.",
-                icon: "check",
-                color: "green",
-            },
-            "o": {
-                empty_text: "All buses have arrived or are delayed.",
-                name: "On Time",
-                personal: "is on time.",
-                icon: "clock",
-                color: "blue",
-            },
-            "d": {
-                empty_text: "No delays.",
-                name: "Delayed",
-                personal: "is delayed.",
-                icon: "exclamation-circle",
-                color: "red",
-            },
-        };
+    {% block js %}
+        {{ block.super }}
+        <script>
+            window.isAdmin = {{ admin | yesno:"true,false" }};
+            window.isSignage = {{ signage | yesno:"true,false" }};
+            window.websocketHost = "{{ ws_host }}";
+            window.websocketProtocol = "{{ ws_protocol }}";
+            window.endHour = "{{ school_end_hour }}";
+            window.endMinute = "{{ school_end_time }}";
+            window.enableBusDriver = false;
+            window.label_status_strings = {
+                "a": {
+                    empty_text: "No buses have arrived yet.",
+                    name: "Arrived",
+                    personal: "has arrived.",
+                    icon: "check",
+                    color: "green",
+                },
+                "o": {
+                    empty_text: "All buses have arrived or are delayed.",
+                    name: "On Time",
+                    personal: "is on time.",
+                    icon: "clock",
+                    color: "blue",
+                },
+                "d": {
+                    empty_text: "No delays.",
+                    name: "Delayed",
+                    personal: "is delayed.",
+                    icon: "exclamation-circle",
+                    color: "red",
+                },
+            };
 
-        window.onload = function () {
-            var now = new Date();
-            var changeTime = new Date();
-            changeTime.setHours(parseInt("{{ changeover_time }}", 10), 00, 0);
-            if (changeTime > now) {
-                document.getElementById('morning').hidden = false;
-                document.getElementById('afternoon').hidden = true;
-                setTimeout(function() {
+            window.onload = function () {
+                var now = new Date();
+                var changeTime = new Date();
+                changeTime.setHours(parseInt("{{ changeover_time }}", 10), 00, 0);
+                if (changeTime > now) {
+                    document.getElementById('morning').hidden = false;
+                    document.getElementById('afternoon').hidden = true;
+                    setTimeout(function() {
+                        document.getElementById('morning').hidden = true;
+                        document.getElementById('afternoon').hidden = false;
+                    }, changeTime - now);
+                } else {
                     document.getElementById('morning').hidden = true;
                     document.getElementById('afternoon').hidden = false;
-                }, changeTime - now);
-            } else {
-                document.getElementById('morning').hidden = true;
-                document.getElementById('afternoon').hidden = false;
+                }
+
+                setInterval(function() {
+                    var now = new Date();
+                    var hr = now.getHours();
+                    var ampm = 'AM';
+                    if (hr >= 12) {
+                        hr -= 12;
+                        ampm = 'PM';
+                    }
+                    if (hr === 0) {
+                        hr = 12;
+                    }
+                    var min = now.getMinutes();
+                    if (min < 10) {
+                        min = '0' + min;
+                    }
+                    $('.time').html(hr + ':' + min + ' ' + ampm);
+                }, 1000);
             }
+        </script>
+        <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+        <script src="{% static 'js/vendor/svg.min.js' %}"></script>
+        <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+        <script type="module" src="{% static 'js/bus-morning.js' %}"></script>
+        <script type="module" src="{% static 'js/bus-afternoon.js' %}"></script>
+        <script src="{% static 'js/pages/bus.js' %}"></script>
+        <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+        <script src="{% static 'js/vendor/backbone-min.js' %}"></script>
+        <script src="{% static 'js/common.header.js' %}"></script>
+        <script src="{% static 'vendor/messenger/build/js/messenger.min.js' %}"></script>
+        <script src="{% static 'vendor/messenger/build/js/messenger-theme-flat.js' %}"></script>
 
-            setInterval(function() {
-                var now = new Date();
-                var hr = now.getHours();
-                var ampm = 'AM';
-                if (hr >= 12) {
-                    hr -= 12;
-                    ampm = 'PM';
-                }
-                if (hr === 0) {
-                    hr = 12;
-                }
-                var min = now.getMinutes();
-                if (min < 10) {
-                    min = '0' + min;
-                }
-                $('.time').html(hr + ':' + min + ' ' + ampm);
-            }, 1000);
+        <style media="screen">
+        svg {
+            width: 50%;
+            height: 90vh;
+            margin-top: 5vh;
         }
-    </script>
-    <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
-    <script src="{% static 'js/vendor/svg.min.js' %}"></script>
-    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
-    <script type="module" src="{% static 'js/bus-morning.js' %}"></script>
-    <script type="module" src="{% static 'js/bus-afternoon.js' %}"></script>
-    <script src="{% static 'js/pages/bus.js' %}"></script>
-    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
-    <script src="{% static 'js/vendor/backbone-min.js' %}"></script>
-    <script src="{% static 'js/common.header.js' %}"></script>
-    <script src="{% static 'vendor/messenger/build/js/messenger.min.js' %}"></script>
-    <script src="{% static 'vendor/messenger/build/js/messenger-theme-flat.js' %}"></script>
 
-    <style media="screen">
-    svg {
-        width: 50%;
-        height: 90vh;
-        margin-top: 5vh;
-    }
+        .text {
+            position: absolute;
+            top: 42%;
+            right: 6%;
+            width: 50%;
+            padding: 20px !important;
 
-    .text {
-        position: absolute;
-        top: 42%;
-        right: 6%;
-        width: 50%;
-        padding: 20px !important;
+            font-size: 36px;
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            display: inline-block;
 
-        font-size: 36px;
-        text-align: center;
-        background-color: white;
-        padding: 20px;
-        display: inline-block;
+            border-radius: 5px;
+            border: 1px solid #d8d8d8;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            margin-right: 6px;
+        }
 
-        border-radius: 5px;
-        border: 1px solid #d8d8d8;
-        padding: 6px 10px;
-        margin-bottom: 6px;
-        margin-right: 6px;
-    }
+        .logo {
+            position: absolute;
+            top: 400px;
+            right: 30%;
+            height: 30px;
+        }
 
-    .logo {
-        position: absolute;
-        top: 400px;
-        right: 30%;
-        height: 30px;
-    }
+        svg text {
+            font-weight: bold;
+            font-size: 110%;
+        }
+        svg text.small {
+            font-size: 100%;
+        }
+        svg text.extra-small {
+            font-size: 90%;
+        }
 
-    svg text {
-        font-weight: bold;
-        font-size: 110%;
-    }
-    svg text.small {
-        font-size: 100%;
-    }
-    svg text.extra-small {
-        font-size: 90%;
-    }
+        .bus-col {
+            display: inline-block;
+            width: 33.333333%;
+            height: 100%;
+            vertical-align: top;
+            margin-right: -4px;
+        }
 
-    .bus-col {
-        display: inline-block;
-        width: 33.333333%;
-        height: 100%;
-        vertical-align: top;
-        margin-right: -4px;
-    }
+        .bus-heading {
+            width: 100%;
+            height: 50px;
+        }
 
-    .bus-heading {
-        width: 100%;
-        height: 50px;
-    }
+        .bus-heading {
+            width: 100%;
+            height: 100%;
+        }
 
-    .bus-heading {
-        width: 100%;
-        height: 100%;
-    }
+        .welcome-text {
+            font-size: 50px;
+            padding: 40px 20px;
+        }
 
-    .welcome-text {
-        font-size: 50px;
-        padding: 40px 20px;
-    }
+        .bus-header {
+            font-size: 30px;
+            padding: 15px;
+        }
 
-    .bus-header {
-        font-size: 30px;
-        padding: 15px;
-    }
+        .list-bus {
+            font-size: 20px;
+            padding: 15px;
+        }
 
-    .list-bus {
-        font-size: 20px;
-        padding: 15px;
-    }
+        .logo-ion {
+            position: absolute;
+            top: 30px;
+            right: 280px;
+            width: 48px;
+        }
 
-    .logo-ion {
-        position: absolute;
-        top: 30px;
-        right: 280px;
-        width: 48px;
-    }
+        .logo-bus {
+            position: absolute;
+            top: 33px;
+            right: 230px;
+            font-size: 30pt;
+        }
 
-    .logo-bus {
-        position: absolute;
-        top: 33px;
-        right: 230px;
-        font-size: 30pt;
-    }
+        .bus-title {
+            position: absolute;
+            top: 30px;
+            right: 60px;
+            font-size: 24pt;
+        }
 
-    .bus-title {
-        position: absolute;
-        top: 30px;
-        right: 60px;
-        font-size: 24pt;
-    }
+        .time {
+            font-size: 36px;
+            font-weight: bold;
+            position: fixed;
+            bottom: 30px;
+            right: 3%;
+        }
 
-    .time {
-        font-size: 36px;
-        font-weight: bold;
-        position: fixed;
-        bottom: 30px;
-        right: 3%;
-    }
+        ::-webkit-scrollbar {
+            display: none;
+        }
 
-    ::-webkit-scrollbar {
-        display: none;
-    }
+        .list p {
+            padding: 10px 15px;
+            font-size: 18pt;
+        }
 
-    .list p {
-        padding: 10px 15px;
-        font-size: 18pt;
-    }
+        .bus-announcement-container {
+            position: absolute;
+            top: 85%;
+            right: 3%;
+            width: 25%;
+            padding: 20px !important;
 
-    .bus-announcement-container {
-        position: absolute;
-        top: 55%;
-        right: 6%;
-        width: 50%;
-        padding: 20px !important;
+            font-size: 20px;
+            text-align: center;
+            padding: 20px;
+            display: inline-block;
 
-        font-size: 30px;
-        text-align: center;
-        padding: 20px;
-        display: inline-block;
+            background-color: #dbdada;
+            border-radius: 5px;
+            border: 1px solid #d8d8d8;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            margin-right: 6px;
+            overflow: show;
+        }
 
-        background-color: #dbdada;
-        border-radius: 5px;
-        border: 1px solid #d8d8d8;
-        padding: 6px 10px;
-        margin-bottom: 6px;
-        margin-right: 6px;
-        overflow: show;
-    }
+        .bus-announcement-header {
+            position: absolute;
+            top: 10px;
+            left: 25%;
+            font-size: 24px;
+        }
 
-    .bus-announcement-header {
-        position: absolute;
-        top: 10px;
-        left: 25%;
-        font-size: 24px;
-    }
+        .bus-announcement {
+            margin-top: 25px;
+            font-size: 20px;
+            width: 100%;
+            text-align: left;
+            overflow-wrap: break-word;
+        }
 
-    .bus-announcement {
-        margin-top: 25px;
-        font-size: 20px;
-        width: 100%;
-        text-align: left;
-        overflow-wrap: break-word;
-    }
+        #morning .bus-announcement-container {
+            top: 80%;
+            right: 3%;
+            width: 25%;
+        }
 
-    #morning .bus-announcement-container {
-        top: 50%;
-        right: 3%;
-        width: 27%;
-    }
-
-    #morning .bus-announcement-header {
-        left: 10%;
-    }
-    </style>
-{% endblock %}
+        #morning .bus-announcement-header {
+            left: 10%;
+        }
+        </style>
+    {% endblock %} -->
 
 {% block body %}
     <div id="title-container">
