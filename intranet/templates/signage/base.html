@@ -36,7 +36,7 @@
             }
             window.lockPage = '{{ sign.lock_page.pk }}';
             window.defaultPage = '{{ sign.default_page.pk }}';
-            window.endSwitchPage = '{{ sign.day_end_switch_page.pk }}';
+            window.endSwitchPage = '{% if not sign.lock_page %}{{ sign.day_end_switch_page.pk }}{% endif %}';
             window.endSwitchHour = {{ end_switch_page_time.hour }};
             window.endSwitchMinute = {{ end_switch_page_time.minute }};
             window.customSwitchPage = '{{ sign.custom_switch_page.pk }}';
