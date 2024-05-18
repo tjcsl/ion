@@ -34,6 +34,7 @@ def set_historical_user(collector, field, sub_objs, using):
 
 
 def handle_eighth_sponsor_deletion(in_obj, eighth_sponsor):
+    original = None
     teststaff, _ = get_user_model().objects.get_or_create(id=7011)
     c = Collector(using="default")
     c.collect([in_obj])
