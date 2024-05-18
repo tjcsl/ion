@@ -72,7 +72,7 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
     def get_form_kwargs(self, step=None):
         kwargs = {}
         block = None
-
+        block_title = None
         if step == "block":
             show_all_blocks = "show_all_blocks" in self.request.GET or "block" in self.request.GET
             if show_all_blocks:

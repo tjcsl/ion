@@ -121,6 +121,7 @@ def picture_view(request, user_id, year=None):
     """
     user = get_object_or_404(get_user_model(), id=user_id)
     default_image_path = os.path.join(settings.PROJECT_ROOT, "static/img/default_profile_pic.png")
+    image_buffer = None
 
     img = None
     if year is None:

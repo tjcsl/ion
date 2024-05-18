@@ -606,6 +606,7 @@ eighth_admin_distribute_unsigned = eighth_admin_required(EighthAdminDistributeGr
 
 @eighth_admin_required
 def eighth_admin_distribute_action(request):
+    block = None
     if "users" in request.POST:
         activity_user_map = {}
         for item in request.POST:
