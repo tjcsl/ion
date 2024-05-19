@@ -49,10 +49,9 @@ class LoginViewTest(IonTestCase):
         self.assertTrue(self.does_login_redirect_to(reverse("index")))
 
     def test_login(self):
-        """Just test Kerberos login, but not really because Kerberos isn't accessible from here..."""
+        """Just test PAM login, but not really because PAM isn't accessible from here..."""
 
-        with self.settings(KINIT_TIMEOUT=1):
-            response = self.client.post(reverse("login"), data={"username": "awilliam", "password": "dankmemes123"})
+        response = self.client.post(reverse("login"), data={"username": "awilliam", "password": "dankmemes123"})
         self.assertEqual(200, response.status_code)
 
     def test_logout_view(self):

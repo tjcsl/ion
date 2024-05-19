@@ -43,5 +43,6 @@ def change_password(form_data):
     except pexpect.TIMEOUT:
         return {"unable_to_set": True, "errors": errors}
     if exitstatus == 0:
+        logging.debug("Password changed for %s", form_data["username"])
         return {"unable_to_set": False}
     return {"unable_to_set": True}

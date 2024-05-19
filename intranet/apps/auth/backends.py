@@ -1,10 +1,7 @@
 import enum
 import logging
-import os
-import tempfile
-from typing import Union
 
-import pexpect
+import pam
 from prometheus_client import Counter, Summary
 
 from django.conf import settings
@@ -13,39 +10,39 @@ from django.contrib.auth.hashers import check_password
 
 logger = logging.getLogger(__name__)
 
-kerberos_authenticate = Summary("intranet_kerberos_authenticate", "Kerberos authentication requests")
-kerberos_authenticate_failures = Counter("intranet_kerberos_authenticate_failures", "Number of failed Kerberos authentication attempts")
-kerberos_authenticate_post_failures = Counter(
-    "intranet_kerberos_authenticate_post_failures",
-    "Number of Kerberos authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not "
+pam_authenticate = Summary("intranet_pam_authenticate", "PAM authentication requests")
+pam_authenticate_failures = Counter("intranet_pam_authenticate_failures", "Number of failed PAM authentication attempts")
+pam_authenticate_post_failures = Counter(
+    "intranet_pam_authenticate_post_failures",
+    "Number of PAM authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not "
     "exist)",
 )
 
 
-class KerberosAuthenticationResult(enum.Enum):
+class PamAuthenticationResult(enum.Enum):
     FAILURE = 0  # Authentication failed
     SUCCESS = 1  # Authentication succeeded
     EXPIRED = -1  # Password expired; needs reset
 
 
-class KerberosAuthenticationBackend:
-    """Authenticate using Kerberos.
+class PamAuthenticationBackend:
+    """Authenticate using PAM.
 
     This is the default authentication backend.
 
     """
 
     @staticmethod
-    def kinit_timeout_handle(username, realm):
+    def pam_auth_timeout_handle(username, realm):
         """Check if the user exists before we throw an error."""
         try:
             u = get_user_model().objects.get(username__iexact=username)
         except get_user_model().DoesNotExist:
-            logger.warning("kinit timed out for %s@%s (invalid user)", username, realm)
+            logger.warning("pam_auth timed out for %s@%s (invalid user)", username, realm)
             return
 
         logger.critical(
-            "kinit timed out for %s",
+            "pam_auth timed out for %s",
             realm,
             extra={
                 "stack": True,
@@ -55,8 +52,8 @@ class KerberosAuthenticationBackend:
         )
 
     @staticmethod
-    def get_kerberos_ticket(username, password):
-        """Attempts to create a Kerberos ticket for a user.
+    def pam_auth(username, password):
+        """Attempts to authenticate a user against PAM.
 
         Args:
             username
@@ -65,48 +62,34 @@ class KerberosAuthenticationBackend:
                 The password.
 
         Returns:
-            Boolean indicating success or failure of ticket creation
+            Boolean indicating success or failure of PAM authentication
 
         """
 
         # We should not try to authenticate with an empty password
         if password == "":
-            return KerberosAuthenticationResult.FAILURE, False
+            return PamAuthenticationResult.FAILURE, False
 
-        krb5cc_fd, krb5ccname = tempfile.mkstemp(prefix="ion-", text=False)
-        os.close(krb5cc_fd)
-
-        # Attempt to authenticate against CSL Kerberos realm
         realm = settings.CSL_REALM
-        result = KerberosAuthenticationBackend.try_single_kinit(
-            username=username, realm=realm, password=password, timeout=settings.KINIT_TIMEOUT, krb5ccname=krb5ccname
-        )
+        pam_authenticator = pam.pam()
+        full_username = f"{username}@{realm}"
+        result = pam_authenticator.authenticate(full_username, password)
 
-        if result == KerberosAuthenticationResult.SUCCESS:
-            logger.debug("Kerberos authorized %s@%s", username, realm)
+        if result:
+            result = PamAuthenticationResult.SUCCESS
+            logger.debug("PAM authorized %s@%s", username, realm)
         else:
-            logger.debug("Kerberos failed to authorize %s", username)
+            logger.debug("PAM failed to authorize %s", username)
+            result = PamAuthenticationResult.FAILURE
+            if "authentication token is no longer valid" in pam_authenticator.reason.lower():
+                result = PamAuthenticationResult.EXPIRED
+                logger.debug("Password for %s@%s expired, needs reset", username, realm)
+            if "timeout" in pam_authenticator.reason.lower():
+                PamAuthenticationBackend.pam_auth_timeout_handle(username, realm)
 
         return result
 
-    @staticmethod
-    def try_single_kinit(*, username: str, realm: str, password: str, krb5ccname: str, timeout: Union[int, float]) -> KerberosAuthenticationResult:
-        try:
-            kinit = pexpect.spawn("/usr/bin/kinit", ["-c", krb5ccname, "{}@{}".format(username, realm)], timeout=timeout, encoding="utf-8")
-            kinit.expect(":")
-            kinit.sendline(password)
-            returned = kinit.expect([pexpect.EOF, "password:"])
-            if returned == 1:
-                logger.debug("Password for %s@%s expired, needs reset", username, realm)
-                return KerberosAuthenticationResult.EXPIRED
-            kinit.close()
-
-            return KerberosAuthenticationResult.SUCCESS if kinit.exitstatus == 0 else KerberosAuthenticationResult.FAILURE
-        except pexpect.TIMEOUT:
-            KerberosAuthenticationBackend.kinit_timeout_handle(username, realm)
-            return KerberosAuthenticationResult.FAILURE
-
-    @kerberos_authenticate.time()
+    @pam_authenticate.time()
     def authenticate(self, request, username=None, password=None):
         """Authenticate a username-password pair.
 
@@ -129,25 +112,25 @@ class KerberosAuthenticationBackend:
         # remove all non-alphanumerics
         username = username.lower()
 
-        result = self.get_kerberos_ticket(username, password)
+        result = self.pam_auth(username, password)
 
-        if result == KerberosAuthenticationResult.SUCCESS:
+        if result == PamAuthenticationResult.SUCCESS:
             logger.debug("Authentication successful")
 
             try:
                 user = get_user_model().objects.get(username__iexact=username)
             except get_user_model().DoesNotExist:
-                kerberos_authenticate_failures.inc()
-                kerberos_authenticate_post_failures.inc()
+                pam_authenticate_failures.inc()
+                pam_authenticate_post_failures.inc()
                 return None
 
             return user
 
-        elif result == KerberosAuthenticationResult.EXPIRED:
+        elif result == PamAuthenticationResult.EXPIRED:
             user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             return user
         else:
-            kerberos_authenticate_failures.inc()
+            pam_authenticate_failures.inc()
             return None
 
     def get_user(self, user_id):
