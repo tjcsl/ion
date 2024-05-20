@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #2297) documentation</title>
+    <title>intranet.apps.auth.backends &#8212; TJ Intranet v3 (Build #2335) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -123,11 +123,8 @@
   <h1>Source code for intranet.apps.auth.backends</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">pexpect</span>
+<span class="kn">import</span> <span class="nn">pam</span>
 <span class="kn">from</span> <span class="nn">prometheus_client</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">Summary</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
@@ -136,39 +133,39 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">kerberos_authenticate</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="s2">&quot;intranet_kerberos_authenticate&quot;</span><span class="p">,</span> <span class="s2">&quot;Kerberos authentication requests&quot;</span><span class="p">)</span>
-<span class="n">kerberos_authenticate_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">&quot;intranet_kerberos_authenticate_failures&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of failed Kerberos authentication attempts&quot;</span><span class="p">)</span>
-<span class="n">kerberos_authenticate_post_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s2">&quot;intranet_kerberos_authenticate_post_failures&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Number of Kerberos authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not &quot;</span>
+<span class="n">pam_authenticate</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="s2">&quot;intranet_pam_authenticate&quot;</span><span class="p">,</span> <span class="s2">&quot;PAM authentication requests&quot;</span><span class="p">)</span>
+<span class="n">pam_authenticate_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">&quot;intranet_pam_authenticate_failures&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of failed PAM authentication attempts&quot;</span><span class="p">)</span>
+<span class="n">pam_authenticate_post_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+    <span class="s2">&quot;intranet_pam_authenticate_post_failures&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Number of PAM authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not &quot;</span>
     <span class="s2">&quot;exist)&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="KerberosAuthenticationResult"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationResult">[docs]</a><span class="k">class</span> <span class="nc">KerberosAuthenticationResult</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="PamAuthenticationResult"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.PamAuthenticationResult">[docs]</a><span class="k">class</span> <span class="nc">PamAuthenticationResult</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
     <span class="n">FAILURE</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Authentication failed</span>
     <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Authentication succeeded</span>
     <span class="n">EXPIRED</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># Password expired; needs reset</span></div>
 
 
-<div class="viewcode-block" id="KerberosAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">KerberosAuthenticationBackend</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate using Kerberos.</span>
+<div class="viewcode-block" id="PamAuthenticationBackend"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.PamAuthenticationBackend">[docs]</a><span class="k">class</span> <span class="nc">PamAuthenticationBackend</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate using PAM.</span>
 
 <span class="sd">    This is the default authentication backend.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="KerberosAuthenticationBackend.kinit_timeout_handle"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">):</span>
+<div class="viewcode-block" id="PamAuthenticationBackend.pam_auth_timeout_handle"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth_timeout_handle">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">pam_auth_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;kinit timed out for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> (invalid user)&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;pam_auth timed out for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> (invalid user)&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
-            <span class="s2">&quot;kinit timed out for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pam_auth timed out for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">realm</span><span class="p">,</span>
             <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
                 <span class="s2">&quot;stack&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -177,9 +174,9 @@
             <span class="p">},</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="KerberosAuthenticationBackend.get_kerberos_ticket"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Attempts to create a Kerberos ticket for a user.</span>
+<div class="viewcode-block" id="PamAuthenticationBackend.pam_auth"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">pam_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Attempts to authenticate a user against PAM.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            username</span>
@@ -188,48 +185,34 @@
 <span class="sd">                The password.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Boolean indicating success or failure of ticket creation</span>
+<span class="sd">            Boolean indicating success or failure of PAM authentication</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># We should not try to authenticate with an empty password</span>
         <span class="k">if</span> <span class="n">password</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span><span class="p">,</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span><span class="p">,</span> <span class="kc">False</span>
 
-        <span class="n">krb5cc_fd</span><span class="p">,</span> <span class="n">krb5ccname</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ion-&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">krb5cc_fd</span><span class="p">)</span>
-
-        <span class="c1"># Attempt to authenticate against CSL Kerberos realm</span>
         <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CSL_REALM</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">KerberosAuthenticationBackend</span><span class="o">.</span><span class="n">try_single_kinit</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="o">=</span><span class="n">realm</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">KINIT_TIMEOUT</span><span class="p">,</span> <span class="n">krb5ccname</span><span class="o">=</span><span class="n">krb5ccname</span>
-        <span class="p">)</span>
+        <span class="n">pam_authenticator</span> <span class="o">=</span> <span class="n">pam</span><span class="o">.</span><span class="n">pam</span><span class="p">()</span>
+        <span class="n">full_username</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">realm</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">full_username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos authorized </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;PAM authorized </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Kerberos failed to authorize </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;PAM failed to authorize </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span>
+            <span class="k">if</span> <span class="s2">&quot;authentication token is no longer valid&quot;</span> <span class="ow">in</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">reason</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">EXPIRED</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Password for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> expired, needs reset&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;timeout&quot;</span> <span class="ow">in</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">reason</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">PamAuthenticationBackend</span><span class="o">.</span><span class="n">pam_auth_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="KerberosAuthenticationBackend.try_single_kinit"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.try_single_kinit">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">try_single_kinit</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">realm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">krb5ccname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">KerberosAuthenticationResult</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">kinit</span> <span class="o">=</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="s2">&quot;/usr/bin/kinit&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;-c&quot;</span><span class="p">,</span> <span class="n">krb5ccname</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">@</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">sendline</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
-            <span class="n">returned</span> <span class="o">=</span> <span class="n">kinit</span><span class="o">.</span><span class="n">expect</span><span class="p">([</span><span class="n">pexpect</span><span class="o">.</span><span class="n">EOF</span><span class="p">,</span> <span class="s2">&quot;password:&quot;</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">returned</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Password for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> expired, needs reset&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">EXPIRED</span>
-            <span class="n">kinit</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-            <span class="k">return</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span> <span class="k">if</span> <span class="n">kinit</span><span class="o">.</span><span class="n">exitstatus</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span>
-        <span class="k">except</span> <span class="n">pexpect</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
-            <span class="n">KerberosAuthenticationBackend</span><span class="o">.</span><span class="n">kinit_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span></div>
-
-<div class="viewcode-block" id="KerberosAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">[docs]</a>    <span class="nd">@kerberos_authenticate</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<div class="viewcode-block" id="PamAuthenticationBackend.authenticate"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.PamAuthenticationBackend.authenticate">[docs]</a>    <span class="nd">@pam_authenticate</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
 
@@ -252,28 +235,28 @@
         <span class="c1"># remove all non-alphanumerics</span>
         <span class="n">username</span> <span class="o">=</span> <span class="n">username</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_kerberos_ticket</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pam_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Authentication successful&quot;</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                <span class="n">kerberos_authenticate_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
-                <span class="n">kerberos_authenticate_post_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+                <span class="n">pam_authenticate_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+                <span class="n">pam_authenticate_post_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
                 <span class="k">return</span> <span class="kc">None</span>
 
             <span class="k">return</span> <span class="n">user</span>
 
-        <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="n">KerberosAuthenticationResult</span><span class="o">.</span><span class="n">EXPIRED</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">EXPIRED</span><span class="p">:</span>
             <span class="n">user</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;RESET_PASSWORD&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">999999</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">user</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">kerberos_authenticate_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
+            <span class="n">pam_authenticate_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="KerberosAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+<div class="viewcode-block" id="PamAuthenticationBackend.get_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.backends.PamAuthenticationBackend.get_user">[docs]</a>    <span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #2297) documentation</title>
+    <title>intranet.apps.auth package &#8212; TJ Intranet v3 (Build #2335) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -104,23 +104,22 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#module-intranet.apps.auth.backends">intranet.apps.auth.backends module</a><ul>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend</span></code></a><ul>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.authenticate()</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.get_kerberos_ticket()</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.get_user()</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.kinit_timeout_handle()</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.try_single_kinit"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationBackend.try_single_kinit()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult</span></code></a><ul>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.EXPIRED"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult.EXPIRED</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.FAILURE"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult.FAILURE</span></code></a></li>
-<li><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.SUCCESS"><code class="docutils literal notranslate"><span class="pre">KerberosAuthenticationResult.SUCCESS</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend"><code class="docutils literal notranslate"><span class="pre">MasterPasswordAuthenticationBackend</span></code></a><ul>
 <li><a class="reference internal" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate"><code class="docutils literal notranslate"><span class="pre">MasterPasswordAuthenticationBackend.authenticate()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user"><code class="docutils literal notranslate"><span class="pre">MasterPasswordAuthenticationBackend.get_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationBackend"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationBackend</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationBackend.authenticate"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationBackend.authenticate()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationBackend.get_user"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationBackend.get_user()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationBackend.pam_auth()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth_timeout_handle"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationBackend.pam_auth_timeout_handle()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationResult"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationResult</span></code></a><ul>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationResult.EXPIRED"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationResult.EXPIRED</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationResult.FAILURE"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationResult.FAILURE</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.auth.backends.PamAuthenticationResult.SUCCESS"><code class="docutils literal notranslate"><span class="pre">PamAuthenticationResult.SUCCESS</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -287,94 +286,6 @@
 <section id="module-intranet.apps.auth.backends">
 <span id="intranet-apps-auth-backends-module"></span><h2>intranet.apps.auth.backends module<a class="headerlink" href="#module-intranet.apps.auth.backends" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationBackend">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.auth.backends.</span></span><span class="sig-name descname"><span class="pre">KerberosAuthenticationBackend</span></span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Authenticate using Kerberos.</p>
-<p>This is the default authentication backend.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate">
-<span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Authenticate a username-password pair.</p>
-<p>Creates a new user if one is not already in the database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>username</strong> – The username of the <cite>User</cite> to authenticate.</p></li>
-<li><p><strong>password</strong> – The password of the <cite>User</cite> to authenticate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><cite>User</cite></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_kerberos_ticket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.get_kerberos_ticket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_kerberos_ticket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to create a Kerberos ticket for a user.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>username</strong> – The username.</p></li>
-<li><p><strong>password</strong> – The password.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Boolean indicating success or failure of ticket creation</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user">
-<span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.get_user" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a user, given his or her user id. Required for a custom authentication backend.
-:param user_id: The user id of the user to fetch.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>User or None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kinit_timeout_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.kinit_timeout_handle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.kinit_timeout_handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the user exists before we throw an error.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationBackend.try_single_kinit">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">try_single_kinit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">krb5ccname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.12)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#intranet.apps.auth.backends.KerberosAuthenticationResult" title="intranet.apps.auth.backends.KerberosAuthenticationResult"><span class="pre">KerberosAuthenticationResult</span></a></span></span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationBackend.try_single_kinit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationBackend.try_single_kinit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.auth.backends.</span></span><span class="sig-name descname"><span class="pre">KerberosAuthenticationResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#KerberosAuthenticationResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationResult" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
-<p>An enumeration.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationResult.EXPIRED">
-<span class="sig-name descname"><span class="pre">EXPIRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.EXPIRED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationResult.FAILURE">
-<span class="sig-name descname"><span class="pre">FAILURE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.FAILURE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="intranet.apps.auth.backends.KerberosAuthenticationResult.SUCCESS">
-<span class="sig-name descname"><span class="pre">SUCCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#intranet.apps.auth.backends.KerberosAuthenticationResult.SUCCESS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.auth.backends.</span></span><span class="sig-name descname"><span class="pre">MasterPasswordAuthenticationBackend</span></span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#MasterPasswordAuthenticationBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
@@ -408,6 +319,89 @@
 </dd>
 </dl>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationBackend">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.auth.backends.</span></span><span class="sig-name descname"><span class="pre">PamAuthenticationBackend</span></span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#PamAuthenticationBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Authenticate using PAM.</p>
+<p>This is the default authentication backend.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationBackend.authenticate">
+<span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#PamAuthenticationBackend.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationBackend.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate a username-password pair.</p>
+<p>Creates a new user if one is not already in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – The username of the <cite>User</cite> to authenticate.</p></li>
+<li><p><strong>password</strong> – The password of the <cite>User</cite> to authenticate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>User</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationBackend.get_user">
+<span class="sig-name descname"><span class="pre">get_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#PamAuthenticationBackend.get_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationBackend.get_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a user, given his or her user id. Required for a custom authentication backend.
+:param user_id: The user id of the user to fetch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>User or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pam_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#PamAuthenticationBackend.pam_auth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to authenticate a user against PAM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – The username.</p></li>
+<li><p><strong>password</strong> – The password.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Boolean indicating success or failure of PAM authentication</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth_timeout_handle">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pam_auth_timeout_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">realm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#PamAuthenticationBackend.pam_auth_timeout_handle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth_timeout_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the user exists before we throw an error.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.auth.backends.</span></span><span class="sig-name descname"><span class="pre">PamAuthenticationResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/backends.html#PamAuthenticationResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationResult.EXPIRED">
+<span class="sig-name descname"><span class="pre">EXPIRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationResult.EXPIRED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationResult.FAILURE">
+<span class="sig-name descname"><span class="pre">FAILURE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationResult.FAILURE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.auth.backends.PamAuthenticationResult.SUCCESS">
+<span class="sig-name descname"><span class="pre">SUCCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#intranet.apps.auth.backends.PamAuthenticationResult.SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -591,7 +585,7 @@ in the “admin_polls” group or in the “admin_all” group.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="intranet.apps.auth.tests.LoginViewTest.test_login">
 <span class="sig-name descname"><span class="pre">test_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/auth/tests.html#LoginViewTest.test_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.auth.tests.LoginViewTest.test_login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Just test Kerberos login, but not really because Kerberos isn’t accessible from here…</p>
+<dd><p>Just test PAM login, but not really because PAM isn’t accessible from here…</p>
 </dd></dl>
 
 <dl class="py method">
