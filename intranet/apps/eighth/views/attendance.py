@@ -166,7 +166,10 @@ class EighthAttendanceSelectScheduledActivityWizard(SessionWizardView):
         else:
             url_name = "eighth_take_attendance"
 
-        return redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+        response = redirect(url_name, scheduled_activity_id=scheduled_activity.id)
+        if self.request.GET.get("show_all_blocks", "") == "1":
+            response["Location"] += "?show_all_blocks=1"
+        return response
 
 
 _unsafe_choose_scheduled_activity_view = EighthAttendanceSelectScheduledActivityWizard.as_view(
@@ -415,7 +418,12 @@ def take_attendance_view(request, scheduled_activity_id):
 
         if request.user.is_eighth_admin:
             context["scheduled_activities"] = EighthScheduledActivity.objects.filter(block__id=scheduled_activity.block.id)
-            context["blocks"] = EighthBlock.objects.filter(date__gte=get_start_date(request)).order_by("date", "block_letter")
+            show_all_blocks = request.GET.get("show_all_blocks", "") == "1"
+            if show_all_blocks:
+                start_date, _ = get_date_range_this_year()
+            else:
+                start_date = get_start_date(request)
+            context["blocks"] = EighthBlock.objects.filter(date__gte=start_date).order_by("date", "block_letter")
 
         if request.resolver_match.url_name == "eighth_admin_export_attendance_csv":
             response = http.HttpResponse(content_type="text/csv")
