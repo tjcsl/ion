@@ -22,14 +22,14 @@ $(document).ready(function() {
             datasets: [{
                 label: "A Block",
                 backgroundColor: "rgba(200,100,100,0.5)",
-                data: $.map(parsedData, function(v) {
-                    return "A" in v[1] ? v[1].A : null;
+                data: parsedData.filter((v) => "A" in v[1]).map((v) => {
+                    return {x: v[0]._i, y: v[1].A};
                 })
             }, {
                 label: "B Block",
                 backgroundColor: "rgba(100,100,200,0.5)",
-                data: $.map(parsedData, function(v) {
-                    return "B" in v[1] ? v[1].B : null;
+                data: parsedData.filter((v) => "B" in v[1]).map((v) =>  {
+                    return {x: v[0]._i, y: v[1].B};
                 })
             }]
         };
