@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #2335) documentation</title>
+    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #2364) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -289,7 +289,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">url_name</span> <span class="o">=</span> <span class="s2">&quot;eighth_take_attendance&quot;</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div></div>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_all_blocks&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;?show_all_blocks=1&quot;</span>
+        <span class="k">return</span> <span class="n">response</span></div></div>
 
 
 <span class="n">_unsafe_choose_scheduled_activity_view</span> <span class="o">=</span> <span class="n">EighthAttendanceSelectScheduledActivityWizard</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span>
@@ -538,7 +541,12 @@
 
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">&quot;scheduled_activities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
+            <span class="n">show_all_blocks</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_all_blocks&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span>
+            <span class="k">if</span> <span class="n">show_all_blocks</span><span class="p">:</span>
+                <span class="n">start_date</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">start_date</span> <span class="o">=</span> <span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_export_attendance_csv&quot;</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
