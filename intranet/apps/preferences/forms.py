@@ -19,19 +19,39 @@ class BusRouteForm(forms.Form):
         self.fields["bus_route"] = forms.ChoiceField(choices=self.BUS_ROUTE_CHOICES, widget=forms.Select, required=False)
 
 
+class UploadPictureForm(forms.Form):
+    uploaded_photo = forms.ImageField(required=False)
+
+
+class DeletePictureForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        picture_choices = []
+
+        for i in range(user.photos.count()):
+            picture_choices.append((i, f"Photo {i + 1}"))
+
+        self.fields["photos_to_delete"] = forms.MultipleChoiceField(choices=picture_choices, widget=forms.CheckboxSelectMultiple(), required=False)
+
+
 class PreferredPictureForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.PREFERRED_PICTURE_CHOICES = [("AUTO", "Auto-select the most recent photo")]
 
-        for i in range(4):
-            try:
-                grade = Grade.names[i]
-                user.photos.get(grade_number=i + 9)  # Only display option if the photo exists
-                self.PREFERRED_PICTURE_CHOICES += [(i + 9, grade.title() + " Photo")]
-            except Exception:
-                pass
+        if user.is_student:
+            for i in range(4):
+                try:
+                    grade = Grade.names[i]
+                    user.photos.get(grade_number=i + 9)  # Only display option if the photo exists
+                    self.PREFERRED_PICTURE_CHOICES.append((i + 9, grade.title() + " Photo"))
+                except Exception:
+                    pass
+        if user.is_teacher:
+            for i in range(user.photos.count()):
+                self.PREFERRED_PICTURE_CHOICES.append((i, f"Photo {i + 1}"))
 
         self.fields["preferred_photo"] = forms.ChoiceField(choices=self.PREFERRED_PICTURE_CHOICES, widget=forms.RadioSelect(), required=True)
 

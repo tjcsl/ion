@@ -124,18 +124,25 @@ def picture_view(request, user_id, year=None):
     image_buffer = None
 
     img = None
+    data = None
+
     if year is None:
         preferred = user.preferred_photo
         if preferred is None:
             data = user.default_photo
         else:
             data = preferred.binary
+    elif year.startswith("teacher"):
+        t_idx = year[len("teacher"):]
+        if t_idx.isdigit():
+            idx = int(t_idx)
+            photos = user.photos.all()
+            if idx < len(photos):
+                data = photos[idx].binary
     else:
         grade_number = Grade.number_from_name(year)
         if user.photos.filter(grade_number=grade_number).exists():
             data = user.photos.filter(grade_number=grade_number).first().binary
-        else:
-            data = None
 
     if data is None:
         img = io.open(default_image_path, mode="rb").read()
