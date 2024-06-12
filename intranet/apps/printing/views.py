@@ -29,7 +29,38 @@ logger = logging.getLogger(__name__)
 
 
 class InvalidInputPrintingError(Exception):
-    """An error occurred while printing, but it was due to invalid input from the user and is not worthy of a ``CRITICAL`` log message."""
+    """An error occurred while printing, but it was due to invalid input from the user and is not worthy of a
+    ``CRITICAL`` log message."""
+
+
+class RatelimitCacheError(Exception):
+    """An error occurred while accessing the cache to rate limit a user"""
+
+
+class RatelimitExceededError(Exception):
+    """An error occurred because the user exceeded the printing rate limit"""
+
+
+def get_user_ratelimit_status(username: str) -> bool:
+    cache_key = f"printing_ratelimit:{username}"
+    value = cache.get(cache_key, None)
+    if value is None or value < settings.PRINT_RATELIMIT_FREQUENCY:
+        # User did not go over the rate limit
+        return False
+    elif value >= settings.PRINT_RATELIMIT_FREQUENCY:
+        return True
+    else:
+        raise RatelimitCacheError("An error occurred while trying to get your rate limit status")
+
+
+def set_user_ratelimit_status(username: str) -> None:
+    cache_key = f"printing_ratelimit:{username}"
+    value = cache.get(cache_key, None)
+    if value is None:
+        # Set the key to expire in the time specified by settings and indicate the user has requested once so far
+        cache.set(cache_key, 1, settings.PRINT_RATELIMIT_MINUTES * 60)
+    elif value >= 1:
+        cache.incr(cache_key)
 
 
 def get_printers() -> Dict[str, str]:
@@ -155,14 +186,14 @@ def get_numpages(tmpfile_name: str) -> int:
     return num_pages
 
 
-# If a file is identified as a mimetype that is a key in this dictionary, the magic files (in the "magic_files" director) from the corresponding list
-# will be used to re-examine the file and attempt to find a better match.
-# Why not just always use those files? Well, if you give libmagic a list of files, it will check *only* the files you tell it to, excluding the
-# system-wide magic database. Worse, there is no reliable method of getting the system-wide database path (which is distro-specific, so we can't just
-# hardcode it). This really is the best solution.
+# If a file is identified as a mimetype that is a key in this dictionary, the magic files (in the "magic_files"
+# director) from the corresponding list will be used to re-examine the file and attempt to find a better match. Why
+# not just always use those files? Well, if you give libmagic a list of files, it will check *only* the files you
+# tell it to, excluding the system-wide magic database. Worse, there is no reliable method of getting the system-wide
+# database path (which is distro-specific, so we can't just hardcode it). This really is the best solution.
 EXTRA_MAGIC_FILES = {"application/zip": ["msooxml"]}
-# If the re-examination of a file with EXTRA_MAGIC_FILES yields one of these mimetypes, the original mimetype (the one that prompted re-examining
-# based on EXTRA_MAGIC_FILES) will be used instead.
+# If the re-examination of a file with EXTRA_MAGIC_FILES yields one of these mimetypes, the original mimetype (the
+# one that prompted re-examining based on EXTRA_MAGIC_FILES) will be used instead.
 GENERIC_MIMETYPES = {"application/octet-stream"}
 
 
@@ -349,17 +380,45 @@ def print_job(obj: PrintJob, do_print: bool = True):
         if obj.page_range:
             if not range_count:
                 raise InvalidInputPrintingError("You specified an invalid page range.")
-            elif range_count > settings.PRINTING_PAGES_LIMIT:
+
+            elif range_count > settings.PRINTING_PAGES_LIMIT_TEACHERS and (obj.user.is_teacher or obj.user.is_printing_admin):
                 raise InvalidInputPrintingError(
-                    "You specified a range of {} pages. You may only print up to {} pages using this tool.".format(
-                        range_count, settings.PRINTING_PAGES_LIMIT
-                    )
+                    f"You specified a range of {range_count} pages. "
+                    f"You may only print up to {settings.PRINTING_PAGES_LIMIT_TEACHERS} pages using this tool."
                 )
-        elif num_pages > settings.PRINTING_PAGES_LIMIT:
+
+            elif range_count > settings.PRINTING_PAGES_LIMIT_STUDENTS:
+                raise InvalidInputPrintingError(
+                    f"You specified a range of {range_count} pages. "
+                    f"You may only print up to {settings.PRINTING_PAGES_LIMIT_STUDENTS} pages using this tool."
+                )
+
+        elif num_pages > settings.PRINTING_PAGES_LIMIT_TEACHERS and (obj.user.is_teacher or obj.user.is_printing_admin):
             raise InvalidInputPrintingError(
-                "This file contains {} pages. You may only print up to {} pages using this tool.".format(num_pages, settings.PRINTING_PAGES_LIMIT)
+                f"This file contains {num_pages} pages. " f"You may only print up to {settings.PRINTING_PAGES_LIMIT_TEACHERS} pages using this tool."
             )
 
+        elif num_pages > settings.PRINTING_PAGES_LIMIT_STUDENTS:
+            raise InvalidInputPrintingError(
+                f"This file contains {num_pages} pages. " f"You may only print up to {settings.PRINTING_PAGES_LIMIT_STUDENTS} pages using this tool."
+            )
+
+        if get_user_ratelimit_status(obj.user.username):
+            # Bypass rate limit for admins but still send error message for debugging purposes
+            if obj.user.is_printing_admin:
+                logger.debug(
+                    """Administrator %s passed the rate limit of %s print jobs every %s minutes, but since they are an
+                    administrator the request will still go through.""",
+                    obj.user.username,
+                    settings.PRINT_RATELIMIT_FREQUENCY,
+                    settings.PRINT_RATELIMIT_MINUTES,
+                )
+            # If user needs to be rate limited
+            elif not obj.user.is_printing_admin and not obj.user.is_teacher:  # Don't rate limit teachers
+                raise RatelimitExceededError(
+                    f"You're sending print jobs too fast! You can only send {settings.PRINT_RATELIMIT_FREQUENCY} print "
+                    f"jobs every {settings.PRINT_RATELIMIT_MINUTES} minutes."
+                )
         if do_print:
             args = ["lpr", "-P", printer, final_filename]
 
@@ -398,6 +457,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
                 raise Exception("An error occurred while printing your file: {}".format(e.output.strip())) from e
 
         obj.printed = True
+        set_user_ratelimit_status(obj.user.username)
         obj.save()
     finally:
         for filename in delete_filenames:

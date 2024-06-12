@@ -22,7 +22,14 @@
     <br>
     <b>The following restrictions apply:</b>
     <ul>
-        <li>Print jobs can have a maximum of {{ DJANGO_SETTINGS.PRINTING_PAGES_LIMIT }} pages.</li>
+        {% if user.is_teacher or user.is_printing_admin %}
+        <li>Print jobs can have a maximum of {{ DJANGO_SETTINGS.PRINTING_PAGES_LIMIT_TEACHERS }} pages.</li>
+        {% else %}
+        <li>Print jobs can have a maximum of {{ DJANGO_SETTINGS.PRINTING_PAGES_LIMIT_STUDENTS }} pages.</li>
+        {% endif %}
+        {% if not user.is_teacher and not user.is_printing_admin %}
+        <li>You may send up to {{ DJANGO_SETTINGS.PRINT_RATELIMIT_FREQUENCY}} print jobs every {{ DJANGO_SETTINGS.PRINT_RATELIMIT_MINUTES }} minutes.</li>
+        {% endif %}
         <li>If the printer doesn't appear to be working, do <b>NOT</b> keep attempting to print. Instead, contact the Student Systems Administrators with <a href="{% url 'send_feedback' %}">the Ion feedback form</a>.</li>
         <li>Please be mindful of other printing users.</li>
         <li>Do not print documents that use an excessive amount of ink (e.g. dark backgrounds).</li>
