@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import datetime
 import ipaddress
 import logging
 import string
 import subprocess
-from typing import Collection, Dict, Set  # noqa
+from typing import Collection
 from urllib import parse
 
 from django.conf import settings
@@ -98,7 +100,7 @@ class InvalidString(str):
 
 
 class MigrationMock:
-    seen = set()  # type: Set[str]
+    seen: set[str] = set()
 
     def __contains__(self, mod):
         return True
@@ -245,7 +247,7 @@ def get_theme_name() -> str:
     return None
 
 
-def get_theme() -> Dict[str, Dict[str, str]]:
+def get_theme() -> dict[str, dict[str, str]]:
     """Return JS and CSS for the currently active special event theme."""
     return GLOBAL_THEMES.get(get_theme_name(), {})
 

@@ -1,9 +1,11 @@
-from typing import Dict, Iterable, List, Union
+from __future__ import annotations
+
+from typing import Iterable
 
 from django.db.models import Manager, Model, QuerySet
 
 
-def lock_on(items: Iterable[Union[Model, Manager, QuerySet]]) -> None:
+def lock_on(items: Iterable[Model | Manager | QuerySet]) -> None:
     """Given an iterable of ``Model`` instances, ``Manager``s, and/or ``QuerySet``s, locks the
     corresponding database rows.
 
@@ -26,15 +28,15 @@ def lock_on(items: Iterable[Union[Model, Manager, QuerySet]]) -> None:
             the database rows to lock.
 
     """
-    querysets_by_model: Dict[str, List[Union[Manager, QuerySet]]] = {}
-    objects_by_model: Dict[str, List[Model]] = {}
+    querysets_by_model: dict[str, list[Manager | QuerySet]] = {}
+    objects_by_model: dict[str, list[Model]] = {}
 
     # First, we go through and categorize everything. Put instances in objects_by_model and
     # Managers/QuerySets in querysets_by_model.
     # Both are categorized by the dotted path to their class.
     for item in items:
         model_class = item.model if isinstance(item, (Manager, QuerySet)) else item.__class__
-        model_fullname = model_class.__module__ + "." + model_class.__qualname__
+        model_fullname = f"{model_class.__module__}.{model_class.__qualname__}"
 
         if isinstance(item, (Manager, QuerySet)):
             querysets_by_model.setdefault(model_fullname, [])
