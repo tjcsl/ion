@@ -1,8 +1,9 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
+from __future__ import annotations
+
 import logging
 from base64 import b64encode
 from datetime import timedelta
-from typing import Collection, Dict, Optional, Union
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -41,14 +42,14 @@ class UserManager(DjangoUserManager):
 
     """
 
-    def user_with_student_id(self, student_id: Union[int, str]) -> Optional["User"]:
+    def user_with_student_id(self, student_id: int | str) -> User | None:
         """Get a unique user object by FCPS student ID. (Ex. 1624472)"""
         results = User.objects.filter(student_id=str(student_id))
         if len(results) == 1:
             return results.first()
         return None
 
-    def user_with_ion_id(self, student_id: Union[int, str]) -> Optional["User"]:
+    def user_with_ion_id(self, student_id: int | str) -> User | None:
         """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not is_entirely_digit(student_id):
             return None
@@ -57,11 +58,11 @@ class UserManager(DjangoUserManager):
             return results.first()
         return None
 
-    def users_in_year(self, year: int) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def users_in_year(self, year: int) -> QuerySet[User]:  # pylint: disable=unsubscriptable-object
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
-    def user_with_name(self, given_name: Optional[str] = None, last_name: Optional[str] = None) -> "User":  # pylint: disable=unsubscriptable-object
+    def user_with_name(self, given_name: str | None = None, last_name: str | None = None) -> User:  # pylint: disable=unsubscriptable-object
         """Get a unique user object by given name (first/nickname) and/or last name.
 
         Args:
@@ -85,14 +86,14 @@ class UserManager(DjangoUserManager):
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
 
-    def get_students(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_students(self) -> QuerySet[User]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are students (quickly)."""
         users = User.objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
         users = users.exclude(id__in=EXTRA)
 
         return users
 
-    def get_teachers(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_teachers(self) -> QuerySet[User]:  # pylint: disable=unsubscriptable-object
         """Get user objects that are teachers (quickly)."""
         users = User.objects.filter(user_type="teacher")
         users = users.exclude(id__in=EXTRA)
@@ -103,7 +104,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_attendance_users(self) -> "QuerySet[User]":
+    def get_teachers_attendance_users(self) -> QuerySet[User]:
         """Like ``get_teachers()``, but includes attendance-only users as well as
         teachers.
 
@@ -120,7 +121,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_sorted(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_teachers_sorted(self) -> QuerySet[User]:  # pylint: disable=unsubscriptable-object
         """Returns a ``QuerySet`` of teachers sorted by last name, then first name.
 
         Returns:
@@ -129,7 +130,7 @@ class UserManager(DjangoUserManager):
         """
         return self.get_teachers().order_by("last_name", "first_name")
 
-    def get_teachers_attendance_users_sorted(self) -> "QuerySet[User]":
+    def get_teachers_attendance_users_sorted(self) -> QuerySet[User]:
         """Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by
         last name, then first name.
 
@@ -139,7 +140,7 @@ class UserManager(DjangoUserManager):
         """
         return self.get_teachers_attendance_users().order_by("last_name", "first_name")
 
-    def get_approve_announcements_users(self) -> "QuerySet[User]":
+    def get_approve_announcements_users(self) -> QuerySet[User]:
         """Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,
         alumni, service users and students.
 
@@ -155,7 +156,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_approve_announcements_users_sorted(self) -> "QuerySet[User]":
+    def get_approve_announcements_users_sorted(self) -> QuerySet[User]:
         """Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,
         alumni, service users and students sorted by last name, then first name.
 
@@ -170,8 +171,8 @@ class UserManager(DjangoUserManager):
 
     def exclude_from_search(
         self,
-        existing_queryset: Optional[Union[Collection["User"], QuerySet]] = None,  # pylint: disable=unsubscriptable-object
-    ) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+        existing_queryset: QuerySet[User] | None = None,  # pylint: disable=unsubscriptable-object
+    ) -> QuerySet[User]:  # pylint: disable=unsubscriptable-object
         if existing_queryset is None:
             existing_queryset = self
 
@@ -249,7 +250,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     @staticmethod
-    def get_signage_user() -> "User":
+    def get_signage_user() -> User:
         """Returns the user used to authenticate signage displays
 
         Returns:
@@ -259,7 +260,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return User(id=99999)
 
     @property
-    def address(self) -> Optional["Address"]:
+    def address(self) -> Address | None:
         """Returns the ``Address`` object representing this user's address, or ``None`` if it is not
         set or the current user does not have permission to access it.
 
@@ -271,7 +272,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.properties.address
 
     @property
-    def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:  # pylint: disable=unsubscriptable-object
+    def schedule(self) -> QuerySet[Section] | None:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the ``Section`` objects representing the classes this student is
         in, or ``None`` if the current user does not have permission to list this student's classes.
 
@@ -283,7 +284,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.properties.schedule
 
-    def member_of(self, group: Union[Group, str]) -> bool:
+    def member_of(self, group: Group | str) -> bool:
         """Returns whether a user is a member of a certain group.
 
         Args:
@@ -401,7 +402,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.short_name
 
     @property
-    def primary_email_address(self) -> Optional[str]:
+    def primary_email_address(self) -> str | None:
         try:
             return self.primary_email.address if self.primary_email else None
         except Email.DoesNotExist:
@@ -433,7 +434,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.username}@{domain}"
 
     @property
-    def non_tj_email(self) -> Optional[str]:
+    def non_tj_email(self) -> str | None:
         """
         Returns the user's first non-TJ email found, or None if none is found.
 
@@ -475,7 +476,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return email.address if email and email.address else self.tj_email
 
     @property
-    def default_photo(self) -> Optional[bytes]:
+    def default_photo(self) -> bytes | None:
         """Returns default photo (in binary) that should be used
 
         Returns:
@@ -500,7 +501,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return None
 
     @property
-    def grade(self) -> "Grade":
+    def grade(self) -> Grade:
         """Returns the grade of a user.
 
         Returns:
@@ -510,7 +511,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return Grade(self.graduation_year)
 
     @property
-    def permissions(self) -> Dict[str, bool]:
+    def permissions(self) -> dict[str, bool]:
         """Dynamically generate dictionary of privacy options.
 
         Returns:
@@ -752,7 +753,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.member_of("admin_all") and self.is_staff and self.is_superuser
 
-    def can_manage_group(self, group: Union[Group, str]) -> bool:
+    def can_manage_group(self, group: Group | str) -> bool:
         """Checks whether this user has permission to edit/manage the given group (either
         a Group or a group name).
 
@@ -1380,7 +1381,7 @@ class Photo(models.Model):
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     @cached_property
-    def base64(self) -> Optional[bytes]:
+    def base64(self) -> bytes | None:
         """Returns base64 encoded binary data for a user's picture.
 
         Returns:
@@ -1446,7 +1447,7 @@ class Grade:
             return self._name
 
     @staticmethod
-    def number_from_name(name: str) -> Optional[int]:
+    def number_from_name(name: str) -> int | None:
         if name in Grade.names:
             return Grade.names.index(name) + 9
         return None

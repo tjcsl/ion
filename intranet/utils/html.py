@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import urllib.parse
-from typing import Mapping, Optional, Tuple, Union
+from typing import MutableMapping
 
 import bleach
 from bleach.css_sanitizer import CSSSanitizer
@@ -35,9 +37,9 @@ def safe_html(txt):
     return bleach.linkify(bleach.clean(txt, tags=tags, attributes=att, css_sanitizer=css_sanitizer))
 
 
-def link_removal_callback(  # pylint: disable=unused-argument
-    attrs: Mapping[Union[str, Tuple[Optional[str]]], str], new: bool = False
-) -> Optional[Mapping[Union[str, Tuple[Optional[str]]], str]]:
+def link_removal_callback(
+    attrs: MutableMapping[str | tuple[str | None], str], new: bool = False  # pylint: disable=unused-argument
+) -> MutableMapping[str | tuple[str | None], str] | None:
     """Internal callback for ``nullify_links()``."""
     for key in tuple(attrs.keys()):
         if isinstance(key, tuple) and "href" in key:
@@ -61,9 +63,9 @@ def nullify_links(text: str) -> str:
 
 
 def safe_fcps_emerg_html(text: str, base_url: str) -> str:
-    def translate_link_attr(  # pylint: disable=unused-argument
-        attrs: Mapping[Union[str, Tuple[Optional[str]]], str], new: bool = False
-    ) -> Optional[Mapping[Union[str, Tuple[Optional[str]]], str]]:
+    def translate_link_attr(
+        attrs: MutableMapping[str | tuple[str | None], str], new: bool = False  # pylint: disable=unused-argument
+    ) -> MutableMapping[str | tuple[str | None], str] | None:
         for key in tuple(attrs.keys()):
             if isinstance(key, tuple) and "href" in key:
                 # Translate links that don't specify a protocol/host

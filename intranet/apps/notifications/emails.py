@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import logging
-from typing import Collection, Mapping
+from typing import Mapping, MutableSequence
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -13,11 +15,11 @@ def email_send(
     html_template: str,
     data: Mapping[str, object],
     subject: str,
-    emails: Collection[str],  # pylint: disable=unsubscriptable-object
-    headers: Mapping[str, str] = None,  # pylint: disable=unsubscriptable-object
+    emails: MutableSequence[str],
+    headers: Mapping[str, str] | None = None,
     bcc: bool = False,
     *,
-    custom_logger: logging.Logger = None,
+    custom_logger: logging.Logger | None = None,
 ) -> EmailMultiAlternatives:
     """Send an HTML/Plaintext email with the following fields.
     If we are not in production and settings.FORCE_EMAIL_SEND is not set, does not actually send the email

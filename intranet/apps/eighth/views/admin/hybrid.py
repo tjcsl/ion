@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import logging
-from typing import Optional
 
 from django import http
 from django.contrib import messages
@@ -212,7 +213,7 @@ def eighth_admin_signup_group_action_hybrid(request, group_id, schact_virtual_id
     )
 
 
-def eighth_admin_perform_group_signup(*, group_id: int, schact_virtual_id: int, schact_person_id: int, request: Optional[http.HttpRequest]):
+def eighth_admin_perform_group_signup(*, group_id: int, schact_virtual_id: int, schact_person_id: int, request: http.HttpRequest | None):
     """Performs sign up of all users in a specific group up for a
     specific scheduled activity.
 

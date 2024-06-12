@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import logging
-from typing import List  # noqa
 
 from django import forms, http
 from django.contrib.auth import get_user_model
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class ActivityDisplayField(forms.ModelChoiceField):
-    cancelled_acts = None  # type: List[EighthActivity]
+    cancelled_acts: list[EighthActivity] | None = None
 
     def __init__(self, *args, **kwargs):
         if "block" in kwargs:

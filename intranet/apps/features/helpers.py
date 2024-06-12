@@ -1,7 +1,7 @@
-from typing import Optional
+from __future__ import annotations
 
 
-def get_feature_context(request) -> Optional[str]:
+def get_feature_context(request) -> str | None:
     """Given a Django request, returns the 'context' that should be used to select feature
     announcements to display (one of ``dashboard``, ``login``, ``eighth_signup``, or ``None``).
 
