@@ -49,7 +49,7 @@ def email_send(
         logger.debug("Email list is empty; not sending")
         return EmailMultiAlternatives(subject, text_content, settings.EMAIL_FROM, emails, headers=headers)
 
-    email_groups = [emails[i: i + 800] for i in range(0, len(emails), 800)]
+    email_groups = [emails[i : i + 800] for i in range(0, len(emails), 800)]
     email_msg = []
 
     for group in email_groups:

@@ -3,7 +3,6 @@ from datetime import date, datetime
 from unittest.mock import patch
 
 import pytz
-
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
 from django.urls import reverse

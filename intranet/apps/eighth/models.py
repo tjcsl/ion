@@ -5,9 +5,6 @@ import string
 from typing import Collection, Iterable, List, Optional, Union
 
 from cacheops import invalidate_obj
-from sentry_sdk import add_breadcrumb, capture_exception
-from simple_history.models import HistoricalRecords
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group as DjangoGroup
@@ -18,6 +15,8 @@ from django.db import models, transaction
 from django.db.models import Count, Manager, Q, QuerySet
 from django.http.request import HttpRequest
 from django.utils import formats, timezone
+from sentry_sdk import add_breadcrumb, capture_exception
+from simple_history.models import HistoricalRecords
 
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
@@ -733,9 +732,7 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity."""
 
-    def for_sponsor(
-        self, sponsor: EighthSponsor, include_cancelled: bool = False
-    ) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
+    def for_sponsor(self, sponsor: EighthSponsor, include_cancelled: bool = False) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of EighthScheduledActivities where the given EighthSponsor is
         sponsoring.
         If a sponsorship is defined in an EighthActivity, it may be overridden
@@ -1003,9 +1000,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False).exists()
 
-    def _get_viewable_members(
-        self, user: "get_user_model()"
-    ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def _get_viewable_members(self, user: "get_user_model()") -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Get an unsorted QuerySet of the members that you have permission to view.
         Args:
             user: The user who is attempting to view the member list.
@@ -1020,9 +1015,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 q |= Q(id=user.id)
             return self.members.filter(q)
 
-    def get_viewable_members(
-        self, user: "get_user_model()" = None
-    ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_viewable_members(self, user: "get_user_model()" = None) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you have permission to view, sorted alphabetically.
         Args:
             user: The user who is attempting to view the member list.
@@ -1041,9 +1034,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self._get_viewable_members(request.user)
 
-    def get_hidden_members(
-        self, user: "get_user_model()" = None
-    ) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_hidden_members(self, user: "get_user_model()" = None) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you do not have permission to view.
         Args:
             user: The user who is attempting to view the member list.
@@ -1296,7 +1287,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                     if not existing_signup.scheduled_activity.is_both_blocks():
                         add_breadcrumb(
                             category="eighth-signup",
-                            message=f"Switching user {user.id} from single-block activity {existing_signup.scheduled_activity.activity.id} to single-block activity {self.activity.id} in block {self.block.id}",  # pylint: disable=line-too-long # noqa: E501
+                            message=f"Switching user {user.id} from single-block activity {existing_signup.scheduled_activity.activity.id} to single-block activity {self.activity.id} in block {self.block.id}",  # pylint: disable=line-too-long
                             level="debug",
                         )
 
@@ -1352,7 +1343,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
                         add_breadcrumb(
                             category="eighth-signup",
-                            message=f"Switching user {user.id} from dual-block activity {existing_signup.scheduled_activity.activity.id} to single-block activity {self.activity.id} in block {self.block.id}",  # pylint: disable=line-too-long # noqa: E501
+                            message=f"Switching user {user.id} from dual-block activity {existing_signup.scheduled_activity.activity.id} to single-block activity {self.activity.id} in block {self.block.id}",  # pylint: disable=line-too-long
                             level="debug",
                         )
 
@@ -1429,7 +1420,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 for signup in existing_signups:
                     add_breadcrumb(
                         category="eighth-signup",
-                        message=f"User {user.id}: original activity for block {signup.scheduled_activity.block.id}: {signup.scheduled_activity.activity.id}",  # pylint: disable=line-too-long # noqa: E501
+                        message=f"User {user.id}: original activity for block {signup.scheduled_activity.block.id}: {signup.scheduled_activity.activity.id}",  # pylint: disable=line-too-long
                         level="debug",
                     )
 
@@ -1747,9 +1738,7 @@ class EighthSignup(AbstractBaseEighthModel):
 class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
-    def get_next_waitlist(
-        self, activity: EighthScheduledActivity
-    ) -> Union[QuerySet, Collection["EighthWaitlist"]]:  # pylint: disable=unsubscriptable-object
+    def get_next_waitlist(self, activity: EighthScheduledActivity) -> Union[QuerySet, Collection["EighthWaitlist"]]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of all the EighthWaitlist objects for the given
         activity, ordered by signup time.
         Args:
