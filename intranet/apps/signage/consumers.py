@@ -1,5 +1,4 @@
 from channels.generic.websocket import JsonWebsocketConsumer
-
 from django.conf import settings
 from django.utils import timezone
 

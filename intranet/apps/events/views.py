@@ -2,7 +2,6 @@ import logging
 from datetime import datetime, timedelta
 
 from dateutil.relativedelta import relativedelta
-
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required

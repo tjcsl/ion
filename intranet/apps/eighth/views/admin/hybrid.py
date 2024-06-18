@@ -1,11 +1,10 @@
 import logging
 from typing import Optional
 
-from formtools.wizard.views import SessionWizardView
-
 from django import http
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render, reverse
+from formtools.wizard.views import SessionWizardView
 
 from ....auth.decorators import eighth_admin_required
 from ....users.models import Group
@@ -46,9 +45,7 @@ def activities_without_attendance_view(request):
             if scheduled_activities is not None:
                 scheduled_activities = scheduled_activities | b.eighthscheduledactivity_set.filter(
                     block__date__gte=start_date, attendance_taken=False
-                ).order_by(
-                    "-activity__special", "activity__name"
-                )  # float special to top
+                ).order_by("-activity__special", "activity__name")  # float special to top
             else:
                 scheduled_activities = b.eighthscheduledactivity_set.filter(block__date__gte=start_date, attendance_taken=False).order_by(
                     "-activity__special", "activity__name"

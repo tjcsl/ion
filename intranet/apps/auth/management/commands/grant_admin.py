@@ -12,6 +12,6 @@ class Command(BaseCommand):
         parser.add_argument("admin_group")
 
     def handle(self, *args, **options):
-        g = Group.objects.get_or_create(name="admin_%s" % options["admin_group"])[0]
+        g = Group.objects.get_or_create(name=f"admin_{options['admin_group']}")[0]
         get_user_model().objects.get_or_create(username=options["username"])[0].groups.add(g)
-        self.stdout.write("Added %s to %s" % (options["username"], options["admin_group"]))
+        self.stdout.write(f"Added {options['username']} to {options['admin_group']}")

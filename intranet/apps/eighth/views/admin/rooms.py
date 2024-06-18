@@ -2,13 +2,12 @@ import csv
 import logging
 from collections import defaultdict
 
-from formtools.wizard.views import SessionWizardView
-
 from django import http
 from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from formtools.wizard.views import SessionWizardView
 
 from ....auth.decorators import eighth_admin_required
 from ...forms.admin.blocks import BlockSelectionForm

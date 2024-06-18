@@ -107,7 +107,8 @@ class ScheduledActivityMultiSelectForm(forms.Form):
             activity_ids = (
                 EighthScheduledActivity.objects.exclude(activity__deleted=True)
                 # .exclude(cancelled=True)
-                .filter(block=block).values_list("activity__id", flat=True)
+                .filter(block=block)
+                .values_list("activity__id", flat=True)
             )
             queryset = EighthActivity.objects.filter(id__in=activity_ids).order_by("name")
         else:

@@ -33,7 +33,7 @@ class Request(models.Model):
         return json.loads(self.request)
 
     def __str__(self):
-        return f'{self.timestamp.astimezone(settings.PYTZ_TIME_ZONE).strftime("%b %d %Y %H:%M:%S")} - {self.username} - {self.ip} - {self.method} "{self.path}"'  # pylint: disable=line-too-long # noqa: E501
+        return f'{self.timestamp.astimezone(settings.PYTZ_TIME_ZONE).strftime("%b %d %Y %H:%M:%S")} - {self.username} - {self.ip} - {self.method} "{self.path}"'  # pylint: disable=line-too-long
 
     class Meta:
         ordering = ["-timestamp"]

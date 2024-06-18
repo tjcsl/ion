@@ -4,11 +4,6 @@ from collections import defaultdict
 from datetime import MAXYEAR, MINYEAR, date, datetime, timedelta
 from io import BytesIO
 
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib.units import inch
-from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -16,6 +11,10 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table
 
 from ....utils.date import get_date_range_this_year, get_senior_graduation_year
 from ....utils.helpers import is_entirely_digit
@@ -53,7 +52,7 @@ def activity_view(request, activity_id=None):
 
 def chunks(items, n):
     for i in range(0, len(items), n):
-        yield items[i: i + n]
+        yield items[i : i + n]
 
 
 def current_school_year():
