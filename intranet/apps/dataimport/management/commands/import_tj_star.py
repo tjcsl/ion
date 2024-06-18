@@ -27,7 +27,7 @@ class Command(BaseCommand):
         parser.add_argument("filename")
 
     def handle(self, *args, **options):
-        with open(options["filename"], "r", encoding="utf-8") as csv_file:
+        with open(options["filename"], encoding="utf-8") as csv_file:
             data = csv.DictReader(csv_file)
 
             for idx, row in enumerate(data):

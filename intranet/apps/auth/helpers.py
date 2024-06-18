@@ -2,7 +2,6 @@ import logging
 import re
 
 import pexpect
-
 from django.conf import settings
 
 logger = logging.getLogger(__name__)

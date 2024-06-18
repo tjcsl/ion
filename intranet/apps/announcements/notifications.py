@@ -3,14 +3,13 @@ import logging
 import re
 
 import requests
-from requests_oauthlib import OAuth1
-from sentry_sdk import capture_exception
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core import exceptions
 from django.urls import reverse
+from requests_oauthlib import OAuth1
+from sentry_sdk import capture_exception
 
 from ...utils.date import get_senior_graduation_year
 from ..notifications.tasks import email_send_task

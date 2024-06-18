@@ -8,9 +8,6 @@ from io import BytesIO
 from typing import Dict, Optional
 
 import magic
-from sentry_sdk import add_breadcrumb, capture_exception
-from xhtml2pdf import pisa
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -19,6 +16,8 @@ from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.text import slugify
+from sentry_sdk import add_breadcrumb, capture_exception
+from xhtml2pdf import pisa
 
 from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
@@ -177,7 +176,7 @@ def get_numpages(tmpfile_name: str) -> int:
     for line in lines:
         if line.startswith(pages_prefix):
             try:
-                num_pages = int(line[len(pages_prefix):].strip())
+                num_pages = int(line[len(pages_prefix) :].strip())
             except ValueError:
                 num_pages = -1
 

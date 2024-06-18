@@ -1,8 +1,7 @@
-from oauth2_provider.models import get_application_model
-from oauth2_provider.views.application import ApplicationDelete, ApplicationRegistration, ApplicationUpdate
-
 from django.forms.models import modelform_factory
 from django.shortcuts import render
+from oauth2_provider.models import get_application_model
+from oauth2_provider.views.application import ApplicationDelete, ApplicationRegistration, ApplicationUpdate
 
 from .models import BlankModel
 

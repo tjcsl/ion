@@ -5,7 +5,6 @@ from datetime import timedelta
 from typing import Collection, Dict, Optional, Union
 
 from dateutil.relativedelta import relativedelta
-
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, AnonymousUser, PermissionsMixin
 from django.contrib.auth.models import UserManager as DjangoUserManager
@@ -104,7 +103,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_attendance_users(self) -> "QuerySet[User]":  # noqa
+    def get_teachers_attendance_users(self) -> "QuerySet[User]":
         """Like ``get_teachers()``, but includes attendance-only users as well as
         teachers.
 
@@ -130,7 +129,7 @@ class UserManager(DjangoUserManager):
         """
         return self.get_teachers().order_by("last_name", "first_name")
 
-    def get_teachers_attendance_users_sorted(self) -> "QuerySet[User]":  # noqa
+    def get_teachers_attendance_users_sorted(self) -> "QuerySet[User]":
         """Returns a ``QuerySet`` containing both teachers and attendance-only users sorted by
         last name, then first name.
 
@@ -140,7 +139,7 @@ class UserManager(DjangoUserManager):
         """
         return self.get_teachers_attendance_users().order_by("last_name", "first_name")
 
-    def get_approve_announcements_users(self) -> "QuerySet[User]":  # noqa
+    def get_approve_announcements_users(self) -> "QuerySet[User]":
         """Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,
         alumni, service users and students.
 
@@ -156,7 +155,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_approve_announcements_users_sorted(self) -> "QuerySet[User]":  # noqa
+    def get_approve_announcements_users_sorted(self) -> "QuerySet[User]":
         """Returns a ``QuerySet`` containing all users except simple users, tjstar presenters,
         alumni, service users and students sorted by last name, then first name.
 
@@ -321,7 +320,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             The user's full name (first + " " + last).
 
         """
-        return "{} {}".format(self.first_name, self.last_name)
+        return f"{self.first_name} {self.last_name}"
 
     @property
     def full_name_nick(self) -> str:
@@ -349,7 +348,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a name in the format of:
         Lastname, Firstname [(Nickname)]
         """
-        return "{}, {}".format(self.last_name, self.first_name) + (" ({})".format(self.nickname) if self.nickname else "")
+        return f"{self.last_name}, {self.first_name}" + (f" ({self.nickname})" if self.nickname else "")
 
     @property
     def last_first_id(self) -> str:
@@ -358,8 +357,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return (
             "{}{} ".format(self.last_name, ", " + self.first_name if self.first_name else "")
-            + ("({}) ".format(self.nickname) if self.nickname else "")
-            + ("({})".format(self.student_id if self.is_student and self.student_id else self.username))
+            + (f"({self.nickname}) " if self.nickname else "")
+            + (f"({self.student_id if self.is_student and self.student_id else self.username})")
         )
 
     @property
@@ -368,7 +367,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Lastname, F [(Nickname)]
         """
         return "{}{}".format(self.last_name, ", " + self.first_name[:1] + "." if self.first_name else "") + (
-            " ({})".format(self.nickname) if self.nickname else ""
+            f" ({self.nickname})" if self.nickname else ""
         )
 
     @property
@@ -431,7 +430,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             domain = "tjhsst.edu"
 
-        return "{}@{}".format(self.username, domain)
+        return f"{self.username}@{domain}"
 
     @property
     def non_tj_email(self) -> Optional[str]:
@@ -929,7 +928,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def frequent_signups(self):
         """Return a QuerySet of activity id's and counts for the activities that a given user
         has signed up for more than `settings.SIMILAR_THRESHOLD` times"""
-        key = "{}:frequent_signups".format(self.username)
+        key = f"{self.username}:frequent_signups"
         cached = cache.get(key)
         if cached:
             return cached
@@ -948,7 +947,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def recommended_activities(self):
-        key = "{}:recommended_activities".format(self.username)
+        key = f"{self.username}:recommended_activities"
         cached = cache.get(key)
         if cached is not None:
             return cached
@@ -972,7 +971,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def archive_admin_comments(self):
         current_year = timezone.localdate().year
         previous_year = current_year - 1
-        self.admin_comments = "\n=== {}-{} comments ===\n{}".format(previous_year, current_year, self.admin_comments)
+        self.admin_comments = f"\n=== {previous_year}-{current_year} comments ===\n{self.admin_comments}"
         self.save(update_fields=["admin_comments"])
 
     def get_eighth_sponsor(self):
@@ -1079,7 +1078,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return UserProperties.objects.get_or_create(user=self)[0]
         elif name == "dark_mode_properties":
             return UserDarkModeProperties.objects.get_or_create(user=self)[0]
-        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     def __str__(self):
         return self.username or self.ion_username or str(self.id)
@@ -1125,7 +1124,7 @@ class UserProperties(models.Model):
             return self._address if self.attribute_is_visible("show_address") else None
         if name == "schedule":
             return self._schedule if self.attribute_is_visible("show_schedule") else None
-        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     def __setattr__(self, name, value):
         if name == "address":
@@ -1152,17 +1151,17 @@ class UserProperties(models.Model):
 
         """
         try:
-            if not getattr(self, "parent_{}".format(permission)) and not parent and not admin:
+            if not getattr(self, f"parent_{permission}") and not parent and not admin:
                 return False
             level = "parent" if parent else "self"
-            setattr(self, "{}_{}".format(level, permission), value)
+            setattr(self, f"{level}_{permission}", value)
 
-            update_fields = ["{}_{}".format(level, permission)]
+            update_fields = [f"{level}_{permission}"]
 
             # Set student permission to false if parent sets permission to false.
             if parent and not value:
-                setattr(self, "self_{}".format(permission), False)
-                update_fields.append("self_{}".format(permission))
+                setattr(self, f"self_{permission}", False)
+                update_fields.append(f"self_{permission}")
 
             self.save(update_fields=update_fields)
             return True
@@ -1229,8 +1228,8 @@ class UserProperties(models.Model):
 
         """
         try:
-            parent = getattr(self, "parent_{}".format(permission))
-            student = getattr(self, "self_{}".format(permission))
+            parent = getattr(self, f"parent_{permission}")
+            student = getattr(self, f"self_{permission}")
         except Exception:
             logger.error("Could not retrieve permissions for %s", permission)
 
@@ -1248,8 +1247,8 @@ class UserProperties(models.Model):
 
         """
         try:
-            parent = getattr(self, "parent_{}".format(permission))
-            student = getattr(self, "self_{}".format(permission))
+            parent = getattr(self, f"parent_{permission}")
+            student = getattr(self, f"self_{permission}")
         except Exception:
             logger.error("Could not retrieve permissions for %s", permission)
 
@@ -1257,7 +1256,7 @@ class UserProperties(models.Model):
 
 
 PERMISSIONS_NAMES = {
-    prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]  # noqa: E501
+    prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
 }
 
 
@@ -1309,10 +1308,10 @@ class Phone(models.Model):
     def __getattr__(self, name):
         if name == "number":
             return self._number if self.user.properties.attribute_is_visible("show_telephone") else None
-        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     def __str__(self):
-        return "{}: {}".format(self.get_purpose_display(), self.number)
+        return f"{self.get_purpose_display()}: {self.number}"
 
     class Meta:
         unique_together = ("user", "_number")
@@ -1357,7 +1356,7 @@ class Address(models.Model):
 
     def __str__(self):
         """Returns full address string."""
-        return "{}\n{}, {} {}".format(self.street, self.city, self.state, self.postal_code)
+        return f"{self.street}\n{self.city}, {self.state} {self.postal_code}"
 
 
 class Photo(models.Model):
@@ -1378,7 +1377,7 @@ class Photo(models.Model):
     def __getattr__(self, name):
         if name == "binary":
             return self._binary if self.user.properties.attribute_is_visible("show_pictures") else None
-        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     @cached_property
     def base64(self) -> Optional[bytes]:
@@ -1436,13 +1435,13 @@ class Grade:
     @property
     def name_plural(self) -> str:
         """Return the grade's plural name (e.g. freshmen)"""
-        return "freshmen" if (self._number and self._number == 9) else "{}s".format(self._name) if self._name else ""
+        return "freshmen" if (self._number and self._number == 9) else f"{self._name}s" if self._name else ""
 
     @property
     def text(self) -> str:
         """Return the grade's number as a string (e.g. Grade 12, Graduate)"""
         if 9 <= self._number <= 12:
-            return "Grade {}".format(self._number)
+            return f"Grade {self._number}"
         else:
             return self._name
 
@@ -1491,7 +1490,7 @@ class Course(models.Model):
     course_id = models.CharField(max_length=12, unique=True)
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.course_id)
+        return f"{self.name} ({self.course_id})"
 
     class Meta:
         ordering = ("name", "course_id")
@@ -1516,7 +1515,7 @@ class Section(models.Model):
     def __getattr__(self, name):
         if name == "students":
             return [s.user for s in self._students.all() if s.attribute_is_visible("show_schedule")]
-        raise AttributeError("{!r} object has no attribute {!r}".format(type(self).__name__, name))
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     class Meta:
         ordering = ("section_id", "period")

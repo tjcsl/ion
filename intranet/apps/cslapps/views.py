@@ -1,8 +1,7 @@
-from oauth2_provider.models import AccessToken
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from oauth2_provider.models import AccessToken
 
 from ..auth.decorators import deny_restricted
 from .models import App

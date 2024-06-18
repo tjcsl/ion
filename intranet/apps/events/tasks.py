@@ -4,7 +4,6 @@ from datetime import date, datetime
 import requests
 from celery import shared_task
 from celery.utils.log import get_task_logger
-
 from django.utils import timezone
 
 from .models import Event
@@ -74,7 +73,7 @@ def pull_sports_schedules(month=None) -> None:
             assert time is not None
             Event.objects.get_or_create(
                 title=line.get("Subject").split("(")[0].strip(),
-                description=line.get("Description")[line.get("Description").index("Opponent:") + 10:],
+                description=line.get("Description")[line.get("Description").index("Opponent:") + 10 :],
                 location=line.get("Location"),
                 show_attending=False,
                 show_on_dashboard=False,

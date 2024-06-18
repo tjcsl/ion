@@ -4,14 +4,6 @@ import logging
 from html import escape
 
 from cacheops import invalidate_obj
-from formtools.wizard.views import SessionWizardView
-from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER, TA_RIGHT
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib.units import inch
-from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
-
 from django import http
 from django.conf import settings
 from django.contrib import messages
@@ -22,6 +14,13 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from formtools.wizard.views import SessionWizardView
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from ....utils.date import get_date_range_this_year
 from ...auth.decorators import attendance_taker_required, deny_restricted, eighth_admin_required

@@ -4,7 +4,6 @@ from io import StringIO
 from unittest.mock import mock_open, patch
 
 import pytz
-
 from django.contrib.auth import get_user_model
 from django.core.management import CommandError, call_command
 from django.utils import timezone

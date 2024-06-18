@@ -3,7 +3,6 @@ import logging
 import pickle
 
 from cacheops import invalidate_obj
-
 from django import forms, http
 from django.contrib import messages
 from django.shortcuts import redirect, render
