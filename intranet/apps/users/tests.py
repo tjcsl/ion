@@ -1,13 +1,12 @@
 import datetime
 import os
 
-from oauth2_provider.models import AccessToken, get_application_model
-from oauth2_provider.settings import oauth2_settings
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
+from oauth2_provider.models import AccessToken, get_application_model
+from oauth2_provider.settings import oauth2_settings
 
 from ...test.ion_test import IonTestCase
 from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup

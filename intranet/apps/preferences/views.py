@@ -1,7 +1,6 @@
 import logging
 
 from cacheops import invalidate_obj
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model

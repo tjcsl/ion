@@ -4,7 +4,6 @@ import time
 
 import requests
 from bs4 import BeautifulSoup
-
 from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
@@ -44,7 +43,7 @@ def check_emerg():
     bad_strings = [
         "There are no emergency announcements at this time",
         "There are no emergency messages at this time",
-        "There are no emeregency annoncements at this time",
+        "There are no emeregency announcements at this time",
         "There are no major announcements at this time.",
         "There are no major emergency announcements at this time.",
         "There are no emergencies at this time.",
@@ -87,7 +86,7 @@ def check_emerg():
                 soup = BeautifulSoup(desc, "html.parser")
 
                 text = soup.find_all(["p", "hr"])
-                desc = text[2: len(text) - 5]
+                desc = text[2 : len(text) - 5]
                 a = {
                     "title": f"<a target='_blank' href=\"{get_domain_name(csl_page)}\">{issue['title']}</a>",
                     "body": "".join(d.prettify() for d in desc),

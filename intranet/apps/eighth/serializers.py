@@ -3,12 +3,11 @@ import collections
 import functools
 import logging
 
-from rest_framework import serializers
-from rest_framework.reverse import reverse
-
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Count
+from rest_framework import serializers
+from rest_framework.reverse import reverse
 
 from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 

@@ -4,7 +4,6 @@ import pickle
 import re
 
 from cacheops import invalidate_model
-
 from django import http
 from django.conf import settings
 from django.contrib import messages

@@ -5,6 +5,7 @@ from django.urls import reverse
 from ...test.ion_test import IonTestCase
 from ...utils.date import get_senior_graduation_year
 from ..bus.models import Route
+
 # from ..users.models import Email, Phone, Photo, User, UserProperties, Website
 from ..users.models import Email, Photo, User, UserProperties
 from .forms import EmailForm
@@ -180,7 +181,7 @@ class PreferencesTest(IonTestCase):
         options = get_privacy_options(user_student)
 
         PERMISSIONS_NAMES = {
-            prefix: [name[len(prefix) + 1:] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
+            prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
         }
 
         for permission_type in PERMISSIONS_NAMES.keys():

@@ -1,18 +1,25 @@
 import logging
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from rest_framework import generics, permissions, status, views
 from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
-
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
-from ..serializers import (EighthActivityDetailSerializer, EighthActivityListSerializer, EighthAddSignupSerializer, EighthBlockDetailSerializer,
-                           EighthBlockListSerializer, EighthScheduledActivitySerializer, EighthSignupSerializer, EighthToggleFavoriteSerializer)
+from ..serializers import (
+    EighthActivityDetailSerializer,
+    EighthActivityListSerializer,
+    EighthAddSignupSerializer,
+    EighthBlockDetailSerializer,
+    EighthBlockListSerializer,
+    EighthScheduledActivitySerializer,
+    EighthSignupSerializer,
+    EighthToggleFavoriteSerializer,
+)
 
 logger = logging.getLogger(__name__)
 

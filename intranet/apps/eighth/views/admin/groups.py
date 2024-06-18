@@ -4,8 +4,6 @@ import re
 from typing import List, Optional
 
 from cacheops import invalidate_model, invalidate_obj
-from formtools.wizard.views import SessionWizardView
-
 from django import http
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -14,6 +12,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from formtools.wizard.views import SessionWizardView
 
 from ....auth.decorators import eighth_admin_required
 from ....groups.models import Group
@@ -675,7 +674,7 @@ def eighth_admin_distribute_action(request):
             users_type = "unsigned"
 
             if "limit" in request.GET:
-                users = users[0: int(request.GET.get("limit"))]
+                users = users[0 : int(request.GET.get("limit"))]
 
         # Sort by last name
         users = sorted(users, key=lambda x: x.last_name)
@@ -684,7 +683,8 @@ def eighth_admin_distribute_action(request):
         sticky_users_and_activities = {}
         for user in users:
             sticky_activity_signup = EighthSignup.objects.filter(
-                user=user, scheduled_activity__block=block if users_type == "unsigned" else schacts[0].block  # pylint: disable=used-before-assignment
+                user=user,
+                scheduled_activity__block=block if users_type == "unsigned" else schacts[0].block,  # pylint: disable=used-before-assignment
             ).filter(Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True))
             if sticky_activity_signup.exists():
                 sticky_users_and_activities[user] = sticky_activity_signup[0].scheduled_activity
