@@ -1,4 +1,4 @@
-from typing import List, Union
+from __future__ import annotations
 
 from django import template
 
@@ -13,8 +13,8 @@ def query_transform(request, **kwargs):
     return query.urlencode()
 
 
-@register.filter  # TODO: replace return type with list[int | None]
-def page_list(paginator, current_page) -> List[Union[int, None]]:
+@register.filter
+def page_list(paginator, current_page) -> list[int | None]:
     """Pagination
 
     If there is a ``None`` in the output, it should be replaced
