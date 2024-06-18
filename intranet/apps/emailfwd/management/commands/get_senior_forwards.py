@@ -10,4 +10,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         forwards = SeniorEmailForward.objects.filter(user__graduation_year=get_senior_graduation_year(), user__user_type="student")
         for forward in forwards:
-            self.stdout.write("%s:\t\t%s" % (forward.user, forward.email))
+            self.stdout.write(f"{forward.user}:\t\t{forward.email}")

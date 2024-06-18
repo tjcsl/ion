@@ -43,7 +43,7 @@ def check_emerg():
     bad_strings = [
         "There are no emergency announcements at this time",
         "There are no emergency messages at this time",
-        "There are no emeregency announcements at this time",
+        "There are no emeregency annoncements at this time",  # codespell: ignore
         "There are no major announcements at this time.",
         "There are no major emergency announcements at this time.",
         "There are no emergencies at this time.",

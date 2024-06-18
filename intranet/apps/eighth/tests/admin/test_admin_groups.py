@@ -531,7 +531,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         self.make_admin()
 
         # Create users
-        users = get_user_model().objects.get_or_create(username="users")[0]
+        userA = get_user_model().objects.get_or_create(username="userA")[0]
         userB = get_user_model().objects.get_or_create(username="userB")[0]
 
         # Create groups
@@ -539,7 +539,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         group_not_empty = Group.objects.get_or_create(name="Not Empty Group")[0]
 
         # Add users to group
-        group_not_empty.user_set.add(users)
+        group_not_empty.user_set.add(userA)
         group_not_empty.user_set.add(userB)
 
         response = self.client.post(reverse("eighth_admin_delete_empty_groups_view"))
@@ -547,7 +547,7 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         self.assertNotIn(group_empty, Group.objects.all())
 
         # Add user to other group
-        group_not_empty.user_set.remove(users)
+        group_not_empty.user_set.remove(userA)
         group_not_empty.user_set.remove(userB)
 
         response = self.client.post(reverse("eighth_admin_delete_empty_groups_view"))
