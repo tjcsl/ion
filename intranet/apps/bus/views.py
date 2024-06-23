@@ -30,7 +30,7 @@ def morning(request, on_home=False):
     routes = Route.objects.all()
     ctx = {
         "admin": is_bus_admin,
-        "enable_bus_driver": settings.ENABLE_BUS_DRIVER,
+        "enable_bus_driver": False,
         "bus_list": routes,
         "changeover_time": settings.BUS_PAGE_CHANGEOVER_HOUR,
         "on_home": on_home,
@@ -54,10 +54,16 @@ def afternoon(request, on_home=False):
 
     ctx = {
         "admin": is_bus_admin,
-        "enable_bus_driver": settings.ENABLE_BUS_DRIVER,
+        "enable_bus_driver": True,
         "changeover_time": settings.BUS_PAGE_CHANGEOVER_HOUR,
         "school_end_hour": end_of_day.hour,
         "school_end_time": end_of_day.minute,
         "on_home": on_home,
     }
     return render(request, "bus/home.html", context=ctx)
+
+
+@login_required
+@deny_restricted
+def game(request):
+    return render(request, "bus/game.html")
