@@ -385,6 +385,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/eighth.schedule",
     "dark/oauth",
     "dark/sessionmgmt",
+    "dark/logs",
 ]
 
 for name in LIST_OF_INDEPENDENT_CSS:
