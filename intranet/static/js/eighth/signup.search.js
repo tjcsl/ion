@@ -96,6 +96,10 @@ $(function() {
                         show = true;
                     }
                 }
+                // description
+                if (activity.description.toLowerCase().indexOf(search) !== -1) {
+                    show = true;
+                }
 
                 var cmd = search.split(":");
                 if (cmd.length > 1) {
