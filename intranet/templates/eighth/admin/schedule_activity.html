@@ -11,8 +11,8 @@
     <script src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
     <script>
-        window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
-        window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
+        window.all_sponsors = _.values(JSON.parse("{{ sponsors_json }}"));
+        window.all_rooms_lookup = JSON.parse("{{ rooms_json }}");
         window.all_rooms = _.values(all_rooms_lookup);
         window.activitySticky = {{ activity.sticky | yesno:"true,false" }};
     </script>
@@ -20,21 +20,21 @@
     <script>
     $(function() {
         $(".schedule-form").areYouSure();
-        $("a#schedule-activity").click(function() {
+        $("a#schedule-activity").on("click", function() {
             var v = $("#activity-select").val();
             if(v && v.length > 0) {
                 location.href = '?activity=' + v;
             }
         });
 
-        $("a#edit-activity").click(function() {
+        $("a#edit-activity").on("click", function() {
             var v = $("#activity-select").val();
             if(v && v.length > 0) {
                 location.href = '/eighth/admin/activities/edit/' + v;
             }
         });
 
-        $(".unschedule-link").click(function() {
+        $(".unschedule-link").on("click", function() {
             var cbox = $('span.unschedule', $(this).parent().parent());
             cbox.toggle();
             $(this).hide();
@@ -56,7 +56,7 @@
         var sact = $(".schedule-activity-buttons");
         $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: sact.offset().top + sact.height() });
         $("#admin_comments_modal").fadeOut();
-        $("#admin_comments_badge").click(function(){
+        $("#admin_comments_badge").on("click", function(){
             $("#admin_comments_modal").slideToggle();
         });
     });

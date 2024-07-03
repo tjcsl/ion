@@ -25,7 +25,7 @@ $(document).ready(function() {
             var content = $(this).find(".announcement-content");
             if(content.height() > 200) {
                 $(this).addClass("partially-hidden");
-                content.click(function() {
+                content.on("click", function() {
                     announcementToggle.call($(this).closest(".announcement"));
                 });
             }
@@ -35,7 +35,7 @@ $(document).ready(function() {
         });
     }
     updatePartiallyHidden();
-    $(window).resize(function() {setTimeout(updatePartiallyHidden, 0);});
+    $(window).on("resize", function() {setTimeout(updatePartiallyHidden, 0);});
 
     function announcementToggle() {
         var announcement = $(this).closest(".announcement");
@@ -101,18 +101,18 @@ $(document).ready(function() {
         }
     };
 
-    $(".announcement[data-id] h3").click(function(e) {
+    $(".announcement[data-id] h3").on("click", function(e) {
         if (e.target !== this) return;
         var btn = $(".announcement-toggle", $(this));
         announcementToggle.call(btn);
     });
 
-    $(".announcement[data-id] h3 .announcement-toggle").click(function(e) {
+    $(".announcement[data-id] h3 .announcement-toggle").on("click", function(e) {
         e.preventDefault();
         announcementToggle.call($(this));
     });
 
-    $(".announcement[data-id] h3 .dashboard-item-icon").click(function(e) {
+    $(".announcement[data-id] h3 .dashboard-item-icon").on("click", function(e) {
         e.preventDefault();
         var btn = $(".announcement-toggle", $(this).parent());
         announcementToggle.call(btn);

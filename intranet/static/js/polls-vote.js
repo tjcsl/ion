@@ -1,5 +1,5 @@
 $(function() {
-    $(".candidate-info-header, .rank-q-header, .expand-collapse-all").click(function() {
+    $(".candidate-info-header, .rank-q-header, .expand-collapse-all").on("click", function() {
         $(this).next().toggle("fast");
         $(this.children[1]).toggleClass("fa-angle-up fa-angle-down");
     });
@@ -9,7 +9,7 @@ $(function() {
         li.prop("checked", true).trigger("click");
     });
 
-    $(".expand-collapse-all").data("expanded", true).click(function() {
+    $(".expand-collapse-all").data("expanded", true).on("click", function() {
         var expanded = $(this).data("expanded");
         var elements = $(".candidate-info-header, .rank-q-header, .expand-collapse-all");
         if (expanded) {

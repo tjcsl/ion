@@ -23,7 +23,7 @@
     <script>
     $(function() {
         $("#user_select").selectize();
-        $("#select_all_checkbox").click(function(){
+        $("#select_all_checkbox").on("click", function(){
             if ($(this).is(":checked")) {
                 $(".privacy-options .parent input[type=checkbox]").each(function() {
                     $(this).prop("checked", true);
@@ -36,7 +36,7 @@
             }
         });
         $(".privacy-options .parent input[type=checkbox]").each(function() {
-            $(this).click(function() {
+            $(this).on("click", function() {
                 if($(".privacy-options .parent input[type=checkbox]").length == $(".privacy-options .parent input[type=checkbox]:checked").length) {
                     $("#select_all_checkbox").prop("checked", true);
                 }

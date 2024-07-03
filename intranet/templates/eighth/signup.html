@@ -47,7 +47,7 @@
     <script>
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
-            jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
+            jsonData = JSON.parse("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
 
             data = _.values(jsonData);
 
@@ -82,11 +82,11 @@
     <script>
     {% if request.GET.activity %}
         $(function() {
-                $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+                $("li[data-activity-id='{{ request.GET.activity|escape }}']").trigger("click");
         })
     {% elif active_block_current_signup %}
         $(function() {
-                $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
+                $("li[data-activity-id='{{ active_block_current_signup|escape }}']").trigger("click");
         })
     {% endif %}
     {% if not real_user.is_eighth_admin %}

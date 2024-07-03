@@ -10,11 +10,11 @@ $(function() {
         $username.focus();
     }
 
-    $('.login-warning').click(function (e) {
+    $('.login-warning').on("click", function (e) {
         $(this).toggleClass('collapsed');
     });
 
-    $(".sidebar-trigger").click(function() {
+    $(".sidebar-trigger").on("click", function() {
         if($(".sidebar").hasClass("has-events")){
             if($(this).css("left") !== "5px") {
                 $(this).html("<i class=\"far fa-fw fa-calendar-alt\"></i>");
@@ -43,15 +43,15 @@ $(function() {
         }
     });
 
-    $(".logo").click(function() {
+    $(".logo").on("click", function() {
         location.href = (window.osearch ? "/?" + window.osearch.substring(0, window.osearch.length - 1) : "/");
     });
 
-    $(".git-version").click(function(e) {
+    $(".git-version").on("click", function(e) {
         location.href = $(this).attr("data-github-url");
     });
 
-    $("input[type=submit]").click(function(e) {
+    $("input[type=submit]").on("click", function(e) {
         if (typeof runEgg === 'function' && runEgg($("#id_username").val())) {
             e.preventDefault();
             return;
@@ -62,7 +62,7 @@ $(function() {
         }
 
         document.forms["auth_form"].submit();
-        $(this).addClass("load-spinner").val("  ").prop("disabled", "disabled");
+        $(this).addClass("load-spinner").val("  ").prop("disabled", true);
         var spinner = new Spinner(spinnerOptions).spin(document.querySelector(".spinner-container"));
     });
 

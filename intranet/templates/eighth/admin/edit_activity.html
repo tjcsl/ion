@@ -8,19 +8,19 @@
     <script>
     $(function() {
         addGroup = function() {
-            $("#submit_button").attr("name", "add_group").click();
+            $("#submit_button").attr("name", "add_group").trigger("click");
         }
 
         $("[name='edit_form']").areYouSure();
 
-        $("a#edit-activity").click(function() {
+        $("a#edit-activity").on("click", function() {
             var v = $("#activity-select").val();
             if(v && v.length > 0) {
                 location.href = './' + v;
             }
         });
 
-        $("a#schedule-activity").click(function() {
+        $("a#schedule-activity").on("click", function() {
             var v = $("#activity-select").val();
             if(v && v.length > 0) {
                 location.href = '/eighth/admin/scheduling/schedule?activity=' + v;

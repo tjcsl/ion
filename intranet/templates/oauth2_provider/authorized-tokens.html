@@ -104,20 +104,20 @@
                 $(".enable-disable-dev-mode").text("Disable developer mode");
             }
 
-            $(".token-info").click(function() {
+            $(".token-info").on("click", function() {
                 $(this).parent().find(".ul-token-info").slideToggle("fast");
             });
 
-            $(".application-info").click(function() {
+            $(".application-info").on("click", function() {
                 $(this).parent().find(".ul-application-info").slideToggle("fast");
             });
 
-            $("#expand-collapse-all").click(function() {
+            $("#expand-collapse-all").on("click", function() {
                 $('.ul-token-info, .ul-application-info').slideToggle("fast");
                 $(this).toggleClass("fa-plus fa-minus");
             });
 
-            $(".enable-disable-dev-mode").click(function() {
+            $(".enable-disable-dev-mode").on("click", function() {
                 if(document.cookie.includes("oauth-tokens-enable-developer-info")) {
                     document.cookie = "oauth-tokens-enable-developer-info=false; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
                 }
@@ -126,7 +126,7 @@
                 }
             });
 
-            $(".application-name").click(function() {
+            $(".application-name").on("click", function() {
                 let link = $(this).attr("href");
                 if(link != undefined && link != "" && !$(this).hasClass("is-sanctioned")) {
                     let open = confirm("External Link Notice\nThis will open the application (" + link + ") in a new tab. This application is not sanctioned by Ion. Are you sure you want to continue?");
@@ -154,7 +154,7 @@
                 }
             });
 
-            $(".eye").click(function() {
+            $(".eye").on("click", function() {
                 $(this).parent().find(".mono").toggleClass("blur");
                 $(this).toggleClass("fa-eye fa-eye-slash");
             });

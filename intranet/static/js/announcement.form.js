@@ -17,7 +17,7 @@ $(function() {
         maxItems: 2
     });
 
-    $("form#announcement_form").bind("submit", function (e) {
+    $("form#announcement_form").on("submit", function (e) {
         if($("#id_notify_email_all").prop("checked")) {
             if(!confirm("This will send an email to ALL users who can see this post. If you have not selected a group, this will email the entire school. Are you sure you want to do this?")) {
                 e.preventDefault();
@@ -32,7 +32,7 @@ $(function() {
         }
 
         var button = $("button#submit_announcement");
-        button.click(function(ev) { ev.preventDefault(); })
+        button.on("click", function(ev) { ev.preventDefault(); })
         button.append(" <i class=\"fas fa-spinner fa-spin\" aria-hidden=\"true\"></i>");
 
         if ($("input#id_title").val() === "") {

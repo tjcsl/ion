@@ -9,7 +9,7 @@ $(function() {
             return cssRight ? (cssRight.split(/[^\-\d]+/)[0] < 0) : false;
         }
 
-        $("#activity-list li[data-activity-id]").click(function() {
+        $("#activity-list li[data-activity-id]").on("click", function() {
             if (is_small()) {
                 $("#activity-picker").addClass("visible");
 
@@ -19,14 +19,14 @@ $(function() {
             }
         })
 
-        $("#activity-picker .backbtn").click(function() {
+        $("#activity-picker .backbtn").on("click", function() {
             $("#activity-picker").removeClass("visible");
             $("#activity-picker .backbtn").removeClass("visible");
             $("#activity-list li[data-activity-id]").removeClass("selected");
         })
 
         if (!window.eighthSwitchEvent) {
-            $(".middle .switch").click(function() {
+            $(".middle .switch").on("click", function() {
                 console.debug("Block switch toggle");
                 $(".primary-content").toggleClass("viewing");
                 activityPickerResize();
@@ -41,7 +41,7 @@ $(function() {
         if (width <= 500 && height <= 745 && !window.isDefaultPage && !window.switchRun) {
             setTimeout(function() {
                 if (!window.switchRun) {
-                    $(".eighth-signup .switch").click();
+                    $(".eighth-signup .switch").trigger("click");
                 }
 
                 window.switchRun = true;

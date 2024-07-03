@@ -22,12 +22,12 @@ function toggleNavbar() {
 
 $(function() {
     /* left menu nav icon */
-    $(".left > .dropdown-taparea").click(toggleNavbar);
+    $(".left > .dropdown-taparea").on("click", toggleNavbar);
 
-    $(".nav-g").click(function() {
+    $(".nav-g").on("click", function() {
         $(this).fadeOut(200);
         if ($(this).hasClass("close-l")) {
-            $(".left > .dropdown-taparea").click();
+            $(".left > .dropdown-taparea").trigger("click");
         }
     });
 });

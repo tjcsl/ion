@@ -44,18 +44,18 @@ $(function() {
         }
     }
 
-    $(".event[data-id] h3").click(function(e) {
+    $(".event[data-id] h3").on("click", function(e) {
         if (e.target !== this) return;
         var btn = $(".event-toggle", $(this));
         eventToggle.call(btn);
     });
 
-    $(".event[data-id] h3 .event-toggle").click(function(e) {
+    $(".event[data-id] h3 .event-toggle").on("click", function(e) {
         e.preventDefault();
         eventToggle.call($(this));
     });
 
-    $(".event[data-id] h3 .dashboard-item-icon").click(function(e) {
+    $(".event[data-id] h3 .dashboard-item-icon").on("click", function(e) {
         e.preventDefault();
         var btn = $(".event-toggle", $(this).parent());
         eventToggle.call(btn);

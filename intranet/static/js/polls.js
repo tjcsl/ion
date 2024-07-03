@@ -58,9 +58,9 @@ $(function() {
         addInline(v);
     });
 
-    $("#import_from_csv").click(async function (e) {
+    $("#import_from_csv").on("click", async function (e) {
         e.preventDefault();
-        $("#csv_input").click();
+        $("#csv_input").trigger("click");
     });
 
     $("#csv_input").on("change", function (e) {
@@ -102,7 +102,7 @@ $(function() {
             let sleep = async () => { await new Promise(resolve => setTimeout(resolve, 0)); };
 
             for (let [position, choices] of Object.entries(map)) {
-                $("#add_question").click();
+                $("#add_question").trigger("click");
                 let question_element = $("#questions .question:last-child");
                 await sleep();
 
@@ -114,7 +114,7 @@ $(function() {
                 for (let choice of choices) {
                     let [name, platform, slogan] = choice;
 
-                    question_element.find(".add_choice").click();
+                    question_element.find(".add_choice").trigger("click");
                     await sleep();
 
                     let text_field = question_element.find(".choices .choice:last-child .info");
@@ -153,7 +153,7 @@ $(function() {
         return true;
     });
 
-    $("#add_question").click(function(e) {
+    $("#add_question").on("click", function(e) {
         e.preventDefault();
         var new_question = $(questionTemplate(default_question));
         new_question.appendTo("#questions").hide().slideDown("fast");

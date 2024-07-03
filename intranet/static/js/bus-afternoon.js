@@ -700,7 +700,7 @@ $(function() {
     });
 
     if(isAdmin) {
-        $(".bus-announcement-save").click(function() {
+        $(".bus-announcement-save").on("click", function() {
             bus.sendUpdate({
                 announcement: $(".bus-announcement").text()
             });
@@ -709,7 +709,7 @@ $(function() {
                 $(".bus-announcement-save").text("Save").css("color", "");
             }, 1500);
         });
-        $(".bus-announcement-clear").click(function() {
+        $(".bus-announcement-clear").on("click", function() {
             $(".bus-announcement").text("");
             bus.sendUpdate({
                 announcement: "",
@@ -734,7 +734,7 @@ $(function() {
     let socket = getSocket(base_url, location, document, window, 'afternoon');
 
     if (enableBusDriver) {
-        $(window).unload(function () {
+        $(window).on("unload", function () {
             alert('hello');
             alert(`You drove ${window.appView.mapView.busDriverBus.elapsedTime} milliseconds!`);
             Backbone.trigger('recordScore', e);

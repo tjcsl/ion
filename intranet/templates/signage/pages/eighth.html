@@ -195,7 +195,7 @@
     <script>
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
-            jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
+            jsonData = JSON.parse("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
             data = _.values(jsonData);
             if(data.length < 1) {
                 console.log("Empty dataset")
@@ -231,7 +231,7 @@
     {% if request.GET.activity %}
         <script>
         $(function() {
-                $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+                $("li[data-activity-id='{{ request.GET.activity|escape }}']").trigger("click");
         })
         </script>
     {% endif %}
