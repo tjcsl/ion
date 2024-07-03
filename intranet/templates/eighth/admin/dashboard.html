@@ -11,7 +11,9 @@
     {{ block.super }}
     <script>
         $(function() {
-            $("#{{ scroll_to_id }}").parent("td").each(function(){this.scrollIntoView()});
+            if ("{{ scroll_to_id }}" !== "") {
+                $("#{{ scroll_to_id }}").parent("td").each(function(){this.scrollIntoView()});
+            }
         });
     </script>
 {% endblock %}

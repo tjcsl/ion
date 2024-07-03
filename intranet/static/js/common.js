@@ -1,5 +1,6 @@
 /* Common JS */
 /* global $ */
+
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -17,7 +18,7 @@ $.ajaxSetup({
 // UI Stuff
 function initUIElementBehavior() {
     // Call this function whenever relevant UI elements are dynamically added to the page
-    $("button, .button, input[type='button'], input[type='submit'], input[type='reset']").mouseup(function() {
+    $("button, .button, input[type='button'], input[type='submit'], input[type='reset']").on("mouseup", function() {
         $(this).blur();
     });
 }
@@ -29,13 +30,13 @@ function showWaitScreen() {
 $(function() {
     initUIElementBehavior();
 
-    $(".nav a").click(function(event) {
+    $(".nav a").on("click", function(event) {
         if (event.metaKey) return;
         $(".nav .selected").removeClass("selected");
         $(this).parent().addClass("selected");
     });
 
-    $(".header h1").click(function() {
+    $(".header h1").on("click", function() {
         if (event.metaKey) return;
         $(".nav .selected").removeClass("selected");
         $(".nav li").slice(0, 1).addClass("selected");
@@ -43,11 +44,11 @@ $(function() {
 
     // On sortable tables, use the data-auto-sort parameter to
     // automatically sort by that field.
-    $("table[data-sortable] thead th[data-auto-sort]").click();
+    $("table[data-sortable] thead th[data-auto-sort]").trigger("click");
 
 
     let collapseWarning = $.cookie("collapseWarning") === "true";
-    $(".warning-title").click(function() {
+    $(".warning-title").on("click", function() {
         $(".warning-content").slideToggle();
         $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
         $.cookie("collapseWarning", !collapseWarning, {path: "/", expires: 14})
@@ -152,7 +153,7 @@ try {
         };
         return udlr
     })(window.creffettMode = function() {
-        $("body").addClass("fire").click(function() {
+        $("body").addClass("fire").on("click", function() {
             $("iframe#udlr").remove();
             $("body").removeClass('fire');
         });

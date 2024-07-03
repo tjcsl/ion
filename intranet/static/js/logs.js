@@ -10,11 +10,12 @@ function goToPage(pageNum) {
 }
 
 $(function() {
-    $(".raw-json-header, .iframe-container-header").click(function () {
+    $("tr.shade:even").css("background-color", "#e7e7e7");
+    $(".raw-json-header, .iframe-container-header").on("click", function () {
         $(this).next().slideToggle("fast");
         $(this.children[1]).toggleClass("fa-angle-up fa-angle-down");
     });
-    $(".pagination a").click(function () {
+    $(".pagination a").on("click", function () {
         goToPage($(this).attr("data-page"));
     });
     $(".pagination form").submit(function (e) {
