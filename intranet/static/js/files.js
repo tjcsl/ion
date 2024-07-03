@@ -38,7 +38,7 @@ $(function() {
                             });
                             var fd = new FormData();
                             fd.append("file", file);
-                            fd.append("csrfmiddlewaretoken", $.cookie("csrftoken"));
+                            fd.append("csrfmiddlewaretoken", Cookies.get("csrftoken"));
                             $.ajax({
                                 url: endpoint,
                                 type: "POST",
