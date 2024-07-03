@@ -10,7 +10,7 @@ $.ajaxSetup({
     crossDomain: false,
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type)) {
-            xhr.setRequestHeader("X-CSRFToken", $.cookie("csrftoken"));
+            xhr.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"));
         }
     }
 });
@@ -47,11 +47,11 @@ $(function() {
     $("table[data-sortable] thead th[data-auto-sort]").trigger("click");
 
 
-    let collapseWarning = $.cookie("collapseWarning") === "true";
+    let collapseWarning = Cookies.get("collapseWarning") === "true";
     $(".warning-title").on("click", function() {
         $(".warning-content").slideToggle();
         $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
-        $.cookie("collapseWarning", !collapseWarning, {path: "/", expires: 14})
+        Cookies.set("collapseWarning", !collapseWarning, {path: "/", expires: 14})
     });
     if(!collapseWarning) {
         $(".warning-content").show();
