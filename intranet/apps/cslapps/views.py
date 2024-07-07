@@ -26,7 +26,12 @@ def redirect_to_app(request):
                         return response
                     return redirect(app.url)
                 else:
-                    last_token = AccessToken.objects.filter(user=request.user, application=app.oauth_application).order_by("-expires").first()
+                    last_token = (
+                        AccessToken.objects.filter(user=request.user, application=app.oauth_application)
+                        .order_by("-expires")
+                        .values_list("token", "expires")
+                        .first()
+                    )
                     if last_token and last_token.is_valid():
                         return redirect(app.url)
                     return redirect(app.auth_url)
