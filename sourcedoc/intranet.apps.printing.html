@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #2364) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #2428) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -159,6 +159,8 @@
 <li><a class="reference internal" href="#module-intranet.apps.printing.urls">intranet.apps.printing.urls module</a></li>
 <li><a class="reference internal" href="#module-intranet.apps.printing.views">intranet.apps.printing.views module</a><ul>
 <li><a class="reference internal" href="#intranet.apps.printing.views.InvalidInputPrintingError"><code class="docutils literal notranslate"><span class="pre">InvalidInputPrintingError</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.RatelimitCacheError"><code class="docutils literal notranslate"><span class="pre">RatelimitCacheError</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.RatelimitExceededError"><code class="docutils literal notranslate"><span class="pre">RatelimitExceededError</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.check_page_range"><code class="docutils literal notranslate"><span class="pre">check_page_range()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.convert_file"><code class="docutils literal notranslate"><span class="pre">convert_file()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.convert_pdf"><code class="docutils literal notranslate"><span class="pre">convert_pdf()</span></code></a></li>
@@ -166,8 +168,10 @@
 <li><a class="reference internal" href="#intranet.apps.printing.views.get_mimetype"><code class="docutils literal notranslate"><span class="pre">get_mimetype()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.get_numpages"><code class="docutils literal notranslate"><span class="pre">get_numpages()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.get_printers"><code class="docutils literal notranslate"><span class="pre">get_printers()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.get_user_ratelimit_status"><code class="docutils literal notranslate"><span class="pre">get_user_ratelimit_status()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.html_to_pdf"><code class="docutils literal notranslate"><span class="pre">html_to_pdf()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.print_job"><code class="docutils literal notranslate"><span class="pre">print_job()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.set_user_ratelimit_status"><code class="docutils literal notranslate"><span class="pre">set_user_ratelimit_status()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-intranet.apps.printing">Module contents</a></li>
@@ -533,7 +537,22 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <dt class="sig sig-object py" id="intranet.apps.printing.views.InvalidInputPrintingError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">InvalidInputPrintingError</span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#InvalidInputPrintingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.InvalidInputPrintingError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>An error occurred while printing, but it was due to invalid input from the user and is not worthy of a <code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code> log message.</p>
+<p>An error occurred while printing, but it was due to invalid input from the user and is not worthy of a
+<code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code> log message.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="intranet.apps.printing.views.RatelimitCacheError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">RatelimitCacheError</span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#RatelimitCacheError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.RatelimitCacheError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>An error occurred while accessing the cache to rate limit a user</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="intranet.apps.printing.views.RatelimitExceededError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">RatelimitExceededError</span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#RatelimitExceededError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.RatelimitExceededError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>An error occurred because the user exceeded the printing rate limit</p>
 </dd></dl>
 
 <dl class="py function">
@@ -605,6 +624,11 @@ Otherwise, this returns an empty dictionary.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="intranet.apps.printing.views.get_user_ratelimit_status">
+<span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">get_user_ratelimit_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#get_user_ratelimit_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.get_user_ratelimit_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="intranet.apps.printing.views.html_to_pdf">
 <span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">html_to_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#html_to_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.html_to_pdf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -612,6 +636,11 @@ Otherwise, this returns an empty dictionary.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="intranet.apps.printing.views.print_job">
 <span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">print_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#intranet.apps.printing.models.PrintJob" title="intranet.apps.printing.models.PrintJob"><span class="pre">PrintJob</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_print</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#print_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.print_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="intranet.apps.printing.views.set_user_ratelimit_status">
+<span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">set_user_ratelimit_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#set_user_ratelimit_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.set_user_ratelimit_status" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>

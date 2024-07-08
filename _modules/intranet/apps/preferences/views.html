@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #2364) documentation</title>
+    <title>intranet.apps.preferences.views &#8212; TJ Intranet v3 (Build #2428) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -166,7 +166,7 @@
     <span class="c1">#     personal_info[&quot;phone_{}&quot;.format(i)] = user.phones.all()[i]</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_emails</span><span class="p">):</span>
-        <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">personal_info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;email_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="c1"># for i in range(num_websites):</span>
     <span class="c1">#     personal_info[&quot;website_{}&quot;.format(i)] = user.websites.all()[i]</span>
@@ -258,7 +258,7 @@
     <span class="k">for</span> <span class="n">ptype</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
-                <span class="n">privacy_options</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">ptype</span><span class="p">)]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
+                <span class="n">privacy_options</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">privacy_options</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
 
@@ -294,7 +294,7 @@
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
                             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You cannot override the parent field.&quot;</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Unable to set field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">))</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Unable to set field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> with value </span><span class="si">{</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unable to set field </span><span class="si">%s</span><span class="s2"> with value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
@@ -379,7 +379,7 @@
                                 <span class="p">),</span>
                             <span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Cleared field </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">))</span>
+                            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Cleared field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                         <span class="k">pass</span>
     <span class="k">return</span> <span class="n">bus_route_form</span></div>

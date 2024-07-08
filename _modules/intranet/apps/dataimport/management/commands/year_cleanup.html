@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #2364) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.year_cleanup &#8212; TJ Intranet v3 (Build #2428) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
@@ -147,7 +147,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> [Yy]: &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">q</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2"> [Yy]: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
@@ -181,7 +181,7 @@
 
         <span class="n">senior_grad_year</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;senior_grad_year&quot;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk</span><span class="p">(</span><span class="s2">&quot;senior_grad_year = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_senior_year</span><span class="p">),</span> <span class="n">senior_grad_year</span> <span class="o">==</span> <span class="n">new_senior_year</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;senior_grad_year = </span><span class="si">{</span><span class="n">new_senior_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">senior_grad_year</span> <span class="o">==</span> <span class="n">new_senior_year</span><span class="p">):</span>
             <span class="k">return</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        EIGHTH:</span>
@@ -214,7 +214,7 @@
 
 <div class="viewcode-block" id="Command.clear_absences"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.year_cleanup.Command.clear_absences">[docs]</a>    <span class="k">def</span> <span class="nf">clear_absences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">absents</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">was_absent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> absent eighth signups&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">absents</span><span class="o">.</span><span class="n">count</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">absents</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="si">}</span><span class="s2"> absent eighth signups&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">absents</span><span class="p">:</span>
             <span class="n">a</span><span class="o">.</span><span class="n">archive_remove_absence</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Archived absences&quot;</span><span class="p">)</span></div>
@@ -234,7 +234,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">usr</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;alum&quot;</span>
                 <span class="n">usr</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;User </span><span class="si">{}</span><span class="s2"> KEEP&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">usr</span><span class="o">.</span><span class="n">username</span><span class="p">))</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">usr</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> KEEP&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>

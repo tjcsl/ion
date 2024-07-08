@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps package &#8212; TJ Intranet v3 (Build #2364) documentation</title>
+    <title>intranet.apps package &#8212; TJ Intranet v3 (Build #2428) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -3430,6 +3430,8 @@
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.printing.html#module-intranet.apps.printing.urls">intranet.apps.printing.urls module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.printing.html#module-intranet.apps.printing.views">intranet.apps.printing.views module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.InvalidInputPrintingError"><code class="docutils literal notranslate"><span class="pre">InvalidInputPrintingError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.RatelimitCacheError"><code class="docutils literal notranslate"><span class="pre">RatelimitCacheError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.RatelimitExceededError"><code class="docutils literal notranslate"><span class="pre">RatelimitExceededError</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.check_page_range"><code class="docutils literal notranslate"><span class="pre">check_page_range()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.convert_file"><code class="docutils literal notranslate"><span class="pre">convert_file()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.convert_pdf"><code class="docutils literal notranslate"><span class="pre">convert_pdf()</span></code></a></li>
@@ -3437,8 +3439,10 @@
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.get_mimetype"><code class="docutils literal notranslate"><span class="pre">get_mimetype()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.get_numpages"><code class="docutils literal notranslate"><span class="pre">get_numpages()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.get_printers"><code class="docutils literal notranslate"><span class="pre">get_printers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.get_user_ratelimit_status"><code class="docutils literal notranslate"><span class="pre">get_user_ratelimit_status()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.html_to_pdf"><code class="docutils literal notranslate"><span class="pre">html_to_pdf()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.print_job"><code class="docutils literal notranslate"><span class="pre">print_job()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.printing.html#intranet.apps.printing.views.set_user_ratelimit_status"><code class="docutils literal notranslate"><span class="pre">set_user_ratelimit_status()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="intranet.apps.printing.html#module-intranet.apps.printing">Module contents</a></li>
@@ -4267,7 +4271,6 @@
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.groups"><code class="docutils literal notranslate"><span class="pre">User.groups</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.handle_delete"><code class="docutils literal notranslate"><span class="pre">User.handle_delete()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.has_admin_permission"><code class="docutils literal notranslate"><span class="pre">User.has_admin_permission()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.has_print_permission"><code class="docutils literal notranslate"><span class="pre">User.has_print_permission</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.has_senior"><code class="docutils literal notranslate"><span class="pre">User.has_senior</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.has_unvoted_polls"><code class="docutils literal notranslate"><span class="pre">User.has_unvoted_polls()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.id"><code class="docutils literal notranslate"><span class="pre">User.id</span></code></a></li>
@@ -4289,6 +4292,7 @@
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_male"><code class="docutils literal notranslate"><span class="pre">User.is_male</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_nonbinary"><code class="docutils literal notranslate"><span class="pre">User.is_nonbinary</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_parking_admin"><code class="docutils literal notranslate"><span class="pre">User.is_parking_admin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_printing_admin"><code class="docutils literal notranslate"><span class="pre">User.is_printing_admin</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_restricted"><code class="docutils literal notranslate"><span class="pre">User.is_restricted</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_schedule_admin"><code class="docutils literal notranslate"><span class="pre">User.is_schedule_admin</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.users.html#intranet.apps.users.models.User.is_senior"><code class="docutils literal notranslate"><span class="pre">User.is_senior</span></code></a></li>
