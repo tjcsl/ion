@@ -12,8 +12,6 @@ from wsgiref.util import FileWrapper
 import pysftp
 from Crypto import Random
 from Crypto.Cipher import AES
-from paramiko import SFTPError, SSHException
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -22,6 +20,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.text import slugify
 from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
+from paramiko import SFTPError, SSHException
 
 from ..auth.decorators import deny_restricted
 from .forms import UploadFileForm

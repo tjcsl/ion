@@ -4,8 +4,6 @@ import logging
 from collections import OrderedDict
 
 import pyrankvote
-from pyrankvote import Ballot
-
 from django import http
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -15,6 +13,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from pyrankvote import Ballot
 
 from ...utils.date import get_senior_graduation_year
 from ...utils.html import safe_html

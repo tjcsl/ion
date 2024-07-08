@@ -6,7 +6,6 @@ from datetime import timedelta
 from typing import Container, Tuple
 
 from dateutil.relativedelta import relativedelta
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
@@ -29,6 +28,7 @@ from ..eighth.models import EighthBlock
 from ..events.models import Event
 from ..schedule.views import schedule_context
 from ..sessionmgmt.helpers import trust_session
+
 # Load these so the Prometheus metrics get added
 from . import backends, signals  # pylint: disable=unused-import # noqa F401
 from .forms import AuthenticateForm

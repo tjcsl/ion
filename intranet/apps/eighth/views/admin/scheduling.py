@@ -1,8 +1,6 @@
 import logging
 
 from cacheops import invalidate_obj
-from formtools.wizard.views import SessionWizardView
-
 from django.contrib import messages
 from django.core.management import call_command
 from django.db import transaction
@@ -11,6 +9,7 @@ from django.db.models.manager import Manager
 from django.forms.formsets import formset_factory
 from django.http import Http404
 from django.shortcuts import redirect, render
+from formtools.wizard.views import SessionWizardView
 
 from .....utils.locking import lock_on
 from .....utils.serialization import safe_json

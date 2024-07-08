@@ -2,8 +2,6 @@ import datetime
 import logging
 import time
 
-from prometheus_client import Summary
-
 from django import http
 from django.conf import settings
 from django.contrib import messages
@@ -13,6 +11,7 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from prometheus_client import Summary
 
 from ....utils.date import get_date_range_this_year
 from ....utils.helpers import is_entirely_digit
