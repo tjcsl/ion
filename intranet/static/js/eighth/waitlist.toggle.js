@@ -1,8 +1,8 @@
 $(function() {
-    $("#toggle-waitlist").click(function(e) {
+    $("#toggle-waitlist").on("click", function(e) {
         e.preventDefault();
         var target = $( e.target );
-        target.attr("disabled", true);
+        target.prop("disabled", true);
 
         if(confirm(target.attr("title") + "?")) {
             $.ajax(toggle_waitlist_endpoint, {

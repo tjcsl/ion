@@ -38,7 +38,7 @@
     <script>
         window.loadModels = function() {
             window.activityModels = new eighth.ActivityList();
-            jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
+            jsonData = JSON.parse("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
 
             data = _.values(jsonData);
 
@@ -73,7 +73,7 @@
         var height = $(window).height();
         if(width <= 500 && height <= 745) {
             setTimeout(function() {
-                $(".eighth-signup .switch").click();
+                $(".eighth-signup .switch").trigger("click");
             }, 450);
         }
     });
