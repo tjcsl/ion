@@ -3,6 +3,8 @@ import { getSocket } from "./bus-shared.js";
 /* globals Messenger */
 var bus = {};
 
+enableBusDriver = false;
+
 $(function() {
     let base_url = window.location.host;
 
@@ -208,12 +210,11 @@ $(function() {
                     this.arriveBus();
                     break;
                 case 'vroom':
-                    if (enableBusDriver) {
-                        this.vroom();
-                        break;
-                    }
+                    enableBusDriver = true;
+                    this.vroom();
+                    break;
                 case 'stop-bus':
-                    window.location = window.location;
+                    window.location.reload();
                 default:
                     break;
             }
@@ -241,39 +242,39 @@ $(function() {
             this.render();
         },
         vroom: function () {
-            this.busDriver = true;
+            $('svg').hide();
+            document.getElementById('busgame').contentDocument.location.reload(true);
+            setTimeout(() => {
+                $('iframe').show();
+            }, 100);
             this.icon = 'fas fa-arrow-left';
             this.text = 'Run out of gas?';
             this.action = 'stop-bus';
-            Messenger().post('Use the arrow keys or WASD to drive!');
             this.render();
-            Backbone.trigger('vroom-vroom', this.selected);
         },
         handleEmptySpace: function (space) {
-            if (!isAdmin && enableBusDriver) {
-                this.icon = 'fas fa-bus';
-                this.text = 'skrt skrt';
-                this.action = 'vroom';
+            if (isAdmin) {
+                this.icon = 'fas fa-plus-square';
+                this.text = '&nbsp;&nbsp;&nbsp;Assign a bus to this space';
+                this.selected = space;
+                this.action = 'Assign a bus to this space';
+              return this.render();
+            } else {
+                if (window.innerWidth > 768) { // Disable bus game on mobile
+                    this.icon = 'fas fa-bus';
+                    this.text = 'skrt skrt';
+                    this.action = 'vroom';
+                }
                 this.selected = space;
                 return this.render();
             }
-            this.icon = 'fas fa-plus-square';
-            this.text = '&nbsp;&nbsp;&nbsp;Assign a bus to this space';
-            this.action = 'Assign a bus to this space';
-            this.selected = space;
-            return this.render();
         },
         handleFilledSpace: function (space) {
-            if (!isAdmin && enableBusDriver) {
-                this.icon = 'fas fa-bus';
-                this.text = 'skrt skrt';
-                this.action = 'vroom';
-                this.selected = space;
-                return this.render();
+            if (isAdmin) {
+                this.icon = 'fas fa-minus-square';
+                this.text = '&nbsp;&nbsp;&nbsp;Unassign bus from this space'
+                this.action = 'Unassign bus from this space';
             }
-            this.icon = 'fas fa-minus-square';
-            this.text = '&nbsp;&nbsp;&nbsp;Unassign bus from this space'
-            this.action = 'Unassign bus from this space';
             this.selected = space;
             this.render();
         },
@@ -314,8 +315,6 @@ $(function() {
 
             Backbone.on('searchForBus', this.selectBus, this);
             Backbone.on('deselectBus', this.deselectBus, this);
-            Backbone.on('driveBus', this.driveBus, this);
-            Backbone.on('slowBus', this.slowBus, this);
             if (enableBusDriver) {
                 Backbone.on('vroom-vroom', this.vroom, this);
             }
@@ -328,7 +327,6 @@ $(function() {
 
         render: function () {
             if (enableBusDriver && this.busDriver) {
-
                 return this;
             }
             var container = this.$el,
@@ -467,134 +465,6 @@ $(function() {
                 this.userRoute = bus.route_name;
             }
         },
-
-        vroom: function () {
-            // Initializes busdriver
-            //console.log('Hi');
-            if (enableBusDriver) {
-                this.busDriver = true;
-                $('svg').hide();
-                mapboxgl.accessToken = 'pk.eyJ1IjoibmFpdGlhbnoiLCJhIjoiY2pmY3p0cWQwMzZncjJ5bXpidDAybGw2aCJ9.-cGh2TszqtE9hxum3qM9Dw';
-                this.mapbox = new mapboxgl.Map({
-                    container: 'map',
-                    style: 'mapbox://styles/mapbox/satellite-v9',
-                    zoom: 18.5,
-                    bearing: -49,
-                    center: [-77.16772, 38.81932]
-                });
-                this.mapbox.keyboard.disable();
-                this.mapbox.dragPan.disable();
-                this.mapbox.scrollZoom.disable();
-                this.mapbox.on('load', function () {
-                    // Callback hell, my old friend.
-                    this.busDriverBus = {
-                        'speed': 0, // km/hr
-                        'direction': Math.PI / 16, // radians
-                        'acceleration': 0,
-                        'point': {
-                            'type': 'Point',
-                            'coordinates': [-77.16772, 38.81932]
-                        },
-                        'lastFrame': null,
-                        'elapsedTime': 0,
-                        'pressed': false
-                    };
-                    this.busDriverEl = $('.busdriver-bus#bd-bus');
-                    this.busDriverEl.addClass('vroom');
-                    requestAnimationFrame(this.animateBus.bind(this));
-                }.bind(this));
-                // this.render();
-            }
-        },
-
-        driveBus: function (e) {
-            if (!this.busDriverBus) {
-                return;
-            }
-            if (e.keyCode === 37 || e.keyCode === 65) {
-                this.busDriverBus.direction -= this.busDriverBus.speed * Math.PI / 180;
-                this.busDriverBus.pressed = true;
-            }
-            if (e.keyCode === 39 || e.keyCode === 68) {
-                this.busDriverBus.direction += this.busDriverBus.speed * Math.PI / 180;
-                this.busDriverBus.pressed = true;
-            }
-            if (e.keyCode === 38 || e.keyCode === 87) {
-                this.busDriverBus.speed = Math.min(this.busDriverBus.speed + 1, 10);
-                this.busDriverBus.pressed = true;
-            }
-            if (e.keyCode === 40 || e.keyCode === 83) {
-                this.busDriverBus.speed = Math.max(this.busDriverBus.speed - 1, 0);
-            }
-        },
-
-        slowBus: function (e) {
-            if (!this.busDriverBus) {
-                return;
-            }
-            if (e.keyCode === 38 || e.keyCode === 87) {
-                this.busDriverBus.pressed = false;
-            }
-        },
-
-        animateBus: function (time) {
-            if (document.hidden || time - this.busDriver.lastFrame > 2000) {
-                this.busDriverBus.lastFrame = time;
-                return;
-            }
-            if (enableBusDriver) {
-                if (!this.busDriverBus.lastFrame) {
-                    this.busDriverBus.lastFrame = time;
-                }
-                // t should be ms
-                let t = (time - this.busDriverBus.lastFrame) / 1000; // Hack...
-                if (!this.busDriverBus.pressed) {
-                    this.busDriverBus.speed *= 0.993;
-                }
-                let speed = this.busDriverBus.speed;
-                let direction = this.busDriverBus.direction;
-                let point = this.busDriverBus.point;
-
-                // km/hr * hr/60min * min/60s * s/1000ms = km/ms
-                // mapbox does angles where pointing up is 0˚ and it increases clockwise
-                // equatorial radius of Earth = 6,378.1370 km
-                // polar radius of Earth = 6,356.7523 km
-
-                    // length of 1 deg equatorial longitude
-                let deg_lng_eq = 6378.1370 * 2 * Math.PI / 360;
-                // length of 1 deg equatorial latitude
-                let deg_lat_eq = 6356.7523 * 2 * Math.PI / 360;
-
-                let x = speed * t * Math.sin(direction) / (60 * 60 * 1000);
-                let y = speed * t * Math.cos(direction) / (60 * 60 * 1000);
-                let old_lat = point.coordinates[1];
-                let old_lng = point.coordinates[0];
-                let rad_lat = old_lat * Math.PI / 180;
-                point.coordinates[0] += deg_lng_eq * Math.cos(rad_lat) * x; // longitude
-                point.coordinates[1] += deg_lat_eq * y; // latitude
-                /*if (Math.abs(x) !== 0 && Math.abs(y) !== 0) {
-                    console.log('------------------------------------');
-                    console.log('∆x', x);
-                    console.log('∆y', y);
-                    console.log('∆t', t);
-                    console.log('∆lng', 111.320 * Math.cos(rad_lat) * x);
-                    console.log('∆lat', 110.574 * y);
-                    console.log('oldlat', old_lat);
-                    console.log('oldlng', old_lng);
-                    console.log('newlat', point.coordinates[1]);
-                    console.log('newlng', point.coordinates[0]);
-                    console.log('bdb', this.busDriverBus);
-                }*/
-                let degrees = (direction) * (180 / Math.PI) - 49 + 90;
-                // let degrees = (direction) * (180 / Math.PI);
-                this.busDriverEl.css({'transform' : 'rotate('+ degrees +'deg)'});
-                this.mapbox.setCenter(this.busDriverBus.point.coordinates);
-
-                this.busDriverBus.lastFrame = time;
-                this.busDriverBus.elapsedTime += t;
-                window.requestAnimationFrame(this.animateBus.bind(this));
-            }
-        }
     });
 
     bus.RouteView = Backbone.View.extend({
@@ -721,37 +591,6 @@ $(function() {
         });
     }
 
-    if (enableBusDriver) {
-        $('body').on('keydown', function (e) {
-            Backbone.trigger('driveBus', e);
-        });
-        $('body').on('keyup', function (e) {
-            Backbone.trigger('slowBus', e);
-        });
-    }
-
     window.appView = new bus.AppView();
     let socket = getSocket(base_url, location, document, window, 'afternoon');
-
-    if (enableBusDriver) {
-        $(window).unload(function () {
-            alert('hello');
-            alert(`You drove ${window.appView.mapView.busDriverBus.elapsedTime} milliseconds!`);
-            Backbone.trigger('recordScore', e);
-        });
-    }
-// window.personalStatusView = new bus.personalStatusView();
 });
-
-/*  TODO: flip bus map to be horizontal
-$(function() {
-    setTimeout(function() {
-        $("text").each(function(){
-            console.log($(this));
-            var pos = $(this).position();
-            console.log("transform ," + "rotate\(-90deg, " + pos.left + "px, " + pos.top + "px\)")
-            $(this).css("transform","rotate\(-90deg, " + pos.left + "px, " + pos.top + "px\)");
-        });
-    }, 1000);
-});
-*/
