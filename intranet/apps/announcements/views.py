@@ -15,8 +15,8 @@ from ..dashboard.views import dashboard_view
 from ..groups.models import Group
 from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm
 from .models import Announcement, AnnouncementRequest
-from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email, announcement_posted_twitter,
-                            request_announcement_email)
+from .notifications import (admin_request_announcement_email, announcement_approved_email, announcement_posted_email,
+                            announcement_posted_push_notification, announcement_posted_twitter, request_announcement_email)
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,7 @@ def announcement_posted_hook(request, obj):
     """
     if obj.notify_post:
         announcement_posted_twitter(request, obj)
+        announcement_posted_push_notification(obj)
         try:
             notify_all = obj.notify_email_all
         except AttributeError:

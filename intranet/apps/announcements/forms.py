@@ -12,7 +12,12 @@ class AnnouncementForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
 
-        self.fields["notify_post"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
+        self.fields["notify_post"].help_text = (
+            "If this box is checked, students who have signed up for email "
+            "notifications will receive an email "
+            "and those who have signed up for push notifications will receive a "
+            "push notification."
+        )
 
         self.fields["notify_email_all"].help_text = (
             "This will send an email notification to all of the users who can see this post. This option "
@@ -41,7 +46,12 @@ class AnnouncementEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
 
-        self.fields["notify_post_resend"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
+        self.fields["notify_post_resend"].help_text = (
+            "If this box is checked, students who have signed up for email "
+            "notifications will receive an email "
+            "and those who have signed up for push notifications will "
+            "receive a push notification."
+        )
 
         self.fields["notify_email_all_resend"].help_text = (
             "This will resend an email notification to all of the users who can see this post. This option "
@@ -105,7 +115,12 @@ class AnnouncementAdminForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["notify_post"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
+        self.fields["notify_post"].help_text = (
+            "If this box is checked, students who have signed up for email "
+            "notifications will receive an email "
+            "and those who have signed up for push notifications will receive a "
+            "push notification."
+        )
         self.fields["notify_email_all"].help_text = (
             "This will send an email notification to all of the users who can see this post. This option "
             "does NOT take users' email notification preferences into account, so please use with care."

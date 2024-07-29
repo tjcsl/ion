@@ -48,6 +48,7 @@ config/scripts/README.md
 config/scripts/create_activities.py
 config/scripts/create_blocks.py
 config/scripts/create_users.py
+config/scripts/create_vapid_keys.py
 config/vagrant/devconfig.json.sample
 config/vagrant/ion_env_setup.sh
 config/vagrant/provision_vagrant.sh
@@ -310,6 +311,7 @@ intranet/apps/eighth/forms/admin/sponsors.py
 intranet/apps/eighth/management/__init__.py
 intranet/apps/eighth/management/commands/__init__.py
 intranet/apps/eighth/management/commands/absence_email.py
+intranet/apps/eighth/management/commands/absence_notify.py
 intranet/apps/eighth/management/commands/delete_duplicate_signups.py
 intranet/apps/eighth/management/commands/dev_create_blocks.py
 intranet/apps/eighth/management/commands/dev_generate_signups.py
@@ -387,6 +389,7 @@ intranet/apps/eighth/migrations/0062_auto_20200116_1926.py
 intranet/apps/eighth/migrations/0063_auto_20201224_1745.py
 intranet/apps/eighth/migrations/0064_auto_20210205_1153.py
 intranet/apps/eighth/migrations/0065_auto_20220903_0038.py
+intranet/apps/eighth/migrations/0066_auto_20240725_1929.py
 intranet/apps/eighth/migrations/__init__.py
 intranet/apps/eighth/tests/__init__.py
 intranet/apps/eighth/tests/eighth_test.py
@@ -602,10 +605,15 @@ intranet/apps/nomination/migrations/0001_initial.py
 intranet/apps/nomination/migrations/0002_auto_20160929_2156.py
 intranet/apps/nomination/migrations/__init__.py
 intranet/apps/notifications/__init__.py
+intranet/apps/notifications/api.py
 intranet/apps/notifications/emails.py
+intranet/apps/notifications/forms.py
 intranet/apps/notifications/models.py
+intranet/apps/notifications/serializers.py
 intranet/apps/notifications/tasks.py
+intranet/apps/notifications/tests.py
 intranet/apps/notifications/urls.py
+intranet/apps/notifications/utils.py
 intranet/apps/notifications/views.py
 intranet/apps/notifications/migrations/0001_initial.py
 intranet/apps/notifications/migrations/0002_auto_20150729_1734.py
@@ -614,6 +622,11 @@ intranet/apps/notifications/migrations/0004_notificationconfig_android_gcm_optou
 intranet/apps/notifications/migrations/0005_auto_20151221_2008.py
 intranet/apps/notifications/migrations/0006_auto_20151221_2028.py
 intranet/apps/notifications/migrations/0007_auto_20151221_2259.py
+intranet/apps/notifications/migrations/0008_userpushnotificationpreferences.py
+intranet/apps/notifications/migrations/0009_userpushnotificationpreferences_is_subscribed.py
+intranet/apps/notifications/migrations/0010_remove_userpushnotificationpreferences_silent_notifications.py
+intranet/apps/notifications/migrations/0011_webpushnotification.py
+intranet/apps/notifications/migrations/0012_auto_20240730_1928.py
 intranet/apps/notifications/migrations/__init__.py
 intranet/apps/oauth/__init__.py
 intranet/apps/oauth/admin.py
@@ -647,6 +660,7 @@ intranet/apps/polls/__init__.py
 intranet/apps/polls/admin.py
 intranet/apps/polls/forms.py
 intranet/apps/polls/models.py
+intranet/apps/polls/notifications.py
 intranet/apps/polls/tests.py
 intranet/apps/polls/urls.py
 intranet/apps/polls/views.py
@@ -882,7 +896,6 @@ intranet/settings/secret.sample
 intranet/static/browserconfig.xml
 intranet/static/manifest.json
 intranet/static/robots.txt
-intranet/static/serviceworker.js
 intranet/static/teacher-guide.pdf
 intranet/static/css/_colors.scss
 intranet/static/css/_reset.scss
@@ -992,6 +1005,7 @@ intranet/static/img/favicon/favicon.ico
 intranet/static/img/favicon/favicon.svg
 intranet/static/img/favicon/mstile-150x150.png
 intranet/static/img/favicon/safari-pinned-tab.svg
+intranet/static/img/guides/add_to_home_screen_ios.png
 intranet/static/img/logos/Header-Logo.png
 intranet/static/img/logos/Header-Logo.svg
 intranet/static/img/logos/Header-Logo@2x.png
@@ -3472,6 +3486,11 @@ intranet/templates/lostfound/lostitem_form.html
 intranet/templates/monitoring/prometheus-metrics.txt
 intranet/templates/notifications/gcm_list.html
 intranet/templates/notifications/gcm_post.html
+intranet/templates/notifications/ios_notifications_guide.html
+intranet/templates/notifications/webpush_device_info.html
+intranet/templates/notifications/webpush_list.html
+intranet/templates/notifications/webpush_post.html
+intranet/templates/notifications/js/serviceworker.js
 intranet/templates/oauth2_provider/application_confirm_delete.html
 intranet/templates/oauth2_provider/application_detail.html
 intranet/templates/oauth2_provider/application_form.html
