@@ -14,7 +14,6 @@ urlpatterns = [
     re_path(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon/favicon.ico"), name="favicon"),
     re_path(r"^robots\.txt$", RedirectView.as_view(url="/static/robots.txt"), name="robots"),
     re_path(r"^manifest\.json$", RedirectView.as_view(url="/static/manifest.json"), name="chrome_manifest"),
-    re_path(r"^serviceworker\.js$", RedirectView.as_view(url="/static/serviceworker.js"), name="chrome_serviceworker"),
     re_path(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     re_path(r"^", include("intranet.apps.auth.urls")),
     re_path(r"^announcements", include("intranet.apps.announcements.urls")),
@@ -65,6 +64,11 @@ urlpatterns = [
         r"^docs/add-to-home-screen-android$",
         TemplateView.as_view(template_name="docs/add-to-home-screen-android.html", content_type="text/html"),
         name="docs_add_to_home_screen_android",
+    ),
+    re_path(
+        r"^serviceworker\.js$",
+        TemplateView.as_view(template_name="notifications/js/serviceworker.js", content_type="application/javascript"),
+        name="serviceworker",
     ),
 ]
 

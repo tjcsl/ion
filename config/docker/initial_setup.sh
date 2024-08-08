@@ -49,3 +49,6 @@ python3 -u manage.py import_sports $(date +%m)
 
 echo -e "${BLUE}${BOLD}Creating CSL apps...${CLEAR}"
 python3 -u manage.py dev_create_cslapps
+
+echo -e "${BLUE}${BOLD}Generating vapid keys...${CLEAR}"
+python3 create_vapid_keys.py
