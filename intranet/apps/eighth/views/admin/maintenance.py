@@ -4,6 +4,8 @@ from io import StringIO
 from django.core.management import call_command
 from django.shortcuts import render
 
+from intranet.utils.date import get_senior_graduation_year
+
 from ....auth.decorators import eighth_admin_required, reauthentication_required
 
 logger = logging.getLogger(__name__)
@@ -19,7 +21,11 @@ def index_view(request):
 @eighth_admin_required
 @reauthentication_required
 def start_of_year_view(request):
-    context = {"admin_page_title": "Start of Year Operations", "completed": False}
+    context = {
+        "admin_page_title": "Start of Year Operations",
+        "completed": False,
+        "senior_graduation_year": get_senior_graduation_year(),
+    }
     if request.method == "POST" and request.POST.get("confirm"):
         try:
             content = StringIO()
