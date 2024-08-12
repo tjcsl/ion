@@ -192,11 +192,14 @@ jobs:
           echo "PGPASSFILE=$PGPASSFILE" >> $GITHUB_ENV
           echo 127.0.0.1:5432:postgres:postgres:postgres >$PGPASSFILE
           chmod 600 $PGPASSFILE
+
       - name: Create database
         run: psql -U postgres -h 127.0.0.1 -c 'create database ion'
 
       - name: install Kerberos
-        run: sudo apt install -y krb5-user
+        run: |
+          sudo apt update
+          sudo apt install -y krb5-user
 
       # Tests
       - name: Run tests (Fork)
