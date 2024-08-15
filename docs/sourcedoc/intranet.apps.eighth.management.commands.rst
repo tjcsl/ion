@@ -12,6 +12,14 @@ intranet.apps.eighth.management.commands.absence\_email module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.management.commands.absence\_notify module
+---------------------------------------------------------------
+
+.. automodule:: intranet.apps.eighth.management.commands.absence_notify
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.eighth.management.commands.delete\_duplicate\_signups module
 --------------------------------------------------------------------------
 

@@ -1,81 +1,89 @@
-var self = this;
 
-self.addEventListener('push', function(event) {
-    console.log('Received a push message', event);
+async function getSilentPreference() {
+    return new Promise((resolve, reject) => {
+        const dbRequest = indexedDB.open("notificationPreferences", 1);
 
-    var data = {};
-    if (event.data) {
-        data = event.data.json();
-        console.debug(data);
-        showNotif(event, data)
-    } else {
-        var evt = event;
-        console.debug("Fetching data text...")
-        fetch("/notifications/chrome/getdata", {
-            credentials: 'include'
-        }).then(function(r) {
-            console.debug(r);
-            return r.json();
-        }).then(function(j) {
-            console.debug(j);
-            if (j == null) return;
-            showNotif(evt, j);
-        });
-    }
+        dbRequest.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            db.createObjectStore("preferences", { keyPath: "id" });
+        };
 
+        dbRequest.onsuccess = function(event) {
+            const db = event.target.result;
+            const transaction = db.transaction(["preferences"], "readonly");
+            const store = transaction.objectStore("preferences");
+            const request = store.get("silentNotification");
 
-    showNotif = function(event, data) {
-        //replace with message data fetched from Ion API/DB based on logged in user's UID
-        var title = data.title || "Intranet Notification";
-        var body = data.text || "Click here to view."
-        var icon = '/static/img/logos/touch/touch-icon192.png';
-        var tag = data.url ? "url=" + data.url : (data.tag || 'ion-notification');
+            request.onsuccess = function() {
+                if (request.result && request.result.silent) {
+                    resolve(request.result.silent);
+                } else {
+                    resolve(false);
+                }
+            };
 
-        self.registration.showNotification(title, {
-            body: body,
-            icon: icon,
-            tag: tag
-        });
-    }
+            request.onerror = function() {
+                resolve(false);
+            };
+        };
 
+        dbRequest.onerror = function() {
+            resolve(false);
+        };
+    });
+}
+
+self.addEventListener("push", function(event) {
+    const data = event.data.json();
+    let options = {
+        body: data.body,
+        icon: data.icon,
+        badge: data.badge,
+        data: {
+            url: data.data.url
+        },
+    };
+
+    getSilentPreference().then(function (silent) {
+        options["silent"] = silent;
+        self.registration.showNotification(data.title, options).then((r) => {});
+    })
 });
 
-self.addEventListener('notificationclick', function(event) {
-    var tag = event.notification.tag;
-    console.log('Notification click: ', tag);
+// Immediately replace any old service worker(s)
+self.addEventListener("install", function (event) {
+  self.skipWaiting();
+});
 
+self.addEventListener("notificationclick", function(event) {
     event.notification.close();
-
-    tagUrl = '/?src=sw';
-    var tags = tag.split("=");
-    if (tags[0] == "url") {
-        tagUrl = "/" + tags[1];
-        if (tagUrl.indexOf("?") == -1) {
-            tagUrl += "?src=sw";
-        } else {
-            tagUrl += "&src=sw";
-        }
-        if (tagUrl.substring(0, 2) == "//") {
-            tagUrl = "/" + tagUrl.substring(2);
-        }
-    }
-
-    console.log("tagUrl: ", tagUrl);
-
     event.waitUntil(
-        clients.matchAll({
-            type: 'window'
-        })
-        .then(function(clientList) {
-            for (var i = 0; i < clientList.length; i++) {
-                var client = clientList[i];
-                if (client.url === tagUrl && 'focus' in client) {
-                    return client.focus();
-                }
-            }
-            if (clients.openWindow) {
-                return clients.openWindow(tagUrl);
-            }
-        })
+        // eslint-disable-next-line no-undef
+        clients.openWindow(event.notification.data.url)
     );
-})
+});
+
+// Update subscription details on server on expiration
+
+self.addEventListener("pushsubscriptionchange", function(event) {
+  event.waitUntil(
+    fetch("/api/notifications/webpush/update_subscription", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        "old_registration_id": event.oldSubscription.endpoint,
+        "registration_id": event.newSubscription.endpoint,
+        "p256dh": btoa(
+            String.fromCharCode.apply(
+                null, new Uint8Array(event.newSubscription.getKey("p256dh"))
+            )
+        ),
+        "auth": btoa(
+            String.fromCharCode.apply(
+                null, new Uint8Array(event.newSubscription.getKey("auth"))
+            )
+        ),
+      })
+    })
+  );
+});

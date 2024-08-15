@@ -3,7 +3,9 @@ import logging
 from django import forms
 from django.contrib.auth import get_user_model
 
+from ... import settings
 from ..bus.models import Route
+from ..notifications.models import UserPushNotificationPreferences
 from ..users.models import Email, Grade, Phone, Website
 
 logger = logging.getLogger(__name__)
@@ -129,6 +131,32 @@ class WebsiteForm(forms.ModelForm):
     class Meta:
         model = Website
         fields = ["url"]
+
+
+class PushNotificationOptionsForm(forms.ModelForm):
+    class Meta:
+        model = UserPushNotificationPreferences
+        fields = [
+            "eighth_reminder_notifications",
+            "eighth_waitlist_notifications",
+            "glance_notifications",
+            "announcement_notifications",
+            "poll_notifications",
+            "bus_notifications",
+        ]
+
+        help_texts = {
+            "eighth_reminder_notifications": f"Receive reminder notifications to sign up for eighth period if you "
+            f"haven't signed up for one "
+            f"{settings.PUSH_NOTIFICATIONS_EIGHTH_REMINDER_MINUTES} "
+            f"minutes prior to when blocks lock",
+            "eighth_waitlist_notifications": "Receive notifications when waitlisted for an activity. Must be enabled to use the waitlist feature",
+            "glance_notifications": "Receive your eighth period glance (a short message telling you which activities "
+            "you signed up for) as a notification when eighth period starts",
+            "announcement_notifications": "Receive notifications whenever an announcement is posted on Ion",
+            "poll_notifications": "Receive notifications whenever a poll you can vote in is available",
+            "bus_notifications": "Receive a notification at dismissal telling you your bus location and if it's delayed or not",
+        }
 
 
 PhoneFormset = forms.inlineformset_factory(get_user_model(), Phone, form=PhoneForm, extra=1)

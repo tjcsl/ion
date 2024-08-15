@@ -4,6 +4,7 @@ from ..announcements import api as announcements_api
 from ..bus import api as bus_api
 from ..eighth.views import api as eighth_api
 from ..emerg import api as emerg_api
+from ..notifications import api as notification_api
 from ..schedule import api as schedule_api
 from ..users import api as users_api
 from .views import api_root
@@ -43,4 +44,15 @@ urlpatterns = [
     re_path(r"^/emerg$", emerg_api.emerg_status, name="api_emerg_status"),
     re_path(r"^/bus$", bus_api.RouteList.as_view(), name="api_bus_list"),
     re_path(r"^/bus/(?P<pk>\d+)$", bus_api.RouteDetail.as_view(), name="api_bus_detail"),
+    re_path(
+        r"^/notifications/webpush/application_key$", notification_api.GetApplicationServerKey.as_view(), name="api_get_vapid_application_server_key"
+    ),
+    re_path(r"^/notifications/webpush/subscribe$", notification_api.WebpushSubscribeDevice.as_view(), name="api_webpush_subscribe"),
+    re_path(r"^/notifications/webpush/unsubscribe$", notification_api.WebpushUnsubscribeDevice.as_view(), name="api_webpush_unsubscribe"),
+    re_path(r"^/notifications/webpush/update_subscription$", notification_api.WebpushUpdateDevice.as_view(), name="api_webpush_update_subscription"),
+    re_path(
+        r"^/notifications/webpush/subscription_status$",
+        notification_api.GetWebpushSubscriptionStatus.as_view(),
+        name="api_webpush_subscription_status",
+    ),
 ]
