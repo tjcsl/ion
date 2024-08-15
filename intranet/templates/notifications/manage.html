@@ -1,0 +1,33 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Manage Push Notifications
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Manage Push Notifications</h2>
+        <ul>
+            <li><a href="{% url "notif_webpush_post_view" %}">Post a Notification</a></li>
+            <li><a href="{% url "notif_webpush_list" %}">Notifications Logs</a></li>
+            <li><a href="{% url "notif_webpush_schedule_view" %}">Notifications Schedule</a></li>
+        </ul>
+    </div>
+{% endblock %}

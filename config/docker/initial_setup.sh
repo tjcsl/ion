@@ -39,6 +39,9 @@ echo -e "${BLUE}${BOLD}Creating eighth period blocks...${CLEAR}"
 python3 create_blocks.py -l A B -c 60
 python3 create_blocks.py -l A B C -i 4 -c 15
 
+echo -e "${BLUE}${BOLD}Generating vapid keys...${CLEAR}"
+python3 create_vapid_keys.py
+
 echo -e "${BLUE}${BOLD}Cleaning up scripts...${CLEAR}"
 for file in config/scripts/*.py; do
     rm "$(basename "$file")"

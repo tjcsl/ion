@@ -1,0 +1,83 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - WebPush Device List
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Devices Sent</h2>
+        <table class="fancy-table" style="margin-top:10px;">
+            <thead>
+                <tr>
+                    <th>Device ID</th>
+                    <th>Registration ID (Endpoint)</th>
+                    <th>Associated User</th>
+                </tr>
+            </thead>
+            {% if page_obj is not None %}
+                {% for item in page_obj.object_list %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>
+                            <a href="">{{ item.registration_id }}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'user_profile' user_id=item.user.id %}">{{ item.user }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td>{{ notifications.id }}</td>
+                    <td>
+                        <a href="">{{ notifications.registration_id }}</a>
+                    </td>
+                    <td>
+                        <a href="{% url 'user_profile' user_id=notifications.user.id %}">{{ notifications.user }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+        {% if page_obj is not None %}
+            <div style="text-align:right">
+                <form action="" method="get" style="display:inline;float:right">
+                    <input name="page" type="number"
+                    min="1" max={{ page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
+                    placeholder={{ page_obj.number }}> of {{ page_obj.num_pages }}
+                    <input type="submit" value="Go"/>
+                </form>
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">
+                        <input type="button" value="<"/>
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">
+                        <input type="button" value=">"/>
+                    </a>
+                {% endif %}
+                <div>
+                    Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ paginator.count }} items
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

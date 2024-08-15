@@ -21,44 +21,349 @@
     <script src="{% static 'js/vendor/jquery.formset.js' %}" charset="utf-8"></script>
     <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script src="{% static 'js/vendor/js.cookie.min.js' %}"></script>
     <script>
-    $(document).ready(function () {
-        $('#phone-formset-table tr').formset({
-            prefix: '{{ phone_formset.prefix }}',
-            formCssClass: 'phone-formset',
-            deleteText: '<button><i class="fas fa-times"></i></button>',
-            addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
-        });
-        $('#email-formset-table tr').formset({
-            prefix: '{{ email_formset.prefix }}',
-            formCssClass: 'email-formset',
-            deleteText: '<button><i class="fas fa-times"></i></button>',
-            addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
-        });
-        $('#website-formset-table tr').formset({
-            prefix: '{{ website_formset.prefix }}',
-            formCssClass: 'website-formset',
-            deleteText: '<button><i class="fas fa-times"></i></button>',
-            addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
-        });
-        $("#id_primary_email").selectize({
-          "allowEmptyOption": true
-        });
-    })
-    $(function() {
-        $('input.disabled').each(function() {
-            $(this).attr('data-state', $(this).prop('checked'));
-            $(this).click(function(e) {
-                e.preventDefault();
-                var state = $(this).attr('data-state');
-                if (!state) {
-                    $(this).removeProp('checked');
-                } else {
-                    $(this).prop('checked', state);
+        $(document).ready(function () {
+            navigator.serviceWorker.register("serviceworker.js", {
+                    scope: "/"
+            });
+
+            function getAppServerKey() {
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: "/api/notifications/webpush/application_key",
+                        type: "GET",
+                        dataType: "json",
+                        success: function (response) {
+                            resolve(response["applicationServerKey"]);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error: ", error);
+                            reject(error);
+                        }
+                    })
+                });
+            }
+
+            function getSubscriptionStatus() {
+                return Promise.all([getServerSubStatus(), getClientSubStatus()])
+                    .then(([serverStatus, clientStatus]) => {
+                        return serverStatus.status === true && clientStatus === true;
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.error('Error getting subscription status:', error);
+                        return false;
+                    });
+            }
+
+            function getServerSubStatus() {
+                return getEndpoint().then(endpoint => {
+                    return $.ajax({
+                        url: "/api/notifications/webpush/subscription_status",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify({"endpoint": endpoint},),
+                        success: function (response) {
+                            if (response.status === true) {
+                                return true;
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            sendMessage("error", error.toString());
+                            return Promise.reject(error);
+                        }
+
+                    })
+                })
+            }
+
+            function getClientSubStatus() {
+                return navigator.serviceWorker.ready
+                    .then(function (registration) {
+                        return registration.pushManager.getSubscription();
+                    })
+                    .then(function (subscription) {
+                        return !!subscription;
+                    })
+                    .catch(function (error) {
+                        console.error("Error checking Webpush subscription status:", error);
+                        return false;
+                    });
+            }
+
+            function getEndpoint() {
+                return navigator.serviceWorker.ready
+                    .then(function (registration) {
+                        return registration.pushManager.getSubscription();
+                    })
+                    .then(function (subscription) {
+                        if (!subscription) {
+                            return "null"
+                        }
+                        return subscription.endpoint;
+                    })
+            }
+
+            function registerWebpushWorker() {
+                getAppServerKey().then(appServerKey => {
+                    navigator.serviceWorker.ready.then(function (registration) {
+                        registration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: appServerKey
+                        }).then(function (subscription) {
+                            $.ajax({
+                                url: "/api/notifications/webpush/subscribe",
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    "registration_id": subscription.endpoint,
+                                    "p256dh": btoa(
+                                        String.fromCharCode.apply(
+                                            null, new Uint8Array(subscription.getKey("p256dh"))
+                                        )
+                                    ),
+                                    "auth": btoa(
+                                        String.fromCharCode.apply(
+                                            null, new Uint8Array(subscription.getKey("auth"))
+                                        )
+                                    ),
+                                }),
+                                success: function (response) {
+                                    sendMessage("success", "Subscribed to push notifications on this device");
+                                },
+                                error: function (xhr, status, error) {
+                                    sendMessage("error", error.toString());
+                                }
+                            });
+                        }).catch(function (e) {
+                                sendMessage("error", e.toString());
+                            }
+                        )
+                    })
+
+                });
+            }
+
+            function unsubscribeUser() {
+                navigator.serviceWorker.ready
+                    .then(function (registration) {
+                        return registration.pushManager.getSubscription();
+                    })
+                    .then(function (subscription) {
+                        if (subscription) {
+                            return subscription.unsubscribe()
+                                .then(function () {
+                                    console.log("Successfully unsubscribed from push notifications on the client side.");
+                                });
+                        } else {
+                            console.log("No subscription found.");
+                            return Promise.resolve();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error("Error unsubscribing from push notifications: ", error);
+                    });
+            }
+
+            function unsubscribeFromServer() {
+                getEndpoint().then(endpoint => {
+                    $.ajax({
+                        url: "/api/notifications/webpush/unsubscribe",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify({"endpoint": endpoint},),
+                        success: function (response) {
+                            if (response.error) {
+                                sendMessage("error", response.error);
+                            }
+                            sendMessage("success", response.message);
+                        },
+                        error: function (xhr, status, error) {
+                            sendMessage("error", error.toString());
+                        }
+
+                    })
+
+                })
+            }
+
+            $('#phone-formset-table tr').formset({
+                prefix: '{{ phone_formset.prefix }}',
+                formCssClass: 'phone-formset',
+                deleteText: '<button><i class="fas fa-times"></i></button>',
+                addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
+            });
+            $('#email-formset-table tr').formset({
+                prefix: '{{ email_formset.prefix }}',
+                formCssClass: 'email-formset',
+                deleteText: '<button><i class="fas fa-times"></i></button>',
+                addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
+            });
+            $('#website-formset-table tr').formset({
+                prefix: '{{ website_formset.prefix }}',
+                formCssClass: 'website-formset',
+                deleteText: '<button><i class="fas fa-times"></i></button>',
+                addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
+            });
+            $("#id_primary_email").selectize({
+                "allowEmptyOption": true
+            });
+
+            var modal = $('#popupForm');
+
+            $('#manage-push').click(function () {
+                modal.show();
+            });
+
+            $('.close-button').click(function () {
+                modal.hide();
+            });
+
+            // When the user clicks anywhere outside the modal, close it
+            $(window).click(function (event) {
+                if ($(event.target).is(modal)) {
+                    modal.hide();
+                }
+            });
+
+            if ("{{ open_push_notif_prefs }}".toLowerCase() === "true") {
+                $('#manage-push').trigger("click");
+            }
+
+            getSubscriptionStatus().then(isSubscribed => {
+                if (isSubscribed) {
+                    $("#sub").prop("value", "Unsubscribe");
                 }
             })
+
+            $("#sub").on("click", function () {
+                getSubscriptionStatus().then(isSubscribed => {
+                    if (isSubscribed) {
+                        unsubscribeFromServer();
+                        unsubscribeUser();
+                    } else {
+                        registerWebpushWorker();
+                    }
+                })
+            });
+
+            if ("{{ is_ios }}" === "True" && !window.navigator.standalone) {
+                // Prompt the user to install the app via 'add to home screen'
+                // or else webpush won't work
+                $("#sub").on("click", function () {
+                    sendMessage("error",
+                        "You need to add Ion to your home screen to receive push notifications on iOS. " +
+                        "<a href=\'{% url 'ios_notif_setup' %}\' style='color: lightblue;'><strong>Click here for instructions</strong></a>"
+                    );
+                })
+            }
+            else if ("{{ browser_supported }}" === "False") {
+                $("#sub").on("click", function () {
+                    sendMessage("error", "Sorry, but your browser isn't supported at the moment.");
+                })
+            }
+
+            // Replace any get params in the history
+            let url = window.location.href;
+            if(url.includes('?')){
+                const currentUrl = new URL(window.location.href);
+                const urlNoGetParams = new URL(currentUrl.protocol + '//' + currentUrl.host + currentUrl.pathname);
+                history.replaceState({}, '', urlNoGetParams.href);
+            }
+
+            function sendMessage(type, msg) {
+                Cookies.set("enableGetParams", "true");
+                let page = new URL(location.href);
+                page.searchParams.append(type, msg);
+                location.href = page.href;
+            }
+
+            if (Cookies.get("enableGetParams") === "true") {
+                Cookies.set("enableGetParams", "false");
+            }
+
+            $(function () {
+                $('input.disabled').each(function () {
+                    $(this).attr('data-state', $(this).prop('checked'));
+                    $(this).click(function (e) {
+                        e.preventDefault();
+                        var state = $(this).attr('data-state');
+                        if (!state) {
+                            $(this).removeProp('checked');
+                        } else {
+                            $(this).prop('checked', state);
+                        }
+                    })
+                })
+            })
+
+            async function getSilentPreference() {
+                return new Promise((resolve, reject) => {
+                    const dbRequest = indexedDB.open("notificationPreferences", 1);
+
+                    dbRequest.onupgradeneeded = function(event) {
+                        const db = event.target.result;
+                        db.createObjectStore("preferences", { keyPath: "id" });
+                    };
+
+                    dbRequest.onsuccess = function(event) {
+                        const db = event.target.result;
+                        const transaction = db.transaction(["preferences"], "readonly");
+                        const store = transaction.objectStore("preferences");
+                        const request = store.get("silentNotification");
+
+                        request.onsuccess = function() {
+                            if (request.result && request.result.silent) {
+                                resolve(request.result.silent);
+                            } else {
+                                resolve(false);
+                            }
+                        };
+
+                        request.onerror = function() {
+                            resolve(false);
+                        };
+                    };
+
+                    dbRequest.onerror = function() {
+                        resolve(false);
+                    };
+                });
+            }
+
+            getSilentPreference().then(function(silent) {
+                $("#silent-notifications").prop("checked", silent)
+            })
+
+            $("#silent-notifications").on("change", function () {
+                let silent = $(this).prop("checked");
+
+                const request = indexedDB.open('notificationPreferences', 1);
+
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    db.createObjectStore('preferences', { keyPath: 'id' });
+                };
+
+                request.onsuccess = function(event) {
+                    const db = event.target.result;
+                    const transaction = db.transaction(['preferences'], 'readwrite');
+                    const store = transaction.objectStore('preferences');
+                    store.put({ id: 'silentNotification', silent: silent });
+                };
+
+            })
+
+            $('.popup-link').hover(function(){
+                $('.popup-content').stop(true, true).fadeIn(200);
+            }, function(){
+                $('.popup-content').stop(true, true).fadeOut(200);
+            });
         })
-    })
+
 
     </script>
 {% endblock %}
@@ -92,39 +397,21 @@
             <br>
             <h3>Notification Options</h3>
             <p>Change how you receive notifications from Intranet.</p>
-            <table class="notification-options">
-              {% if request.user.notificationconfig and request.user.notificationconfig.gcm_token %}
-              <tr>
-                  <td>
-                      <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.gcm_optout %} checked {% endif %}>
-                  </td>
-                  <td>
-                      <label for="id_receive_push_notifications">Receive Push Notifications</label>
-                  </td>
-              </tr>
-              {% else %}
-              <tr>
-                  <td>
-                      <input id="id_receive_push_notifications" type="checkbox" disabled>
-                  </td>
-                  <td>
-                      <label for="id_receive_push_notifications">Receive Push Notifications</label>
-                  </td>
-              </tr>
-              {% endif %}
+            <div>
+                <button id="manage-push" type="button" style="margin-top: 5px;">Manage Push Notifications</button>
                 {% for field in notification_options_form %}
-                <tr>
-                    <td>
-                        {{ field.errors }}
-                        {{ field }}
-                    </td>
-                    <td>
-                        {{ field.label }}
-                    </td>
-                </tr>
+                    <div style="margin-top: 5px;">
+                        {% if field|field_type == "Select" %}
+                            {{ field.label|add:":" }} {{ field }}
+                        {% else %}
+                            {{ field.errors }}
+                            {{ field }}
+                            {{ field.label }}
+                        {% endif %}
+                    </div>
                 {% endfor %}
 
-            </table>
+            </div>
 
             <br>
 
@@ -237,6 +524,48 @@
 
             <button type="submit">Save</button>
             </form>
+        <div id="popupForm" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Settings</h2>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {% for field in push_notifications_options_form %}
+                        <div style="margin-top: 5px;">
+                            {{ field.errors }}
+                            {% if field.name == "eighth_waitlist_notifications" and not ENABLE_WAITLIST %}
+                                {{ field.as_hidden }}
+                            {% else %}
+                                {{ field }}
+                                {{ field.label }}
+                                <i class="fa fa-question-circle" id="{{ field.name }}" style="margin-left: 5px;" title="{{ field.help_text }}"></i>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <hr>
+                    <p style="margin-top: 10px; margin-bottom: 10px; margin-left: 5px; font-size: 15px;">Settings for this device</p>
+                    <input type="checkbox" id="silent-notifications">
+                    <labeL for="silent-notifications" style="margin-left: -4px; margin-top: 10px;">Quiet Notifications</labeL>
+                    <i class="fa fa-question-circle" id="silent_notifications" style="margin-left: 5px;" title="When enabled, notifications from Ion won't make sound even when your device is not on silent"></i>
+                    <hr style="margin-top: 10px;">
+                    <div>
+                        <input type="submit" value="Save" style="margin-top: 10px; display: inline-block;">
+                        <input type="button" value="Subscribe" style="margin-top: 10px; margin-left: 3px; display: inline-block;" id="sub">
+                        <input type="hidden" name="updatepushprefs" value="true">
+                    </div>
+                    <p style="font-size: 12px;">You must click the subscribe button on each device you wish to receive notifications on</p>
+                    <a class="popup-link">Supported browsers
+                        <div class="popup-content">
+                            <p>Chrome (version 42+)</p>
+                            <p>Opera (version 42+)</p>
+                            <p>Firefox (version 44+)</p>
+                            <p>Safari on Mac (version 16+)</p>
+                            <p>Safari on iOS (iOS version 16.4+)</p>
+                        </div>
+                    </a>
+                </form>
+            </div>
+        </div>
 
     </div>
 

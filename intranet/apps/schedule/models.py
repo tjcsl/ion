@@ -144,6 +144,11 @@ class Day(models.Model):
         """Return time the school day ends"""
         return self.day_type.end_time
 
+    @property
+    def end_datetime(self):
+        """Return a timezone aware datetime of when the school day ends"""
+        return timezone.make_aware(self.day_type.end_time.date_obj(timezone.now()), timezone.get_current_timezone())
+
     def __str__(self):
         return f"{self.date}: {self.day_type}"
 

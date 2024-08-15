@@ -21,6 +21,7 @@ from ...utils.locking import lock_on
 from ..auth.decorators import deny_restricted
 from .forms import PollForm
 from .models import Answer, Choice, Poll, Question
+from .notifications import send_poll_notification
 
 logger = logging.getLogger(__name__)
 
@@ -661,6 +662,9 @@ def add_poll_view(request):
             instance = form.save()
 
             process_question_data(instance, question_data)
+
+            if request.POST.get("send_notification"):
+                send_poll_notification.apply_async(args=(instance,), eta=instance.start_time)
 
             messages.success(request, "The poll has been created.")
             return redirect("polls")

@@ -76,6 +76,102 @@ intranet.apps.announcements.views module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.announcements.views\_BACKUP\_1087 module
+------------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_BACKUP_1087
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_BACKUP\_1114 module
+------------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_BACKUP_1114
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_BACKUP\_1972 module
+------------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_BACKUP_1972
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_BASE\_1087 module
+----------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_BASE_1087
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_BASE\_1114 module
+----------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_BASE_1114
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_BASE\_1972 module
+----------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_BASE_1972
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_LOCAL\_1087 module
+-----------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_LOCAL_1087
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_LOCAL\_1114 module
+-----------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_LOCAL_1114
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_LOCAL\_1972 module
+-----------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_LOCAL_1972
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_REMOTE\_1087 module
+------------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_REMOTE_1087
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_REMOTE\_1114 module
+------------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_REMOTE_1114
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+intranet.apps.announcements.views\_REMOTE\_1972 module
+------------------------------------------------------
+
+.. automodule:: intranet.apps.announcements.views_REMOTE_1972
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

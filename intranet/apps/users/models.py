@@ -21,6 +21,7 @@ from ...utils.helpers import is_entirely_digit
 from ..bus.models import Route
 from ..eighth.models import EighthBlock, EighthSignup, EighthSponsor
 from ..groups.models import Group
+from ..notifications.models import UserPushNotificationPreferences
 from ..polls.models import Poll
 from ..preferences.fields import PhoneField
 
@@ -742,6 +743,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.has_admin_permission("board")
 
     @property
+    def is_notifications_admin(self) -> bool:
+        """Checks if user is a notifications admin.
+
+        Returns:
+            Whether this user is a notifications admin.
+
+        """
+
+        return self.has_admin_permission("notifications")
+
+    @property
     def is_global_admin(self) -> bool:
         """Checks if user is a global admin.
 
@@ -1094,6 +1106,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             return UserProperties.objects.get_or_create(user=self)[0]
         elif name == "dark_mode_properties":
             return UserDarkModeProperties.objects.get_or_create(user=self)[0]
+        elif name == "push_notification_preferences":
+            return UserPushNotificationPreferences.objects.get_or_create(user=self)[0]
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     def __str__(self):
