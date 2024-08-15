@@ -34,7 +34,7 @@ $(function() {
         }
 
         // Popup on click
-        hairClickElem.click(() => {
+        hairClickElem.on("click", () => {
             if (hairClickHoverTimer) {
                 clearTimeout(hairClickHoverTimer);
                 hairClickHoverTimer = null;

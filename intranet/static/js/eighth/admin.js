@@ -79,12 +79,12 @@ $(function() {
         } catch (e) {}
     }
 
-    $selectAllBlocksCheckbox.click(updateBlockCheckboxes);
-    $blockCheckboxes.click(updateSelectAllCheckbox);
+    $selectAllBlocksCheckbox.on("click", updateBlockCheckboxes);
+    $blockCheckboxes.on("click", updateSelectAllCheckbox);
     updateSelectAllCheckbox();
 
     // Set up select blocks popover
-    $(".select-blocks-popover-toggle").click(function() {
+    $(".select-blocks-popover-toggle").on("click", function() {
         var $popover = $(".select-blocks-popover"),
             $toggle = $(".select-blocks-popover-toggle");
 
@@ -106,7 +106,7 @@ $(function() {
         };
     };
 
-    $(".select-blocks-popover a.block-type").click(function() {
+    $(".select-blocks-popover a.block-type").on("click", function() {
         var blockType = $(this).text();
 
         var blockTypeFilter = blockTypeRowFilter(blockType);
@@ -149,17 +149,17 @@ $(function() {
         var select = $("#id_users_blacklisted").parent("td").find("select")[0].selectize.enable();
     }
 
-    $("#id_restricted").click(updateRestrictedFormFields);
+    $("#id_restricted").on("click", updateRestrictedFormFields);
 
     if ($("#id_restricted").length > 0) {
         updateRestrictedFormFields();
     }
 
-    $("#only-show-overbooked").click(function() {
+    $("#only-show-overbooked").on("click", function() {
         $("tr.underbooked").toggle();
     });
 
-    $("#hide-administrative").click(function() {
+    $("#hide-administrative").on("click", function() {
         $("tr.administrative").toggle();
     });
 });
