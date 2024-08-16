@@ -31,25 +31,25 @@ end_school_year = start_school_year + 1
 # fmt: off
 """ !! -------- UPDATE ANNUALLY -------- !!
 Update this section annually after summer school ends and before school starts.
-School year last updated:  2023-08-16
-Hoco last updated:         2023-08-16
+School year last updated:  2024-08-16
+Hoco last updated:         2024-08-16
 tjSTAR last updated:       2024-05-03
 """
 
 # When school is scheduled to start and end
 SCHOOL_START_DATE = datetime.date(start_school_year,
-    8, 21  # UPDATE THIS! Value when last updated: August 21, 2023      # noqa: E128
+    8, 19  # UPDATE THIS! Value when last updated: August 19, 2024      # noqa: E128
 )                                                                       # noqa: E124
 SCHOOL_END_DATE = datetime.date(end_school_year,
-    6, 12  # UPDATE THIS! Value when last updated: June 12, 2024        # noqa: E128
+    6, 11  # UPDATE THIS! Value when last updated: June 11, 2025        # noqa: E128
 )                                                                       # noqa: E124
 
 # Dates when hoco starts and ends
 HOCO_START_DATE = datetime.date(start_school_year,
-    9, 16  # UPDATE THIS! Value when last updated: September 16, 2023   # noqa: E128
+    9, 21  # UPDATE THIS! Value when last updated: September 21, 2024   # noqa: E128
 )                                                                       # noqa: E124
 HOCO_END_DATE = datetime.date(start_school_year,
-    9, 24  # UPDATE THIS! Value when last updated: September 24, 2023   # noqa: E128
+    9, 29  # UPDATE THIS! Value when last updated: September 29, 2024   # noqa: E128
 )                                                                       # noqa: E124
 
 # Date of tjSTAR
