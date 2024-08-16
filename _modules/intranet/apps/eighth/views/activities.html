@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.activities &#8212; TJ Intranet v3 (Build #2428) documentation</title>
+    <title>intranet.apps.eighth.views.activities &#8212; TJ Intranet v3 (Build #2479) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -127,11 +127,6 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">MAXYEAR</span><span class="p">,</span> <span class="n">MINYEAR</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
 
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">letter</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">ParagraphStyle</span><span class="p">,</span> <span class="n">getSampleStyleSheet</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">inch</span>
-<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="n">PageBreak</span><span class="p">,</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">SimpleDocTemplate</span><span class="p">,</span> <span class="n">Spacer</span><span class="p">,</span> <span class="n">Table</span>
-
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
@@ -139,6 +134,10 @@
 <span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">letter</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">ParagraphStyle</span><span class="p">,</span> <span class="n">getSampleStyleSheet</span>
+<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">inch</span>
+<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="n">PageBreak</span><span class="p">,</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">SimpleDocTemplate</span><span class="p">,</span> <span class="n">Spacer</span><span class="p">,</span> <span class="n">Table</span>
 
 <span class="kn">from</span> <span class="nn">....utils.date</span> <span class="kn">import</span> <span class="n">get_date_range_this_year</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">....utils.helpers</span> <span class="kn">import</span> <span class="n">is_entirely_digit</span>
@@ -176,7 +175,7 @@
 
 <div class="viewcode-block" id="chunks"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.activities.chunks">[docs]</a><span class="k">def</span> <span class="nf">chunks</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="n">n</span><span class="p">):</span>
-        <span class="k">yield</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span></div>
+        <span class="k">yield</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="current_school_year"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.activities.current_school_year">[docs]</a><span class="k">def</span> <span class="nf">current_school_year</span><span class="p">():</span>

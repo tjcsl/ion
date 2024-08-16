@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.users.management.commands.lock &#8212; TJ Intranet v3 (Build #2428) documentation</title>
+    <title>intranet.apps.users.management.commands.lock &#8212; TJ Intranet v3 (Build #2479) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
@@ -131,10 +131,10 @@
 
 <div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.users.management.commands.html#intranet.apps.users.management.commands.lock.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">user_locked</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">last_login</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">user_locked</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">last_login</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">u</span><span class="o">.</span><span class="n">user_locked</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">u</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">user_locked</span><span class="p">))</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">user_locked</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
     </div>
