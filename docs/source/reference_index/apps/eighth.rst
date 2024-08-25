@@ -1,0 +1,74 @@
+######
+eighth
+######
+
+.. currentmodule:: intranet.apps.eighth
+
+.. autosummary::
+   :toctree: ../../reference
+
+   views.monitoring
+   views.profile
+   views.admin.groups
+   views.admin.sponsors
+   views.admin.blocks
+   views.admin.maintenance
+   views.admin.general
+   views.admin.users
+   views.admin.attendance
+   views.admin.rooms
+   views.admin.hybrid
+   views.admin.activities
+   views.admin.scheduling
+   views.signup
+   views.api
+   views.attendance
+   views.routers
+   views.activities
+   notifications
+   serializers
+   urls
+   forms.admin.groups
+   forms.admin.sponsors
+   forms.admin.blocks
+   forms.admin.general
+   forms.admin.rooms
+   forms.admin.activities
+   forms.admin.scheduling
+   management.commands.absence_email
+   management.commands.dev_generate_signups
+   management.commands.find_duplicates
+   management.commands.signup_status_email
+   management.commands.remove_withdrawn_students
+   management.commands.generate_statistics
+   management.commands.dev_create_blocks
+   management.commands.delete_duplicate_signups
+   management.commands.generate_similarities
+   management.commands.update_counselors
+   management.commands.signup_statistics
+   models
+   tasks
+   utils
+   context_processors
+   admin
+   exceptions
+   tests.test_attendance
+   tests.test_signup
+   tests.test_exceptions
+   tests.eighth_test
+   tests.test_commands
+   tests.admin.test_admin_activities
+   tests.admin.test_admin_blocks
+   tests.admin.test_admin_sponsors
+   tests.admin.test_admin_general
+   tests.admin.test_admin_users
+   tests.admin.test_admin_groups
+   tests.admin.test_admin_attendance
+   tests.admin.test_admin_rooms
+   tests.admin.test_admin_maintenance
+   tests.admin.test_admin_scheduling
+   tests.test_monitoring
+   tests.test_activities
+   tests.test_routers
+   tests.test_profile
+   tests.test_general

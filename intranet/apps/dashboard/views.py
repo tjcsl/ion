@@ -196,6 +196,7 @@ def get_prerender_url(request):
 def get_announcements_list(request, context):
     """
     An announcement will be shown if:
+
     * It is not expired
 
       * unless ?show_expired=1
@@ -211,6 +212,7 @@ def get_announcements_list(request, context):
       * ...unless ?show_all=1
 
     An event will be shown if:
+
     * It is not expired
 
       * unless ?show_expired=1
@@ -265,10 +267,7 @@ def get_announcements_list(request, context):
 
 
 def paginate_announcements_list(request, context, items):
-    """
-    Paginate ``items`` in groups of 15
-
-    """
+    """Paginate ``items`` in groups of 15"""
     DEFAULT_PAGE_NUM = 1
 
     if request.GET.get("page", "INVALID").isdigit():
@@ -304,6 +303,7 @@ def get_tjstar_mapping(user):
 def add_widgets_context(request, context):
     """
     WIDGETS:
+
     * Eighth signup (STUDENT)
     * Eighth attendance (TEACHER or ADMIN)
     * Enrichment activities (ALL if enrichment activity today)
