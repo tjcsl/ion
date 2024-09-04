@@ -377,13 +377,21 @@ def print_job(obj: PrintJob, do_print: bool = True):
         if obj.page_range:
             if not range_count:
                 raise InvalidInputPrintingError("You specified an invalid page range.")
-            elif range_count > settings.PRINTING_PAGES_LIMIT:
+            elif range_count > settings.PRINTING_PAGES_LIMIT_TEACHERS and (obj.user.is_teacher or obj.user.is_printing_admin):
                 raise InvalidInputPrintingError(
-                    f"You specified a range of {range_count} pages. You may only print up to {settings.PRINTING_PAGES_LIMIT} pages using this tool."
+                    f"You specified a range of {range_count} pages. "
+                    f"You may only print up to {settings.PRINTING_PAGES_LIMIT_TEACHERS} pages using this tool."
                 )
-        elif num_pages > settings.PRINTING_PAGES_LIMIT:
+
+            elif range_count > settings.PRINTING_PAGES_LIMIT_STUDENTS:
+                raise InvalidInputPrintingError(
+                    f"You specified a range of {range_count} pages. "
+                    f"You may only print up to {settings.PRINTING_PAGES_LIMIT_STUDENTS} pages using this tool."
+                )
+
+        elif num_pages > settings.PRINTING_PAGES_LIMIT_TEACHERS and (obj.user.is_teacher or obj.user.is_printing_admin):
             raise InvalidInputPrintingError(
-                f"This file contains {num_pages} pages. You may only print up to {settings.PRINTING_PAGES_LIMIT} pages using this tool."
+                f"This file contains {num_pages} pages. " f"You may only print up to {settings.PRINTING_PAGES_LIMIT_TEACHERS} pages using this tool."
             )
 
         elif num_pages > settings.PRINTING_PAGES_LIMIT_STUDENTS:
