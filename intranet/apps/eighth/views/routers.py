@@ -18,4 +18,6 @@ def eighth_redirect_view(request):
     else:
         view = "index"  # should never happen
 
-    return resolve(reverse(view)).func(request)
+    func, args, kwargs = resolve(reverse(view))
+    kwargs["request"] = request
+    return func(*args, **kwargs)
