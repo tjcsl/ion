@@ -27,12 +27,6 @@ env:
   node_versions: &node_versions
     - 12.x
 
-  python_setup: &python_setup
-    name: Set up Python ${{ matrix.python-version }}
-    uses: actions/setup-python@v2
-    with:
-      python-version: ${{ matrix.python-version }}
-
   repo_setup: &repo_setup
     name: Set up repo
     uses: actions/checkout@v2
@@ -43,23 +37,23 @@ env:
     with:
       fetch-depth: 0
 
-  setup_pip_cache: &setup_pip_cache
-    name: Set up pip cache
-    uses: actions/cache@v2
+  setup_uv_cache: &setup_uv_cache
+    name: Set up uv
+    uses: astral-sh/setup-uv@v3
     with:
-      path: ~/.cache/pip
-      key: pip-${{ matrix.python-version }}
+      enable-cache: true
+
+  python_setup: &python_setup
+    name: Set up Python ${{ matrix.python-version }}
+    run: uv python install ${{ matrix.python-version }}
 
   setup_packages: &setup_packages
     name: Set up packages
     run: |
       set -e
-
-      pip install -U pip setuptools wheel
-      pip install -U \
-        pre-commit coveralls pyyaml pytest-django
-      pip install -U -r requirements.txt
-
+      uv sync --locked
+      # change path and env vars
+      source .venv/bin/activate
       echo "PATH=$PATH" >> $GITHUB_ENV
 
   .copy_secret: &copy_secret
@@ -77,8 +71,8 @@ jobs:
 
     steps:
       - *repo_setup
+      - *setup_uv_cache
       - *python_setup
-      - *setup_pip_cache
       - *setup_packages
       - *copy_secret
 
@@ -96,8 +90,8 @@ jobs:
     steps:
       # We need the full history so we can validate commit messages.
       - *repo_setup_fetch_all
+      - *setup_uv_cache
       - *python_setup
-      - *setup_pip_cache
       - *setup_packages
       - *copy_secret
 
@@ -164,8 +158,8 @@ jobs:
 
     steps:
       - *repo_setup
+      - *setup_uv_cache
       - *python_setup
-      - *setup_pip_cache
       - *setup_packages
       - *copy_secret
 
@@ -196,6 +190,9 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y krb5-user
+
+      - name: Install coverage
+        run: uv pip install pytest-cov
 
       # Tests
       - name: Run tests (Fork)
