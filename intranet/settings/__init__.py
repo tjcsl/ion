@@ -397,8 +397,8 @@ for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE["STYLESHEETS"].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = [
-    "intranet.apps.auth.backends.PamAuthenticationBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
+    "intranet.apps.auth.backends.PamAuthenticationBackend",
     "oauth2_provider.backends.OAuth2Backend",
     "django.contrib.auth.backends.ModelBackend",
 ]
@@ -600,7 +600,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 50,
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "intranet.apps.api.authentication.ApiBasicAuthentication",
+        # "intranet.apps.api.authentication.ApiBasicAuthentication",  # Disabled for security
         "intranet.apps.api.authentication.CsrfExemptSessionAuthentication",  # exempts CSRF checking on API
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
     ),

@@ -2,6 +2,7 @@ import datetime
 import json
 import urllib.parse
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
@@ -189,17 +190,21 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_no_credentials_read(self):
+        if "intranet.apps.api.authentication.ApiBasicAuthentication" in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]:
+            status_code = 401
+        else:
+            status_code = 403
         # Announcements should only be available to logged in users
         response = self.client.get(reverse("api_announcements_list_create"))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, status_code)
 
         # Activity list should only be available to logged in users
         response = self.client.get(reverse("api_eighth_activity_list"))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, status_code)
 
         # Block list should only be available to logged in users
         response = self.client.get(reverse("api_eighth_block_list"))
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, status_code)
 
     def test_api_root(self):
         # Should be able to read API root without authentication
