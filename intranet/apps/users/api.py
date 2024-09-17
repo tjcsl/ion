@@ -51,6 +51,9 @@ class ProfileDetail(generics.RetrieveAPIView):
             "websites",
             "is_announcements_admin",
         ]
+        if not (request.user.is_teacher or request.user.is_eighth_admin):
+            fields_to_remove.append("student_id")
+
         for field in fields_to_remove:
             data.pop(field)
 
