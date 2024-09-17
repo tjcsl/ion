@@ -69,6 +69,7 @@ class UserSerializer(serializers.ModelSerializer):
     user_type = serializers.CharField(max_length=100)
     graduation_year = serializers.IntegerField()
     tj_email = serializers.StringRelatedField()
+    student_id = serializers.IntegerField()
     emails = serializers.StringRelatedField(many=True)
     phones = serializers.StringRelatedField(many=True)
     websites = serializers.StringRelatedField(many=True)
@@ -91,6 +92,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "nickname",
             "tj_email",
+            "student_id",
             "emails",
             "grade",
             "graduation_year",
