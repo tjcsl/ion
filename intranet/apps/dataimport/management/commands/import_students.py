@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import csv
 import sys
 
@@ -54,7 +56,7 @@ class Command(BaseCommand):
 
         return f"{graduating_year}{first_stripped[0]}{last_stripped[:7]}".lower()
 
-    def find_next_available_username(self, used_username: str, username_set: set = None) -> str:
+    def find_next_available_username(self, used_username: str, username_set: set[str] | None = None) -> str:
         """Find the next available username.
 
         Args:

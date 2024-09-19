@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import datetime
 import logging
 import os
 import re
 import sys
-from typing import Any, Dict, List, Tuple  # noqa
+from typing import Any
 
 import celery.schedules
 import pytz
@@ -88,11 +90,11 @@ SECRET_DATABASE_URL should be of the following form:
 
 # Dummy values for development and testing.
 # Overridden by the import from secret.py below.
-SECRET_DATABASE_URL = None  # type: str
-MAINTENANCE_MODE = None  # type: bool
-TJSTAR_MAP = None  # type: bool
-TWITTER_KEYS = None  # type: Dict[str,str]
-SENTRY_PUBLIC_DSN = None  # type: str
+SECRET_DATABASE_URL: str | None = None
+MAINTENANCE_MODE: bool | None = None
+TJSTAR_MAP: bool | None = None
+TWITTER_KEYS: dict[str, str] | None = None
+SENTRY_PUBLIC_DSN: str | None = None
 USE_SASL = True
 NO_CACHE = False
 PARKING_ENABLED = True
@@ -124,7 +126,7 @@ IOS_APP_CLIENT_IDS = []  # Attempting to OAuth to an application with one of the
 
 ALLOWED_METRIC_SCRAPE_IPS = []
 
-EMERGENCY_MESSAGE = None  # type: str
+EMERGENCY_MESSAGE: str | None = None
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
@@ -202,7 +204,7 @@ EMAIL_ANNOUNCEMENTS = True
 EMAIL_FROM = "ion-noreply@tjhsst.edu"
 
 # Use PostgreSQL database
-DATABASES = {"default": {"ENGINE": "django_prometheus.db.backends.postgresql", "CONN_MAX_AGE": 30}}  # type: Dict[str,Dict[str,Any]]
+DATABASES: dict[str, dict[str, Any]] = {"default": {"ENGINE": "django_prometheus.db.backends.postgresql", "CONN_MAX_AGE": 30}}
 
 # Address to send feedback messages to
 FEEDBACK_EMAIL = "intranet@tjhsst.edu"
@@ -244,7 +246,7 @@ SILENCED_SYSTEM_CHECKS = [
 ]
 
 # Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# https://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
 TIME_ZONE = "America/New_York"
@@ -313,11 +315,11 @@ STATICFILES_FINDERS = [
 
 STATICFILES_STORAGE = "pipeline.storage.PipelineStorage"
 
-PIPELINE = {
+PIPELINE: dict[str, Any] = {
     "CSS_COMPRESSOR": None,
     "COMPILERS": ["pipeline.compilers.sass.SASSCompiler"],
     "STYLESHEETS": {},
-}  # type: Dict[str,Any]
+}
 
 LIST_OF_INDEPENDENT_CSS = [
     "about",
@@ -419,7 +421,7 @@ PASSWORD_HASHERS = [
 # Use the custom User model defined in apps/users/models.py
 AUTH_USER_MODEL = "users.User"
 
-TEMPLATES = [
+TEMPLATES: list[dict[str, Any]] = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": (os.path.join(PROJECT_ROOT, "templates"),),
@@ -451,7 +453,7 @@ TEMPLATES = [
             "libraries": {"staticfiles": "django.templatetags.static"},
         },
     }
-]  # type: List[Dict[str,Any]]
+]
 
 if PRODUCTION:
     TEMPLATES[0]["OPTIONS"]["loaders"] = [
@@ -561,14 +563,14 @@ if not TESTING:
     SESSION_COOKIE_AGE = int(datetime.timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
 
-CACHES = {
+CACHES: dict[str, dict[str, Any]] = {
     "default": {
         "OPTIONS": {
             # Avoid conflict between production and testing redis db
             "DB": (1 if PRODUCTION else 2)
         }
     }
-}  # type: Dict[str,Dict[str,Any]]
+}
 
 if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     CACHES["default"] = {"BACKEND": "intranet.utils.cache.DummyCache"}
