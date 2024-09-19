@@ -2,11 +2,13 @@
 import datetime
 import logging
 import string
+from collections.abc import Sequence
 from typing import Collection, Iterable, List, Optional, Union
 
 from cacheops import invalidate_obj
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core import validators
 from django.core.cache import cache
@@ -807,6 +809,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     activity = models.ForeignKey(EighthActivity, on_delete=models.CASCADE)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="EighthSignup", related_name="eighthscheduledactivity_set")
     waitlist = models.ManyToManyField(settings.AUTH_USER_MODEL, through="EighthWaitlist", related_name="%(class)s_scheduledactivity_set")
+    sticky_students = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="sticky_scheduledactivity_set",
+        blank=True,
+    )
 
     admin_comments = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=1000, blank=True)
@@ -861,6 +868,24 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.special and not self.activity.special:
             name_with_flags = "Special: " + name_with_flags
         return name_with_flags
+
+    def is_user_stickied(self, user: AbstractBaseUser) -> bool:
+        """Check if the given user is stickied to this activity.
+
+        Args:
+            user: The user to check for stickiness.
+        """
+        return self.is_activity_sticky() or self.sticky_students.filter(pk=user.pk).exists()
+
+    def is_activity_sticky(self) -> bool:
+        """Check if the scheduled activity or activity is sticky
+
+        .. warning::
+
+            This method does NOT take into account individual user stickies.
+            In 99.9% of cases, you should use :meth:`is_user_stickied` instead.
+        """
+        return self.sticky or self.activity.sticky
 
     def get_true_sponsors(self) -> Union[QuerySet, Collection[EighthSponsor]]:  # pylint: disable=unsubscriptable-object
         """Retrieves the sponsors for the scheduled activity, taking into account activity defaults and
@@ -919,13 +944,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             Whether this scheduled activity is restricted.
         """
         return self.restricted or self.activity.restricted
-
-    def get_sticky(self) -> bool:
-        """Gets whether this scheduled activity is sticky.
-        Returns:
-            Whether this scheduled activity is sticky.
-        """
-        return self.sticky or self.activity.sticky
 
     def get_finance(self) -> str:
         """Retrieves the name of this activity's account with the
@@ -1097,10 +1115,50 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 [waitlist.user.primary_email_address],
             )
 
+    def set_sticky_students(self, users: "Sequence[AbstractBaseUser]") -> None:
+        """Sets the given users to the sticky students list for this activity.
+
+        This also sends emails to students.
+
+        Args:
+            users: The users to add to the sticky students list.
+
+        Returns:
+            A tuple of the new stickied students and the unstickied students.
+        """
+        for user in users:
+            signup = EighthSignup.objects.filter(user=user, scheduled_activity__block=self.block).first()
+            if signup is not None:
+                signup.remove_signup(user, force=True)
+            self.add_user(user, force=True)
+
+        old_sticky_students = self.sticky_students.all()
+        self.sticky_students.set(users)
+
+        # note: this will send separate emails to each student for each activity they are stickied in
+        new_stickied_students = [user.notification_email for user in users if user not in old_sticky_students]
+        unstickied_students = [user.notification_email for user in old_sticky_students if user not in users]
+        email_send_task.delay(
+            "eighth/emails/students_stickied.txt",
+            "eighth/emails/students_stickied.html",
+            data={"activity": self},
+            subject="You have been stickied into an activity",
+            emails=new_stickied_students,
+            bcc=True,
+        )
+        email_send_task.delay(
+            "eighth/emails/students_unstickied.txt",
+            "eighth/emails/students_unstickied.html",
+            data={"activity": self},
+            subject="You have been unstickied from an activity",
+            emails=unstickied_students,
+            bcc=True,
+        )
+
     @transaction.atomic  # This MUST be run in a transaction. Do NOT remove this decorator.
     def add_user(
         self,
-        user: "get_user_model()",
+        user: AbstractBaseUser,
         request: Optional[HttpRequest] = None,
         force: bool = False,
         no_after_deadline: bool = False,
@@ -1160,8 +1218,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if (
                 EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
                 .filter(Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True))
-                .filter(Q(scheduled_activity__cancelled=False))
+                .filter(scheduled_activity__cancelled=False)
                 .exists()
+                or user.sticky_scheduledactivity_set.filter(block__in=all_blocks, cancelled=False).exists()
             ):
                 exception.Sticky = True
 
@@ -1223,7 +1282,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if self.activity.users_blacklisted.filter(username=user).exists():
                 exception.Blacklisted = True
 
-        if self.get_sticky():
+        if self.is_user_stickied(user):
             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
 
         success_message = "Successfully added to waitlist for activity." if waitlist else "Successfully signed up for activity."
@@ -1697,7 +1756,7 @@ class EighthSignup(AbstractBaseEighthModel):
             exception.ActivityDeleted = True
 
         # Check if the user is already stickied into an activity
-        if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky and not self.scheduled_activity.cancelled:
+        if self.scheduled_activity.activity and self.scheduled_activity.is_user_stickied(user) and not self.scheduled_activity.cancelled:
             exception.Sticky = True
 
         if exception.messages() and not force:
