@@ -112,7 +112,10 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         if scheduled_activity.title:
             prefix += " - " + scheduled_activity.title
         middle = " (R)" if restricted_for_user else ""
-        suffix = " (S)" if activity.sticky else ""
+        if user is not None and scheduled_activity.is_user_stickied(user):
+            suffix = " (S)"
+        else:
+            suffix = ""
         suffix += " (BB)" if scheduled_activity.is_both_blocks() else ""
         suffix += " (A)" if activity.administrative else ""
         suffix += " (Deleted)" if activity.deleted else ""
@@ -151,7 +154,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "administrative": scheduled_activity.get_administrative(),
             "presign": activity.presign,
             "presign_time": scheduled_activity.is_too_early_to_signup()[1].strftime("%A, %B %-d at %-I:%M %p"),
-            "sticky": scheduled_activity.get_sticky(),
+            "sticky": scheduled_activity.is_activity_sticky(),
+            "user_sticky": scheduled_activity.is_user_stickied(user),
             "finance": "",  # TODO: refactor JS to remove this
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,  # TODO: refactor JS to remove this

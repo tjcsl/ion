@@ -147,7 +147,10 @@ def schedule_activity_view(request):
                             messages.error(request, f"Did not unschedule {name} because there is {count} student signed up.")
                         else:
                             messages.error(request, f"Did not unschedule {name} because there are {count} students signed up.")
-                    instance.save()
+
+                    if instance:
+                        instance.save()
+                        instance.set_sticky_students(form.cleaned_data["sticky_students"])
 
             messages.success(request, "Successfully updated schedule.")
 
@@ -201,7 +204,10 @@ def schedule_activity_view(request):
         initial_formset_data = []
 
         sched_act_queryset = (
-            EighthScheduledActivity.objects.filter(activity=activity).select_related("block").prefetch_related("rooms", "sponsors", "members")
+            EighthScheduledActivity.objects.filter(activity=activity)
+            .select_related("block")
+            .prefetch_related("rooms", "sponsors", "members", "sticky_students")
+            .all()
         )
         all_sched_acts = {sa.block.id: sa for sa in sched_act_queryset}
 
@@ -227,6 +233,7 @@ def schedule_activity_view(request):
                         "admin_comments": sched_act.admin_comments,
                         "scheduled": not sched_act.cancelled,
                         "cancelled": sched_act.cancelled,
+                        "sticky_students": sched_act.sticky_students.all(),
                     }
                 )
             except KeyError:

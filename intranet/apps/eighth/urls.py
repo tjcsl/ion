@@ -67,6 +67,7 @@ eighth_admin_patterns = [
     re_path(r"^blocks/delete/(?P<block_id>\d+)$", blocks.delete_block_view, name="eighth_admin_delete_block"),
     # Users
     re_path(r"^users$", users.list_user_view, name="eighth_admin_manage_users"),
+    re_path(r"^users/non-graduated$", users.list_non_graduated_view, name="eighth_admin_manage_non_graduated"),
     re_path(r"^users/delete/(\d+)$", users.delete_user_view, name="eighth_admin_manage_users"),
     # Scheduling
     re_path(r"^scheduling/schedule$", scheduling.schedule_activity_view, name="eighth_admin_schedule_activity"),
