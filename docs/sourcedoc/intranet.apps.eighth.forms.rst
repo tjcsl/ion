@@ -20,6 +20,14 @@ intranet.apps.eighth.forms.activities module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.eighth.forms.fields module
+----------------------------------------
+
+.. automodule:: intranet.apps.eighth.forms.fields
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

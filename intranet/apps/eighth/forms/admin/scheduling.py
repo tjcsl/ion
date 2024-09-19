@@ -1,6 +1,8 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
 from ...models import EighthScheduledActivity
+from .. import fields
 
 
 class ScheduledActivityForm(forms.ModelForm):
@@ -19,6 +21,12 @@ class ScheduledActivityForm(forms.ModelForm):
 
         for fieldname in ["block", "activity"]:
             self.fields[fieldname].widget = forms.HiddenInput()
+
+        self.fields["sticky_students"] = fields.UserMultipleChoiceField(
+            queryset=self.initial.get("sticky_students", get_user_model().objects.none()),
+            required=False,
+            widget=forms.SelectMultiple(attrs={"class": "remote-source remote-sticky-students"}),
+        )
 
     def validate_unique(self):
         # We'll handle this ourselves by updating if already exists
