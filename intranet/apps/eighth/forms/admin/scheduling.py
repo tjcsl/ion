@@ -1,6 +1,10 @@
 from django import forms
+from django.contrib.auth import get_user_model
+
+from intranet.utils.date import get_senior_graduation_year
 
 from ...models import EighthScheduledActivity
+from .. import fields
 
 
 class ScheduledActivityForm(forms.ModelForm):
@@ -19,6 +23,14 @@ class ScheduledActivityForm(forms.ModelForm):
 
         for fieldname in ["block", "activity"]:
             self.fields[fieldname].widget = forms.HiddenInput()
+
+        self.fields["sticky_students"] = fields.UserMultipleChoiceField(
+            queryset=get_user_model().objects.filter(
+                user_type="student",
+                graduation_year__gte=get_senior_graduation_year(),
+            ),
+            required=False,
+        )
 
     def validate_unique(self):
         # We'll handle this ourselves by updating if already exists
