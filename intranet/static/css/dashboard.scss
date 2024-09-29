@@ -1,305 +1,335 @@
 @import "colors";
 
 .announcements {
-    padding-right: 432px;
-    min-width: 290px;
-    /* for 320x480 screens */
-    max-width: 1000px;
-    margin-bottom: 100px;
+  padding-right: 432px;
+  min-width: 290px;
+  /* for 320x480 screens */
+  max-width: 1000px;
+  margin-bottom: 100px;
 
-    &.no-widgets {
-        padding-right: 0;
-    }
+  &.no-widgets {
+    padding-right: 0;
+  }
 
-    h2 {
-        padding-left: 10px;
-        line-height: 38px;
-        float: left;
-    }
+  h2 {
+    padding-left: 10px;
+    line-height: 38px;
+    float: left;
+  }
+
+  .announcement-banner {
+    background-color: #fff3cd;
+    color: #533f05;
+    border: 1px solid #fbe298;
+    padding: 10px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    align-items: center;
+    border-radius: 5px;
+    line-height: 1.5;
+  }
+
+  .announcement-link {
+    color: #856404;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .announcement-link:hover {
+    color: #251900;
+  }
 }
 
 .announcements-header {
-    height: 38px;
-    margin-bottom: 4px;
+  height: 38px;
+  margin-bottom: 4px;
 }
 
 .club-announcements {
-    padding: 10px;
-    border-radius: 4px;
-    transition: max-height 0.2s ease-in-out;
-    text-align: left;
+  padding: 10px;
+  border-radius: 4px;
+  transition: max-height 0.2s ease-in-out;
+  text-align: left;
 
-    &.collapsed {
-        max-height: 90px !important;
-        overflow: hidden;
+  &.collapsed {
+    max-height: 90px !important;
+    overflow: hidden;
+  }
+
+  &.collapsed::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0),
+      #fce624 90%
+    );
+    width: 100%;
+    height: 4em;
+  }
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #d6d6d6;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+.club-announcements-header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.club-announcements-content {
+  display: none;
+  margin-top: 5px;
+}
+
+.club-announcements-container {
+  .announcement,
+  .announcement-meta {
+    display: none;
+  }
+}
+
+a.club-announcement-meta-link,
+a.club-announcement-meta-link:visited {
+  color: rgb(144, 144, 144);
+  text-decoration: underline;
+
+  &:hover {
+    color: rgb(66, 66, 66);
+  }
+}
+
+.club-announcements-toggle-icon {
+  float: right;
+  margin-top: 4px;
+}
+
+.announcements-icon-wrapper:has(> .club-announcements-button) {
+  @media (max-width: 800px) {
+    display: block !important;
+    width: 100%;
+  }
+
+  @media (max-width: 550px) {
+    margin-bottom: 6px;
+  }
+}
+
+.announcement,
+.club-announcements,
+.announcement-meta {
+  background-color: white;
+  -webkit--radius: 5px;
+  -moz--radius: 5px;
+  -radius: 5px;
+  border: 1px solid rgb(216, 216, 216);
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  overflow-x: auto;
+  position: relative;
+  behavior: url("/static/js/vendor/PIE/PIE.htc");
+
+  h3 {
+    cursor: pointer;
+
+    > a.announcement-link {
+      cursor: pointer;
+      color: $grey !important;
     }
 
-    &.collapsed::after {
+    &:hover .announcement-icon-wrapper .announcement-toggle,
+    .announcement-icon-wrapper .announcement-toggle:hover,
+    .announcement-icon-wrapper:hover .announcement-toggle:hover {
+      color: rgb(32, 66, 224);
+    }
+
+    .announcement-icon-wrapper:hover .announcement-toggle {
+      color: $grey;
+    }
+  }
+
+  &.announcement-meta h3 {
+    cursor: initial;
+  }
+
+  &.pinned h3 {
+    color: rgb(181, 0, 0);
+  }
+
+  .announcement-content {
+    b,
+    strong {
+      font-weight: bold;
+    }
+
+    i,
+    em {
+      font-style: italic;
+    }
+
+    u {
+      text-decoration: underline;
+    }
+
+    ol {
+      list-style-type: decimal;
+      list-style-position: inside;
+    }
+
+    p {
+      margin-bottom: 5px;
+    }
+  }
+
+  &.partially-hidden {
+    .announcement-toggle-content {
+      max-height: 200px;
+      overflow-y: hidden;
+
+      &::after {
         content: "";
         position: absolute;
         z-index: 1;
         bottom: 0;
         left: 0;
         pointer-events: none;
-        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fce624 90%);
+        background-image: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0),
+          white 80%
+        );
         width: 100%;
-        height: 4em;
+        height: 5em;
+      }
     }
+  }
 
-    &::-webkit-scrollbar {
-        width: 7px;
-    }
-    &::-webkit-scrollbar-track {
-        background: #d6d6d6;
-    }
-    &::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
-}
+  &.club-announcements {
+    background-color: rgb(231, 231, 231);
+  }
 
-.club-announcements-header {
-    text-align: center;
-    margin-bottom: 0;
-}
+  &-icon {
+    cursor: pointer;
+  }
 
-.club-announcements-content {
+  &.hidden .announcement-toggle-content {
     display: none;
-    margin-top: 5px;
-}
-
-.club-announcements-container {
-    .announcement, .announcement-meta {
-        display: none;
-    }
-}
-
-a.club-announcement-meta-link, a.club-announcement-meta-link:visited {
-    color: rgb(144, 144, 144);
-    text-decoration: underline;
-
-    &:hover {
-        color: rgb(66, 66, 66);
-    }
-}
-
-.club-announcements-toggle-icon {
-    float: right;
-    margin-top: 4px;
-}
-
-.announcements-icon-wrapper:has(> .club-announcements-button) {
-    @media (max-width: 800px) {
-        display: block !important;
-        width: 100%;
-    }
-
-    @media (max-width: 550px) {
-        margin-bottom: 6px;
-    }
-}
-
-.announcement, .club-announcements, .announcement-meta {
-    background-color: white;
-    -webkit--radius: 5px;
-    -moz--radius: 5px;
-    -radius: 5px;
-    border: 1px solid rgb(216, 216, 216);
-    padding: 6px 10px;
-    margin-bottom: 6px;
-    overflow-x: auto;
-    position: relative;
-    behavior: url("/static/js/vendor/PIE/PIE.htc");
-
-    h3 {
-        cursor: pointer;
-
-        > a.announcement-link {
-            cursor: pointer;
-            color: $grey !important;
-        }
-
-        &:hover .announcement-icon-wrapper .announcement-toggle,
-        .announcement-icon-wrapper .announcement-toggle:hover,
-        .announcement-icon-wrapper:hover .announcement-toggle:hover {
-            color: rgb(32, 66, 224);
-        }
-
-        .announcement-icon-wrapper:hover .announcement-toggle {
-            color: $grey;
-        }
-    }
-
-    &.announcement-meta h3 {
-        cursor: initial;
-    }
-
-    &.pinned h3 {
-        color: rgb(181, 0, 0);
-    }
-
-    .announcement-content {
-        b,
-        strong {
-            font-weight: bold;
-        }
-
-        i,
-        em {
-            font-style: italic;
-        }
-
-        u {
-            text-decoration: underline;
-        }
-
-        ol {
-            list-style-type: decimal;
-            list-style-position: inside;
-        }
-
-        p {
-            margin-bottom: 5px;
-        }
-    }
-
-    &.partially-hidden {
-        .announcement-toggle-content {
-            max-height: 200px;
-            overflow-y: hidden;
-
-            &::after {
-                content: "";
-                position: absolute;
-                z-index: 1;
-                bottom: 0;
-                left: 0;
-                pointer-events: none;
-                background-image: linear-gradient(
-                                to bottom,
-                                rgba(255, 255, 255, 0),
-                                white 80%
-                );
-                width: 100%;
-                height: 5em;
-            }
-        }
-    }
-
-    &.club-announcements {
-        background-color: rgb(231, 231, 231);
-    }
-
-    &-icon {
-        cursor: pointer;
-    }
-
-    &.hidden .announcement-toggle-content {
-        display: none;
-    }
+  }
 }
 
 .announcements-icon-wrapper {
-    float: right;
+  float: right;
 }
 
 .announcement-metadata {
-    color: rgb(144, 144, 144);
-    font-size: 12px;
-    line-height: 12px;
-    margin-bottom: 5px;
+  color: rgb(144, 144, 144);
+  font-size: 12px;
+  line-height: 12px;
+  margin-bottom: 5px;
 }
 
 .announcement-icon-wrapper {
-    float: right;
-    display: none;
+  float: right;
+  display: none;
 
-    .announcement:not(.club-announcements):hover & {
-        display: block;
+  .announcement:not(.club-announcements):hover & {
+    display: block;
+  }
+
+  > a {
+    color: $grey;
+    text-decoration: none !important;
+    padding-left: 2px;
+
+    &:hover {
+      color: rgb(32, 66, 224);
     }
-
-    > a {
-        color: $grey;
-        text-decoration: none !important;
-        padding-left: 2px;
-
-        &:hover {
-            color: rgb(32, 66, 224);
-        }
-    }
+  }
 }
 
 .club-announcement-filters {
-    display: flex;
-    justify-content: space-between;
-    flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
 
-    > .club-announcement-filter {
-        background-color: white;
-        border: 1px solid rgb(216, 216, 216);
-        padding: 6px 10px;
-        margin-bottom: 6px;
-        position: relative;
+  > .club-announcement-filter {
+    background-color: white;
+    border: 1px solid rgb(216, 216, 216);
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    position: relative;
 
-        text-align: center;
-        font-size: 14px;
-        width: 100%;
+    text-align: center;
+    font-size: 14px;
+    width: 100%;
 
-        cursor: pointer;
-        font-weight: bolder;
+    cursor: pointer;
+    font-weight: bolder;
 
-        &.active {
-            background-color: rgb(44, 103, 186);
-            color: white;
-        }
-
-        &.subscribed-filter {
-            border-right: none;
-            border-top-left-radius: 5px;
-            border-bottom-left-radius: 5px;
-        }
-
-        &.unsubscribed-filter {
-            border-top-right-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
+    &.active {
+      background-color: rgb(44, 103, 186);
+      color: white;
     }
+
+    &.subscribed-filter {
+      border-right: none;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+
+    &.unsubscribed-filter {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
 }
 
 a.button {
-    &.subscribe-button {
-        color: green;
-        float: right;
-        margin-left: 5px;
-    }
+  &.subscribe-button {
+    color: green;
+    float: right;
+    margin-left: 5px;
+  }
 
-    &.unsubscribe-button {
-        color: red;
-        float: right;
-        margin-left: 5px;
-    }
+  &.unsubscribe-button {
+    color: red;
+    float: right;
+    margin-left: 5px;
+  }
 }
 
 .event.hidden .event-toggle-content {
-    display: none;
+  display: none;
 }
 
 .content-center {
-    width: 100%;
-    text-align: center;
+  width: 100%;
+  text-align: center;
 }
 
 @media (max-width: 800px) {
-    /*
+  /*
      * widgets that fall underneath nav shouldn't float
      * all the way to the left in 800-500px tablet view.
      * mainly affects student admins
      */
-    ul.nav {
-        margin-bottom: 100%;
-    }
+  ul.nav {
+    margin-bottom: 100%;
+  }
 }
 
 /*
@@ -328,63 +358,63 @@ a.button {
 */
 
 @media print {
-    div.main div.announcements.primary-content {
-        position: absolute;
-        top: 0;
-        padding: 0;
-        min-width: initial;
-        max-width: initial;
+  div.main div.announcements.primary-content {
+    position: absolute;
+    top: 0;
+    padding: 0;
+    min-width: initial;
+    max-width: initial;
+  }
+  div.announcements-header .announcements-icon-wrapper * {
+    visibility: hidden;
+  }
+  div.announcement {
+    &-icon-wrapper {
+      visibility: hidden !important;
     }
-    div.announcements-header .announcements-icon-wrapper * {
-        visibility: hidden;
-    }
-    div.announcement {
-        &-icon-wrapper {
-            visibility: hidden !important;
-        }
 
-        &.announcement-meta {
-            display: none;
-        }
+    &.announcement-meta {
+      display: none;
     }
+  }
 }
 
 div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
-    content: attr(data-placeholder);
-    float: left;
-    margin-left: 5px;
-    color: $grey;
+  content: attr(data-placeholder);
+  float: left;
+  margin-left: 5px;
+  color: $grey;
 }
 
 .dashboard-item-icon {
-    float: left;
-    font-size: 32px;
-    opacity: 0.6;
-    margin: 0;
-    padding: 2px 8px 0 0;
-    width: 27px;
-    text-align: center;
-    cursor: pointer;
+  float: left;
+  font-size: 32px;
+  opacity: 0.6;
+  margin: 0;
+  padding: 2px 8px 0 0;
+  width: 27px;
+  text-align: center;
+  cursor: pointer;
 
-    &:hover,
-    .announcement h3:hover &,
-    .event h3:hover & {
-        opacity: 1;
-    }
+  &:hover,
+  .announcement h3:hover &,
+  .event h3:hover & {
+    opacity: 1;
+  }
 
-    &.fa-users {
-        width: 36px;
-        font-size: 28px;
-        position: relative;
-        top: 2px;
-    }
+  &.fa-users {
+    width: 36px;
+    font-size: 28px;
+    position: relative;
+    top: 2px;
+  }
 }
 
 .main div.primary-content {
-    @media (min-width: 801px) {
-        padding-right: 316px;
-    }
-    @media (min-width: 961px) {
-        padding-right: 432px;
-    }
+  @media (min-width: 801px) {
+    padding-right: 316px;
+  }
+  @media (min-width: 961px) {
+    padding-right: 432px;
+  }
 }
