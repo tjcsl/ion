@@ -44,12 +44,14 @@ $(document).ready(function() {
 
     $(".subscribed-filter").click(function () {
         $(".unsubscribed-filter").removeClass("active");
+        $("#subscriptions-pagination").css("display", "");
         $(this).addClass("active");
         filterClubAnnouncements();
     });
 
     $(".unsubscribed-filter").click(function () {
         $(".subscribed-filter").removeClass("active");
+        $("#subscriptions-pagination").css("display", "none");
         $(this).addClass("active");
         filterClubAnnouncements();
     });
