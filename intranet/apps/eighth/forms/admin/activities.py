@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 import logging
-from typing import List  # noqa
 
 from django import forms, http
 from django.contrib.auth import get_user_model
@@ -11,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class ActivityDisplayField(forms.ModelChoiceField):
-    cancelled_acts = None  # type: List[EighthActivity]
+    cancelled_acts: list[EighthActivity] | None = None
 
     def __init__(self, *args, **kwargs):
         if "block" in kwargs:
@@ -144,9 +145,9 @@ class ActivityForm(forms.ModelForm):
         self.fields["subscriptions_enabled"].label = "Enable club announcements"
         self.fields["subscriptions_enabled"].help_text = "Allow students to subscribe to receive announcements for this activity through Ion."
         self.fields["officers"].help_text = "Student officers can send club announcements to subscribers."
-        self.fields["club_sponsors"].help_text = (
-            "Club sponsors can manage this club's announcements. May be different from the activity's scheduled sponsors."
-        )
+        self.fields[
+            "club_sponsors"
+        ].help_text = "Club sponsors can manage this club's announcements. May be different from the activity's scheduled sponsors."
         self.fields["subscribers"].help_text = "Students who subscribe to this activity will receive club announcements."
 
         # These fields are rendered on the right of the page on the edit activity page.
@@ -161,14 +162,12 @@ class ActivityForm(forms.ModelForm):
             "seniors_allowed",
         }
 
-        self.club_announcements_fields = set(
-            [
-                "subscriptions_enabled",
-                "club_sponsors",
-                "officers",
-                "subscribers",
-            ]
-        )
+        self.club_announcements_fields = {
+            "subscriptions_enabled",
+            "club_sponsors",
+            "officers",
+            "subscribers",
+        }
 
     class Meta:
         model = EighthActivity
