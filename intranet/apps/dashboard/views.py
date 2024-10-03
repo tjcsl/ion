@@ -1,14 +1,20 @@
+from __future__ import annotations
+
 import logging
 from datetime import datetime, time, timedelta
 from itertools import chain
+from typing import Any, Generic, Iterable, Sequence, TypeVar
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Page, Paginator
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware
+from typing_extensions import TypedDict, TypeGuard
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
@@ -21,9 +27,10 @@ from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 
 logger = logging.getLogger(__name__)
+T = TypeVar("T")
 
 
-def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
+def gen_schedule(user, num_blocks: int = 6, surrounding_blocks: Iterable[EighthBlock] | None = None):
     """Generate a list of information about a block and a student's current activity signup.
 
     Returns:
@@ -109,7 +116,7 @@ def gen_schedule(user, num_blocks=6, surrounding_blocks=None):
     return schedule, no_signup_today
 
 
-def gen_sponsor_schedule(user, sponsor=None, num_blocks=6, surrounding_blocks=None, given_date=None):
+def gen_sponsor_schedule(user, sponsor=None, num_blocks: int = 6, surrounding_blocks=None, given_date=None):
     r"""Return a list of :class:`EighthScheduledActivity`\s in which the
     given user is sponsoring.
 
@@ -193,7 +200,7 @@ def get_prerender_url(request):
     return request.build_absolute_uri(reverse(view))
 
 
-def get_announcements_list(request, context):
+def get_announcements_list(request, context) -> list[Announcement | Event]:
     """
     An announcement will be shown if:
     * It is not expired
@@ -265,11 +272,25 @@ def get_announcements_list(request, context):
     return items
 
 
-def split_club_announcements(items):
+def split_club_announcements(items: Iterable[Announcement | Event]) -> tuple[list[Announcement], list[Announcement]]:
+    """Split items into standard and club announcements.
+
+    .. warning::
+
+        This will discard any club announcements with subscriptions disabled
+        from the resulting list.
+
+    Returns:
+        a tuple of standard and club announcements.
+    """
+
+    def is_announcement(item: Announcement | Event) -> TypeGuard[Announcement]:
+        return item.dashboard_type == "announcement"
+
     standard, club = [], []
 
     for item in items:
-        if item.dashboard_type == "announcement" and item.is_club_announcement:
+        if is_announcement(item) and item.is_club_announcement:
             if item.activity.subscriptions_enabled:
                 club.append(item)
         else:
@@ -278,30 +299,62 @@ def split_club_announcements(items):
     return standard, club
 
 
-def filter_club_announcements(user, user_hidden_announcements, club_items):
+def filter_club_announcements(
+    user, user_hidden_announcements: QuerySet[Announcement], club_items: Iterable[Announcement]
+) -> tuple[list[Announcement], list[Announcement], list[Announcement]]:
+    """Filter club announcements into categories
+
+    Returns:
+        a tuple of visible, hidden, and unsubscribed club announcements for the user.
+    """
     visible, hidden, unsubscribed = [], [], []
 
     for item in club_items:
         if item.activity.subscriptions_enabled:
-            if user not in item.activity.subscribers.all():
-                unsubscribed.append(item)
-            elif item.id in user_hidden_announcements:
+            if item.id in user_hidden_announcements:
                 hidden.append(item)
-            else:
+            elif user.subscribed_activity_set.filter(announcement=item).exists():
                 visible.append(item)
+            else:
+                unsubscribed.append(item)
 
     return visible, hidden, unsubscribed
 
 
-def paginate_announcements_list(request, context, items, visible_club_items):
-    """
-    Paginate ``items`` in groups of 15
+class RawPaginationData(TypedDict, Generic[T]):
+    club_items: Sequence[Announcement]
+    items: Page[T]
+    page_num: int
+    prev_page: int
+    next_page: int
+    more_items: bool
+    page_obj: Paginator[T]
 
+
+def paginate_announcements_list_raw(
+    request: HttpRequest,
+    items: Sequence[T],
+    visible_club_items: Sequence[Announcement] = (),
+    *,
+    query_param: str = "page",
+) -> RawPaginationData[T]:
+    """Return the raw data for paginating announcements.
+
+    Args:
+        request: The :class:`django.http.HttpRequest` object.
+        items: The list of items to paginate.
+        visible_club_items: The list of club announcements to paginate and add to the context.
+        query_param: The ``request.GET`` parameter to use for the page number.
+
+    Returns:
+        A dictionary intended to be merged into the context.
     """
+
     DEFAULT_PAGE_NUM = 1
 
-    if request.GET.get("page", "INVALID").isdigit():
-        page_num = int(request.GET["page"])
+    num = request.GET.get(query_param, "")
+    if num.isdigit():
+        page_num = int(num)
     else:
         page_num = DEFAULT_PAGE_NUM
 
@@ -315,20 +368,34 @@ def paginate_announcements_list(request, context, items, visible_club_items):
     prev_page = items.previous_page_number() if items.has_previous() else 0
     next_page = items.next_page_number() if more_items else 0
 
+    # limit to 15 to prevent extreme slowdowns for large amounts
+    # of club announcements
     club_items = visible_club_items[:15]
-    context.update(
-        {
-            "club_items": club_items,
-            "items": items,
-            "page_num": page_num,
-            "prev_page": prev_page,
-            "next_page": next_page,
-            "more_items": more_items,
-            "page_obj": paginator,
-        }
+
+    return RawPaginationData(
+        club_items=club_items,
+        items=items,
+        page_num=page_num,
+        prev_page=prev_page,
+        next_page=next_page,
+        more_items=more_items,
+        page_obj=paginator,
     )
 
-    return context, items
+
+def paginate_announcements_list(
+    request, context: dict[str, Any], items: Sequence[T], visible_club_items: Sequence[Announcement] = ()
+) -> tuple[dict[str, Any], Page[T]]:
+    """Paginate ``items`` in groups of 15
+
+    Returns:
+        A tuple of the updated context and the page.
+    """
+    new_ctx = paginate_announcements_list_raw(request, items, visible_club_items)
+    context.update(new_ctx)
+    context["all_items"] = context["items"]
+
+    return context, new_ctx["items"]
 
 
 def get_tjstar_mapping(user):
@@ -495,13 +562,25 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
 
     items, club_items = split_club_announcements(items)
 
+    visible_club_items, _, unsubscribed_club_announcements = filter_club_announcements(user, user_hidden_announcements, club_items)
+
     if not show_hidden_club:
         # Dashboard
-        visible_club_items, _hidden_club_items, _other_club_items = filter_club_announcements(user, user_hidden_announcements, club_items)
         context, items = paginate_announcements_list(request, context, items, visible_club_items)
     else:
         # Club announcements only
-        context, items = paginate_announcements_list(request, context, club_items, visible_club_items=[])
+        context, items = paginate_announcements_list(request, context, visible_club_items, visible_club_items=[])
+
+        # add club announcement pagination for non-subscribed
+        raw_pagination_data = paginate_announcements_list_raw(
+            request,
+            unsubscribed_club_announcements,
+            query_param="unsubscribed_page",
+        )
+        # namespace the pagination data for unsubscribed club announcements so it doesn't
+        # conflict with other pagination data
+        context["unsubscribed"] = raw_pagination_data
+        context["all_items"] = (*context["items"], *context["unsubscribed"]["items"])
 
     if ignore_dashboard_types is None:
         ignore_dashboard_types = []

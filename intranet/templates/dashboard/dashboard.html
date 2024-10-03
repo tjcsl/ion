@@ -209,7 +209,12 @@
             <div class="club-announcements">
                 <h3 class="club-announcements-header">
                     <i class="fas fa-users"></i>&nbsp;
-                    You have <span class="num-club-announcements">{{ club_items|length }}</span> new club announcement{{ club_items|length|pluralize }}
+                    <!-- This only goes up to 15 items. Removing this restriction causes slowdowns. -->
+                    {% if club_items|length < 15 %}
+                        You have <span class="num-club-announcements">{{ club_items|length }}</span> new club announcement{{ club_items|length|pluralize }}
+                    {% else %}
+                        You have <span class="num-club-announcements">15+</span> new club announcements
+                    {% endif %}
                     <i class="fas fa-chevron-down club-announcements-toggle-icon"></i>
                 </h3>
                 <div class="club-announcements-content">
@@ -242,7 +247,7 @@
             </div>
         {% endif %}
 
-        {% for item in items %}
+        {% for item in all_items %}
             {% if item.dashboard_type in ignore_dashboard_types %}
                 <!-- {{ item.dashboard_type }} hidden -->
             {% elif item.dashboard_type == "announcement" %}
@@ -280,8 +285,8 @@
                           >&lt;</a>
 
                         {% for page in page_obj|page_list:items %}
-                        <a {% if page %} class="button" {% else %} class="ellipses" {% endif %}
-                          {% if page == items.number %} style="background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;" {% endif %}
+                        <a class="{% if page %}button {% else %}ellipses{% endif %}"
+                          style="{% if page == items.number %}background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;{% endif %}"
                           href="{% url view_announcements_url %}{% if page %}?{% query_transform request page=page %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
                         {% endfor %}
 
@@ -298,6 +303,43 @@
                             <input name="page" type="number"
                             min="1" max={{ page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
                             placeholder={{ items.number }}> of {{ page_obj.num_pages }}
+                            <input type="submit" value="Go"/>
+                        </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div id="non-subscriptions-pagination" style="display:none">
+                {% if unsubscribed.page_obj.num_pages > 1 %}
+                    <div style="display:grid;grid-template-columns:1fr max-content 1fr">
+                        <div style="text-align:center;grid-column-start:2">
+                          <a {% if unsubscribed.prev_page > 0 %}
+                            href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.prev_page %}"
+                            {% else %}
+                            disabled
+                            {% endif %}
+                            class="button"
+                          >&lt;</a>
+
+                        {% for page in unsubscribed.page_obj|page_list:unsubscribed.items %}
+                        <a class="{% if page %}button {% else %}ellipses{% endif %}"
+                          style="{% if page == unsubscribed.items.number %}background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;{% endif %}"
+                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request unsubscribed_page=page %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
+                        {% endfor %}
+
+                        <a {% if unsubscribed.more_items %}
+                          href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.next_page %}"
+                          {% else %}
+                          disabled
+                          {% endif %}
+                          class="button"
+                        >&gt;</a>
+                    </div>
+                    <div style="text-align:right">
+                        <form action="{% url view_announcements_url %}" method="get" style="display:inline;float:right">
+                            <input name="page" type="number"
+                            min="1" max={{ unsubscribed.page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
+                            placeholder={{ unsubscribed.items.number }}> of {{ unsubscribed.page_obj.num_pages }}
                             <input type="submit" value="Go"/>
                         </form>
                         </div>

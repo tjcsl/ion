@@ -44,15 +44,21 @@ $(document).ready(function() {
 
     $(".subscribed-filter").click(function () {
         $(".unsubscribed-filter").removeClass("active");
-        $("#subscriptions-pagination").css("display", "");
+        $("#non-subscriptions-pagination").hide();
+
+        $("#subscriptions-pagination").show();
         $(this).addClass("active");
+
         filterClubAnnouncements();
     });
 
     $(".unsubscribed-filter").click(function () {
         $(".subscribed-filter").removeClass("active");
-        $("#subscriptions-pagination").css("display", "none");
+        $("#subscriptions-pagination").hide();
+
+        $("#non-subscriptions-pagination").show();
         $(this).addClass("active");
+
         filterClubAnnouncements();
     });
 
