@@ -9,6 +9,17 @@ Subpackages
 
    intranet.apps.eighth.forms.admin
 
+Submodules
+----------
+
+intranet.apps.eighth.forms.fields module
+----------------------------------------
+
+.. automodule:: intranet.apps.eighth.forms.fields
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

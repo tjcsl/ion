@@ -7,6 +7,7 @@ from typing import Collection, Iterable, List, Optional, Union
 from cacheops import invalidate_obj
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import Group as DjangoGroup
 from django.core import validators
 from django.core.cache import cache
@@ -798,6 +799,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     activity = models.ForeignKey(EighthActivity, on_delete=models.CASCADE)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through="EighthSignup", related_name="eighthscheduledactivity_set")
     waitlist = models.ManyToManyField(settings.AUTH_USER_MODEL, through="EighthWaitlist", related_name="%(class)s_scheduledactivity_set")
+    sticky_students = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="sticky_scheduledactivity_set",
+        blank=True,
+    )
 
     admin_comments = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=1000, blank=True)
@@ -852,6 +858,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if self.special and not self.activity.special:
             name_with_flags = "Special: " + name_with_flags
         return name_with_flags
+
+    def is_user_stickied(self, user: AbstractBaseUser) -> bool:
+        """Check if the given user is stickied to this activity.
+
+        Args:
+            user: The user to check for stickiness.
+        """
+        return self.sticky or self.activity.sticky or self.sticky_students.filter(pk=user.pk).exists()
 
     def get_true_sponsors(self) -> Union[QuerySet, Collection[EighthSponsor]]:  # pylint: disable=unsubscriptable-object
         """Retrieves the sponsors for the scheduled activity, taking into account activity defaults and
@@ -910,13 +924,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             Whether this scheduled activity is restricted.
         """
         return self.restricted or self.activity.restricted
-
-    def get_sticky(self) -> bool:
-        """Gets whether this scheduled activity is sticky.
-        Returns:
-            Whether this scheduled activity is sticky.
-        """
-        return self.sticky or self.activity.sticky
 
     def get_finance(self) -> str:
         """Retrieves the name of this activity's account with the
@@ -1091,7 +1098,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     @transaction.atomic  # This MUST be run in a transaction. Do NOT remove this decorator.
     def add_user(
         self,
-        user: "get_user_model()",
+        user: AbstractBaseUser,
         request: Optional[HttpRequest] = None,
         force: bool = False,
         no_after_deadline: bool = False,
@@ -1151,8 +1158,9 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if (
                 EighthSignup.objects.filter(user=user, scheduled_activity__block__in=all_blocks)
                 .filter(Q(scheduled_activity__activity__sticky=True) | Q(scheduled_activity__sticky=True))
-                .filter(Q(scheduled_activity__cancelled=False))
+                .filter(scheduled_activity__cancelled=False)
                 .exists()
+                or user.sticky_scheduledactivity_set.filter(block__in=all_blocks, cancelled=False).exists()
             ):
                 exception.Sticky = True
 
@@ -1214,7 +1222,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             if self.activity.users_blacklisted.filter(username=user).exists():
                 exception.Blacklisted = True
 
-        if self.get_sticky():
+        if self.is_user_stickied(user):
             EighthWaitlist.objects.filter(user_id=user.id, block_id=self.block.id).delete()
 
         success_message = "Successfully added to waitlist for activity." if waitlist else "Successfully signed up for activity."
@@ -1688,7 +1696,7 @@ class EighthSignup(AbstractBaseEighthModel):
             exception.ActivityDeleted = True
 
         # Check if the user is already stickied into an activity
-        if self.scheduled_activity.activity and self.scheduled_activity.activity.sticky and not self.scheduled_activity.cancelled:
+        if self.scheduled_activity.activity and self.scheduled_activity.is_user_stickied(user) and not self.scheduled_activity.cancelled:
             exception.Sticky = True
 
         if exception.messages() and not force:
