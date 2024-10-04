@@ -140,6 +140,27 @@
         {% else %}
             <b>No results.</b>
         {% endif %}
+
+        <br><br>
+        <h3>Club Announcements</h3>
+        {% if club_announcements %}
+            {{ club_announcements|length }} result{{ club_announcements|pluralize }}
+            <table class="list-table announcements-table">
+                {% for a in club_announcements %}
+                    <tr>
+                        <td class="list-item">
+                            <a href="{% url 'view_announcement' a.id %}">
+                                {{ a.title|safe }}
+                            </a><br>
+                            &nbsp; &nbsp; {{ a.content|truncatechars_html:"50"|striptags }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+
     {% endif %}
 
     {% if search_query and DJANGO_SETTINGS.ENABLE_ENRICHMENT_APP %}
