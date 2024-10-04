@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 
 from django.conf import settings
@@ -7,7 +9,7 @@ from django.db.models import Q
 from django.shortcuts import redirect, render
 
 from ...utils.helpers import is_entirely_digit
-from ..announcements.models import AnnouncementManager
+from ..announcements.models import Announcement, AnnouncementManager
 from ..auth.decorators import deny_restricted
 from ..eighth.models import EighthActivity
 from ..enrichment.models import EnrichmentActivity
@@ -214,14 +216,24 @@ def do_courses_search(q):
     return Course.objects.filter(filter_query).order_by("name")
 
 
-def do_announcements_search(q, user):
+def do_announcements_search(q, user) -> tuple[list[Announcement], list[Announcement]]:
+    """Search for announcements.
+
+    Returns:
+        A tuple of the announcements and club announcements
+    """
     filter_query = get_query(q, ["title", "content"])
     entries = AnnouncementManager().visible_to_user(user).filter(filter_query).order_by("title")
-    final_entries = []
+    club_announcements = []
+    announcements = []
     for e in entries:
-        if e.is_this_year:
-            final_entries.append(e)
-    return final_entries
+        if not e.is_this_year:
+            continue
+        if e.activity is None:
+            announcements.append(e)
+        else:
+            club_announcements.append(e)
+    return (announcements, club_announcements)
 
 
 def do_events_search(q):
@@ -266,7 +278,7 @@ def search_view(request):
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))
 
         activities = do_activities_search(q)
-        announcements = do_announcements_search(q, request.user)
+        announcements, club_announcements = do_announcements_search(q, request.user)
         events = do_events_search(q)
         enrichments = do_enrichment_search(q) if settings.ENABLE_ENRICHMENT_APP else []
         classes = do_courses_search(q)
@@ -282,6 +294,7 @@ def search_view(request):
             "search_query": q,
             "search_results": users,  # User objects
             "announcements": announcements,  # Announcement objects
+            "club_announcements": club_announcements,  # Club Announcement objects
             "events": events,  # Event objects
             "enrichments": enrichments,  # EnrichmentActivity objects
             "activities": activities,  # EighthActivity objects
