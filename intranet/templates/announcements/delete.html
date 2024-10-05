@@ -34,8 +34,15 @@
 
 {% block main %}
 <div class="announcements primary-content">
+    {% if request.user.is_announcements_admin %}
     <h3>Are you sure you want to delete this announcement?</h3>
     <p>Please <b>EXPIRE</b> this announcement instead of deleting it, unless the announcement was created by accident.</p>
+    {% else %}
+    <h3>Are you sure you want to expire this club announcement?</h3>
+    <p>Expiring an announcement will remove it from the dashboard, but it will still be accessible in the archive.
+        To request full deletion of a club announcement, email <a href="mailto:intranet@tjhsst.edu">intranet@tjhsst.edu</a>.</p>
+    {% endif %}
+    <br>
     <b>{{ announcement.title }}</b>
     <br>
     <br>
@@ -49,7 +56,9 @@
         <input type="submit" value="Expire">
         <br>
         <br>
+        {% if request.user.is_announcements_admin %}
         <a href="#" id="delete" class="button"><i class='fas fa-exclamation-triangle'></i> Full Delete</a> &nbsp;
+        {% endif %}
     </form>
 </div>
 <script>

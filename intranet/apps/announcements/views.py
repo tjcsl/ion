@@ -426,7 +426,6 @@ def modify_announcement_view(request, announcement_id=None):
     return render(request, "announcements/add_modify.html", context)
 
 
-@announcements_admin_required
 @deny_restricted
 def delete_announcement_view(request, announcement_id):
     """Delete an announcement.
@@ -434,30 +433,28 @@ def delete_announcement_view(request, announcement_id):
     announcement_id: announcement id
 
     """
-    if request.method == "POST":
-        post_id = None
-        try:
-            post_id = request.POST["id"]
-        except AttributeError:
-            post_id = None
-        try:
-            a = Announcement.objects.get(id=post_id)
-            if request.POST.get("full_delete", False):
-                a.delete()
-                messages.success(request, "Successfully deleted announcement.")
-                logger.info("Admin %s deleted announcement: %s (%s)", request.user, a, a.id)
-            else:
-                a.expiration_date = timezone.localtime()
-                a.save()
-                messages.success(request, "Successfully expired announcement.")
-                logger.info("Admin %s expired announcement: %s (%s)", request.user, a, a.id)
-        except Announcement.DoesNotExist:
-            pass
+    announcement = get_object_or_404(Announcement, id=announcement_id)
 
+    if not (request.user.is_announcements_admin or announcement.is_club_announcement and announcement.can_modify(request.user)):
+        messages.error(request, "You do not have permission to delete this announcement.")
         return redirect("index")
-    else:
-        announcement = get_object_or_404(Announcement, id=announcement_id)
-        return render(request, "announcements/delete.html", {"announcement": announcement})
+
+    if request.method == "POST":
+        if request.POST.get("full_delete", False) and request.user.is_announcements_admin:
+            announcement.delete()
+            messages.success(request, "Successfully deleted announcement.")
+            logger.info("Admin %s deleted announcement: %s (%s)", request.user, announcement, announcement.id)
+        else:
+            announcement.expiration_date = timezone.localtime()
+            announcement.save()
+            messages.success(request, "Successfully expired announcement.")
+            logger.info("%s expired announcement: %s (%s)", request.user, announcement, announcement.id)
+
+        if announcement.is_club_announcement:
+            return redirect("club_announcements")
+        return redirect("index")
+
+    return render(request, "announcements/delete.html", {"announcement": announcement})
 
 
 @login_required
