@@ -153,13 +153,21 @@
                                 Post
                             </a>
                         {% endif %}
+                        {% if request.GET.show_expired == "1" %}
+                            <a class="button" href="{% url view_announcements_url %}?{% query_transform request show_expired=0 %}">
+                                <i class="fas fa-times"></i> Don't Show Expired
+                            </a>
+                        {% else %}
+                            <a class="button" href="{% url view_announcements_url %}?{% query_transform request show_expired=1 %}">
+                                Show Expired
+                            </a>
+                        {% endif %}
                     {% else %}
                         <a class="button announcement-request" href="{% url 'request_announcement' %}">
                             <i class="far fa-file-alt"></i>
                             Request Post
                         </a>
                     {% endif %}
-
                 {% endif %}
             {% endif %}
             </span>
