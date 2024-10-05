@@ -82,7 +82,9 @@ class EighthSponsor(AbstractBaseEighthModel):
     show_full_name = models.BooleanField(default=False)
 
     history = HistoricalRecords()
-
+    
+    def __str__(self):
+        return self.name
     class Meta:
         unique_together = (("first_name", "last_name", "user", "online_attendance", "full_time", "department"),)
         ordering = ("last_name", "first_name")

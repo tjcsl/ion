@@ -23,7 +23,7 @@ from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_sponsor_required
 from ..forms.activities import ActivitySettingsForm
 from ..forms.admin.activities import ActivityMultiSelectForm
-from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..utils import get_start_date
 
 logger = logging.getLogger(__name__)
@@ -52,24 +52,23 @@ def activity_view(request, activity_id=None):
     return render(request, "eighth/activity.html", context)
 
 
-@eighth_sponsor_required
+@login_required
 def settings_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
-
-    if not request.user.sponsor_obj:
+      
+    if not (EighthSponsor.objects.filter(user=request.user).exists() or request.user in activity.club_sponsors.all()):
         raise Http404
 
-    if request.user.sponsor_obj not in activity.sponsors.all():
-        raise Http404
+    print(activity.sponsors.all())
 
     if request.method == "POST":
-        form = ActivitySettingsForm(request.POST, instance=activity)
+        form = ActivitySettingsForm(request.POST, instance=activity, sponsors=activity.sponsors.all())
         if form.is_valid():
             form.save()
         else:
             messages.error(request, "There was an error saving the activity settings.")
     else:
-        form = ActivitySettingsForm(instance=activity)
+        form = ActivitySettingsForm(instance=activity, sponsors=activity.sponsors.all())
 
     context = {"activity": activity, "form": form}
 
