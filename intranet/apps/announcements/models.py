@@ -155,7 +155,7 @@ class Announcement(models.Model):
         return (
             user.is_announcements_admin
             or self.is_club_announcement
-            and (self.is_visible_submitter(user) or user.club_sponsor_for_set.filter(id=self.activity.id).exists())
+            and (user in self.activity.officers.all() or user in self.activity.sponsors.all() or user in self.activity.club_sponsors.all())
         )
 
     # False, not None. This can be None if no AnnouncementRequest exists for this Announcement,
