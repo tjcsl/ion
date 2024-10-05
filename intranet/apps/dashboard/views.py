@@ -19,7 +19,7 @@ from typing_extensions import TypedDict, TypeGuard
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
 from ..announcements.models import Announcement, AnnouncementRequest, WarningAnnouncement
-from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup
+from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..enrichment.models import EnrichmentActivity
 from ..events.models import Event, TJStarUUIDMap
 from ..schedule.models import Day
@@ -553,6 +553,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
         "show_hidden_club": show_hidden_club,
         "show_expired": show_expired,
         "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= now.date() <= settings.TJSTAR_DATE,
+        "user_sponsor_obj": EighthSponsor.objects.filter(user=request.user).first(),
     }
 
     user_hidden_announcements = Announcement.objects.hidden_announcements(user).values_list("id", flat=True)
