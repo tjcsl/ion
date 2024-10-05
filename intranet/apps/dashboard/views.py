@@ -311,10 +311,11 @@ def filter_club_announcements(
 
     for item in club_items:
         if item.activity.subscriptions_enabled:
-            if item.id in user_hidden_announcements:
-                hidden.append(item)
-            elif user.subscribed_activity_set.filter(announcement=item).exists():
-                visible.append(item)
+            if user.subscribed_activity_set.filter(announcement=item).exists():
+                if item.id in user_hidden_announcements:
+                    hidden.append(item)
+                else:
+                    visible.append(item)
             else:
                 unsubscribed.append(item)
 
@@ -562,14 +563,14 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
 
     items, club_items = split_club_announcements(items)
 
-    visible_club_items, _, unsubscribed_club_announcements = filter_club_announcements(user, user_hidden_announcements, club_items)
+    visible_club_items, hidden_club_items, unsubscribed_club_announcements = filter_club_announcements(user, user_hidden_announcements, club_items)
 
     if not show_hidden_club:
         # Dashboard
         context, items = paginate_announcements_list(request, context, items, visible_club_items)
     else:
         # Club announcements only
-        context, items = paginate_announcements_list(request, context, visible_club_items, visible_club_items=[])
+        context, items = paginate_announcements_list(request, context, visible_club_items + hidden_club_items, visible_club_items=[])
 
         # add club announcement pagination for non-subscribed
         raw_pagination_data = paginate_announcements_list_raw(
