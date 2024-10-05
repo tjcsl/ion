@@ -78,6 +78,13 @@
         {% endif %}
     {% endif %}
 
+    {% if request.user.sponsor_obj and request.user.sponsor_obj in scheduled_activity.activity.sponsors.all or request.user in activity.club_sponsors.all %}
+        <a class="button print-hide" href="{% url 'eighth_activity_settings' activity.id %}">
+            <i class="fa fa-users"></i>
+            Club Announcement Settings
+        </a>
+    {% endif %}
+
     <h2 style="padding-bottom: 0">Activity: {{ activity }}</h2>
     {% if activity.special %}
         <span class="badge green" title="This is a special activity.">Special</span>

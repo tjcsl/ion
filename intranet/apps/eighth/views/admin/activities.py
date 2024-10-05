@@ -48,7 +48,7 @@ def edit_activity_view(request, activity_id):
         raise http.Http404 from e
 
     if request.method == "POST":
-        form = ActivityForm(request.POST, instance=activity)
+        form = ActivityForm(request.POST, instance=activity, sponsors=activity.sponsors.all())
         if form.is_valid():
             try:
                 # Check if sponsor change
@@ -182,7 +182,7 @@ def edit_activity_view(request, activity_id):
         else:
             messages.error(request, "Error adding activity.")
     else:
-        form = ActivityForm(instance=activity)
+        form = ActivityForm(instance=activity, sponsors=activity.sponsors.all())
 
     activities = EighthActivity.undeleted_objects.order_by("name")
 
