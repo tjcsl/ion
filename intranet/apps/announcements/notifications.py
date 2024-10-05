@@ -122,8 +122,13 @@ def announcement_posted_email(request, obj, send_all=False):
             subject = f"Club Announcement for {obj.activity.name}: {obj.title}"
             users = (
                 get_user_model()
-                .objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year(), subscribed_to_set__contains=obj.activity)
-                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"], subscribed_to_set__contains=obj.activity))
+                .objects.filter(
+                    user_type="student",
+                    graduation_year__gte=get_senior_graduation_year(),
+                    receive_news_emails=True,
+                    subscribed_activity_set=obj.activity,
+                )
+                .union(get_user_model().objects.filter(user_type__in=["teacher", "counselor"], subscribed_activity_set=obj.activity))
             )
 
         else:
@@ -152,7 +157,10 @@ def announcement_posted_email(request, obj, send_all=False):
         email_send_task.delay(
             "announcements/emails/announcement_posted.txt", "announcements/emails/announcement_posted.html", data, subject, emails, bcc=True
         )
-        messages.success(request, f"Sent email to {len(users_send)} users")
+        if request.user.is_announcements_admin:
+            messages.success(request, f"Sent email to {len(users_send)} users")
+        else:
+            messages.success(request, "Sent notification emails.")
     else:
         logger.info("Emailing announcements disabled")
 

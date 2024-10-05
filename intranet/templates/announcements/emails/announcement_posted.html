@@ -6,7 +6,7 @@
 {{ announcement.content }}
 {% endautoescape %}
 
-<p>Posted by {{ announcement.get_author }} on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}
+<p>Posted by {{ announcement.get_author }} on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.is_club_announcement %}{{ announcement.activity.name }}{% else %}{% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}{% endif %}
 </p>
 
 <p><a href="{{ info_link }}">View this announcement on Intranet</a></p>

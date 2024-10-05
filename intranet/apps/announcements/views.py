@@ -157,8 +157,9 @@ def add_club_announcement_view(request):
             obj.user = request.user
             # SAFE HTML
             obj.content = safe_html(obj.content)
-
             obj.save()
+
+            announcement_posted_hook(request, obj)
 
             messages.success(request, "Successfully posted club announcement.")
             return redirect("club_announcements")
