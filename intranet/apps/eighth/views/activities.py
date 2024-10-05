@@ -59,8 +59,6 @@ def settings_view(request, activity_id=None):
     if not (EighthSponsor.objects.filter(user=request.user).exists() or request.user in activity.club_sponsors.all()):
         raise Http404
 
-    print(activity.sponsors.all())
-
     if request.method == "POST":
         form = ActivitySettingsForm(request.POST, instance=activity, sponsors=activity.sponsors.all())
         if form.is_valid():

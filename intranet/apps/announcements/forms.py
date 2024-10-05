@@ -24,8 +24,14 @@ class AnnouncementForm(forms.ModelForm):
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
             "notify_post": "If this box is checked, students who have signed up for notifications will receive an email.",
-            "notify_email_all": "This will send an email notification to all of the users who can see this post. This option does NOT take users' email notification preferences into account, so please use with care.",
-            "update_added_date": "If this announcement has already been added, update the added date to now so that the announcement is pushed to the top. If this option is not selected, the announcement will stay in its current position.",
+            "notify_email_all": (
+                "This will send an email notification to all of the users who can see this post. "
+                "This option does NOT take users' email notification preferences into account, so please use with care."
+            ),
+            "update_added_date": (
+                "If this announcement has already been added, update the added date to now so that the announcement is pushed to the top. "
+                "If this option is not selected, the announcement will stay in its current position."
+            ),
         }
 
 
