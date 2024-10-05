@@ -148,7 +148,10 @@ def edit_activity_view(request, activity_id):
                     messages.success(request, "Notifying students of this room change.")
                     room_changed_activity_email.delay(activity, old_rooms, EighthRoom.objects.filter(id__in=new_room_ids))
 
-                form.save()
+                activity = form.save()
+                activity.subscribers.add(*[sponsor.user for sponsor in form.cleaned_data["sponsors"]])
+                activity.save()
+
             except forms.ValidationError as error:
                 error = str(error)
                 messages.error(request, error)

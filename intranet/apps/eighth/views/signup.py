@@ -404,7 +404,7 @@ def subscribe_to_club(request, activity_id):
 def unsubscribe_from_club(request, activity_id):
     activity = get_object_or_404(EighthActivity, id=activity_id)
 
-    if request.user in activity.subscribers.all():
+    if request.user in activity.subscribers.all() and not activity.sponsors.filter(user=request.user).exists():
         activity.subscribers.remove(request.user)
 
     return redirect(request.META.get("HTTP_REFERER", "/"))
