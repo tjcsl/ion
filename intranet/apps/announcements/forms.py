@@ -47,13 +47,29 @@ class ClubAnnouncementForm(forms.ModelForm):
 
         if "instance" in kwargs:  # Don't allow changing the activity once the announcement has been created
             self.fields["activity"].widget.attrs["disabled"] = True
-            self.fields["activity"].required = False
+            self.fields["activity"].initial = kwargs["instance"].activity
 
     expiration_date = forms.DateTimeInput()
 
     class Meta:
         model = Announcement
         fields = ["activity", "title", "content", "expiration_date"]
+        help_texts = {
+            "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
+        }
+
+
+class ClubAnnouncementEditForm(forms.ModelForm):
+    """A form for editing a club announcement."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    expiration_date = forms.DateTimeInput()
+
+    class Meta:
+        model = Announcement
+        fields = ["title", "content", "expiration_date"]
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
         }

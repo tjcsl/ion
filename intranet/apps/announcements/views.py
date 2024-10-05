@@ -13,7 +13,14 @@ from ...utils.html import safe_html
 from ..auth.decorators import announcements_admin_required, deny_restricted
 from ..dashboard.views import dashboard_view
 from ..groups.models import Group
-from .forms import AnnouncementAdminForm, AnnouncementEditForm, AnnouncementForm, AnnouncementRequestForm, ClubAnnouncementForm
+from .forms import (
+    AnnouncementAdminForm,
+    AnnouncementEditForm,
+    AnnouncementForm,
+    AnnouncementRequestForm,
+    ClubAnnouncementEditForm,
+    ClubAnnouncementForm,
+)
 from .models import Announcement, AnnouncementRequest
 from .notifications import (
     admin_request_announcement_email,
@@ -146,7 +153,7 @@ def add_club_announcement_view(request):
         form = ClubAnnouncementForm(request.user, request.POST)
 
         if form.is_valid():
-            obj = form.save(commit=True)
+            obj = form.save(commit=False)
             obj.user = request.user
             # SAFE HTML
             obj.content = safe_html(obj.content)
@@ -186,15 +193,12 @@ def modify_club_announcement_view(request, announcement_id):
         return redirect("club_announcements")
 
     if request.method == "POST":
-        form = ClubAnnouncementForm(request.user, request.POST, instance=announcement)
+        form = ClubAnnouncementEditForm(request.POST, instance=announcement)
 
         if form.is_valid():
-            obj = form.save(commit=True)
-            obj.user = request.user
-            obj.activity = announcement.activity
+            obj = form.save(commit=False)
             # SAFE HTML
             obj.content = safe_html(obj.content)
-
             obj.save()
 
             messages.success(request, "Successfully modified club announcement.")
@@ -202,7 +206,7 @@ def modify_club_announcement_view(request, announcement_id):
         else:
             messages.error(request, "Error modifying club announcement")
     else:
-        form = ClubAnnouncementForm(request.user, instance=announcement)
+        form = ClubAnnouncementEditForm(instance=announcement)
     return render(request, "announcements/club-request.html", {"form": form, "action": "modify"})
 
 
