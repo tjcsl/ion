@@ -71,7 +71,8 @@ $(function() {
             $(".exp-header").css("display", "none");
         for (var i = 0; i < dates.length; i++) {
             var use_date = dates[i].end ? dates[i].end.date() : dates[i].start.date();
-            $(".exp-list").append(`<li><a class='exp-suggest-item' data-date='${use_date}'>"${dates[i].text}" - ${use_date}</a></li>`);
+            var display_date = use_date.toDateString();
+            $(".exp-list").append(`<li><a class='exp-suggest-item' data-date='${use_date}'>"${dates[i].text}" - ${display_date}</a></li>`);
         }
     });
 
@@ -100,13 +101,16 @@ $(function() {
             $(".exp-header").css("display", "none");
         for (var i = 0; i < dates.length; i++) {
             var use_date = dates[i].end ? dates[i].end.date() : dates[i].start.date();
-            $(".exp-list").append(`<li><a class='exp-suggest-item' data-date='${use_date}'>"${dates[i].text}" - ${use_date}</a></li>`);
+            var display_date = use_date.toDateString();
+            $(".exp-list").append(`<li><a class='exp-suggest-item' data-date='${use_date}'>"${dates[i].text}" - ${display_date}</a></li>`);
         }
     });
 
     var exp = $("#id_expiration_date");
 
-    dateReset(exp);
+    if (exp.val() === "" || exp.val() === "3000-01-01 00:00:00") {
+        dateReset(exp);
+    }
 
     $(".helptext", exp.parent()).before("<h5 style='display: none' class='exp-header'><b>Suggested Expiration Dates</b></h4><ul class='exp-list'></ul>");
     $(".helptext", exp.parent()).before("<span class='exp-buttons'>" +
