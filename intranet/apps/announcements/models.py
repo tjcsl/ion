@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group as DjangoGroup
 from django.db import models
 from django.db.models import Manager, Q
 from django.utils import timezone
+from simple_history.models import HistoricalRecords
 
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
@@ -119,6 +120,8 @@ class Announcement(models.Model):
     notify_email_all = models.BooleanField(default=False)
 
     pinned = models.BooleanField(default=False)
+
+    history = HistoricalRecords()
 
     def get_author(self) -> str:
         """Returns 'author' if it is set. Otherwise, returns the name of the user who created the announcement.
@@ -293,6 +296,8 @@ class WarningAnnouncement(models.Model):
     )
     active = models.BooleanField(default=True, help_text="Whether or not to show the warning.")
     added = models.DateTimeField(auto_now_add=True)
+
+    history = HistoricalRecords()
 
     @property
     def show_on_dashboard(self):

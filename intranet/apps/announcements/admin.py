@@ -1,9 +1,10 @@
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from .models import Announcement, WarningAnnouncement
 
 
-class AnnouncementAdmin(admin.ModelAdmin):
+class AnnouncementAdmin(SimpleHistoryAdmin):
     list_display = ("title", "user", "author", "activity", "added")
     list_filter = ("added", "updated", "activity")
     ordering = ("-added",)
@@ -11,7 +12,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
     search_fields = ("title", "content", "user__first_name", "user__last_name", "user__username")
 
 
-class WarningAnnouncementAdmin(admin.ModelAdmin):
+class WarningAnnouncementAdmin(SimpleHistoryAdmin):
     list_display = ("title", "content", "active")
     list_filter = ("active",)
     search_fields = ("title", "content")
