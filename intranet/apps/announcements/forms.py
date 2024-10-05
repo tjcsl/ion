@@ -22,7 +22,7 @@ class AnnouncementForm(forms.ModelForm):
         model = Announcement
         fields = ["title", "author", "content", "groups", "expiration_date", "notify_post", "notify_email_all", "update_added_date", "pinned"]
         help_texts = {
-            "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
+            "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
             "notify_post": "If this box is checked, students who have signed up for notifications will receive an email.",
             "notify_email_all": "This will send an email notification to all of the users who can see this post. This option does NOT take users' email notification preferences into account, so please use with care.",
             "update_added_date": "If this announcement has already been added, update the added date to now so that the announcement is pushed to the top. If this option is not selected, the announcement will stay in its current position.",
@@ -55,7 +55,7 @@ class ClubAnnouncementForm(forms.ModelForm):
         model = Announcement
         fields = ["activity", "title", "content", "expiration_date"]
         help_texts = {
-            "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
+            "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
         }
 
 
@@ -71,7 +71,7 @@ class ClubAnnouncementEditForm(forms.ModelForm):
         model = Announcement
         fields = ["title", "content", "expiration_date"]
         help_texts = {
-            "expiration_date": "By default, announcements expire after two weeks. To change this, click in the box above.",
+            "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
         }
 
 
@@ -80,7 +80,7 @@ class AnnouncementEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
+        self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. Choose the shortest time necessary."
 
         self.fields["notify_post_resend"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
 
@@ -117,7 +117,7 @@ class AnnouncementRequestForm(forms.ModelForm):
             "Otherwise, your name will appear in this field automatically."
         )
         self.fields["content"].help_text = "The contents of the news post which will appear on Intranet."
-        self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. To change this, click in the box above."
+        self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. Choose the shortest time necessary."
         self.fields["notes"].help_text = (
             "Any information about this announcement you wish to share with the Intranet "
             "administrators and teachers selected above. If you want to restrict this posting "
