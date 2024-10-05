@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from ...test.ion_test import IonTestCase
 from ...utils.date import get_senior_graduation_year
+from ..eighth.models import EighthActivity
 from ..users.models import Group
 from .models import Announcement, AnnouncementRequest
 
@@ -442,6 +443,17 @@ class AnnouncementTest(IonTestCase):
         # Check that GET returns 405
         response = self.client.get(reverse("hide_announcement"))
         self.assertEqual(405, response.status_code)
+
+    def test_modify_club_announcement(self):
+        self.make_admin()
+        act = EighthActivity.objects.get_or_create(name="test")[0]
+        announce = Announcement.objects.get_or_create(title="test9", content="test9", activity=act)[0]
+        self.client.post(
+            reverse("modify_club_announcement", args=[announce.id]),
+            {"title": "hi", "content": "bye", "expiration_date": "3000-01-01"},
+        )
+        announce.refresh_from_db()
+        self.assertEqual(act, announce.activity)
 
 
 class ApiTest(IonTestCase):

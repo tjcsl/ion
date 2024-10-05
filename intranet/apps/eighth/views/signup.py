@@ -405,7 +405,8 @@ def unsubscribe_from_club(request, activity_id):
     activity = get_object_or_404(EighthActivity, id=activity_id)
 
     if activity.sponsors.filter(user=request.user).exists() or request.user in activity.club_sponsors.all():
-        raise http.Http404
+        messages.error(request, "You cannot unsubscribe from an activity you sponsor.")
+        return redirect("club_announcements")
 
     if request.user in activity.subscribers.all():
         activity.subscribers.remove(request.user)
