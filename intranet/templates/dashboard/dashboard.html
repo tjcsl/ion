@@ -30,6 +30,9 @@
 {% block js %}
     {{ block.super }}
 
+    <script>
+        const flipToUnsubscribed = "{{ request.GET.flip_to }}" == "unsubscribed";
+    </script>
     <script src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
     <script src="{% static 'js/schedule.js' %}"></script>
     <script src="{% static 'js/events.js' %}"></script>
@@ -285,7 +288,7 @@
                     <div style="display:grid;grid-template-columns:1fr max-content 1fr">
                         <div style="text-align:center;grid-column-start:2">
                           <a {% if prev_page > 0 %}
-                            href="{% url view_announcements_url %}?{% query_transform request page=prev_page %}"
+                            href="{% url view_announcements_url %}?{% query_transform request page=prev_page flip_to="subscribed" %}"
                             {% else %}
                             disabled
                             {% endif %}
@@ -295,11 +298,11 @@
                         {% for page in page_obj|page_list:items %}
                         <a class="{% if page %}button {% else %}ellipses{% endif %}"
                           style="{% if page == items.number %}background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;{% endif %}"
-                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request page=page %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
+                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request page=page flip_to="subscribed" %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
                         {% endfor %}
 
                         <a {% if more_items %}
-                          href="{% url view_announcements_url %}?{% query_transform request page=next_page %}"
+                          href="{% url view_announcements_url %}?{% query_transform request page=next_page flip_to="subscribed" %}"
                           {% else %}
                           disabled
                           {% endif %}
@@ -322,7 +325,7 @@
                     <div style="display:grid;grid-template-columns:1fr max-content 1fr">
                         <div style="text-align:center;grid-column-start:2">
                           <a {% if unsubscribed.prev_page > 0 %}
-                            href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.prev_page %}"
+                            href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.prev_page flip_to="unsubscribed" %}"
                             {% else %}
                             disabled
                             {% endif %}
@@ -332,11 +335,11 @@
                         {% for page in unsubscribed.page_obj|page_list:unsubscribed.items %}
                         <a class="{% if page %}button {% else %}ellipses{% endif %}"
                           style="{% if page == unsubscribed.items.number %}background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;{% endif %}"
-                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request unsubscribed_page=page %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
+                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request unsubscribed_page=page flip_to="unsubscribed" %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
                         {% endfor %}
 
                         <a {% if unsubscribed.more_items %}
-                          href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.next_page %}"
+                          href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.next_page flip_to="unsubscribed" %}"
                           {% else %}
                           disabled
                           {% endif %}

@@ -62,6 +62,9 @@ $(document).ready(function() {
         filterClubAnnouncements();
     });
 
+    if (flipToUnsubscribed) {
+      $(".unsubscribed-filter").click();
+    }
 });
 
 function updatePartiallyHidden() {
