@@ -20,7 +20,7 @@ from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, 
 from ....utils.date import get_date_range_this_year, get_senior_graduation_year
 from ....utils.helpers import is_entirely_digit
 from ....utils.serialization import safe_json
-from ...auth.decorators import deny_restricted, eighth_sponsor_required
+from ...auth.decorators import deny_restricted
 from ..forms.activities import ActivitySettingsForm
 from ..forms.admin.activities import ActivityMultiSelectForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
@@ -55,7 +55,7 @@ def activity_view(request, activity_id=None):
 @login_required
 def settings_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
-      
+
     if not (EighthSponsor.objects.filter(user=request.user).exists() or request.user in activity.club_sponsors.all()):
         raise Http404
 

@@ -82,9 +82,10 @@ class EighthSponsor(AbstractBaseEighthModel):
     show_full_name = models.BooleanField(default=False)
 
     history = HistoricalRecords()
-    
+
     def __str__(self):
         return self.name
+
     class Meta:
         unique_together = (("first_name", "last_name", "user", "online_attendance", "full_time", "department"),)
         ordering = ("last_name", "first_name")
@@ -107,9 +108,6 @@ class EighthSponsor(AbstractBaseEighthModel):
             Whether the sponsor is a "to be assigned" sponsor.
         """
         return any(x in self.name.lower() for x in ["to be assigned", "to be determined", "to be announced"])
-
-    def __str__(self):
-        return self.name
 
 
 class EighthRoom(AbstractBaseEighthModel):
