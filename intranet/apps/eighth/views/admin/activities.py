@@ -150,6 +150,7 @@ def edit_activity_view(request, activity_id):
 
                 activity = form.save()
                 activity.subscribers.add(*[sponsor.user for sponsor in form.cleaned_data["sponsors"]])
+                activity.subscribers.add(*form.cleaned_data["club_sponsors"], *form.cleaned_data["officers"])
                 activity.save()
 
             except forms.ValidationError as error:
