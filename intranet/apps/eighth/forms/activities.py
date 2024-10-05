@@ -15,9 +15,9 @@ class ActivitySettingsForm(forms.ModelForm):
         self.fields["subscriptions_enabled"].label = "Enable club announcements"
         self.fields["subscriptions_enabled"].help_text = "Allow students to subscribe to receive announcements for this activity through Ion."
         self.fields["club_sponsors"].label = "Teacher moderators"
-        
+
         sponsors_list = "; ".join([str(sponsor) for sponsor in sponsors]) if sponsors else "no sponsors"
-                
+
         self.fields["club_sponsors"].help_text = (
             f"Teacher moderators can post and manage this club's announcements. "
             f"These are in addition to the activity's eighth period sponsors ({sponsors_list})."

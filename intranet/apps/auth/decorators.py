@@ -26,9 +26,6 @@ def admin_required(group):
 #: Restrict the wrapped view to eighth admins
 eighth_admin_required = admin_required("eighth")
 
-# Restrict the wrapped view to eighth sponsors
-eighth_sponsor_required = user_passes_test(lambda u: not u.is_anonymous and u.is_eighth_sponsor)
-
 #: Restrict the wrapped view to announcements admins
 announcements_admin_required = admin_required("announcements")
 
