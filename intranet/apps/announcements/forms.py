@@ -44,16 +44,20 @@ class ClubAnnouncementForm(forms.ModelForm):
         else:
             self.fields["activity"].queryset = []
         self.fields["activity"].required = True
+        self.fields[
+            "notify_post"
+        ].help_text = "If this box is checked, students who have subscribed to your club's announcements will receive an email."
 
         if "instance" in kwargs:  # Don't allow changing the activity once the announcement has been created
             self.fields["activity"].widget.attrs["disabled"] = True
             self.fields["activity"].initial = kwargs["instance"].activity
 
     expiration_date = forms.DateTimeInput()
+    notify_post = forms.BooleanField(required=False, initial=True)
 
     class Meta:
         model = Announcement
-        fields = ["activity", "title", "content", "expiration_date"]
+        fields = ["activity", "title", "content", "expiration_date", "notify_post"]
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
         }
