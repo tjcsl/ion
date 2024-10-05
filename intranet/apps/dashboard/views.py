@@ -238,7 +238,7 @@ def get_announcements_list(request, context) -> list[Announcement | Event]:
         # Show all announcements if user has admin permissions and the
         # show_all GET argument is given.
         announcements = Announcement.objects.all()
-    elif context["show_expired"] or context["show_all"]:
+    elif context["show_expired"]:
         announcements = Announcement.objects.visible_to_user(user)
     else:
         announcements = Announcement.objects.visible_to_user(user).filter(expiration_date__gt=timezone.now())
@@ -530,7 +530,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
     events_admin = user.has_admin_permission("events")
 
     if not show_expired:
-        show_expired = "show_expired" in request.GET
+        show_expired = request.GET.get("show_expired") == "1"
 
     show_all = request.GET.get("show_all", "0") != "0"
     if "show_all" not in request.GET and request.user.is_eighthoffice:
@@ -610,7 +610,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
     elif show_expired:
         dashboard_title = dashboard_header = "Announcement Archive"
         view_announcements_url = "announcements_archive"
-    elif show_hidden_club:
+    if show_hidden_club:
         dashboard_title = dashboard_header = "Club Announcements"
         view_announcements_url = "club_announcements"
     else:
