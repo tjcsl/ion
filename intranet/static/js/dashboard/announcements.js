@@ -154,7 +154,11 @@ function announcementToggle() {
                 announcement.remove();
                 const numAnnouncementsSpan = $(".num-club-announcements");
                 const numAnnouncements = numAnnouncementsSpan.text().match(/\d+/);
-                numAnnouncementsSpan.text(numAnnouncements - 1);
+                // 15 is the cap, and prevent clicking on the button too fast
+                if(numAnnouncements != 15 && !announcement.hasClass("announcement-read")) {
+                  numAnnouncementsSpan.text(numAnnouncements - 1);
+                  announcement.addClass("announcement-read");
+                }
                 $(".club-announcements:has(.club-announcements-content:not(:has(.announcement)))").slideUp(350);
             }, 450);
         } else {
