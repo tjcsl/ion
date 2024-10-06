@@ -5,7 +5,9 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
 from django.utils import timezone
 
+from ..schedule.models import Day
 from .models import BusAnnouncement, Route
+from .tasks import push_bus_announcement_notifications, push_delayed_bus_notifications
 
 logger = logging.getLogger(__name__)
 
@@ -43,12 +45,18 @@ class BusConsumer(JsonWebsocketConsumer):
                             content["announcement"] = ""
                         announcement = BusAnnouncement.object()
                         announcement.message = content["announcement"]
+                        push_bus_announcement_notifications.delay(announcement.message)
                         announcement.save()
                     else:
                         route = Route.objects.get(id=content["id"])
                         route.status = content["status"]
                         if content["time"] == "afternoon" and route.status == "a":
                             route.space = content["space"]
+                            today = Day.objects.today()
+
+                            if today is not None and timezone.now() > today.end_datetime:
+                                # Bus came late
+                                push_delayed_bus_notifications.delay(route.bus_number)
                         else:
                             route.space = ""
                         route.save()

@@ -1503,9 +1503,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.save(update_fields=["cancelled"])
 
             if not self.is_both_blocks or self.block.block_letter != "B":
-                from .notifications import activity_cancelled_email  # pylint: disable=import-outside-toplevel,cyclic-import
+                # pylint: disable=import-outside-toplevel,cyclic-import
+                from .notifications import (
+                    activity_cancelled_email,
+                    activity_cancelled_notification,
+                )
 
                 activity_cancelled_email(self)
+                activity_cancelled_notification(self)
 
     def uncancel(self):
         """Uncancel an EighthScheduledActivity.
@@ -1599,6 +1604,8 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the student has dismissed the absence notification.
         absence_emailed
             Whether the student has been emailed about the absence.
+        absence_notified
+            Whether the student has received a push notification about their absence
     """
 
     objects = EighthSignupManager()
@@ -1619,6 +1626,7 @@ class EighthSignup(AbstractBaseEighthModel):
     was_absent = models.BooleanField(default=False, blank=True)
     absence_acknowledged = models.BooleanField(default=False, blank=True)
     absence_emailed = models.BooleanField(default=False, blank=True)
+    absence_notified = models.BooleanField(default=False, blank=True)
 
     archived_was_absent = models.BooleanField(default=False, blank=True)
 

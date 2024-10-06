@@ -32,3 +32,8 @@ def field_array_size(field):
         if re.match(rf"^{prefix}_(\d+)$", field_name):
             count += 1
     return count
+
+
+@register.filter
+def field_type(field):
+    return field.field.widget.__class__.__name__

@@ -1,18 +1,23 @@
 import calendar
 import datetime
-from typing import Collection
+from typing import Any, Collection, List, Union
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
+from django.urls import reverse
 from django.utils import timezone
+from push_notifications.models import WebPushDevice
 
 from ...utils.helpers import join_nicely
 from ..groups.models import Group
 from ..notifications.emails import email_send
-from .models import EighthActivity, EighthRoom, EighthScheduledActivity
+from ..notifications.tasks import send_bulk_notification, send_notification_to_user
+from ..schedule.models import Day
+from ..users.models import User
+from .models import EighthActivity, EighthBlock, EighthRoom, EighthScheduledActivity
 
 logger = get_task_logger(__name__)
 
@@ -343,3 +348,124 @@ def follow_up_absence_emails():
                 [student.notification_email],
                 bcc=True,
             )
+
+
+@shared_task
+def push_eighth_reminder_notifications(schedule: bool = False, return_result: bool = False) -> Union[None, datetime.datetime]:
+    """Send push notification reminders to sign up, specified number of minutes prior to blocks locking
+
+    Args:
+        schedule: Schedule for a future run instead of instantly running
+        return_result: when true, return the result instead of scheduling. no effect if schedule is false
+
+    Returns:
+        None, or the datetime indicating when the task is scheduled if return_result is true
+    """
+    if schedule:
+        block = EighthBlock.objects.get_blocks_today().first()
+
+        if block is not None:
+            # Get the time to send reminder notifications (PUSH_NOTIFICATIONS_EIGHTH_REMINDER_MINUTES
+            # minutes prior to the block locking)
+            block_datetime = datetime.datetime.combine(timezone.now(), block.signup_time)
+            block_datetime = timezone.make_aware(block_datetime, timezone.get_current_timezone())
+            notification_datetime = block_datetime - datetime.timedelta(minutes=settings.PUSH_NOTIFICATIONS_EIGHTH_REMINDER_MINUTES)
+
+            if return_result:
+                return notification_datetime
+
+            push_eighth_reminder_notifications.apply_async(eta=notification_datetime)
+            logger.info("Push reminder notifications scheduled at %s for %s block (eighth reminder)", str(notification_datetime), block.block_letter)
+
+    else:
+        todays_blocks = EighthBlock.objects.get_blocks_today()
+
+        if todays_blocks is not None:
+            for block in todays_blocks:
+                unsigned_students = block.get_unsigned_students()
+
+                # We only want to send this notification to users who have enabled "eighth_reminder_notifications"
+                # in their preferences.
+                users_to_send = unsigned_students.filter(push_notification_preferences__eighth_reminder_notifications=True)
+
+                # No need to check if the user is subscribed since we are passing WebPushDevice objects directly
+                devices_to_send = WebPushDevice.objects.filter(user__in=users_to_send)
+
+                send_bulk_notification(
+                    filtered_objects=devices_to_send,
+                    title="Sign up for Eighth Period",
+                    body=f"You have not signed up for today's eighth period ({block.block_letter} block). "
+                    f"Sign ups close in {settings.PUSH_NOTIFICATIONS_EIGHTH_REMINDER_MINUTES} minutes.",
+                    data={
+                        "url": settings.PUSH_NOTIFICATIONS_BASE_URL + reverse("eighth_signup", args=[block.id]),
+                    },
+                )
+    return None
+
+
+@shared_task
+def push_glance_notifications(schedule: bool = False, return_result: bool = False) -> Union[None, datetime.datetime]:
+    """Send push notification to each user containing their 'glance'
+
+    Args:
+        schedule: Schedule for a future run instead of instantly running
+        return_result: when true, return the result instead of scheduling. no effect if schedule is false
+
+    Returns:
+        None, or the datetime indicating when the task is scheduled if return_result is true
+    """
+    if schedule:
+        today = Day.objects.today()
+        if today:
+            today_8 = today.day_type.blocks.filter(name__contains="8")
+            if today_8:
+                timezone_now = timezone.now().today()
+                first_start_time = datetime.time(today_8[0].start.hour, today_8[0].start.minute)
+                first_start_date = datetime.datetime.combine(timezone_now, first_start_time) - datetime.timedelta(minutes=10)
+                aware_first_start_date = timezone.make_aware(first_start_date, timezone.get_current_timezone())
+
+                if return_result:
+                    return aware_first_start_date
+
+                push_glance_notifications.apply_async(eta=first_start_date)
+                logger.info("Push glance notifications scheduled at %s (glance)", str(first_start_date))
+    else:
+        users_to_send = User.objects.filter(push_notification_preferences__glance_notifications=True)
+        blocks = EighthBlock.objects.get_blocks_today()
+
+        if blocks:
+            for user in users_to_send:
+                sch_acts = []
+                for b in blocks:
+                    try:
+                        act = user.eighthscheduledactivity_set.get(block=b)
+                        if act.activity.name != "z - Hybrid Sticky":
+                            sch_acts.append(
+                                [b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])]
+                            )
+                    except EighthScheduledActivity.DoesNotExist:
+                        sch_acts.append([b, None])
+
+                body = "\n".join(
+                    [
+                        f"{s[0].hybrid_text if list_index_exists(0, s) else None} block: "
+                        f"{s[1].full_title if list_index_exists(1, s) else None} "
+                        f"(Room {s[2] if list_index_exists(2, s) else None})"
+                        for s in sch_acts
+                    ]
+                )
+
+                send_notification_to_user(
+                    user=user,
+                    title="Eighth Period Glance",
+                    body=body,
+                    data={
+                        "url": settings.PUSH_NOTIFICATIONS_BASE_URL + reverse("eighth_location"),
+                    },
+                )
+
+    return None
+
+
+def list_index_exists(index: int, list_to_check: List[Any]) -> bool:
+    return len(list_to_check) > index and list_to_check[index]
