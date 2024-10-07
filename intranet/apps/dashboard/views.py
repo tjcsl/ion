@@ -616,7 +616,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
         dashboard_title = dashboard_header = "Club Announcements"
         view_announcements_url = "club_announcements"
     else:
-        dashboard_title = dashboard_header = "Announcements"
+        dashboard_title = dashboard_header = "Dashboard"
 
     num_senior_destinations = len(Senior.objects.filled())
 

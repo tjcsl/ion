@@ -11,7 +11,7 @@ from simple_history.models import HistoricalRecords
 from ...utils.date import get_date_range_this_year, is_current_year
 from ...utils.deletion import set_historical_user
 from ...utils.html import nullify_links
-from ..eighth.models import EighthActivity
+from ..eighth.models import EighthActivity, EighthSponsor
 
 
 class AnnouncementManager(Manager):
@@ -158,7 +158,12 @@ class Announcement(models.Model):
         return (
             user.is_announcements_admin
             or self.is_club_announcement
-            and (user in self.activity.officers.all() or user in self.activity.sponsors.all() or user in self.activity.club_sponsors.all())
+            and (
+                user in self.activity.officers.all()
+                or user in self.activity.club_sponsors.all()
+                or EighthSponsor.objects.filter(user=user).exists()
+                and user.sponsor_obj in self.activity.sponsors.all()
+            )
         )
 
     # False, not None. This can be None if no AnnouncementRequest exists for this Announcement,
