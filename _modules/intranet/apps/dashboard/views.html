@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #2517) documentation</title>
+    <title>intranet.apps.dashboard.views &#8212; TJ Intranet v3 (Build #2590) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,22 +121,28 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.dashboard.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span>
+<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Page</span><span class="p">,</span> <span class="n">Paginator</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">QuerySet</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpRequest</span>
 <span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
 <span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.utils.timezone</span> <span class="kn">import</span> <span class="n">make_aware</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">TypeGuard</span>
 
 <span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_date</span><span class="p">,</span> <span class="n">get_senior_graduation_year</span>
 <span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">get_ap_week_warning</span><span class="p">,</span> <span class="n">get_fcps_emerg</span><span class="p">,</span> <span class="n">get_warning_html</span>
 <span class="kn">from</span> <span class="nn">..announcements.models</span> <span class="kn">import</span> <span class="n">Announcement</span><span class="p">,</span> <span class="n">AnnouncementRequest</span><span class="p">,</span> <span class="n">WarningAnnouncement</span>
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
 <span class="kn">from</span> <span class="nn">..enrichment.models</span> <span class="kn">import</span> <span class="n">EnrichmentActivity</span>
 <span class="kn">from</span> <span class="nn">..events.models</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">TJStarUUIDMap</span>
 <span class="kn">from</span> <span class="nn">..schedule.models</span> <span class="kn">import</span> <span class="n">Day</span>
@@ -144,9 +150,10 @@
 <span class="kn">from</span> <span class="nn">..seniors.models</span> <span class="kn">import</span> <span class="n">Senior</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="gen_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.gen_schedule">[docs]</a><span class="k">def</span> <span class="nf">gen_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">num_blocks</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gen_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.gen_schedule">[docs]</a><span class="k">def</span> <span class="nf">gen_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">EighthBlock</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a list of information about a block and a student&#39;s current activity signup.</span>
 
 <span class="sd">    Returns:</span>
@@ -232,7 +239,7 @@
     <span class="k">return</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span></div>
 
 
-<div class="viewcode-block" id="gen_sponsor_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.gen_sponsor_schedule">[docs]</a><span class="k">def</span> <span class="nf">gen_sponsor_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">sponsor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_blocks</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">given_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gen_sponsor_schedule"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.gen_sponsor_schedule">[docs]</a><span class="k">def</span> <span class="nf">gen_sponsor_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">sponsor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">given_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a list of :class:`EighthScheduledActivity`\s in which the</span>
 <span class="sd">    given user is sponsoring.</span>
 
@@ -316,7 +323,7 @@
     <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="n">view</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="get_announcements_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.get_announcements_list">[docs]</a><span class="k">def</span> <span class="nf">get_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<div class="viewcode-block" id="get_announcements_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.get_announcements_list">[docs]</a><span class="k">def</span> <span class="nf">get_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span> <span class="o">|</span> <span class="n">Event</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An announcement will be shown if:</span>
 <span class="sd">    * It is not expired</span>
@@ -361,11 +368,11 @@
 
     <span class="c1"># Load information on the user who posted the announcement</span>
     <span class="c1"># Unless the announcement has a custom author (some do, but not all), we will need the user information to construct the byline,</span>
-    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">)</span>
 
     <span class="c1"># We may query the announcement request multiple times while checking if the user submitted or approved the announcement.</span>
     <span class="c1"># prefetch_related() will still make a separate query for each request, but the results are cached if we check them multiple times</span>
-    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;announcementrequest_set&quot;</span><span class="p">)</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;announcementrequest_set&quot;</span><span class="p">,</span> <span class="s2">&quot;groups&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;events_admin&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
@@ -375,6 +382,7 @@
         <span class="c1"># Unlike announcements, show events for the rest of the day after they occur.</span>
         <span class="n">midnight</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">midnight</span><span class="p">,</span> <span class="n">show_on_dashboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">announcements_sorting_key</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_expired&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
@@ -387,15 +395,90 @@
     <span class="k">return</span> <span class="n">items</span></div>
 
 
-<div class="viewcode-block" id="paginate_announcements_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.paginate_announcements_list">[docs]</a><span class="k">def</span> <span class="nf">paginate_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Paginate ``items`` in groups of 15</span>
+<div class="viewcode-block" id="split_club_announcements"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.split_club_announcements">[docs]</a><span class="k">def</span> <span class="nf">split_club_announcements</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Announcement</span> <span class="o">|</span> <span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split items into standard and club announcements.</span>
 
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        This will discard any club announcements with subscriptions disabled</span>
+<span class="sd">        from the resulting list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        a tuple of standard and club announcements.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">is_announcement</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">Announcement</span> <span class="o">|</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeGuard</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">dashboard_type</span> <span class="o">==</span> <span class="s2">&quot;announcement&quot;</span>
+
+    <span class="n">standard</span><span class="p">,</span> <span class="n">club</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_announcement</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">is_club_announcement</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">subscriptions_enabled</span><span class="p">:</span>
+                <span class="n">club</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">standard</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">standard</span><span class="p">,</span> <span class="n">club</span></div>
+
+
+<div class="viewcode-block" id="filter_club_announcements"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.filter_club_announcements">[docs]</a><span class="k">def</span> <span class="nf">filter_club_announcements</span><span class="p">(</span>
+    <span class="n">user</span><span class="p">,</span> <span class="n">user_hidden_announcements</span><span class="p">:</span> <span class="n">QuerySet</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="n">club_items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter club announcements into categories</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        a tuple of visible, hidden, and unsubscribed club announcements for the user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">visible</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">unsubscribed</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">club_items</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">subscriptions_enabled</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">subscribed_activity_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">announcement</span><span class="o">=</span><span class="n">item</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">user_hidden_announcements</span><span class="p">:</span>
+                    <span class="n">hidden</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">visible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">unsubscribed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">visible</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">unsubscribed</span></div>
+
+
+<div class="viewcode-block" id="RawPaginationData"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.RawPaginationData">[docs]</a><span class="k">class</span> <span class="nc">RawPaginationData</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+    <span class="n">club_items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">Page</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+    <span class="n">page_num</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">prev_page</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">next_page</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">more_items</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">page_obj</span><span class="p">:</span> <span class="n">Paginator</span><span class="p">[</span><span class="n">T</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="paginate_announcements_list_raw"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.paginate_announcements_list_raw">[docs]</a><span class="k">def</span> <span class="nf">paginate_announcements_list_raw</span><span class="p">(</span>
+    <span class="n">request</span><span class="p">:</span> <span class="n">HttpRequest</span><span class="p">,</span>
+    <span class="n">items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
+    <span class="n">visible_club_items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">query_param</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;page&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RawPaginationData</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the raw data for paginating announcements.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request: The :class:`django.http.HttpRequest` object.</span>
+<span class="sd">        items: The list of items to paginate.</span>
+<span class="sd">        visible_club_items: The list of club announcements to paginate and add to the context.</span>
+<span class="sd">        query_param: The ``request.GET`` parameter to use for the page number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A dictionary intended to be merged into the context.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">DEFAULT_PAGE_NUM</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
-        <span class="n">page_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">])</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_param</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">page_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">page_num</span> <span class="o">=</span> <span class="n">DEFAULT_PAGE_NUM</span>
 
@@ -409,11 +492,34 @@
     <span class="n">prev_page</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">previous_page_number</span><span class="p">()</span> <span class="k">if</span> <span class="n">items</span><span class="o">.</span><span class="n">has_previous</span><span class="p">()</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="n">next_page</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="n">next_page_number</span><span class="p">()</span> <span class="k">if</span> <span class="n">more_items</span> <span class="k">else</span> <span class="mi">0</span>
 
-    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-        <span class="p">{</span><span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">items</span><span class="p">,</span> <span class="s2">&quot;page_num&quot;</span><span class="p">:</span> <span class="n">page_num</span><span class="p">,</span> <span class="s2">&quot;prev_page&quot;</span><span class="p">:</span> <span class="n">prev_page</span><span class="p">,</span> <span class="s2">&quot;next_page&quot;</span><span class="p">:</span> <span class="n">next_page</span><span class="p">,</span> <span class="s2">&quot;more_items&quot;</span><span class="p">:</span> <span class="n">more_items</span><span class="p">,</span> <span class="s2">&quot;page_obj&quot;</span><span class="p">:</span> <span class="n">paginator</span><span class="p">}</span>
-    <span class="p">)</span>
+    <span class="c1"># limit to 15 to prevent extreme slowdowns for large amounts</span>
+    <span class="c1"># of club announcements</span>
+    <span class="n">club_items</span> <span class="o">=</span> <span class="n">visible_club_items</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">items</span></div>
+    <span class="k">return</span> <span class="n">RawPaginationData</span><span class="p">(</span>
+        <span class="n">club_items</span><span class="o">=</span><span class="n">club_items</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="n">items</span><span class="p">,</span>
+        <span class="n">page_num</span><span class="o">=</span><span class="n">page_num</span><span class="p">,</span>
+        <span class="n">prev_page</span><span class="o">=</span><span class="n">prev_page</span><span class="p">,</span>
+        <span class="n">next_page</span><span class="o">=</span><span class="n">next_page</span><span class="p">,</span>
+        <span class="n">more_items</span><span class="o">=</span><span class="n">more_items</span><span class="p">,</span>
+        <span class="n">page_obj</span><span class="o">=</span><span class="n">paginator</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="paginate_announcements_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.paginate_announcements_list">[docs]</a><span class="k">def</span> <span class="nf">paginate_announcements_list</span><span class="p">(</span>
+    <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">visible_club_items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Page</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Paginate ``items`` in groups of 15</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple of the updated context and the page.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_ctx</span> <span class="o">=</span> <span class="n">paginate_announcements_list_raw</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">visible_club_items</span><span class="p">)</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_ctx</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;all_items&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">new_ctx</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="get_tjstar_mapping"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.get_tjstar_mapping">[docs]</a><span class="k">def</span> <span class="nf">get_tjstar_mapping</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
@@ -506,7 +612,7 @@
 
 
 <div class="viewcode-block" id="dashboard_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.dashboard.html#intranet.apps.dashboard.views.dashboard_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_welcome</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden_club</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_welcome</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process and show the dashboard, which includes activities, events, and widgets.&quot;&quot;&quot;</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
@@ -548,12 +654,15 @@
     <span class="n">events_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">show_expired</span><span class="p">:</span>
-        <span class="n">show_expired</span> <span class="o">=</span> <span class="s2">&quot;show_expired&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
+        <span class="n">show_expired</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_expired&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span>
 
     <span class="n">show_all</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_all&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
         <span class="c1"># Show all by default to 8th period office</span>
         <span class="n">show_all</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">show_hidden_club</span><span class="p">:</span>
+        <span class="n">show_hidden_club</span> <span class="o">=</span> <span class="s2">&quot;show_hidden_club&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
 
     <span class="n">is_index_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
 
@@ -564,18 +673,39 @@
         <span class="s2">&quot;events_admin&quot;</span><span class="p">:</span> <span class="n">events_admin</span><span class="p">,</span>
         <span class="s2">&quot;is_index_page&quot;</span><span class="p">:</span> <span class="n">is_index_page</span><span class="p">,</span>
         <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
+        <span class="s2">&quot;show_hidden_club&quot;</span><span class="p">:</span> <span class="n">show_hidden_club</span><span class="p">,</span>
         <span class="s2">&quot;show_expired&quot;</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
         <span class="s2">&quot;show_tjstar&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_BANNER_START_DATE</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_DATE</span><span class="p">,</span>
+        <span class="s2">&quot;user_sponsor_obj&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span>
     <span class="p">}</span>
+
+    <span class="n">user_hidden_announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_hidden_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_events</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Get list of announcements</span>
     <span class="n">items</span> <span class="o">=</span> <span class="n">get_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
-    <span class="c1"># Paginate announcements list</span>
-    <span class="n">context</span><span class="p">,</span> <span class="n">items</span> <span class="o">=</span> <span class="n">paginate_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
+    <span class="n">items</span><span class="p">,</span> <span class="n">club_items</span> <span class="o">=</span> <span class="n">split_club_announcements</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 
-    <span class="n">user_hidden_announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">user_hidden_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_events</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">visible_club_items</span><span class="p">,</span> <span class="n">hidden_club_items</span><span class="p">,</span> <span class="n">unsubscribed_club_announcements</span> <span class="o">=</span> <span class="n">filter_club_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">user_hidden_announcements</span><span class="p">,</span> <span class="n">club_items</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">show_hidden_club</span><span class="p">:</span>
+        <span class="c1"># Dashboard</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">items</span> <span class="o">=</span> <span class="n">paginate_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">visible_club_items</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Club announcements only</span>
+        <span class="n">context</span><span class="p">,</span> <span class="n">items</span> <span class="o">=</span> <span class="n">paginate_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">visible_club_items</span> <span class="o">+</span> <span class="n">hidden_club_items</span><span class="p">,</span> <span class="n">visible_club_items</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="c1"># add club announcement pagination for non-subscribed</span>
+        <span class="n">raw_pagination_data</span> <span class="o">=</span> <span class="n">paginate_announcements_list_raw</span><span class="p">(</span>
+            <span class="n">request</span><span class="p">,</span>
+            <span class="n">unsubscribed_club_announcements</span><span class="p">,</span>
+            <span class="n">query_param</span><span class="o">=</span><span class="s2">&quot;unsubscribed_page&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># namespace the pagination data for unsubscribed club announcements so it doesn&#39;t</span>
+        <span class="c1"># conflict with other pagination data</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;unsubscribed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_pagination_data</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;all_items&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">],</span> <span class="o">*</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;unsubscribed&quot;</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">ignore_dashboard_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ignore_dashboard_types</span> <span class="o">=</span> <span class="p">[]</span>
@@ -605,8 +735,11 @@
     <span class="k">elif</span> <span class="n">show_expired</span><span class="p">:</span>
         <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Announcement Archive&quot;</span>
         <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;announcements_archive&quot;</span>
+    <span class="k">if</span> <span class="n">show_hidden_club</span><span class="p">:</span>
+        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Club Announcements&quot;</span>
+        <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;club_announcements&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Announcements&quot;</span>
+        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Dashboard&quot;</span>
 
     <span class="n">num_senior_destinations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filled</span><span class="p">())</span>
 

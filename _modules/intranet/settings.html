@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.settings &#8212; TJ Intranet v3 (Build #2517) documentation</title>
+    <title>intranet.settings &#8212; TJ Intranet v3 (Build #2590) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -467,6 +467,7 @@
     <span class="s2">&quot;groups&quot;</span><span class="p">,</span>
     <span class="s2">&quot;board&quot;</span><span class="p">,</span>
     <span class="s2">&quot;announcements.form&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;announcements.request&quot;</span><span class="p">,</span>
     <span class="s2">&quot;polls.form&quot;</span><span class="p">,</span>
     <span class="s2">&quot;preferences&quot;</span><span class="p">,</span>
     <span class="s2">&quot;signage.base&quot;</span><span class="p">,</span>
@@ -520,8 +521,8 @@
     <span class="n">PIPELINE</span><span class="p">[</span><span class="s2">&quot;STYLESHEETS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">helpers</span><span class="o">.</span><span class="n">single_css_map</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
 
 <span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;intranet.apps.auth.backends.PamAuthenticationBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;intranet.apps.auth.backends.MasterPasswordAuthenticationBackend&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;intranet.apps.auth.backends.PamAuthenticationBackend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;oauth2_provider.backends.OAuth2Backend&quot;</span><span class="p">,</span>
     <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span>
 <span class="p">]</span>
@@ -723,7 +724,7 @@
     <span class="s2">&quot;DEFAULT_PAGINATION_CLASS&quot;</span><span class="p">:</span> <span class="s2">&quot;rest_framework.pagination.PageNumberPagination&quot;</span><span class="p">,</span>
     <span class="s2">&quot;PAGE_SIZE&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
     <span class="s2">&quot;DEFAULT_AUTHENTICATION_CLASSES&quot;</span><span class="p">:</span> <span class="p">(</span>
-        <span class="s2">&quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;</span><span class="p">,</span>
+        <span class="c1"># &quot;intranet.apps.api.authentication.ApiBasicAuthentication&quot;,  # Disabled for security</span>
         <span class="s2">&quot;intranet.apps.api.authentication.CsrfExemptSessionAuthentication&quot;</span><span class="p">,</span>  <span class="c1"># exempts CSRF checking on API</span>
         <span class="s2">&quot;oauth2_provider.contrib.rest_framework.OAuth2Authentication&quot;</span><span class="p">,</span>
     <span class="p">),</span>
