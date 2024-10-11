@@ -12,6 +12,6 @@ export PYTHONUNBUFFERED=1  # Don't buffer Django output
 # Wrap the run command in a loop so that it restarts if it crashes, e.g. due to a syntax error
 while true
 do
-    exec python3 manage.py run 0.0.0.0:8080  # Custom run command that skips system checks for performance
+    python3 manage.py run 0.0.0.0:8080  # Custom run command that skips system checks for performance
     sleep 1
 done
