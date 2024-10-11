@@ -353,6 +353,16 @@
                 </div>
             </div>
             <% if (!showingRosterButton) { %>
+                <% if(isEighthAdmin) { %>
+                    <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                        View Roster
+                    </a>
+                <% } %>
+                <% if (waitlist_count > 0 && waitlistEnabled) { %>
+                    <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
+                        View Waitlist
+                    </a>
+                <% } %>
                 <% if (subscriptions_enabled) { %>
                     <% if (subscribed_to) { %>
                         <a class="button" id="unsubscribe-button" href="/eighth/signup/unsubscribe/<%= id %>">
@@ -365,16 +375,6 @@
                             Subscribe
                         </a>
                     <% } %>
-                <% } %>
-                <% if(isEighthAdmin) { %>
-                    <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
-                        View Roster
-                    </a>
-                <% } %>
-                <% if (waitlist_count > 0 && waitlistEnabled) { %>
-                    <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
-                        View Waitlist
-                    </a>
                 <% } %>
                 <div id="signup-spinner-container">
                     <div id="signup-spinner"></div>
