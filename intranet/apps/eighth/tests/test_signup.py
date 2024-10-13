@@ -200,6 +200,31 @@ class EighthSignupTest(EighthAbstractTest):
         self.assertEqual(len(EighthScheduledActivity.objects.get(block=block1.id, activity=act1.id).members.all()), 1)
         self.assertEqual(len(EighthScheduledActivity.objects.get(block=block1.id, activity=act2.id).members.all()), 0)
 
+    def test_user_stickied(self):
+        """Test that stickying an individual user into an activity works."""
+        self.make_admin()
+        user = get_user_model().objects.create(username="user1", graduation_year=get_senior_graduation_year())
+
+        block = self.add_block(date="2024-09-09", block_letter="A")
+        room = self.add_room(name="room1", capacity=1)
+        act = self.add_activity(name="Test Activity 1", restricted=True, users_allowed=[user])
+        act.rooms.add(room)
+
+        schact = EighthScheduledActivity.objects.create(block=block, activity=act, capacity=5)
+        schact.sticky_students.add(user)
+        schact.save()
+
+        act2 = self.add_activity(name="Test Activity 2")
+        act2.rooms.add(room)
+        schact2 = EighthScheduledActivity.objects.create(block=block, activity=act2, capacity=5)
+
+        # ensure that the user can't sign up to something else
+        with self.assertRaisesMessage(SignupException, "Sticky"):
+            self.verify_signup(user, schact2)
+
+        self.client.post(reverse("eighth_signup", args=[block.id]), {"aid": act2.id})
+        self.assertFalse(schact2.members.exists())
+
     def test_eighth_signup_view(self):
         """Tests :func:`~intranet.apps.eighth.views.signup.eighth_signup_view`."""
 
