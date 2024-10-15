@@ -28,8 +28,8 @@ class Command(BaseCommand):
         for path in all_photos:
             user = None
             if IS_STAFF:
-                if "-" in path.stem:
-                    last_name, first_name = path.stem.rsplit("-", 1)
+                if "_" in path.stem:
+                    last_name, first_name = path.stem.rsplit("_", 1)
                     user = get_user_model().objects.filter(first_name=first_name, last_name=last_name).first()
             else:
                 try:
