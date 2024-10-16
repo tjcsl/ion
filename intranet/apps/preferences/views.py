@@ -5,19 +5,27 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, reverse
 
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
+from ..notifications.models import UserPushNotificationPreferences
 from ..users.models import Email
-from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
+from .forms import (
+    BusRouteForm,
+    DarkModeForm,
+    EmailFormset,
+    NotificationOptionsForm,
+    PreferredPictureForm,
+    PrivacyOptionsForm,
+    PushNotificationOptionsForm,
+)
 
 # from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
 #                    WebsiteFormset)
 
 
 logger = logging.getLogger(__name__)
-
 
 """
     NOTE: Phone and website information have been disabled because of privacy reasons.
@@ -197,6 +205,17 @@ def get_notification_options(user):
     return notification_options
 
 
+def get_push_notifications_options(user):
+    return {
+        "eighth_reminder_notifications": user.push_notification_preferences.eighth_reminder_notifications,
+        "eighth_waitlist_notifications": user.push_notification_preferences.eighth_waitlist_notifications,
+        "glance_notifications": user.push_notification_preferences.glance_notifications,
+        "announcement_notifications": user.push_notification_preferences.announcement_notifications,
+        "poll_notifications": user.push_notification_preferences.poll_notifications,
+        "bus_notifications": user.push_notification_preferences.bus_notifications,
+    }
+
+
 def save_notification_options(request, user):
     notification_options = get_notification_options(user)
     notification_options_form = NotificationOptionsForm(user, data=request.POST, initial=notification_options)
@@ -217,6 +236,17 @@ def save_notification_options(request, user):
                     except TypeError:
                         pass
     return notification_options_form
+
+
+def save_push_notifications_options(request, user):
+    push_notifications_options = get_push_notifications_options(user)
+    obj, _ = UserPushNotificationPreferences.objects.get_or_create(user=user)
+
+    push_notifications_options_form = PushNotificationOptionsForm(data=request.POST, initial=push_notifications_options, instance=obj)
+    if push_notifications_options_form.is_valid() and push_notifications_options_form.has_changed():
+        push_notifications_options_form.save()
+
+    return push_notifications_options_form
 
 
 def get_bus_route(user):
@@ -293,38 +323,46 @@ def save_dark_mode_settings(request, user):
 @login_required
 def preferences_view(request):
     """View and process updates to the preferences page."""
+    # pylint: disable=E0606
+
     user = request.user
 
     if request.method == "POST":
-        logger.debug("Preparing to update user preferences for user %s", request.user.id)
-        # phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
-        _, email_formset, _, errors = save_personal_info(request, user)
-        if user.is_student:
-            preferred_pic_form = save_preferred_pic(request, user)
-            bus_route_form = save_bus_route(request, user)
-            """
-            The privacy options form is disabled due to the
-            permissions feature being unused and changes to school policy.
-            """
-            # privacy_options_form = save_privacy_options(request, user)
-            privacy_options_form = None
-        else:
-            preferred_pic_form = None
-            bus_route_form = None
-            privacy_options_form = None
-        notification_options_form = save_notification_options(request, user)
+        if request.POST.get("updatepushprefs", "").lower() == "":
+            logger.debug("Preparing to update user preferences for user %s", request.user.id)
+            # phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)
+            _, email_formset, _, errors = save_personal_info(request, user)
+            if user.is_student:
+                preferred_pic_form = save_preferred_pic(request, user)
+                bus_route_form = save_bus_route(request, user)
+                """
+                The privacy options form is disabled due to the
+                permissions feature being unused and changes to school policy.
+                """
+                # privacy_options_form = save_privacy_options(request, user)
+                privacy_options_form = None
+            else:
+                preferred_pic_form = None
+                bus_route_form = None
+                privacy_options_form = None
+            notification_options_form = save_notification_options(request, user)
 
-        dark_mode_form = save_dark_mode_settings(request, user)
+            dark_mode_form = save_dark_mode_settings(request, user)
 
-        for error in errors:
-            messages.error(request, error)
+            for error in errors:
+                messages.error(request, error)
 
-        try:
-            save_gcm_options(request, user)
-        except AttributeError:
-            pass
+            try:
+                save_gcm_options(request, user)
+            except AttributeError:
+                pass
 
-        return redirect("preferences")
+            return redirect("preferences")
+
+        elif request.POST.get("updatepushprefs").lower() == "true":
+            push_notifications_options_form = save_push_notifications_options(request, user)
+            messages.success(request, "Push notification settings updated.")
+            return redirect(f"{reverse('preferences')}?pushprefs=true")
 
     else:
         # phone_formset = PhoneFormset(instance=user, prefix="pf")
@@ -354,8 +392,23 @@ def preferences_view(request):
 
         notification_options = get_notification_options(user)
         notification_options_form = NotificationOptionsForm(user, initial=notification_options)
+        push_notifications_options = get_push_notifications_options(user)
+        push_notifications_options_form = PushNotificationOptionsForm(initial=push_notifications_options)
 
         dark_mode_form = DarkModeForm(user, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+
+    enable_get_params = request.COOKIES.get("enableGetParams", "false")
+
+    if request.method == "GET" and enable_get_params == "true":
+        if request.GET.get("success", "") != "":
+            messages.success(request, f"Success: {request.GET.get('success')}")
+        elif request.GET.get("error", "") != "":  # Success messages take precedence
+            messages.error(request, f"An error occurred: {request.GET.get('error')}")
+
+    user_agent = request.user_agent
+    is_ios = user_agent.is_mobile and user_agent.os.family == "iOS"
+    browser_supported = supports_webpush_notifications(user_agent)
+    open_push_notifs_prefs = request.GET.get("pushprefs") if enable_get_params == "true" else "false"
 
     context = {
         # "phone_formset": phone_formset,
@@ -366,6 +419,11 @@ def preferences_view(request):
         "notification_options_form": notification_options_form,
         "bus_route_form": bus_route_form if settings.ENABLE_BUS_APP else None,
         "dark_mode_form": dark_mode_form,
+        "open_push_notif_prefs": open_push_notifs_prefs,
+        "push_notifications_options_form": push_notifications_options_form,
+        "is_ios": is_ios,
+        "browser_supported": browser_supported,
+        "ENABLE_WAITLIST": settings.ENABLE_WAITLIST,
     }
     return render(request, "preferences/preferences.html", context)
 
@@ -403,3 +461,17 @@ def privacy_options_view(request):
     else:
         context = {"profile_user": user}
     return render(request, "preferences/privacy_options.html", context)
+
+
+def supports_webpush_notifications(user_agent):
+    """Detect browsers that support webpush notifications."""
+    if (user_agent.browser.family in ("Chrome", "Opera")) and user_agent.browser.version[0] >= 42:
+        return True
+    elif user_agent.browser.family == "Firefox" and user_agent.browser.version[0] >= 44:
+        return True
+    elif "Safari" in user_agent.browser.family and user_agent.os.family == "iOS" and user_agent.os.version[0] >= 16 and user_agent.os.version[1] >= 4:
+        return True
+    elif "Safari" in user_agent.browser.family and user_agent.os.family == "macOS" and user_agent.browser.version[0] >= 16:
+        return True
+    else:
+        return False
