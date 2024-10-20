@@ -59,6 +59,22 @@
         $("#admin_comments_badge").click(function(){
             $("#admin_comments_modal").slideToggle();
         });
+
+        $.get({
+          url: "{% url 'eighth_admin_manage_non_graduated' %}",
+          data: {"user_type": "student"},
+          success: function(response) {
+            $("select.remote-sticky-students").each((_, el) => {
+              $(el).selectize({
+                plugins: ["remove_button"],
+                valueField: 'id',
+                labelField: 'name',
+                searchField: 'name',
+                options: response.users,
+              })
+            });
+          }
+        });
     });
     </script>
 
@@ -216,6 +232,7 @@
                     </th>
                     <th>Comments</th><th></th>
                     <th>Admin Comments</th><th></th>
+                    <th>Sticky Students</th><th></th>
                 </tr>
             </thead>
             <tbody>
@@ -295,7 +312,7 @@
                                 {% endif %}
                                 </td>
 
-                                {% if field.name in "rooms capacity sponsors title special administrative restricted sticky both_blocks comments admin_comments" %}
+                                {% if field.name in "rooms capacity sponsors title special administrative restricted sticky both_blocks comments admin_comments sticky_students " %}
                                 <td class="propagate" data-base-field="{{ field.name }}">
                                     <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fas fa-arrows-alt-v"></i>
