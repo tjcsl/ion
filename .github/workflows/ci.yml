@@ -31,23 +31,19 @@
                     "uses": "actions/checkout@v2"
                 },
                 {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v2",
+                    "name": "Set up uv",
+                    "uses": "astral-sh/setup-uv@v3",
                     "with": {
-                        "python-version": "${{ matrix.python-version }}"
+                        "enable-cache": true
                     }
                 },
                 {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v2",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
+                    "name": "Set up Python ${{ matrix.python-version }}",
+                    "run": "uv python install ${{ matrix.python-version }}"
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\nuv sync --locked\n# change path and env vars\nsource .venv/bin/activate\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -78,23 +74,19 @@
                     }
                 },
                 {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v2",
+                    "name": "Set up uv",
+                    "uses": "astral-sh/setup-uv@v3",
                     "with": {
-                        "python-version": "${{ matrix.python-version }}"
+                        "enable-cache": true
                     }
                 },
                 {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v2",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
+                    "name": "Set up Python ${{ matrix.python-version }}",
+                    "run": "uv python install ${{ matrix.python-version }}"
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\nuv sync --locked\n# change path and env vars\nsource .venv/bin/activate\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -179,23 +171,19 @@
                     "uses": "actions/checkout@v2"
                 },
                 {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v2",
+                    "name": "Set up uv",
+                    "uses": "astral-sh/setup-uv@v3",
                     "with": {
-                        "python-version": "${{ matrix.python-version }}"
+                        "enable-cache": true
                     }
                 },
                 {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v2",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
+                    "name": "Set up Python ${{ matrix.python-version }}",
+                    "run": "uv python install ${{ matrix.python-version }}"
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\nuv sync --locked\n# change path and env vars\nsource .venv/bin/activate\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -223,6 +211,10 @@
                 {
                     "name": "install Kerberos",
                     "run": "sudo apt update\nsudo apt install -y krb5-user\n"
+                },
+                {
+                    "name": "Install coverage",
+                    "run": "uv pip install pytest-cov"
                 },
                 {
                     "name": "Run tests (Fork)",
