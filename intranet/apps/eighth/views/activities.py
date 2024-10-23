@@ -47,7 +47,11 @@ def activity_view(request, activity_id=None):
 
     scheduled_activities = scheduled_activities.order_by("block__date", "block__block_letter")
 
-    context = {"activity": activity, "scheduled_activities": scheduled_activities}
+    context = {
+        "activity": activity,
+        "scheduled_activities": scheduled_activities,
+        "is_subscribable": activity.is_subscribable_for_user(request.user),
+    }
 
     return render(request, "eighth/activity.html", context)
 
