@@ -51,6 +51,8 @@ def edit_activity_view(request, activity_id):
         form = ActivityForm(request.POST, instance=activity, sponsors=activity.sponsors.all())
         if form.is_valid():
             try:
+                form.instance.clean_subscribers()
+
                 # Check if sponsor change
                 old_sponsors = activity.sponsors.all()
                 old_sponsor_ids = old_sponsors.values_list("id", flat=True)

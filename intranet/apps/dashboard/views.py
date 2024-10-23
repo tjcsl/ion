@@ -27,7 +27,7 @@ from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 
 logger = logging.getLogger(__name__)
-T = TypeVar("T")
+T = TypeVar("T", bound=Announcement)
 
 
 def gen_schedule(user, num_blocks: int = 6, surrounding_blocks: Iterable[EighthBlock] | None = None):
@@ -372,6 +372,13 @@ def paginate_announcements_list_raw(
     # limit to 15 to prevent extreme slowdowns for large amounts
     # of club announcements
     club_items = visible_club_items[:15]
+
+    # set it as an attribute so we can access in the template
+    for c in club_items:
+        c.can_subscribe = c.activity.is_subscribable_for_user(request.user)
+    for a in items:
+        if a.activity is not None:
+            a.can_subscribe = a.activity.is_subscribable_for_user(request.user)
 
     return RawPaginationData(
         club_items=club_items,

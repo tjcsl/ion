@@ -228,7 +228,7 @@
                 <div class="club-announcements-content">
                     {% for item in club_items %}
                         {% if not hide_announcements or not item.id in user_hidden_announcements %}
-                            {% with announcement=item show_icon=True %}
+                            {% with announcement=item show_icon=True can_subscribe=item.can_subscribe %}
                                 {% include "announcements/announcement.html" %}
                             {% endwith %}
                         {% endif %}
@@ -259,7 +259,7 @@
             {% if item.dashboard_type in ignore_dashboard_types %}
                 <!-- {{ item.dashboard_type }} hidden -->
             {% elif item.dashboard_type == "announcement" %}
-                {% with announcement=item show_icon=True %}
+                {% with announcement=item show_icon=True can_subscribe=item.can_subscribe %}
                     {% include "announcements/announcement.html" %}
                 {% endwith %}
             {% elif item.dashboard_type == "event" %}

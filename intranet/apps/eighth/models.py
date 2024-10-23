@@ -424,6 +424,32 @@ class EighthActivity(AbstractBaseEighthModel):
         """
         return self.frequent_users.count() > (settings.SIMILAR_THRESHOLD * 2)
 
+    def is_subscribable_for_user(self, user) -> bool:
+        """Returns whether a user can subscribe to the activity.
+
+        Args:
+            user: The user to check.
+
+        Returns:
+            Whether the user can subscribe to the activity.
+        """
+        return user.is_eighth_admin or (
+            self.subscriptions_enabled
+            and user.is_authenticated
+            and (
+                not self.restricted
+                or (self.users_allowed.filter(id=user.id).exists() or user.groups.filter(id__in=self.groups_allowed.all()).exists())
+            )
+        )
+
+    def clean_subscribers(self):
+        """Removes any subscribers who are not allowed to subscribe to the activity."""
+        to_keep = []
+        for sub in self.subscribers.all():
+            if self.is_subscribable_for_user(sub):
+                to_keep.append(sub)
+        self.subscribers.set(to_keep)
+
     class Meta:
         verbose_name_plural = "eighth activities"
 

@@ -391,10 +391,14 @@ def eighth_multi_signup_view(request):
 def subscribe_to_club(request, activity_id):
     activity = get_object_or_404(EighthActivity, id=activity_id)
 
-    if activity.subscriptions_enabled:
-        activity.subscribers.add(request.user)
-    else:
+    if not activity.is_subscribable_for_user(request.user):
+        messages.error(request, "You are not allowed to subscribe to this activity.")
+        return http.HttpResponse(status=403)
+    elif not activity.subscriptions_enabled:
         messages.error(request, "Subscriptions are not enabled for this activity.")
+        return http.HttpResponse(status=403)
+
+    activity.subscribers.add(request.user)
 
     return redirect(request.META.get("HTTP_REFERER", "/"))
 
