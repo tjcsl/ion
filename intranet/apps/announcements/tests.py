@@ -19,6 +19,80 @@ class AnnouncementTest(IonTestCase):
             username="awilliam", graduation_year=get_senior_graduation_year() + 1, user_type="student"
         )[0]
 
+    def test_visible_to_user(self):
+        """Tests :meth:`.AnnouncementManager.visible_to_user`."""
+        user = get_user_model().objects.create(
+            username="ajellyfish",
+            graduation_year=get_senior_graduation_year(),
+            user_type="student",
+        )
+        ann = Announcement.objects.get_or_create(title="test", content="hello")[0]
+        self.assertIn(ann, Announcement.objects.visible_to_user(user))
+
+        group = Group.objects.get_or_create(name="user_group")[0]
+        empty_group = Group.objects.get_or_create(name="empty_user_group")[0]
+        ann.groups.add(group)
+        ann.save()
+        self.assertNotIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "adding a group automatically limits the announcement to that group",
+        )
+
+        user.groups.add(group)
+        user.save()
+        self.assertIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "User is added to a group that the announcement is restricted to",
+        )
+
+        # things get more complicated with club announcements
+        act = EighthActivity.objects.create(name="Test activity 1")
+        ann.activity = act
+        act.restricted = False
+        act.save(update_fields=["restricted"])
+        ann.save()
+        self.assertIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "A non-restricted club announcement should be visible to all",
+        )
+
+        act.restricted = True
+        act.save(update_fields=["restricted"])
+        self.assertIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "It's a restricted club announcement, but the user is in a group for the announcement",
+        )
+
+        # can't be empty because then group__isnull is True, which satisfies the query
+        ann.groups.set([empty_group])
+        ann.save()
+        self.assertNotIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "It's a restricted club announcement, and this time the user is not in the right group",
+        )
+
+        act.groups_allowed.add(group)
+        act.save()
+        self.assertIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "It's restricted but the user is in the right group",
+        )
+
+        act.groups_allowed.clear()
+        act.seniors_allowed = True
+        act.save()
+        self.assertIn(
+            ann,
+            Announcement.objects.visible_to_user(user),
+            "User is a senior, and seniors are allowed",
+        )
+
     def test_get_announcements(self):
         self.login()
 
