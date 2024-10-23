@@ -29,13 +29,22 @@ class AnnouncementManager(Manager):
         if user.is_restricted:  # Restricted users are not authorized to view announcements
             return Announcement.objects.none()
 
-        return Announcement.objects.filter(
-            Q(user=user)
-            | Q(groups__isnull=True)
-            | Q(groups__user=user)
-            | Q(announcementrequest__teachers_requested=user)
-            | Q(announcementrequest__user=user)
-        ).distinct()
+        return (
+            Announcement.objects.filter(
+                Q(user=user)
+                # even if there are no groups to restrict to, there might still be restrictions on the activity
+                | Q(groups__isnull=True) & Q(activity__isnull=True)
+                | Q(groups__user=user)
+                | Q(announcementrequest__teachers_requested=user)
+                | Q(announcementrequest__user=user)
+                | Q(activity__restricted=False)
+                | Q(activity__users_allowed=user)
+                | Q(activity__groups_allowed__user=user)
+                | (Q(**{f"activity__{user.grade.name_plural}_allowed": True}) if 9 <= int(user.grade) <= 12 else Q(pk__in=[]))
+            )
+            .distinct()
+            .prefetch_related("activity")
+        )
 
     def hidden_announcements(self, user):
         """Get a list of announcements marked as hidden for a given user (usually request.user).
