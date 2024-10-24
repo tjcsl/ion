@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #2603) documentation</title>
+    <title>intranet.apps.users package &#8212; TJ Intranet v3 (Build #2619) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -419,6 +419,7 @@
 <li><a class="reference internal" href="#intranet.apps.users.models.User.signed_up_next_few_days"><code class="docutils literal notranslate"><span class="pre">User.signed_up_next_few_days()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.signed_up_today"><code class="docutils literal notranslate"><span class="pre">User.signed_up_today()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.sponsor_obj"><code class="docutils literal notranslate"><span class="pre">User.sponsor_obj</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.users.models.User.sticky_scheduledactivity_set"><code class="docutils literal notranslate"><span class="pre">User.sticky_scheduledactivity_set</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.student_id"><code class="docutils literal notranslate"><span class="pre">User.student_id</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.students"><code class="docutils literal notranslate"><span class="pre">User.students</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.users.models.User.subscribed_activity_set"><code class="docutils literal notranslate"><span class="pre">User.subscribed_activity_set</span></code></a></li>
@@ -3307,6 +3308,22 @@ relation.</p>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Place.restaurant</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.users.models.User.sticky_scheduledactivity_set">
+<span class="sig-name descname"><span class="pre">sticky_scheduledactivity_set</span></span><a class="headerlink" href="#intranet.apps.users.models.User.sticky_scheduledactivity_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="py attribute">

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #2603) documentation</title>
+    <title>intranet.apps.eighth.serializers &#8212; TJ Intranet v3 (Build #2619) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -235,7 +235,10 @@
         <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span><span class="p">:</span>
             <span class="n">prefix</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span>
         <span class="n">middle</span> <span class="o">=</span> <span class="s2">&quot; (R)&quot;</span> <span class="k">if</span> <span class="n">restricted_for_user</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
-        <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot; (S)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">sticky</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_user_stickied</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot; (S)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot; (BB)&quot;</span> <span class="k">if</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_both_blocks</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot; (A)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">administrative</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="n">suffix</span> <span class="o">+=</span> <span class="s2">&quot; (Deleted)&quot;</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">deleted</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
@@ -274,7 +277,8 @@
             <span class="s2">&quot;administrative&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_administrative</span><span class="p">(),</span>
             <span class="s2">&quot;presign&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">presign</span><span class="p">,</span>
             <span class="s2">&quot;presign_time&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_too_early_to_signup</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%A, %B </span><span class="si">%-d</span><span class="s2"> at %-I:%M %p&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_sticky</span><span class="p">(),</span>
+            <span class="s2">&quot;sticky&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_activity_sticky</span><span class="p">(),</span>
+            <span class="s2">&quot;user_sticky&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">is_user_stickied</span><span class="p">(</span><span class="n">user</span><span class="p">),</span>
             <span class="s2">&quot;finance&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># TODO: refactor JS to remove this</span>
             <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">title</span><span class="p">,</span>
             <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>  <span class="c1"># TODO: refactor JS to remove this</span>
