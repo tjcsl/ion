@@ -1133,27 +1133,31 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.add_user(user, force=True)
 
         old_sticky_students = self.sticky_students.all()
-        self.sticky_students.set(users)
 
         # note: this will send separate emails to each student for each activity they are stickied in
         new_stickied_students = [user.notification_email for user in users if user not in old_sticky_students]
         unstickied_students = [user.notification_email for user in old_sticky_students if user not in users]
-        email_send_task.delay(
-            "eighth/emails/students_stickied.txt",
-            "eighth/emails/students_stickied.html",
-            data={"activity": self},
-            subject="You have been stickied into an activity",
-            emails=new_stickied_students,
-            bcc=True,
-        )
-        email_send_task.delay(
-            "eighth/emails/students_unstickied.txt",
-            "eighth/emails/students_unstickied.html",
-            data={"activity": self},
-            subject="You have been unstickied from an activity",
-            emails=unstickied_students,
-            bcc=True,
-        )
+
+        self.sticky_students.set(users)
+
+        if new_stickied_students:
+            email_send_task.delay(
+                "eighth/emails/students_stickied.txt",
+                "eighth/emails/students_stickied.html",
+                data={"activity": self},
+                subject="You have been stickied into an activity",
+                emails=new_stickied_students,
+                bcc=True,
+            )
+        if unstickied_students:
+            email_send_task.delay(
+                "eighth/emails/students_unstickied.txt",
+                "eighth/emails/students_unstickied.html",
+                data={"activity": self},
+                subject="You have been unstickied from an activity",
+                emails=unstickied_students,
+                bcc=True,
+            )
 
     @transaction.atomic  # This MUST be run in a transaction. Do NOT remove this decorator.
     def add_user(
