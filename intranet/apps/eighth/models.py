@@ -16,6 +16,7 @@ from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import models, transaction
 from django.db.models import Count, Manager, Q, QuerySet
 from django.http.request import HttpRequest
+from django.urls import reverse
 from django.utils import formats, timezone
 from sentry_sdk import add_breadcrumb, capture_exception
 from simple_history.models import HistoricalRecords
@@ -1140,11 +1141,16 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
         self.sticky_students.set(users)
 
+        base_url = reverse("eighth_signup", args=[self.block.id])
         if new_stickied_students:
             email_send_task.delay(
                 "eighth/emails/students_stickied.txt",
                 "eighth/emails/students_stickied.html",
-                data={"activity": self},
+                data={
+                    "activity": self.activity,
+                    "block": self.block,
+                    "base_url": base_url,
+                },
                 subject="You have been stickied into an activity",
                 emails=new_stickied_students,
                 bcc=True,
@@ -1153,7 +1159,11 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             email_send_task.delay(
                 "eighth/emails/students_unstickied.txt",
                 "eighth/emails/students_unstickied.html",
-                data={"activity": self},
+                data={
+                    "activity": self.activity,
+                    "block": self.block,
+                    "base_url": base_url,
+                },
                 subject="You have been unstickied from an activity",
                 emails=unstickied_students,
                 bcc=True,
