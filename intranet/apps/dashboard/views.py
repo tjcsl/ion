@@ -369,12 +369,8 @@ def paginate_announcements_list_raw(
     prev_page = items.previous_page_number() if items.has_previous() else 0
     next_page = items.next_page_number() if more_items else 0
 
-    # limit to 15 to prevent extreme slowdowns for large amounts
-    # of club announcements
-    club_items = visible_club_items[:15]
-
     return RawPaginationData(
-        club_items=club_items,
+        club_items=visible_club_items,
         items=items,
         page_num=page_num,
         prev_page=prev_page,
