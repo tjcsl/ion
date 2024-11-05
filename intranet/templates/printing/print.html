@@ -9,16 +9,7 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
-    <style>
-    .primary-content .selectize-control {
-        height: 42px;
-    }
-
-    .primary-content tr th,
-    .primary-content tr td {
-        padding: 5px;
-    }
-    </style>
+    {% stylesheet 'printing' %}
 {% endblock %}
 
 {% block js %}
@@ -44,6 +35,10 @@
     <h2>Printing</h2>
     <br>
     {% include "printing/print_form.html" %}
+
+    <div class="print-status-container">
+        {% include "printing/print_status.html" %}
+    </div>
 
     </div>
 {% endblock %}

@@ -1,0 +1,10 @@
+<h2>Printer status:</h2>
+{% for printer, alert in alerts.items %}
+    <div class="printer-status {{ alert.1 }}">
+        {{ printer }}: {{ alert.0 }}
+    </div>
+{% endfor %}
+Updated at: {{ updated_time }}
+{% if user.is_printing_admin %}
+(<a href="?refresh">Update</a>)
+{% endif %}
