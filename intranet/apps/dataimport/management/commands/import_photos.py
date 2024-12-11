@@ -30,7 +30,7 @@ class Command(BaseCommand):
             if IS_STAFF:
                 if "-" in path.stem:
                     last_name, first_name = path.stem.rsplit("-", 1)
-                    user = get_user_model().objects.filter(first_name=first_name, last_name=last_name).first()
+                    user = get_user_model().objects.filter(first_name=first_name, last_name=last_name, user_type__in=["teacher", "counselor"]).first()
             else:
                 try:
                     int(path.stem)
