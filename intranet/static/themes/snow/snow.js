@@ -2,16 +2,29 @@
  * Credits: dmorris, zyaro
  * Modified for Ion (Intranet3) by: 2016jwoglom, 2025azhu
  */
+
+function encodeBase64(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+    }
+
+function decodeBase64(str) {
+    try {
+        return decodeURIComponent(escape(atob(str)));
+    } catch (e) {
+        return null;
+    }
+}
+
 $(function () {
     $("head").first().append("<script nomodule src='/static/js/vendor/js.cookie.min.js'></script>");
     let enabled = Cookies.get("disable-theme") == "1" ? false : true;
 
     if (enabled) {
         // Snow streak - How many days in a row the user has seen the theme. Controls size and speed of snow.
-        let dayStreak = Cookies.get("dayStreak");
+        let dayStreak = decodeBase64(Cookies.get("dayStreak"));
         if (dayStreak == null) {
-            Cookies.set("dayStreak", 1, { expires: 5 * 7 });
             dayStreak = 1;
+            Cookies.set("dayStreak", encodeBase64(String(dayStreak)), { expires: 5 * 7 });
         }
 
         let day = new Date().getDate();
@@ -21,8 +34,8 @@ $(function () {
             prevDay = day;
         }
         if (prevDay < day) {
-            Cookies.set("dayStreak", parseInt(dayStreak) + 1, { expires: 5 * 7 });
             dayStreak = parseInt(dayStreak) + 1;
+            Cookies.set("dayStreak", encodeBase64(String(dayStreak)), { expires: 5 * 7 });
             Cookies.set("prevDay", day, { expires: 5 * 7 });
         }
 
@@ -538,12 +551,12 @@ function toggleTheme() {
 
 function handleDecreaseSnowStreak() {
     if(confirm("Are you sure you want to decrease your snow streak by 1?")) {
-        let dayStreak = Cookies.get("dayStreak");
+        let dayStreak = decodeBase64(Cookies.get("dayStreak"));
         if(dayStreak <= 1) {
             alert("Your snow streak is already 1 and cannot be decreased further.");
             return;
         }
-        Cookies.set("dayStreak", parseInt(dayStreak) - 1, { expires: 5 * 7 });
+        Cookies.set("dayStreak", encodeBase64(String(parseInt(dayStreak) - 1)), { expires: 5 * 7 });
         location.reload();
     }
 }
