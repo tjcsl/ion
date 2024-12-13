@@ -7,12 +7,18 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core import exceptions
+from django.db.models import Q
 from django.urls import reverse
+from django.utils.html import strip_tags
+from push_notifications.models import WebPushDevice
 from requests_oauthlib import OAuth1
 from sentry_sdk import capture_exception
 
 from ...utils.date import get_senior_graduation_year
-from ..notifications.tasks import email_send_task
+from ..notifications.tasks import email_send_task, send_bulk_notification
+from ..notifications.utils import truncate_content, truncate_title
+from ..users.models import User
+from .models import Announcement
 
 logger = logging.getLogger(__name__)
 
@@ -148,7 +154,7 @@ def announcement_posted_email(request, obj, send_all=False):
                 emails.append(u.notification_email)
                 users_send.append(u)
 
-        if not settings.PRODUCTION and len(emails) > 3:
+        if not settings.PRODUCTION and len(emails) > 3 and not settings.FORCE_EMAIL_SEND:
             raise exceptions.PermissionDenied("You're about to email a lot of people, and you aren't in production!")
 
         base_url = request.build_absolute_uri(reverse("index"))
@@ -216,3 +222,27 @@ def notify_twitter(status):
     req = requests.post(url, data=data, auth=auth, timeout=15)
 
     return req.text
+
+
+def announcement_posted_push_notification(obj: Announcement) -> None:
+    """Send a (Web)push notification to users when an announcement is posted.
+
+    obj: The announcement object
+
+    """
+
+    if not obj.groups.all():
+        users = User.objects.filter(push_notification_preferences__announcement_notifications=True)
+        devices = WebPushDevice.objects.filter(user__in=users)
+    else:
+        users = User.objects.filter(Q(groups__in=obj.groups.all()) & Q(push_notification_preferences__announcement_notifications=True))
+        devices = WebPushDevice.objects.filter(user__in=users)
+
+    send_bulk_notification.delay(
+        filtered_objects=devices,
+        title=f"Announcement: {truncate_title(obj.title)} ({obj.get_author()})",
+        body=truncate_content(strip_tags(obj.content_no_links)),
+        data={
+            "url": settings.PUSH_NOTIFICATIONS_BASE_URL + reverse("view_announcement", args=[obj.id]),
+        },
+    )

@@ -1,3 +1,5 @@
+# pylint: disable=C0302
+
 import datetime
 import logging
 import os
@@ -102,6 +104,8 @@ NOMINATION_POSITION = ""
 
 # App and functionality availability toggles
 ENABLE_WAITLIST = False  # Eighth waitlist. WARNING: Enabling the waitlist causes severe performance issues
+
+ENABLE_WEBPUSH = True  # Enable webpush notifications
 
 ENABLE_BUS_APP = True
 ENABLE_BUS_DRIVER = True
@@ -302,6 +306,34 @@ STATICFILES_DIRS = [
     # Don"t forget to use absolute paths, not relative paths.
     os.path.join(PROJECT_ROOT, "static")
 ]
+
+# Settings for Webpush (used in the django-push-notifications library)
+PUSH_NOTIFICATIONS_SETTINGS = {
+    "WP_PRIVATE_KEY": os.path.join(os.path.dirname(PROJECT_ROOT), "keys", "webpush", "private_key.pem"),
+    "WP_CLAIMS": {"sub": "mailto:intranet@tjhsst.edu"},
+}
+
+# Used in instances where the request object is not available, so we can't build an absolute URI
+PUSH_NOTIFICATIONS_BASE_URL = "https://ion.tjhsst.edu" if PRODUCTION else "http://localhost:8080"
+
+# How many minutes before an eighth period locks should notifications be sent out
+PUSH_NOTIFICATIONS_EIGHTH_REMINDER_MINUTES = 40
+
+# Determines the name/location of each bus spot when sending Webpush notifications
+# Keys are lowercase so they don't look out of place when formatted into the notification body
+# The values are bus spot ID's. I.e. "_9" is written as 9
+
+PUSH_ROUTE_TRANSLATIONS = {
+    "curb, left section": {7, 8, 9},
+    "curb, middle section": {3, 4, 5, 6},
+    "curb, right section": {1, 2, 41},
+    "front row, left section": {19, 20, 21, 22},
+    "back row, left section": {42, 43, 44, 45},
+    "front row, middle section": {14, 15, 16, 17, 18},
+    "back row, middle section": {27, 28, 29, 30},
+    "front row, right section": {10, 11, 12, 13},
+    "back row, right section": {23, 24, 25, 26},
+}
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -688,6 +720,7 @@ INSTALLED_APPS = [
     "simple_history",  # django-simple-history
     "django_referrer_policy",
     "django_user_agents",
+    "push_notifications",  # django-push-notifications
 ]
 
 # Django Channels Configuration (we use this for websockets)
@@ -933,6 +966,26 @@ CELERY_BEAT_SCHEDULE = {
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
+        "args": (),
+    },
+    "push-eighth-reminder-notifications": {
+        "task": "intranet.apps.eighth.tasks.push_eighth_reminder_notifications",
+        "schedule": celery.schedules.crontab(hour=0, minute=1),
+        "args": [True],
+    },
+    "push-glance-notifications": {
+        "task": "intranet.apps.eighth.tasks.push_glance_notifications",
+        "schedule": celery.schedules.crontab(hour=0, minute=1),
+        "args": [True],
+    },
+    "push-bus-notifications": {
+        "task": "intranet.apps.bus.tasks.push_bus_notifications",
+        "schedule": celery.schedules.crontab(hour=0, minute=1),
+        "args": [True],
+    },
+    "remove-inactive-subscriptions": {
+        "task": "intranet.apps.notifications.tasks.remove_inactive_subscriptions",
+        "schedule": celery.schedules.crontab(day_of_week=0, hour=0, minute=0),
         "args": (),
     },
 }

@@ -1,0 +1,81 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - WebPush Notifications List
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Sent Notifications</h2>
+        <table class="fancy-table" style="margin-top:10px;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Target</th>
+                    <th>Title</th>
+                    <th>Body</th>
+                </tr>
+            </thead>
+            {% for item in page_obj.object_list %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.date_sent }}</td>
+                    <td>{{ item.target }}</td>
+                    <td>
+                        {% if item.target == targets.USER %}
+                            <a href="{% url 'user_profile' user_id=item.user_sent.id %}">{{ item.user_sent }}</a>
+                        {% elif item.target == targets.DEVICE %}
+                            <a href="{% url 'notif_webpush_device_view' model_id=item.id %}">{{ item.device_sent }}</a>
+                        {% elif item.target == targets.DEVICE_QUERYSET %}
+                            <a href="{% url 'notif_webpush_device_view' model_id=item.id %}">View Queryset ({{ item.device_queryset_sent.count }} items)</a>
+                        {% else %}
+                        Unavailable
+                        {% endif %}
+                    </td>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.body|truncatechars:50 }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div style="text-align:right">
+            <form action="" method="get" style="display:inline;float:right">
+                <input name="page" type="number"
+                min="1" max={{ page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
+                placeholder={{ page_obj.number }}> of {{ paginator.num_pages }}
+                <input type="submit" value="Go"/>
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">
+                        <input type="button" value="<"/>
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">
+                        <input type="button" value=">"/>
+                    </a>
+                {% endif %}
+                <div>
+                    Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ paginator.count }} items
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

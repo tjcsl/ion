@@ -1,16 +1,28 @@
 import json
 import logging
+import os
 
 import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import FileResponse, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
+from push_notifications.models import WebPushDevice
 
+from ...celery import app
+from ..bus.tasks import push_bus_notifications
+from ..eighth.tasks import push_eighth_reminder_notifications, push_glance_notifications
+from ..schedule.models import Day
 from ..schedule.notifications import chrome_getdata_check
-from .models import GCMNotification, NotificationConfig
+from ..users.models import User
+from .forms import SendPushNotificationForm
+from .models import GCMNotification, NotificationConfig, WebPushNotification
+from .tasks import send_bulk_notification
+from .utils import return_all_notification_schedules
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +118,7 @@ def chrome_setup_view(request):
 
 @login_required
 def gcm_list_view(request):
-    if not request.user.has_admin_permission("notifications"):
+    if not request.user.is_notifications_admin:
         return redirect("index")
     gcm_notifs = GCMNotification.objects.all().order_by("-time")
     posts = []
@@ -163,7 +175,7 @@ def gcm_post(nc_users, data, user=None, request=None):
 
 @login_required
 def gcm_post_view(request):
-    if not request.user.has_admin_permission("notifications"):
+    if not request.user.is_notifications_admin:
         return redirect("index")
     try:
         has_tokens = settings.GCM_AUTH_KEY and settings.GCM_PROJECT_ID
@@ -200,3 +212,126 @@ def get_gcm_schedule_uids():
     nc_all = NotificationConfig.objects.exclude(gcm_token=None).exclude(gcm_optout=True)
     nc = nc_all.filter(user__receive_schedule_notifications=True)
     return nc.values_list("id", flat=True)
+
+
+@login_required
+def webpush_list_view(request):
+    if not request.user.is_notifications_admin:
+        return redirect("index")
+    notifications = WebPushNotification.objects.all().order_by("-date_sent")
+
+    paginator = Paginator(notifications, 20)
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "notifications/webpush_list.html",
+        {
+            "notifications": notifications,
+            "page_obj": page_obj,
+            "targets": WebPushNotification.Targets,
+            "paginator": paginator,
+        },
+    )
+
+
+@login_required
+def webpush_device_info_view(request, model_id=None):
+    if not request.user.is_notifications_admin:
+        return redirect("index")
+    notifications = WebPushNotification.objects.filter(id=model_id).first()
+    notification_target = notifications.target
+
+    if notifications is not None:
+        if notification_target == WebPushNotification.Targets.DEVICE:
+            notifications = notifications.device_sent
+        elif notification_target == WebPushNotification.Targets.DEVICE_QUERYSET:
+            notifications = notifications.device_queryset_sent.all()
+        else:
+            messages.error(request, "The notification type cannot be found or is 'Targets.USER'")
+            return redirect("index")
+    else:
+        messages.error(request, f"Can't find notification with id {model_id}")
+        return redirect("index")
+
+    if notification_target == WebPushNotification.Targets.DEVICE_QUERYSET:
+        paginator = Paginator(notifications, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+    else:
+        page_obj = None
+        paginator = None
+
+    return render(
+        request,
+        "notifications/webpush_device_info.html",
+        {
+            "notifications": notifications,
+            "page_obj": page_obj,
+            "paginator": paginator,
+        },
+    )
+
+
+@login_required()
+def webpush_post_view(request):
+    if not request.user.is_notifications_admin:
+        return redirect("index")
+
+    if request.method == "POST":
+        form = SendPushNotificationForm(data=request.POST)
+
+        if form.is_valid():
+            if not form.cleaned_data["users"].exists() and not form.cleaned_data["groups"].exists():
+                devices = WebPushDevice.objects.all()
+            else:
+                group_users = User.objects.filter(groups__in=form.cleaned_data["groups"])
+
+                devices = WebPushDevice.objects.filter(Q(user__in=form.cleaned_data["users"]) | Q(user__in=group_users))
+
+            send_bulk_notification.delay(
+                title=form.cleaned_data["title"], body=form.cleaned_data["body"], data={"url": form.cleaned_data["url"]}, filtered_objects=devices
+            )
+
+            messages.success(request, "Sent post notification.")
+        else:
+            messages.error(request, "Form invalid.")
+
+    send_push_notification_form = SendPushNotificationForm()
+
+    return render(
+        request,
+        "notifications/webpush_post.html",
+        {
+            "form": send_push_notification_form,
+        },
+    )
+
+
+def webpush_schedule_view(request):
+    if not request.user.is_notifications_admin:
+        return redirect("index")
+
+    if request.method == "POST":
+        push_eighth_reminder_notifications.delay(True)
+        push_glance_notifications.delay(True)
+        push_bus_notifications.delay(True)
+
+        messages.success(request, "Rescheduled tasks.")
+
+    day = Day.objects.today()
+
+    context = {
+        "schedules": return_all_notification_schedules(),
+        "day": day if day else "today: no schedule",
+        "scheduled_tasks": app.control.inspect().scheduled(),
+    }
+
+    return render(request, "notifications/webpush_schedule.html", context)
+
+
+def serve_serviceworker(request):
+    file_path = os.path.join(settings.STATICFILES_DIRS[0], "serviceworker.js")
+    return FileResponse(open(file_path, "rb"), content_type="application/javascript")
