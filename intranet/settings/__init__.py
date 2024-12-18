@@ -340,6 +340,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "schedule.widget",
     "dashboard.widgets",
     "profile",
+    "printing",
     "polls",
     "groups",
     "board",
