@@ -1,3 +1,4 @@
+import datetime
 import logging
 import math
 import os
@@ -5,7 +6,7 @@ import re
 import subprocess
 import tempfile
 from io import BytesIO
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 
 import magic
 from django.conf import settings
@@ -62,6 +63,29 @@ def set_user_ratelimit_status(username: str) -> None:
         cache.incr(cache_key)
 
 
+def parse_alerts(alerts: str) -> Tuple[str, bool]:
+    known_alerts = {
+        "paused": "unavailable",
+        "media-empty-error": "out of paper",
+        "media-empty-warning": "out of paper",
+        "media-jam-error": "jammed",
+        "media-jam-warning": "jammed",
+        "none": "working",
+    }
+    alerts = alerts.split()
+    alerts_text = ", ".join(known_alerts.get(alert, "error") for alert in alerts)
+    error_alerts = ["paused"]
+    broken_alerts = ["media-empty-error", "media-empty-warning", "media-jam-error", "media-jam-warning"]
+    printer_class = "working"
+    for alert in alerts:
+        if alert in error_alerts or alert not in known_alerts:
+            printer_class = "error"
+            break
+        if alert in broken_alerts:
+            printer_class = "broken"
+    return alerts_text, printer_class
+
+
 def get_printers() -> Dict[str, str]:
     """Returns a dictionary mapping name:description for available printers.
 
@@ -86,8 +110,9 @@ def get_printers() -> Dict[str, str]:
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             return []
 
-        PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)\s+(?!disabled)", re.ASCII)
+        PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)", re.ASCII)
         DESCRIPTION_LINE_RE = re.compile(r"^\s+Description:\s+(.*)\s*$", re.ASCII)
+        ALERTS_LINE_RE = re.compile(r"^\s+Alerts:\s+(.*)\s*$", re.ASCII)
 
         printers = {}
         last_name = None
@@ -98,19 +123,23 @@ def get_printers() -> Dict[str, str]:
                 name = match.group(1)
                 if name != "Please_Select_a_Printer":
                     # By default, use the name of the printer instead of the description
-                    printers[name] = name
+                    printers[name] = [name]
                     # Record the name of the printer so when we parse the rest of the
                     # extended description we know which printer it's referring to.
                     last_name = name
-                elif last_name is not None:
-                    match = DESCRIPTION_LINE_RE.match(line)
-                    if match is not None:
-                        # Pull out the description
-                        description = match.group(1)
-                        # And make sure we don't set an empty description
-                        if description:
-                            printers[last_name] = description
-                            last_name = None
+            elif last_name is not None:
+                description_match = DESCRIPTION_LINE_RE.match(line)
+                if description_match is not None:
+                    # Pull out the description
+                    description = description_match.group(1)
+                    # And make sure we don't set an empty description
+                    if description:
+                        printers[last_name] = [description]
+                alerts_match = ALERTS_LINE_RE.match(line)
+                if alerts_match is not None:
+                    alerts = alerts_match.group(1)
+                    printers[last_name].append(alerts)
+                    last_name = None
 
         cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
         return printers
@@ -300,8 +329,11 @@ def html_to_pdf(template_src, filename, context=None):
 
 def print_job(obj: PrintJob, do_print: bool = True):
     printer = obj.printer
-    if printer not in get_printers().keys():
+    all_printers = get_printers()
+    if printer not in all_printers:
         raise Exception("Printer not authorized.")
+    if parse_alerts(all_printers[printer][1])[1] == "error":
+        raise Exception("Printer unavailable.")
 
     if not obj.file:
         raise InvalidInputPrintingError("No file given to print.")
@@ -467,6 +499,9 @@ def print_view(request):
         messages.error(request, "You don't have printer access outside of the TJ network.")
         return redirect("index")
 
+    if request.method == "GET" and "refresh" in request.GET and request.user.is_printing_admin:
+        cache.delete("printing:printers")
+
     printers = get_printers()
     if request.method == "POST":
         form = PrintJobForm(request.POST, request.FILES, printers=printers)
@@ -494,5 +529,13 @@ def print_view(request):
                 )
     else:
         form = PrintJobForm(printers=printers)
-    context = {"form": form}
+    alerts = {}
+    for printer in printers:
+        alerts[printer] = parse_alerts(printers[printer][1])
+    if hasattr(cache, "ttl"):
+        elapsed_seconds = settings.CACHE_AGE["printers_list"] - cache.ttl("printing:printers")
+        start_time = datetime.datetime.now() - datetime.timedelta(seconds=elapsed_seconds)
+        context = {"form": form, "alerts": alerts, "updated_time": start_time.strftime("%-I:%M:%S %p")}
+    else:
+        context = {"form": form, "alerts": alerts}
     return render(request, "printing/print.html", context)
