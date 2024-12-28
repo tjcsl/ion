@@ -225,7 +225,7 @@ def files_type(request, fstype=None):
                 content_len = tmpfile.tell()
                 tmpfile.seek(0)
                 chunk_size = 8192
-                response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+                response = StreamingHttpResponse([*FileWrapper(tmpfile, chunk_size)], content_type="application/octet-stream")
                 response["Content-Length"] = content_len
                 response["Content-Disposition"] = f"attachment; filename={filebase_escaped}"
                 return response
@@ -294,7 +294,7 @@ def files_type(request, fstype=None):
             content_len = tmpfile.tell()
             tmpfile.seek(0)
             chunk_size = 8192
-            response = StreamingHttpResponse(FileWrapper(tmpfile, chunk_size), content_type="application/octet-stream")
+            response = StreamingHttpResponse([*FileWrapper(tmpfile, chunk_size)], content_type="application/octet-stream")
             response["Content-Length"] = content_len
             if not dirbase_escaped:
                 dirbase_escaped = "files"
