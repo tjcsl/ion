@@ -123,6 +123,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         name_with_flags = prefix + middle + suffix
         name_with_flags_for_user = prefix + (middle if restricted_for_user else "") + suffix
 
+        is_activity_sticky = scheduled_activity.is_activity_sticky()
+
         activity_info = {
             "id": activity.id,
             "aid": activity.aid,
@@ -154,8 +156,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "administrative": scheduled_activity.get_administrative(),
             "presign": activity.presign,
             "presign_time": scheduled_activity.is_too_early_to_signup()[1].strftime("%A, %B %-d at %-I:%M %p"),
-            "sticky": scheduled_activity.is_activity_sticky(),
-            "user_sticky": scheduled_activity.is_user_stickied(user),
+            "sticky": is_activity_sticky,
+            "user_sticky": scheduled_activity.is_user_stickied(user) and not is_activity_sticky,
             "finance": "",  # TODO: refactor JS to remove this
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,  # TODO: refactor JS to remove this
