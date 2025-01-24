@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.enrichment.views &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,25 +121,25 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.enrichment.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dateutil.relativedelta</span><span class="w"> </span><span class="kn">import</span> <span class="n">relativedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">...utils.html</span> <span class="kn">import</span> <span class="n">safe_html</span>
-<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">deny_restricted</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">EnrichmentActivityForm</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">EnrichmentActivity</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_html</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">deny_restricted</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnrichmentActivityForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnrichmentActivity</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="date_format"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.date_format">[docs]</a><span class="k">def</span> <span class="nf">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<div class="viewcode-block" id="date_format"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.date_format">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -147,7 +147,7 @@
     <span class="k">return</span> <span class="n">d</span></div>
 
 
-<div class="viewcode-block" id="decode_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.decode_date">[docs]</a><span class="k">def</span> <span class="nf">decode_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<div class="viewcode-block" id="decode_date"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.decode_date">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">decode_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -155,11 +155,11 @@
     <span class="k">return</span> <span class="n">d</span></div>
 
 
-<div class="viewcode-block" id="is_weekday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.is_weekday">[docs]</a><span class="k">def</span> <span class="nf">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<div class="viewcode-block" id="is_weekday"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.is_weekday">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="enrichment_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.enrichment_context">[docs]</a><span class="k">def</span> <span class="nf">enrichment_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="enrichment_context"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.enrichment_context">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">enrichment_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">local_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -195,7 +195,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="week_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.week_data">[docs]</a><span class="k">def</span> <span class="nf">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="week_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.week_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">date</span>
     <span class="k">elif</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
@@ -224,7 +224,7 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="month_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.month_data">[docs]</a><span class="k">def</span> <span class="nf">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="month_data"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.views.month_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
@@ -250,7 +250,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Enrichment homepage.</span>
 
 <span class="sd">    Shows a list of enrichments occurring in the next week, month, and</span>
@@ -326,7 +326,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">enrichment_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">enrichment_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
 
@@ -363,7 +363,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">enrichment_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">enrichment_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
     <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
     <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
 
@@ -404,7 +404,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">add_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add enrichment activity page.&quot;&quot;&quot;</span>
 
     <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
@@ -434,7 +434,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">modify_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">modify_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify enrichment activity page.</span>
 
 <span class="sd">    Args:</span>
@@ -467,7 +467,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">delete_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">delete_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete enrichment activity page.</span>
 
 <span class="sd">    Args:</span>
@@ -502,7 +502,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.management.commands.signup_status_email &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.eighth.management.commands.signup_status_email &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
@@ -121,20 +121,20 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.eighth.management.commands.signup_status_email</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
 
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.management.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">intranet.apps.eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
-<span class="kn">from</span> <span class="nn">intranet.apps.eighth.notifications</span> <span class="kn">import</span> <span class="n">signup_status_email</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">intranet.apps.eighth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">intranet.apps.eighth.notifications</span><span class="w"> </span><span class="kn">import</span> <span class="n">signup_status_email</span>
 
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.signup_status_email.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.signup_status_email.Command">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
     <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Notify users who have not signed up for Eighth Period or need to change their signup selection.&quot;</span>
 
-<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.signup_status_email.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.signup_status_email.Command.add_arguments">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--silent&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;silent&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Be silent.&quot;</span><span class="p">)</span>
 
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -149,7 +149,7 @@
             <span class="s2">&quot;--everyone&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;everyone&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Send to everyone, even those who have no eighth emails set.&quot;</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.signup_status_email.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.eighth.management.commands.html#intranet.apps.eighth.management.commands.signup_status_email.Command.handle">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="n">log</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;silent&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;everyone&quot;</span><span class="p">]:</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span>
@@ -222,7 +222,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

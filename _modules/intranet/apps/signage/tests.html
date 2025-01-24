@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.signage.tests &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.signage.tests &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,22 +121,22 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.signage.tests</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
-<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AnonymousUser</span>
-<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">RequestFactory</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnonymousUser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.test</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
-<span class="kn">from</span> <span class="nn">...utils</span> <span class="kn">import</span> <span class="n">helpers</span>
-<span class="kn">from</span> <span class="nn">..eighth.models</span> <span class="kn">import</span> <span class="n">EighthBlock</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Sign</span>
-<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">check_internal_ip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...test.ion_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">helpers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..eighth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthBlock</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_internal_ip</span>
 
 
-<div class="viewcode-block" id="SignageTestCase"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase">[docs]</a><span class="k">class</span> <span class="nc">SignageTestCase</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<div class="viewcode-block" id="SignageTestCase.test_check_internal_ip"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_check_internal_ip">[docs]</a>    <span class="k">def</span> <span class="nf">test_check_internal_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignageTestCase"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SignageTestCase</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="SignageTestCase.test_check_internal_ip"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_check_internal_ip">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_check_internal_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">(</span><span class="n">TJ_IPS</span><span class="o">=</span><span class="n">helpers</span><span class="o">.</span><span class="n">GlobList</span><span class="p">([</span><span class="s2">&quot;165.45.34.0/24&quot;</span><span class="p">])):</span>  <span class="c1"># arbitrary</span>
             <span class="n">factory</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/signage/display/cs-nobel/&quot;</span><span class="p">,</span> <span class="n">REMOTE_ADDR</span><span class="o">=</span><span class="s2">&quot;165.45.34.120&quot;</span><span class="p">)</span>
@@ -151,7 +151,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SignageTestCase.test_signage_display"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_signage_display">[docs]</a>    <span class="k">def</span> <span class="nf">test_signage_display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignageTestCase.test_signage_display"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_signage_display">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_signage_display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;signage_display&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;display_id&quot;</span><span class="p">:</span> <span class="s2">&quot;nobel&quot;</span><span class="p">}))</span>
@@ -163,7 +163,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;sign&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="SignageTestCase.test_eighth"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_eighth">[docs]</a>    <span class="k">def</span> <span class="nf">test_eighth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignageTestCase.test_eighth"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_eighth">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_eighth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth&quot;</span><span class="p">))</span>
@@ -178,7 +178,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">block_a</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;active_block&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">block_b</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;next_block&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="SignageTestCase.test_prometheus_metrics"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_prometheus_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">test_prometheus_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SignageTestCase.test_prometheus_metrics"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.tests.SignageTestCase.test_prometheus_metrics">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_prometheus_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -211,7 +211,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

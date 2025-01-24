@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.utils.html &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.utils.html &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -121,11 +121,11 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.utils.html</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">urllib.parse</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">bleach</span>
-<span class="kn">from</span> <span class="nn">bleach.css_sanitizer</span> <span class="kn">import</span> <span class="n">CSSSanitizer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bleach</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bleach.css_sanitizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSSSanitizer</span>
 
 <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;abbr&quot;</span><span class="p">,</span> <span class="s2">&quot;acronym&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;br&quot;</span><span class="p">,</span> <span class="s2">&quot;blockquote&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span> <span class="s2">&quot;em&quot;</span><span class="p">,</span> <span class="s2">&quot;hr&quot;</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="s2">&quot;ol&quot;</span><span class="p">,</span> <span class="s2">&quot;strong&quot;</span><span class="p">,</span> <span class="s2">&quot;ul&quot;</span><span class="p">,</span> <span class="s2">&quot;iframe&quot;</span><span class="p">,</span> <span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">]</span>
 
@@ -154,11 +154,11 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="safe_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.safe_html">[docs]</a><span class="k">def</span> <span class="nf">safe_html</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
+<div class="viewcode-block" id="safe_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.safe_html">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">safe_html</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">txt</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">att</span><span class="p">,</span> <span class="n">css_sanitizer</span><span class="o">=</span><span class="n">css_sanitizer</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="link_removal_callback"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.link_removal_callback">[docs]</a><span class="k">def</span> <span class="nf">link_removal_callback</span><span class="p">(</span>  <span class="c1"># pylint: disable=unused-argument</span>
+<div class="viewcode-block" id="link_removal_callback"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.link_removal_callback">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">link_removal_callback</span><span class="p">(</span>  <span class="c1"># pylint: disable=unused-argument</span>
     <span class="n">attrs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">new</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal callback for ``nullify_links()``.&quot;&quot;&quot;</span>
@@ -169,7 +169,7 @@
     <span class="k">return</span> <span class="n">attrs</span></div>
 
 
-<div class="viewcode-block" id="nullify_links"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.nullify_links">[docs]</a><span class="k">def</span> <span class="nf">nullify_links</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="nullify_links"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.nullify_links">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">nullify_links</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a string containing HTML, changes the ``href`` attribute of any links to &quot;javascript:void(0)&quot; to render</span>
 <span class="sd">    the link useless.</span>
 
@@ -183,8 +183,8 @@
     <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="p">[</span><span class="n">link_removal_callback</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="safe_fcps_emerg_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.safe_fcps_emerg_html">[docs]</a><span class="k">def</span> <span class="nf">safe_fcps_emerg_html</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">translate_link_attr</span><span class="p">(</span>  <span class="c1"># pylint: disable=unused-argument</span>
+<div class="viewcode-block" id="safe_fcps_emerg_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.safe_fcps_emerg_html">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">safe_fcps_emerg_html</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translate_link_attr</span><span class="p">(</span>  <span class="c1"># pylint: disable=unused-argument</span>
         <span class="n">attrs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="nb">str</span><span class="p">],</span> <span class="n">new</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
@@ -198,7 +198,7 @@
     <span class="k">return</span> <span class="n">bleach</span><span class="o">.</span><span class="n">linkify</span><span class="p">(</span><span class="n">bleach</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">strip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">,</span> <span class="n">attributes</span><span class="o">=</span><span class="n">att</span><span class="p">,</span> <span class="n">css_sanitizer</span><span class="o">=</span><span class="n">css_sanitizer</span><span class="p">),</span> <span class="p">[</span><span class="n">translate_link_attr</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="get_domain_name"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.get_domain_name">[docs]</a><span class="k">def</span> <span class="nf">get_domain_name</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+<div class="viewcode-block" id="get_domain_name"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.html.get_domain_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_domain_name</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
     <span class="k">return</span> <span class="s2">&quot;https://&quot;</span> <span class="o">+</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">netloc</span></div>
 </pre></div>
 
@@ -216,7 +216,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.middleware.profiler &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.middleware.profiler &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -127,19 +127,19 @@
 <span class="c1"># Modified by: Shwagroo Team</span>
 <span class="c1"># Modified further by Doug Stryke</span>
 
-<span class="kn">import</span> <span class="nn">cProfile</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pstats</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">resource</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>  <span class="c1"># noqa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cProfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pstats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">resource</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>  <span class="c1"># noqa</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">connections</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">connections</span>
 
 <span class="c1"># FIXME change log base to something appropriate for the particular installation</span>
 <span class="n">PROFILE_LOG_BASE</span> <span class="o">=</span> <span class="s2">&quot;/var/tmp/django&quot;</span>
@@ -174,7 +174,7 @@
 <span class="n">_profile_layer</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="ProfileMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware">[docs]</a><span class="k">class</span> <span class="nc">ProfileMiddleware</span><span class="p">:</span>
+<div class="viewcode-block" id="ProfileMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ProfileMiddleware</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Displays timing or profiling for any view.</span>
 <span class="sd">    http://yoursite.com/yourview/?time or http://yoursite.com/yourview/?prof</span>
 
@@ -194,10 +194,10 @@
 <span class="sd">    statistics, add &#39;&amp;strip&#39;. (Note that the file and group summaries are also removed by &#39;strip&#39;.)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ProfileMiddleware.process_request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_request">[docs]</a>    <span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="ProfileMiddleware.process_request"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_request">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">global</span> <span class="n">_middleware_start_time</span><span class="p">,</span> <span class="n">_start_time</span><span class="p">,</span> <span class="n">_log_file_path</span><span class="p">,</span> <span class="n">_prof</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
@@ -220,13 +220,13 @@
                 <span class="k">if</span> <span class="s2">&quot;log&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">_log_file_path</span> <span class="o">=</span> <span class="n">get_log_file_path</span><span class="p">(</span><span class="s2">&quot;middleware.profile&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">gmtime</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="ProfileMiddleware.process_view"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_view">[docs]</a>    <span class="k">def</span> <span class="nf">process_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">callback_args</span><span class="p">,</span> <span class="n">callback_kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ProfileMiddleware.process_view"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_view">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">callback_args</span><span class="p">,</span> <span class="n">callback_kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;prof&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_prof</span><span class="o">.</span><span class="n">runcall</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">callback_args</span><span class="p">,</span> <span class="o">**</span><span class="n">callback_kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="ProfileMiddleware.process_response"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_response">[docs]</a>    <span class="k">def</span> <span class="nf">process_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+<div class="viewcode-block" id="ProfileMiddleware.process_response"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.ProfileMiddleware.process_response">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">process_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="c1"># pylint: disable=unsupported-assignment-operation,unsubscriptable-object</span>
         <span class="k">global</span> <span class="n">_current_stats</span><span class="p">,</span> <span class="n">_middleware_start_time</span><span class="p">,</span> <span class="n">_log_file_path</span><span class="p">,</span> <span class="n">_profile_layer</span><span class="p">,</span> <span class="n">_prof</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
@@ -253,7 +253,7 @@
 
     <span class="c1"># detect when we start timing a different page and auto-reset stats</span>
     <span class="c1"># (another option would be to maintain separate stats)</span>
-    <span class="k">def</span> <span class="nf">_auto_reset_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_auto_reset_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_real_uri</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_last_uri</span> <span class="o">=</span> <span class="n">uri</span>
@@ -263,7 +263,7 @@
 
     <span class="n">_reUri</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(http.+/)[?&amp;]time.*$&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_real_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_real_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">uri</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">()</span>
         <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reUri</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">uri</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -271,7 +271,7 @@
 
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_collect_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_collect_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># record stats from this request</span>
         <span class="n">stats</span> <span class="o">=</span> <span class="n">time_stats</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">_start_time</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;total_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">_start_time</span>
@@ -284,7 +284,7 @@
         <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;query_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">stats</span>
 
-    <span class="k">def</span> <span class="nf">_display_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_display_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="c1"># display all stats since last reset</span>
         <span class="n">stats_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%-4s</span><span class="s2"> </span><span class="si">%-24s</span><span class="s2"> </span><span class="si">%13s</span><span class="s2"> </span><span class="si">%14s</span><span class="s2"> </span><span class="si">%10s</span><span class="s2"> </span><span class="si">%12s</span><span class="s2"> </span><span class="si">%12s</span><span class="s2"> </span><span class="si">%12s</span><span class="s2"> </span><span class="si">%12s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">([</span><span class="s2">&quot;Req&quot;</span><span class="p">,</span> <span class="s2">&quot;Start time&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">time_labels</span><span class="p">)</span>
         <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
@@ -320,10 +320,10 @@
         <span class="k">if</span> <span class="n">response</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="n">stats_str</span><span class="p">:</span>
             <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="s2">&quot;&lt;pre&gt;</span><span class="si">%s</span><span class="se">\n\n</span><span class="s2">options: &amp;reset (clear all stats)</span><span class="se">\n\n</span><span class="si">%s</span><span class="s2">&lt;/pre&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(),</span> <span class="n">stats_str</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_elapsed_ru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_elapsed_ru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_end_rusage</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">-</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_rusage</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
         <span class="k">if</span> <span class="s2">&quot;log&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">_log_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">_prof</span><span class="o">.</span><span class="n">dump_stats</span><span class="p">(</span><span class="n">_log_file_path</span><span class="p">)</span>
@@ -365,7 +365,7 @@
             <span class="k">if</span> <span class="s2">&quot;strip&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
                 <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_summary_for_files</span><span class="p">(</span><span class="n">stats_str</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">group_prefix_re</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
@@ -373,7 +373,7 @@
 
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">results_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
         <span class="n">items</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="p">[:</span><span class="mi">40</span><span class="p">]</span>
@@ -384,7 +384,7 @@
 
         <span class="k">return</span> <span class="n">res</span>
 
-    <span class="k">def</span> <span class="nf">_summary_for_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_summary_for_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_str</span><span class="p">):</span>
         <span class="n">stats_str</span> <span class="o">=</span> <span class="n">stats_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">8</span><span class="p">:]</span>
 
         <span class="n">mystats</span> <span class="o">=</span> <span class="p">{}</span>
@@ -419,7 +419,7 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_log_file_path"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.get_log_file_path">[docs]</a><span class="k">def</span> <span class="nf">get_log_file_path</span><span class="p">(</span><span class="n">log_file_path</span><span class="p">,</span> <span class="n">called_time</span><span class="p">):</span>
+<div class="viewcode-block" id="get_log_file_path"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.get_log_file_path">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_log_file_path</span><span class="p">(</span><span class="n">log_file_path</span><span class="p">,</span> <span class="n">called_time</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">log_file_path</span><span class="p">):</span>
         <span class="n">log_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PROFILE_LOG_BASE</span><span class="p">,</span> <span class="n">log_file_path</span><span class="p">)</span>
 
@@ -435,12 +435,12 @@
     <span class="k">return</span> <span class="n">base</span> <span class="o">+</span> <span class="n">ext</span></div>
 
 
-<div class="viewcode-block" id="stdev"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.stdev">[docs]</a><span class="k">def</span> <span class="nf">stdev</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<div class="viewcode-block" id="stdev"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.profiler.stdev">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">stdev</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate standard deviation of data x[]:</span>
 <span class="sd">    std = sqrt(\sum_i (x_i - mean)^2 \over n-1)</span>
 <span class="sd">    https://wiki.python.org/moin/NumericAndScientificRecipes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>  <span class="c1"># pylint: disable=import-outside-toplevel</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">mean</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
@@ -462,7 +462,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

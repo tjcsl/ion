@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.routing &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.routing &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -126,28 +126,28 @@
 <span class="sd">https://channels.readthedocs.io/en/latest/topics/routing.html</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">channels.auth</span> <span class="kn">import</span> <span class="n">AuthMiddlewareStack</span>
-<span class="kn">from</span> <span class="nn">channels.generic.websocket</span> <span class="kn">import</span> <span class="n">WebsocketConsumer</span>
-<span class="kn">from</span> <span class="nn">channels.routing</span> <span class="kn">import</span> <span class="n">ProtocolTypeRouter</span><span class="p">,</span> <span class="n">URLRouter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">channels.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthMiddlewareStack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">channels.generic.websocket</span><span class="w"> </span><span class="kn">import</span> <span class="n">WebsocketConsumer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">channels.routing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtocolTypeRouter</span><span class="p">,</span> <span class="n">URLRouter</span>
 
-<span class="kn">from</span> <span class="nn">django.core.asgi</span> <span class="kn">import</span> <span class="n">get_asgi_application</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">re_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.asgi</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_asgi_application</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">re_path</span>
 
-<span class="kn">from</span> <span class="nn">.apps.bus.consumers</span> <span class="kn">import</span> <span class="n">BusConsumer</span>
-<span class="kn">from</span> <span class="nn">.apps.signage.consumers</span> <span class="kn">import</span> <span class="n">SignageConsumer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.apps.bus.consumers</span><span class="w"> </span><span class="kn">import</span> <span class="n">BusConsumer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.apps.signage.consumers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignageConsumer</span>
 
 
-<div class="viewcode-block" id="WebsocketCloseConsumer"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer">[docs]</a><span class="k">class</span> <span class="nc">WebsocketCloseConsumer</span><span class="p">(</span><span class="n">WebsocketConsumer</span><span class="p">):</span>
-<div class="viewcode-block" id="WebsocketCloseConsumer.connect"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="WebsocketCloseConsumer"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">WebsocketCloseConsumer</span><span class="p">(</span><span class="n">WebsocketConsumer</span><span class="p">):</span>
+<div class="viewcode-block" id="WebsocketCloseConsumer.connect"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.connect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="WebsocketCloseConsumer.receive"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.receive">[docs]</a>    <span class="k">def</span> <span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bytes_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="WebsocketCloseConsumer.receive"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.receive">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">receive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bytes_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="WebsocketCloseConsumer.disconnect"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+<div class="viewcode-block" id="WebsocketCloseConsumer.disconnect"><a class="viewcode-back" href="../../sourcedoc/intranet.html#intranet.routing.WebsocketCloseConsumer.disconnect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
         <span class="k">pass</span></div></div>
 
 
@@ -182,7 +182,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.signage.admin &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.signage.admin &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,16 +121,16 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.signage.admin</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">...utils.helpers</span> <span class="kn">import</span> <span class="n">join_nicely</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">SetSignCustomSwitchTimeForm</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Page</span><span class="p">,</span> <span class="n">Sign</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">join_nicely</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">SetSignCustomSwitchTimeForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Page</span><span class="p">,</span> <span class="n">Sign</span>
 
 
-<div class="viewcode-block" id="SignAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.SignAdmin">[docs]</a><span class="k">class</span> <span class="nc">SignAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+<div class="viewcode-block" id="SignAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.SignAdmin">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">SignAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;display&quot;</span><span class="p">,</span>
@@ -143,11 +143,11 @@
         <span class="s2">&quot;page_list&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="SignAdmin.page_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.SignAdmin.page_list">[docs]</a>    <span class="k">def</span> <span class="nf">page_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="SignAdmin.page_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.SignAdmin.page_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">page_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">pages</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div></div>
 
 
-<div class="viewcode-block" id="PageAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin">[docs]</a><span class="k">class</span> <span class="nc">PageAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+<div class="viewcode-block" id="PageAdmin"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PageAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;name&quot;</span><span class="p">,</span>
         <span class="s2">&quot;url&quot;</span><span class="p">,</span>
@@ -158,13 +158,13 @@
         <span class="s2">&quot;custom_page_on&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="PageAdmin.sign_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.sign_list">[docs]</a>    <span class="k">def</span> <span class="nf">sign_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="PageAdmin.sign_list"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.sign_list">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">sign_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; Commons&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">signs</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="PageAdmin.lock_page_on"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.lock_page_on">[docs]</a>    <span class="k">def</span> <span class="nf">lock_page_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="PageAdmin.lock_page_on"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.lock_page_on">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">lock_page_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; Commons&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">lock_page</span><span class="o">=</span><span class="n">obj</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="PageAdmin.custom_page_on"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.custom_page_on">[docs]</a>    <span class="k">def</span> <span class="nf">custom_page_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="PageAdmin.custom_page_on"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.custom_page_on">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">custom_page_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; Commons&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">custom_switch_page</span><span class="o">=</span><span class="n">obj</span><span class="p">))</span></div>
 
     <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span>
@@ -179,19 +179,19 @@
     <span class="p">]</span>
 
 <div class="viewcode-block" id="PageAdmin.add_page_to_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.add_page_to_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Add selected Page(s) to all Signs&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">add_page_to_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_page_to_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
             <span class="n">page</span><span class="o">.</span><span class="n">deploy_to</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Successfully added </span><span class="si">{</span><span class="n">join_nicely</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span><span class="si">}</span><span class="s2"> to all Signs.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PageAdmin.remove_page_from_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.remove_page_from_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Remove selected Page(s) from all Signs&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">remove_page_from_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_page_from_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
             <span class="n">page</span><span class="o">.</span><span class="n">signs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Successfully removed </span><span class="si">{</span><span class="n">join_nicely</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span><span class="si">}</span><span class="s2"> from all Signs.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PageAdmin.lock_page_to_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.lock_page_to_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Lock all Signs to selected Page&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">lock_page_to_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">lock_page_to_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">queryset</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Please select only one Page to lock to all Signs.&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -200,7 +200,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Successfully locked all Signs to </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PageAdmin.unlock_all_signs_from_selected_pages"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.unlock_all_signs_from_selected_pages">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unlock all Signs from selected Page(s)&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">unlock_all_signs_from_selected_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unlock_all_signs_from_selected_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
             <span class="n">locked_signs</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locked_signs</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">locked_signs</span><span class="p">:</span>
@@ -210,7 +210,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Successfully unlocked </span><span class="si">{</span><span class="n">join_nicely</span><span class="p">(</span><span class="n">locked_signs</span><span class="p">)</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PageAdmin.set_custom_switch_page_for_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.set_custom_switch_page_for_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set selected Page as custom switch page for all Signs&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">set_custom_switch_page_for_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_custom_switch_page_for_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">queryset</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Please select only one Page to set as custom switch page for all Signs.&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -225,7 +225,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="PageAdmin.set_locked_custom_switch_page_for_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.set_locked_custom_switch_page_for_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set selected Page as locked custom switch page for all Signs&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">set_locked_custom_switch_page_for_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_locked_custom_switch_page_for_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">queryset</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Please select only one Page to set as locked custom switch page for all Signs.&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;ERROR&quot;</span><span class="p">)</span>
             <span class="k">return</span>
@@ -240,7 +240,7 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="PageAdmin.remove_custom_switch_page_from_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.remove_custom_switch_page_from_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Remove selected Page(s) as custom switch page from all Signs&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">remove_custom_switch_page_from_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_custom_switch_page_from_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">queryset</span><span class="p">:</span>
             <span class="n">custom_page_signs</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">custom_page_signs</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">custom_page_signs</span><span class="p">:</span>
@@ -254,7 +254,7 @@
                     <span class="n">sign</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PageAdmin.set_custom_switch_time_for_all_signs"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.signage.html#intranet.apps.signage.admin.PageAdmin.set_custom_switch_time_for_all_signs">[docs]</a>    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Set custom switch time for all Signs&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">set_custom_switch_time_for_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_custom_switch_time_for_all_signs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;apply&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="n">form</span> <span class="o">=</span> <span class="n">SetSignCustomSwitchTimeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
@@ -294,7 +294,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

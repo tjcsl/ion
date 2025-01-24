@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dataimport.management.commands.import_users &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_users &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
@@ -121,26 +121,26 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.dataimport.management.commands.import_users</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span><span class="p">,</span> <span class="n">CommandError</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.management.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommand</span><span class="p">,</span> <span class="n">CommandError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q</span>
 
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_users.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_users.Command">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
     <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Import User Objects&quot;</span>
 
-<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_users.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_users.Command.add_arguments">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="c1"># Positional arguments</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;data_fname&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_users.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_users.Command.handle">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;data_fname&quot;</span><span class="p">],</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_obj</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f_obj</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">ex</span>
+            <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ex</span>
 
         <span class="k">for</span> <span class="n">counselor</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;counselors&quot;</span><span class="p">]:</span>
             <span class="n">gender</span> <span class="o">=</span> <span class="n">counselor</span><span class="p">[</span><span class="s2">&quot;Gender&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -217,7 +217,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.error.views &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.error.views &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,26 +121,26 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.error.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">render</span>
 
 
-<div class="viewcode-block" id="handle_404_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_404_view">[docs]</a><span class="k">def</span> <span class="nf">handle_404_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+<div class="viewcode-block" id="handle_404_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_404_view">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">handle_404_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
     <span class="c1"># TODO: Actually render the exception?</span>
     <span class="k">del</span> <span class="n">exception</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/404.html&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_500_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_500_view">[docs]</a><span class="k">def</span> <span class="nf">handle_500_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="handle_500_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_500_view">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">handle_500_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/500.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;public_dsn&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">SENTRY_PUBLIC_DSN</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_503_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_503_view">[docs]</a><span class="k">def</span> <span class="nf">handle_503_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="handle_503_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_503_view">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">handle_503_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="c1"># maintenance mode</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/503.html&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">503</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle_csrf_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_csrf_view">[docs]</a><span class="k">def</span> <span class="nf">handle_csrf_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+<div class="viewcode-block" id="handle_csrf_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.error.html#intranet.apps.error.views.handle_csrf_view">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">handle_csrf_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
     <span class="c1"># CSRF failure view</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/csrf.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">reason</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span></div>
 </pre></div>
@@ -159,7 +159,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

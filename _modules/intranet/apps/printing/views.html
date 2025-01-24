@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,49 +121,50 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.printing.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">magic</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.core.cache</span> <span class="kn">import</span> <span class="n">cache</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.template.loader</span> <span class="kn">import</span> <span class="n">get_template</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">django.utils.text</span> <span class="kn">import</span> <span class="n">slugify</span>
-<span class="kn">from</span> <span class="nn">sentry_sdk</span> <span class="kn">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
-<span class="kn">from</span> <span class="nn">xhtml2pdf</span> <span class="kn">import</span> <span class="n">pisa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">magic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.template.loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_template</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">slugify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sentry_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xhtml2pdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">pisa</span>
 
-<span class="kn">from</span> <span class="nn">..auth.decorators</span> <span class="kn">import</span> <span class="n">deny_restricted</span>
-<span class="kn">from</span> <span class="nn">..context_processors</span> <span class="kn">import</span> <span class="n">_get_current_ip</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">PrintJobForm</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">PrintJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">deny_restricted</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..context_processors</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_current_ip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrintJobForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrintJob</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="InvalidInputPrintingError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.InvalidInputPrintingError">[docs]</a><span class="k">class</span> <span class="nc">InvalidInputPrintingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidInputPrintingError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.InvalidInputPrintingError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InvalidInputPrintingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An error occurred while printing, but it was due to invalid input from the user and is not worthy of a</span>
 <span class="sd">    ``CRITICAL`` log message.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="RatelimitCacheError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.RatelimitCacheError">[docs]</a><span class="k">class</span> <span class="nc">RatelimitCacheError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="RatelimitCacheError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.RatelimitCacheError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RatelimitCacheError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An error occurred while accessing the cache to rate limit a user&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="RatelimitExceededError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.RatelimitExceededError">[docs]</a><span class="k">class</span> <span class="nc">RatelimitExceededError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="RatelimitExceededError"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.RatelimitExceededError">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RatelimitExceededError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An error occurred because the user exceeded the printing rate limit&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="get_user_ratelimit_status"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_user_ratelimit_status">[docs]</a><span class="k">def</span> <span class="nf">get_user_ratelimit_status</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="get_user_ratelimit_status"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_user_ratelimit_status">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_user_ratelimit_status</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;printing_ratelimit:</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINT_RATELIMIT_FREQUENCY</span><span class="p">:</span>
@@ -175,7 +176,7 @@
         <span class="k">raise</span> <span class="n">RatelimitCacheError</span><span class="p">(</span><span class="s2">&quot;An error occurred while trying to get your rate limit status&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="set_user_ratelimit_status"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.set_user_ratelimit_status">[docs]</a><span class="k">def</span> <span class="nf">set_user_ratelimit_status</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="set_user_ratelimit_status"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.set_user_ratelimit_status">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">set_user_ratelimit_status</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;printing_ratelimit:</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -185,7 +186,30 @@
         <span class="n">cache</span><span class="o">.</span><span class="n">incr</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_printers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_printers">[docs]</a><span class="k">def</span> <span class="nf">get_printers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="parse_alerts"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.parse_alerts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_alerts</span><span class="p">(</span><span class="n">alerts</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="n">known_alerts</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="s2">&quot;unavailable&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;media-empty-error&quot;</span><span class="p">:</span> <span class="s2">&quot;out of paper&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;media-empty-warning&quot;</span><span class="p">:</span> <span class="s2">&quot;out of paper&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;media-jam-error&quot;</span><span class="p">:</span> <span class="s2">&quot;jammed&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;media-jam-warning&quot;</span><span class="p">:</span> <span class="s2">&quot;jammed&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;none&quot;</span><span class="p">:</span> <span class="s2">&quot;working&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">alerts_text</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">known_alerts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">)</span>
+    <span class="n">error_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;paused&quot;</span><span class="p">]</span>
+    <span class="n">broken_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;media-empty-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-empty-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-warning&quot;</span><span class="p">]</span>
+    <span class="n">printer_class</span> <span class="o">=</span> <span class="s2">&quot;working&quot;</span>
+    <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">error_alerts</span> <span class="ow">or</span> <span class="n">alert</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_alerts</span><span class="p">:</span>
+            <span class="n">printer_class</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">broken_alerts</span><span class="p">:</span>
+            <span class="n">printer_class</span> <span class="o">=</span> <span class="s2">&quot;broken&quot;</span>
+    <span class="k">return</span> <span class="n">alerts_text</span><span class="p">,</span> <span class="n">printer_class</span></div>
+
+
+<div class="viewcode-block" id="get_printers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_printers">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_printers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dictionary mapping name:description for available printers.</span>
 
 <span class="sd">    This requires that a CUPS client be configured on the server.</span>
@@ -209,8 +233,9 @@
         <span class="k">except</span> <span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">PRINTER_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^printer\s+(\w+)\s+(?!disabled)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
+        <span class="n">PRINTER_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^printer\s+(\w+)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
         <span class="n">DESCRIPTION_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s+Description:\s+(.*)\s*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
+        <span class="n">ALERTS_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s+Alerts:\s+(.*)\s*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
 
         <span class="n">printers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
@@ -221,25 +246,29 @@
                 <span class="n">name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;Please_Select_a_Printer&quot;</span><span class="p">:</span>
                     <span class="c1"># By default, use the name of the printer instead of the description</span>
-                    <span class="n">printers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+                    <span class="n">printers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
                     <span class="c1"># Record the name of the printer so when we parse the rest of the</span>
                     <span class="c1"># extended description we know which printer it&#39;s referring to.</span>
                     <span class="n">last_name</span> <span class="o">=</span> <span class="n">name</span>
-                <span class="k">elif</span> <span class="n">last_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">match</span> <span class="o">=</span> <span class="n">DESCRIPTION_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># Pull out the description</span>
-                        <span class="n">description</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                        <span class="c1"># And make sure we don&#39;t set an empty description</span>
-                        <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
-                            <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
-                            <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">last_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">description_match</span> <span class="o">=</span> <span class="n">DESCRIPTION_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">description_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Pull out the description</span>
+                    <span class="n">description</span> <span class="o">=</span> <span class="n">description_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="c1"># And make sure we don&#39;t set an empty description</span>
+                    <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">description</span><span class="p">]</span>
+                <span class="n">alerts_match</span> <span class="o">=</span> <span class="n">ALERTS_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">alerts_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span>
+                    <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">printers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">printers</span></div>
 
 
-<div class="viewcode-block" id="convert_soffice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_soffice">[docs]</a><span class="k">def</span> <span class="nf">convert_soffice</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="convert_soffice"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_soffice">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">convert_soffice</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a doc or docx to a PDF with soffice.</span>
 
 <span class="sd">    Args:</span>
@@ -270,7 +299,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="convert_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_pdf">[docs]</a><span class="k">def</span> <span class="nf">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cmdname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ps2pdf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="convert_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_pdf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">convert_pdf</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cmdname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ps2pdf&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tmpfile_name</span><span class="si">}</span><span class="s2">.pdf&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="n">cmdname</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -286,7 +315,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="get_numpages"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_numpages">[docs]</a><span class="k">def</span> <span class="nf">get_numpages</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="get_numpages"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_numpages">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_numpages</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;pdfinfo&quot;</span><span class="p">,</span> <span class="n">tmpfile_name</span><span class="p">],</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -317,7 +346,7 @@
 <span class="n">GENERIC_MIMETYPES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;application/octet-stream&quot;</span><span class="p">}</span>
 
 
-<div class="viewcode-block" id="get_mimetype"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_mimetype">[docs]</a><span class="k">def</span> <span class="nf">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="get_mimetype"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_mimetype">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="n">mime</span> <span class="o">=</span> <span class="n">magic</span><span class="o">.</span><span class="n">Magic</span><span class="p">(</span><span class="n">mime</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">mimetype</span> <span class="o">=</span> <span class="n">mime</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
 
@@ -332,7 +361,7 @@
     <span class="k">return</span> <span class="n">mimetype</span></div>
 
 
-<div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_file">[docs]</a><span class="k">def</span> <span class="nf">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">orig_fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="convert_file"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.convert_file">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">convert_file</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">orig_fname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="n">get_mimetype</span><span class="p">(</span><span class="n">tmpfile_name</span><span class="p">)</span>
 
     <span class="n">add_breadcrumb</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="s2">&quot;printing&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Detected file type </span><span class="si">{</span><span class="n">detected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">)</span>
@@ -364,7 +393,7 @@
     <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid file type </span><span class="si">{</span><span class="n">detected</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span> <span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the number of pages included in the range, or None if it is an invalid range.</span>
 
 <span class="sd">    Args:</span>
@@ -404,7 +433,7 @@
     <span class="k">return</span> <span class="n">pages</span></div>
 
 
-<div class="viewcode-block" id="html_to_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.html_to_pdf">[docs]</a><span class="k">def</span> <span class="nf">html_to_pdf</span><span class="p">(</span><span class="n">template_src</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="html_to_pdf"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.html_to_pdf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">html_to_pdf</span><span class="p">(</span><span class="n">template_src</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">template</span> <span class="o">=</span> <span class="n">get_template</span><span class="p">(</span><span class="n">template_src</span><span class="p">)</span>
@@ -421,10 +450,13 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span> <span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">PrintJob</span><span class="p">,</span> <span class="n">do_print</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="print_job"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.print_job">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">print_job</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">PrintJob</span><span class="p">,</span> <span class="n">do_print</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="n">printer</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">printer</span>
-    <span class="k">if</span> <span class="n">printer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_printers</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">all_printers</span> <span class="o">=</span> <span class="n">get_printers</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">printer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_printers</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Printer not authorized.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">parse_alerts</span><span class="p">(</span><span class="n">all_printers</span><span class="p">[</span><span class="n">printer</span><span class="p">][</span><span class="mi">1</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Printer unavailable.&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">file</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;No file given to print.&quot;</span><span class="p">)</span>
@@ -570,10 +602,10 @@
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;is not accepting jobs&quot;</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="kn">from</span> <span class="nn">e</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
                 <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not run lpr (returned </span><span class="si">%d</span><span class="s2">): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred while printing your file: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred while printing your file: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="n">obj</span><span class="o">.</span><span class="n">printed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">set_user_ratelimit_status</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
@@ -585,10 +617,13 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">print_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">_get_current_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJ_IPS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;printing&quot;</span><span class="p">):</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You don&#39;t have printer access outside of the TJ network.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span> <span class="ow">and</span> <span class="s2">&quot;refresh&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_printing_admin</span><span class="p">:</span>
+        <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;printing:printers&quot;</span><span class="p">)</span>
 
     <span class="n">printers</span> <span class="o">=</span> <span class="n">get_printers</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
@@ -617,7 +652,15 @@
                 <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">PrintJobForm</span><span class="p">(</span><span class="n">printers</span><span class="o">=</span><span class="n">printers</span><span class="p">)</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">}</span>
+    <span class="n">alerts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">printer</span> <span class="ow">in</span> <span class="n">printers</span><span class="p">:</span>
+        <span class="n">alerts</span><span class="p">[</span><span class="n">printer</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_alerts</span><span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">printer</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="s2">&quot;ttl&quot;</span><span class="p">):</span>
+        <span class="n">elapsed_seconds</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cache</span><span class="o">.</span><span class="n">ttl</span><span class="p">(</span><span class="s2">&quot;printing:printers&quot;</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed_seconds</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;alerts&quot;</span><span class="p">:</span> <span class="n">alerts</span><span class="p">,</span> <span class="s2">&quot;updated_time&quot;</span><span class="p">:</span> <span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%-I:%M:%S %p&quot;</span><span class="p">)}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;alerts&quot;</span><span class="p">:</span> <span class="n">alerts</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;printing/print.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </pre></div>
 
@@ -635,7 +678,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.dataimport.management.commands.import_students &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.dataimport.management.commands.import_students &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
@@ -121,24 +121,24 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.dataimport.management.commands.import_students</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.core.management.base</span> <span class="kn">import</span> <span class="n">BaseCommand</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.core.management.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q</span>
 
-<span class="kn">from</span> <span class="nn">....users.models</span> <span class="kn">import</span> <span class="n">Email</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....users.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span>
 
 
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
     <span class="n">help</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;Given an alphabetized CSV of students from the same graduating class, add them to Ion. Required columns &quot;</span>
         <span class="s2">&quot;in the CSV include &#39;Student ID&#39;, &#39;First Name&#39;, &#39;Last Name&#39;, and &#39;Middle Name&#39;. Optional fields include &quot;</span>
         <span class="s2">&quot;their &#39;Nick Name&#39;, &#39;Counselor&#39; (last name), and &#39;Gender&#39;.&quot;</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.add_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.add_arguments"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.add_arguments">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--filename&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filename to import data from. Required.&quot;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--grad-year&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;grad_year&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Graduation year of this class. Required.&quot;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -147,12 +147,12 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--run&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;run&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Actually run.&quot;</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--confirm&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;confirm&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Skip confirmation.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.ask">[docs]</a>    <span class="k">def</span> <span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.ask"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.ask">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">ask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">input</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s2"> [Yy]: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">ERROR</span><span class="p">(</span><span class="s2">&quot;Abort.&quot;</span><span class="p">))</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Command.generate_single_username"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.generate_single_username">[docs]</a>    <span class="k">def</span> <span class="nf">generate_single_username</span><span class="p">(</span>
+<div class="viewcode-block" id="Command.generate_single_username"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.generate_single_username">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">generate_single_username</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">users_properties</span><span class="p">:</span> <span class="p">{},</span> <span class="n">graduating_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">first_name_header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="n">last_name_header</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Last Name&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a single username. Ignores the presence of other users (so duplicate usernames are not handled).</span>
@@ -177,7 +177,7 @@
 
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">graduating_year</span><span class="si">}{</span><span class="n">first_stripped</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}{</span><span class="n">last_stripped</span><span class="p">[:</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Command.find_next_available_username"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.find_next_available_username">[docs]</a>    <span class="k">def</span> <span class="nf">find_next_available_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">used_username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username_set</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="Command.find_next_available_username"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.find_next_available_username">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_next_available_username</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">used_username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">username_set</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the next available username.</span>
 
 <span class="sd">        Args:</span>
@@ -189,7 +189,7 @@
 <span class="sd">            A username that has not been used. Increments the digit on the end, or tacks one on if it doesn&#39;t exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">increment_username</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">increment_username</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">username</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
                 <span class="n">username</span> <span class="o">=</span> <span class="n">username</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span>
             <span class="k">else</span><span class="p">:</span>
@@ -202,7 +202,7 @@
 
         <span class="k">return</span> <span class="n">new_username</span></div>
 
-<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.handle">[docs]</a>    <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="Command.handle"><a class="viewcode-back" href="../../../../../../sourcedoc/intranet.apps.dataimport.management.commands.html#intranet.apps.dataimport.management.commands.import_students.Command.handle">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="c1"># Read the data file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">],</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">))</span>
@@ -298,7 +298,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

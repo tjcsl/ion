@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.sessionmgmt.models &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.sessionmgmt.models &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,16 +121,16 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.sessionmgmt.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
 
 <span class="n">SessionStore</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SESSION_ENGINE</span><span class="p">)</span><span class="o">.</span><span class="n">SessionStore</span>
 
 
-<div class="viewcode-block" id="TrustedSession"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.models.TrustedSession">[docs]</a><span class="k">class</span> <span class="nc">TrustedSession</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="TrustedSession"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.models.TrustedSession">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">TrustedSession</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">DEVICE_TYPES</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;mobile&quot;</span><span class="p">,</span> <span class="s2">&quot;Mobile&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;tablet&quot;</span><span class="p">,</span> <span class="s2">&quot;Tablet&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;computer&quot;</span><span class="p">,</span> <span class="s2">&quot;Computer&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;unknown&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown type&quot;</span><span class="p">))</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -142,7 +142,7 @@
     <span class="n">first_trusted_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TrustedSession.delete_expired_sessions"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.models.TrustedSession.delete_expired_sessions">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">delete_expired_sessions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_expired_sessions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes all expired trusted sessions for the given user. If ``user`` is ``None`` or not given, deletes all expired trusted sessions.</span>
 
 <span class="sd">        Args:</span>
@@ -157,10 +157,10 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">SessionStore</span><span class="p">(</span><span class="n">session_key</span><span class="o">=</span><span class="n">trusted_session</span><span class="o">.</span><span class="n">session_key</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">trusted_session</span><span class="o">.</span><span class="n">session_key</span><span class="p">):</span>
                 <span class="n">trusted_session</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">first_trusted_date</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;session_key&quot;</span><span class="p">),)</span></div>
 </pre></div>
 
@@ -178,7 +178,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

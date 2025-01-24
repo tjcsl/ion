@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.printing package &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -170,6 +170,7 @@
 <li><a class="reference internal" href="#intranet.apps.printing.views.get_printers"><code class="docutils literal notranslate"><span class="pre">get_printers()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.get_user_ratelimit_status"><code class="docutils literal notranslate"><span class="pre">get_user_ratelimit_status()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.html_to_pdf"><code class="docutils literal notranslate"><span class="pre">html_to_pdf()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.printing.views.parse_alerts"><code class="docutils literal notranslate"><span class="pre">parse_alerts()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.print_job"><code class="docutils literal notranslate"><span class="pre">print_job()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.printing.views.set_user_ratelimit_status"><code class="docutils literal notranslate"><span class="pre">set_user_ratelimit_status()</span></code></a></li>
 </ul>
@@ -396,13 +397,13 @@ This is calculated after converting the job.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.printing.models.PrintJob.DoesNotExist">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.DoesNotExist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v6.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.printing.models.PrintJob.MultipleObjectsReturned">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#intranet.apps.printing.models.PrintJob.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v6.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -417,7 +418,7 @@ object the first time, the query is executed.</p>
 <span class="sig-name descname"><span class="pre">file</span></span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd><p>The descriptor for the file attribute on the model instance. Return a
 FieldFile when accessed so you can write code like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">MyModel</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">myapp.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyModel</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">size</span>
 </pre></div>
@@ -499,7 +500,7 @@ object the first time, the query is executed.</p>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
 one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p>In the example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
     <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -634,6 +635,11 @@ Otherwise, this returns an empty dictionary.</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="intranet.apps.printing.views.parse_alerts">
+<span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">parse_alerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#parse_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.parse_alerts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="intranet.apps.printing.views.print_job">
 <span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">print_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#intranet.apps.printing.models.PrintJob" title="intranet.apps.printing.models.PrintJob"><span class="pre">PrintJob</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_print</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#print_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.print_job" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -664,7 +670,7 @@ Otherwise, this returns an empty dictionary.</p>
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

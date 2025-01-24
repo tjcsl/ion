@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.preferences.tests &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,22 +121,22 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.preferences.tests</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.test.client</span> <span class="kn">import</span> <span class="n">RequestFactory</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.test.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
-<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
-<span class="kn">from</span> <span class="nn">..bus.models</span> <span class="kn">import</span> <span class="n">Route</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...test.ion_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils.date</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_senior_graduation_year</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..bus.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Route</span>
 
 <span class="c1"># from ..users.models import Email, Phone, Photo, User, UserProperties, Website</span>
-<span class="kn">from</span> <span class="nn">..users.models</span> <span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Photo</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserProperties</span>
-<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">EmailForm</span>
-<span class="kn">from</span> <span class="nn">.views</span> <span class="kn">import</span> <span class="n">get_personal_info</span><span class="p">,</span> <span class="n">get_privacy_options</span><span class="p">,</span> <span class="n">save_bus_route</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..users.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Email</span><span class="p">,</span> <span class="n">Photo</span><span class="p">,</span> <span class="n">User</span><span class="p">,</span> <span class="n">UserProperties</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmailForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_personal_info</span><span class="p">,</span> <span class="n">get_privacy_options</span><span class="p">,</span> <span class="n">save_bus_route</span>
 
 
-<div class="viewcode-block" id="PreferencesTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest">[docs]</a><span class="k">class</span> <span class="nc">PreferencesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<div class="viewcode-block" id="PreferencesTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PreferencesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.setUp"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.setUp">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;99999&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">route_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;JT-002&quot;</span><span class="p">,</span> <span class="s2">&quot;JT-001&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">route_name</span> <span class="ow">in</span> <span class="n">route_names</span><span class="p">:</span>
@@ -144,12 +144,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">route_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">route_names</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PreferencesTest.test_get_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_get_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.test_get_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_get_preferences">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PreferencesTest.test_set_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_set_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_set_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.test_set_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_set_preferences">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_set_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">settings_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;pf-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
@@ -200,7 +200,7 @@
         <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PreferencesTest.test_clear_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_clear_preferences">[docs]</a>    <span class="k">def</span> <span class="nf">test_clear_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.test_clear_preferences"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_clear_preferences">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_clear_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">pref_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;pf-1-number&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
@@ -255,7 +255,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="s2">&quot;Error processing Bus Route Form&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PreferencesTest.test_save_bus_route"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_save_bus_route">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_bus_route</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.test_save_bus_route"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_save_bus_route">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_save_bus_route</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Test that save_bus_route() works</span>
 
         <span class="c1"># Test that choices are in order</span>
@@ -267,7 +267,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route_name</span><span class="p">,</span> <span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="PreferencesTest.test_get_personal_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_get_personal_info">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_personal_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.test_get_personal_info"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_get_personal_info">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_personal_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Make a user</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -296,7 +296,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_0&quot;</span><span class="p">])</span></div>
         <span class="c1"># self.assertEqual(website, personal_info[&quot;website_0&quot;])</span>
 
-<div class="viewcode-block" id="PreferencesTest.test_privacy_options_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_privacy_options_view">[docs]</a>    <span class="k">def</span> <span class="nf">test_privacy_options_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesTest.test_privacy_options_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesTest.test_privacy_options_view">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_privacy_options_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Test the get privacy options views and associated methods.&quot;&quot;&quot;</span>
         <span class="n">user_student</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">12345</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -375,8 +375,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">self_show_telephone</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="PreferencesFormTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesFormTest">[docs]</a><span class="k">class</span> <span class="nc">PreferencesFormTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<div class="viewcode-block" id="PreferencesFormTest.test_email_form"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesFormTest.test_email_form">[docs]</a>    <span class="k">def</span> <span class="nf">test_email_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesFormTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesFormTest">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PreferencesFormTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="PreferencesFormTest.test_email_form"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.preferences.html#intranet.apps.preferences.tests.PreferencesFormTest.test_email_form">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_email_form</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Indirect test of formset validation</span>
 
         <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
@@ -407,7 +407,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

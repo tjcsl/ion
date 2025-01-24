@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.middleware.monitoring &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.middleware.monitoring &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -121,19 +121,19 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.middleware.monitoring</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">render</span>
 
 
-<div class="viewcode-block" id="PrometheusAccessMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.monitoring.PrometheusAccessMiddleware">[docs]</a><span class="k">class</span> <span class="nc">PrometheusAccessMiddleware</span><span class="p">:</span>
+<div class="viewcode-block" id="PrometheusAccessMiddleware"><a class="viewcode-back" href="../../../sourcedoc/intranet.middleware.html#intranet.middleware.monitoring.PrometheusAccessMiddleware">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">PrometheusAccessMiddleware</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Restricts access to Django Prometheus metrics to ALLOWED_METRIC_IPS and superusers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_response</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_response</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span> <span class="o">=</span> <span class="n">get_response</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="c1"># We would like to be able to just check request.resolver_match.app_name. Unfortunately, URL resolving has not taken place yet, so we can&#39;t.</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;/prometheus&quot;</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/prometheus/&quot;</span><span class="p">):</span>
             <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="p">[</span><span class="s2">&quot;HTTP_X_REAL_IP&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;HTTP_X_REAL_IP&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -160,7 +160,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

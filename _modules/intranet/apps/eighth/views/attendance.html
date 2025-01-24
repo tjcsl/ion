@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.eighth.views.attendance &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -121,44 +121,44 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.eighth.views.attendance</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">html</span> <span class="kn">import</span> <span class="n">escape</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">html</span><span class="w"> </span><span class="kn">import</span> <span class="n">escape</span>
 
-<span class="kn">from</span> <span class="nn">cacheops</span> <span class="kn">import</span> <span class="n">invalidate_obj</span>
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">Http404</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">formtools.wizard.views</span> <span class="kn">import</span> <span class="n">SessionWizardView</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.enums</span> <span class="kn">import</span> <span class="n">TA_CENTER</span><span class="p">,</span> <span class="n">TA_RIGHT</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.pagesizes</span> <span class="kn">import</span> <span class="n">letter</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.styles</span> <span class="kn">import</span> <span class="n">ParagraphStyle</span><span class="p">,</span> <span class="n">getSampleStyleSheet</span>
-<span class="kn">from</span> <span class="nn">reportlab.lib.units</span> <span class="kn">import</span> <span class="n">inch</span>
-<span class="kn">from</span> <span class="nn">reportlab.platypus</span> <span class="kn">import</span> <span class="n">PageBreak</span><span class="p">,</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">SimpleDocTemplate</span><span class="p">,</span> <span class="n">Spacer</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">TableStyle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cacheops</span><span class="w"> </span><span class="kn">import</span> <span class="n">invalidate_obj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Q</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">Http404</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">formtools.wizard.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">SessionWizardView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.enums</span><span class="w"> </span><span class="kn">import</span> <span class="n">TA_CENTER</span><span class="p">,</span> <span class="n">TA_RIGHT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.pagesizes</span><span class="w"> </span><span class="kn">import</span> <span class="n">letter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.styles</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParagraphStyle</span><span class="p">,</span> <span class="n">getSampleStyleSheet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.lib.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">inch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">reportlab.platypus</span><span class="w"> </span><span class="kn">import</span> <span class="n">PageBreak</span><span class="p">,</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">SimpleDocTemplate</span><span class="p">,</span> <span class="n">Spacer</span><span class="p">,</span> <span class="n">Table</span><span class="p">,</span> <span class="n">TableStyle</span>
 
-<span class="kn">from</span> <span class="nn">....utils.date</span> <span class="kn">import</span> <span class="n">get_date_range_this_year</span>
-<span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="kn">import</span> <span class="n">attendance_taker_required</span><span class="p">,</span> <span class="n">deny_restricted</span><span class="p">,</span> <span class="n">eighth_admin_required</span>
-<span class="kn">from</span> <span class="nn">...dashboard.views</span> <span class="kn">import</span> <span class="n">gen_sponsor_schedule</span>
-<span class="kn">from</span> <span class="nn">...schedule.views</span> <span class="kn">import</span> <span class="n">decode_date</span>
-<span class="kn">from</span> <span class="nn">..forms.admin.activities</span> <span class="kn">import</span> <span class="n">ActivitySelectionForm</span>
-<span class="kn">from</span> <span class="nn">..forms.admin.blocks</span> <span class="kn">import</span> <span class="n">BlockSelectionForm</span>
-<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span>
-<span class="kn">from</span> <span class="nn">..tasks</span> <span class="kn">import</span> <span class="n">email_scheduled_activity_students_task</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....utils.date</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_date_range_this_year</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">attendance_taker_required</span><span class="p">,</span> <span class="n">deny_restricted</span><span class="p">,</span> <span class="n">eighth_admin_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...dashboard.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">gen_sponsor_schedule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...schedule.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">decode_date</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..forms.admin.activities</span><span class="w"> </span><span class="kn">import</span> <span class="n">ActivitySelectionForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..forms.admin.blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">BlockSelectionForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span><span class="p">,</span> <span class="n">EighthWaitlist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">email_scheduled_activity_students_task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_start_date</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="should_show_activity_list"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.should_show_activity_list">[docs]</a><span class="k">def</span> <span class="nf">should_show_activity_list</span><span class="p">(</span><span class="n">wizard</span><span class="p">):</span>
+<div class="viewcode-block" id="should_show_activity_list"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.should_show_activity_list">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">should_show_activity_list</span><span class="p">(</span><span class="n">wizard</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;default_activity&quot;</span> <span class="ow">in</span> <span class="n">wizard</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">act_id</span> <span class="o">=</span> <span class="n">wizard</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;default_activity&quot;</span><span class="p">]</span>
         <span class="n">default_activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">act_id</span><span class="p">)</span>
@@ -183,15 +183,15 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard">[docs]</a><span class="k">class</span> <span class="nc">EighthAttendanceSelectScheduledActivityWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EighthAttendanceSelectScheduledActivityWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
     <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
 
     <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/take_attendance.html&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/take_attendance.html&quot;</span><span class="p">}</span>
 
-<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_template_names"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_template_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_template_names"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_template_names">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span></div>
 
-<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span> <span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_form_kwargs">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">block</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">block_title</span> <span class="o">=</span> <span class="kc">None</span>
@@ -234,7 +234,7 @@
 
         <span class="k">return</span> <span class="n">kwargs</span></div>
 
-<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_context_data"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_context_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.get_context_data"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.get_context_data">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Take Attendance&quot;</span><span class="p">})</span>
 
@@ -267,7 +267,7 @@
 
         <span class="k">return</span> <span class="n">context</span></div>
 
-<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.done"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.done">[docs]</a>    <span class="k">def</span> <span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
+<div class="viewcode-block" id="EighthAttendanceSelectScheduledActivityWizard.done"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.EighthAttendanceSelectScheduledActivityWizard.done">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
         <span class="n">form_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form_list</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;no_activities&quot;</span><span class="p">):</span>
@@ -284,7 +284,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The scheduled activity with block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2"> and activity </span><span class="si">{</span><span class="n">activity</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The scheduled activity with block </span><span class="si">{</span><span class="n">block</span><span class="si">}</span><span class="s2"> and activity </span><span class="si">{</span><span class="n">activity</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">if</span> <span class="s2">&quot;admin&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
             <span class="n">url_name</span> <span class="o">=</span> <span class="s2">&quot;eighth_admin_take_attendance&quot;</span>
@@ -306,11 +306,11 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
@@ -329,11 +329,11 @@
 
 
 <div class="viewcode-block" id="raw_roster_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.raw_roster_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">raw_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">raw_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="p">)</span>
 
@@ -352,24 +352,24 @@
 
 <span class="nd">@eighth_admin_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">raw_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">raw_waitlist_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ordered_waitlist&quot;</span><span class="p">:</span> <span class="n">EighthWaitlist</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)}</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/waitlist_list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="take_attendance_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.take_attendance_view">[docs]</a><span class="nd">@attendance_taker_required</span>
-<span class="k">def</span> <span class="nf">take_attendance_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">take_attendance_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="n">activity__deleted</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span>
         <span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="c1"># Attendance-only users can only see their own roster</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">user_is_sponsor</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
@@ -598,14 +598,14 @@
 
 
 <div class="viewcode-block" id="accept_pass_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.accept_pass_view">[docs]</a><span class="nd">@attendance_taker_required</span>
-<span class="k">def</span> <span class="nf">accept_pass_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">signup_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">accept_pass_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">signup_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">signup_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">sponsor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
     <span class="n">can_accept</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="p">(</span>
@@ -633,14 +633,14 @@
 
 
 <div class="viewcode-block" id="accept_all_passes_view"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.accept_all_passes_view">[docs]</a><span class="nd">@attendance_taker_required</span>
-<span class="k">def</span> <span class="nf">accept_all_passes_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">accept_all_passes_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">sponsor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
     <span class="n">can_accept</span> <span class="o">=</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">locked</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sponsor</span> <span class="ow">and</span> <span class="p">(</span><span class="n">sponsor</span> <span class="ow">in</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">())</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
@@ -659,7 +659,7 @@
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_name</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="o">=</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="generate_roster_pdf"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.generate_roster_pdf">[docs]</a><span class="k">def</span> <span class="nf">generate_roster_pdf</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_roster_pdf"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.attendance.generate_roster_pdf">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">generate_roster_pdf</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generates a PDF roster for one or more.</span>
 
 <span class="sd">    :class:`EighthScheduledActivity`\s.</span>
@@ -786,7 +786,7 @@
         <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sched_act_ids</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PageBreak</span><span class="p">())</span>
 
-    <span class="k">def</span> <span class="nf">first_page</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">first_page</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
         <span class="n">canvas</span><span class="o">.</span><span class="n">setTitle</span><span class="p">(</span><span class="s2">&quot;Eighth Activity Roster&quot;</span><span class="p">)</span>
         <span class="n">canvas</span><span class="o">.</span><span class="n">setAuthor</span><span class="p">(</span><span class="s2">&quot;Generated by Ion&quot;</span><span class="p">)</span>
 
@@ -796,7 +796,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">eighth_absences_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eighth_absences_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">user_id</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
@@ -817,7 +817,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">sponsor_schedule_widget_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sponsor_schedule_widget_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="n">eighth_sponsor</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
     <span class="n">num_blocks</span> <span class="o">=</span> <span class="mi">6</span>
@@ -850,7 +850,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">email_students_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">email_students_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
     <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">user_is_sponsor</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
@@ -894,7 +894,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

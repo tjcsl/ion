@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.groups.models &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.groups.models &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,20 +121,20 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.groups.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">models</span> <span class="k">as</span> <span class="n">auth_models</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span> <span class="k">as</span> <span class="n">auth_models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
 
 
-<div class="viewcode-block" id="GroupManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupManager">[docs]</a><span class="k">class</span> <span class="nc">GroupManager</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">GroupManager</span><span class="p">):</span>
+<div class="viewcode-block" id="GroupManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupManager">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GroupManager</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">GroupManager</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This GroupManager model is really just the default Django</span>
 <span class="sd">    django.contrib.auth.models.GroupManager, just with an extra method.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="GroupManager.student_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupManager.student_visible">[docs]</a>    <span class="k">def</span> <span class="nf">student_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GroupManager.student_visible"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupManager.student_visible">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">student_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a QuerySet of groups that are student-visible.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groupproperties__student_visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.Group">[docs]</a><span class="k">class</span> <span class="nc">Group</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
+<div class="viewcode-block" id="Group"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.Group">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Group</span><span class="p">(</span><span class="n">auth_models</span><span class="o">.</span><span class="n">Group</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This Group model is really just the default Django</span>
 <span class="sd">    django.contrib.auth.models.Group, but with a &quot;properties&quot;</span>
 <span class="sd">    property which returns or creates the GroupProperties field</span>
@@ -159,7 +159,7 @@
     <span class="n">objects</span> <span class="o">=</span> <span class="n">GroupManager</span><span class="p">()</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">props</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupproperties</span>  <span class="c1"># pylint: disable=no-member</span>
         <span class="k">except</span> <span class="n">GroupProperties</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -167,11 +167,11 @@
 
         <span class="k">return</span> <span class="n">props</span>
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">proxy</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="GroupProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupProperties">[docs]</a><span class="k">class</span> <span class="nc">GroupProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="GroupProperties"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.groups.html#intranet.apps.groups.forms.GroupProperties">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GroupProperties</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The GroupProperties model contains a OneToOneField with the</span>
 <span class="sd">    intranet.apps.groups.models.Group object (really just the default</span>
 <span class="sd">    django.contrib.auth.models.Group), and contains properties and other</span>
@@ -187,7 +187,7 @@
     <span class="n">group</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="n">Group</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">student_visible</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">)</span></div>
 </pre></div>
 
@@ -205,7 +205,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

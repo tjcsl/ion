@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.cslapps.tests &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.cslapps.tests &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,17 +121,17 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.cslapps.tests</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">...test.ion_test</span> <span class="kn">import</span> <span class="n">IonTestCase</span>
-<span class="kn">from</span> <span class="nn">..groups.models</span> <span class="kn">import</span> <span class="n">Group</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...test.ion_test</span><span class="w"> </span><span class="kn">import</span> <span class="n">IonTestCase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..groups.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Group</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">App</span>
 
 
-<div class="viewcode-block" id="AppsTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.cslapps.html#intranet.apps.cslapps.tests.AppsTest">[docs]</a><span class="k">class</span> <span class="nc">AppsTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="AppsTest"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.cslapps.html#intranet.apps.cslapps.tests.AppsTest">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AppsTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the CSL Apps module&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AppsTest.test_app_requests"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.cslapps.html#intranet.apps.cslapps.tests.AppsTest.test_app_requests">[docs]</a>    <span class="k">def</span> <span class="nf">test_app_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AppsTest.test_app_requests"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.cslapps.html#intranet.apps.cslapps.tests.AppsTest.test_app_requests">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_app_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Test anonymous request</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;apps&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;/login?next=&quot;</span> <span class="o">+</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;apps&quot;</span><span class="p">),</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span>
@@ -171,7 +171,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;http://127.0.0.1:8080/login&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">cookies</span><span class="p">[</span><span class="s2">&quot;accessed_csl-app_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">id</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AppsTest.test_create_app"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.cslapps.html#intranet.apps.cslapps.tests.AppsTest.test_create_app">[docs]</a>    <span class="k">def</span> <span class="nf">test_create_app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AppsTest.test_create_app"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.cslapps.html#intranet.apps.cslapps.tests.AppsTest.test_create_app">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_app</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">app</span> <span class="o">=</span> <span class="n">App</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080&quot;</span><span class="p">,</span> <span class="n">image_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8080/favicon.ico&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">auth_url</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -192,7 +192,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

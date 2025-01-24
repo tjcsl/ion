@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.eighth.views.profile &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
@@ -121,34 +121,34 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.eighth.views.profile</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">http</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">get_user_model</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django</span><span class="w"> </span><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_object_or_404</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">....utils.serialization</span> <span class="kn">import</span> <span class="n">safe_json</span>
-<span class="kn">from</span> <span class="nn">...auth.decorators</span> <span class="kn">import</span> <span class="n">deny_restricted</span><span class="p">,</span> <span class="n">eighth_admin_required</span>
-<span class="kn">from</span> <span class="nn">...users.forms</span> <span class="kn">import</span> <span class="n">ProfileEditForm</span>
-<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
-<span class="kn">from</span> <span class="nn">..serializers</span> <span class="kn">import</span> <span class="n">EighthBlockDetailSerializer</span>
-<span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">get_start_date</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">....utils.serialization</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">deny_restricted</span><span class="p">,</span> <span class="n">eighth_admin_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...users.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProfileEditForm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span><span class="p">,</span> <span class="n">EighthSponsor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..serializers</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthBlockDetailSerializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_start_date</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="date_fmt"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.date_fmt">[docs]</a><span class="k">def</span> <span class="nf">date_fmt</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<div class="viewcode-block" id="date_fmt"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.date_fmt">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">date_fmt</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <span class="nd">@eighth_admin_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">edit_profile_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">edit_profile_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">(),</span> <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="c1"># Disable address form temporarily -- okulkarni, 08/30/2018</span>
     <span class="n">address_form</span> <span class="o">=</span> <span class="kc">None</span>
@@ -175,12 +175,12 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/edit_profile.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_profile_context"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.get_profile_context">[docs]</a><span class="k">def</span> <span class="nf">get_profile_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_profile_context"><a class="viewcode-back" href="../../../../../sourcedoc/intranet.apps.eighth.views.html#intranet.apps.eighth.views.profile.get_profile_context">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_profile_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">profile_user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="k">if</span> <span class="n">profile_user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span><span class="p">):</span>
@@ -271,7 +271,7 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">profile_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">profile_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">context</span> <span class="o">=</span> <span class="n">get_profile_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">context</span><span class="p">:</span>
         <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_profile_header&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span>
@@ -282,12 +282,12 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">profile_history_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">profile_history_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">profile_user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
@@ -320,12 +320,12 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">profile_often_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">profile_often_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">profile_user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">profile_user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
@@ -354,12 +354,12 @@
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
-<span class="k">def</span> <span class="nf">profile_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">profile_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">block_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
@@ -377,7 +377,7 @@
             <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/profile_signup.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;no_blocks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># The provided block_id is invalid</span>
-            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span> <span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="n">serializer_context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
     <span class="n">block_info</span> <span class="o">=</span> <span class="n">EighthBlockDetailSerializer</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">serializer_context</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
@@ -418,7 +418,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

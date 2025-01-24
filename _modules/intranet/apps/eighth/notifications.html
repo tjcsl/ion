@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.eighth.notifications &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,18 +121,18 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.eighth.notifications</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
 
-<span class="kn">from</span> <span class="nn">..notifications.emails</span> <span class="kn">import</span> <span class="n">email_send</span>
-<span class="kn">from</span> <span class="nn">..notifications.tasks</span> <span class="kn">import</span> <span class="n">email_send_task</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..notifications.emails</span><span class="w"> </span><span class="kn">import</span> <span class="n">email_send</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..notifications.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">email_send_task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="signup_status_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.signup_status_email">[docs]</a><span class="k">def</span> <span class="nf">signup_status_email</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">next_blocks</span><span class="p">,</span> <span class="n">use_celery</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="signup_status_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.signup_status_email">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">signup_status_email</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">next_blocks</span><span class="p">,</span> <span class="n">use_celery</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">notification_email</span><span class="p">]</span>
 
     <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -181,7 +181,7 @@
         <span class="k">return</span> <span class="n">email_send</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="activity_cancelled_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.activity_cancelled_email">[docs]</a><span class="k">def</span> <span class="nf">activity_cancelled_email</span><span class="p">(</span><span class="n">sched_act</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="p">):</span>
+<div class="viewcode-block" id="activity_cancelled_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.activity_cancelled_email">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">activity_cancelled_email</span><span class="p">(</span><span class="n">sched_act</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Notifies all the users signed up for the given EighthScheduledActivity that it has been cancelled.</span>
 
 <span class="sd">    Args:</span>
@@ -210,7 +210,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="absence_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.absence_email">[docs]</a><span class="k">def</span> <span class="nf">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">,</span> <span class="n">use_celery</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="absence_email"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.notifications.absence_email">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">absence_email</span><span class="p">(</span><span class="n">signup</span><span class="p">,</span> <span class="n">use_celery</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">signup</span><span class="o">.</span><span class="n">user</span>
     <span class="n">emails</span> <span class="o">=</span> <span class="p">[</span><span class="n">user</span><span class="o">.</span><span class="n">notification_email</span><span class="p">]</span>
 
@@ -248,7 +248,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

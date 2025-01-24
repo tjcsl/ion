@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.announcements.api &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.announcements.api &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,39 +121,39 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.announcements.api</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">permissions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">generics</span><span class="p">,</span> <span class="n">permissions</span>
 
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Announcement</span>
-<span class="kn">from</span> <span class="nn">.serializers</span> <span class="kn">import</span> <span class="n">AnnouncementSerializer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Announcement</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.serializers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnnouncementSerializer</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="IsAnnouncementAdminOrReadOnly"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.IsAnnouncementAdminOrReadOnly">[docs]</a><span class="k">class</span> <span class="nc">IsAnnouncementAdminOrReadOnly</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
-<div class="viewcode-block" id="IsAnnouncementAdminOrReadOnly.has_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.IsAnnouncementAdminOrReadOnly.has_permission">[docs]</a>    <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">):</span>
+<div class="viewcode-block" id="IsAnnouncementAdminOrReadOnly"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.IsAnnouncementAdminOrReadOnly">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">IsAnnouncementAdminOrReadOnly</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+<div class="viewcode-block" id="IsAnnouncementAdminOrReadOnly.has_permission"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.IsAnnouncementAdminOrReadOnly.has_permission">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">auth</span>
         <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="n">permissions</span><span class="o">.</span><span class="n">SAFE_METHODS</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_announcements_admin</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ListCreateAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.ListCreateAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">ListCreateAnnouncement</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
+<div class="viewcode-block" id="ListCreateAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.ListCreateAnnouncement">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ListCreateAnnouncement</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">AnnouncementSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAnnouncementAdminOrReadOnly</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="ListCreateAnnouncement.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.ListCreateAnnouncement.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ListCreateAnnouncement.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.ListCreateAnnouncement.get_queryset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">auth</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="RetrieveUpdateDestroyAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">RetrieveUpdateDestroyAnnouncement</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveUpdateDestroyAPIView</span><span class="p">):</span>
+<div class="viewcode-block" id="RetrieveUpdateDestroyAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RetrieveUpdateDestroyAnnouncement</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveUpdateDestroyAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">AnnouncementSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAnnouncementAdminOrReadOnly</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RetrieveUpdateDestroyAnnouncement.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RetrieveUpdateDestroyAnnouncement.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.announcements.html#intranet.apps.announcements.api.RetrieveUpdateDestroyAnnouncement.get_queryset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
         <span class="k">return</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span></div></div>
 </pre></div>
@@ -172,7 +172,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

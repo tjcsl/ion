@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.utils.helpers &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
@@ -121,28 +121,28 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.utils.helpers</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">ipaddress</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">parse</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ipaddress</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Collection</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Set</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">urllib</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">..apps.emerg.views</span> <span class="kn">import</span> <span class="n">get_emerg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..apps.emerg.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_emerg</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;intranet.settings&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="awaredate"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.awaredate">[docs]</a><span class="k">def</span> <span class="nf">awaredate</span><span class="p">():</span>
+<div class="viewcode-block" id="awaredate"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.awaredate">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">awaredate</span><span class="p">():</span>
     <span class="c1"># Note that date objects are always naive, so we have to use datetime for proper timezone support.</span>
     <span class="k">return</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_id"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_id">[docs]</a><span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="get_id"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_id">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_id</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
@@ -151,7 +151,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="parse_db_url"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.parse_db_url">[docs]</a><span class="k">def</span> <span class="nf">parse_db_url</span><span class="p">(</span><span class="n">db_url</span><span class="p">):</span>
+<div class="viewcode-block" id="parse_db_url"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.parse_db_url">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_db_url</span><span class="p">(</span><span class="n">db_url</span><span class="p">):</span>
     <span class="n">parse</span><span class="o">.</span><span class="n">uses_netloc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;postgres&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">db_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You must set SECRET_DATABASE_URL in secret.py&quot;</span><span class="p">)</span>
@@ -162,7 +162,7 @@
     <span class="k">return</span> <span class="n">args</span></div>
 
 
-<div class="viewcode-block" id="debug_toolbar_callback"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.debug_toolbar_callback">[docs]</a><span class="k">def</span> <span class="nf">debug_toolbar_callback</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="debug_toolbar_callback"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.debug_toolbar_callback">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">debug_toolbar_callback</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    In development:</span>
 <span class="sd">        Show the debug toolbar to all users.</span>
@@ -188,55 +188,55 @@
     <span class="k">return</span> <span class="s2">&quot;debug&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">or</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span></div>
 
 
-<div class="viewcode-block" id="get_current_commit_short_hash"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_short_hash">[docs]</a><span class="k">def</span> <span class="nf">get_current_commit_short_hash</span><span class="p">(</span><span class="n">workdir</span><span class="p">):</span>
+<div class="viewcode-block" id="get_current_commit_short_hash"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_short_hash">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_commit_short_hash</span><span class="p">(</span><span class="n">workdir</span><span class="p">):</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;--short&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_current_commit_long_hash"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_long_hash">[docs]</a><span class="k">def</span> <span class="nf">get_current_commit_long_hash</span><span class="p">(</span><span class="n">workdir</span><span class="p">):</span>
+<div class="viewcode-block" id="get_current_commit_long_hash"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_long_hash">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_commit_long_hash</span><span class="p">(</span><span class="n">workdir</span><span class="p">):</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;-C&quot;</span><span class="p">,</span> <span class="n">workdir</span><span class="p">,</span> <span class="s2">&quot;rev-parse&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_current_commit_info"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_info">[docs]</a><span class="k">def</span> <span class="nf">get_current_commit_info</span><span class="p">():</span>
+<div class="viewcode-block" id="get_current_commit_info"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_info">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_commit_info</span><span class="p">():</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=&#39;Commit %h</span><span class="se">\n</span><span class="si">%a</span><span class="s2">d&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_current_commit_date"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_date">[docs]</a><span class="k">def</span> <span class="nf">get_current_commit_date</span><span class="p">():</span>
+<div class="viewcode-block" id="get_current_commit_date"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_date">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_commit_date</span><span class="p">():</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--format=</span><span class="si">%c</span><span class="s2">i&quot;</span><span class="p">,</span> <span class="s2">&quot;HEAD&quot;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="get_current_commit_github_url"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_github_url">[docs]</a><span class="k">def</span> <span class="nf">get_current_commit_github_url</span><span class="p">(</span><span class="n">workdir</span><span class="p">):</span>
+<div class="viewcode-block" id="get_current_commit_github_url"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_current_commit_github_url">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_commit_github_url</span><span class="p">(</span><span class="n">workdir</span><span class="p">):</span>
     <span class="k">return</span> <span class="s2">&quot;https://github.com/tjcsl/ion/commit/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">get_current_commit_short_hash</span><span class="p">(</span><span class="n">workdir</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="InvalidString"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.InvalidString">[docs]</a><span class="k">class</span> <span class="nc">InvalidString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidString"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.InvalidString">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">InvalidString</span><span class="p">(</span><span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An error for undefined context variables in templates.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Undefined variable or unknown value for: &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="MigrationMock"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.MigrationMock">[docs]</a><span class="k">class</span> <span class="nc">MigrationMock</span><span class="p">:</span>
+<div class="viewcode-block" id="MigrationMock"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.MigrationMock">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">MigrationMock</span><span class="p">:</span>
     <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: Set[str]</span>
 
-    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">mod</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;migrations&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="GlobList"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList">[docs]</a><span class="k">class</span> <span class="nc">GlobList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="GlobList"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GlobList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A list of glob-style strings.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="GlobList.__contains__"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList.__contains__">[docs]</a>    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<div class="viewcode-block" id="GlobList.__contains__"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.GlobList.__contains__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a string matches a glob in the list.&quot;&quot;&quot;</span>
 
         <span class="c1"># request.HTTP_X_FORWARDED_FOR contains can contain a comma delimited</span>
@@ -253,11 +253,11 @@
         <span class="k">return</span> <span class="kc">False</span></div></div>
 
 
-<div class="viewcode-block" id="is_entirely_digit"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.is_entirely_digit">[docs]</a><span class="k">def</span> <span class="nf">is_entirely_digit</span><span class="p">(</span><span class="n">digit_str</span><span class="p">):</span>
+<div class="viewcode-block" id="is_entirely_digit"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.is_entirely_digit">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">is_entirely_digit</span><span class="p">(</span><span class="n">digit_str</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">digit_str</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="join_nicely"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.join_nicely">[docs]</a><span class="k">def</span> <span class="nf">join_nicely</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Collection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="join_nicely"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.join_nicely">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">join_nicely</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Collection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Joins together a list of items in a human-readable format. Examples:</span>
 <span class="sd">    &gt;&gt;&gt; join_nicely([])</span>
 <span class="sd">    &#39;&#39;</span>
@@ -279,11 +279,11 @@
     <span class="k">return</span> <span class="s2">&quot; and &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">items</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;, and &quot;</span> <span class="o">+</span> <span class="n">items</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="single_css_map"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.single_css_map">[docs]</a><span class="k">def</span> <span class="nf">single_css_map</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="single_css_map"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.single_css_map">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">single_css_map</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;source_filenames&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;css/</span><span class="si">%s</span><span class="s2">.scss&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">],</span> <span class="s2">&quot;output_filename&quot;</span><span class="p">:</span> <span class="s2">&quot;css/</span><span class="si">%s</span><span class="s2">.css&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">}}</span></div>
 
 
-<div class="viewcode-block" id="get_fcps_emerg"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_fcps_emerg">[docs]</a><span class="k">def</span> <span class="nf">get_fcps_emerg</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="get_fcps_emerg"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_fcps_emerg">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_fcps_emerg</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return FCPS emergency information.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">emerg</span> <span class="o">=</span> <span class="n">get_emerg</span><span class="p">()</span>
@@ -298,7 +298,7 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="get_ap_week_warning"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_ap_week_warning">[docs]</a><span class="k">def</span> <span class="nf">get_ap_week_warning</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ap_week_warning"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_ap_week_warning">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_ap_week_warning</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ap_day = timezone.localtime()</span>
 <span class="sd">    if ap_day.hour &gt; 16:</span>
@@ -315,7 +315,7 @@
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="get_warning_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_warning_html">[docs]</a><span class="k">def</span> <span class="nf">get_warning_html</span><span class="p">(</span><span class="n">warnings</span><span class="p">,</span> <span class="n">dashboard</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">login</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_warning_html"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_warning_html">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_warning_html</span><span class="p">(</span><span class="n">warnings</span><span class="p">,</span> <span class="n">dashboard</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">login</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns HTML for announcements.models.WarningAnnouncement objects.</span>
 <span class="sd">    Dashboard and login logic is processed here because they cannot be filtered using .filter().</span>
@@ -350,7 +350,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="get_theme_name"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_theme_name">[docs]</a><span class="k">def</span> <span class="nf">get_theme_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="get_theme_name"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_theme_name">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_theme_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the name of the currently active special event theme.&quot;&quot;&quot;</span>
     <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
@@ -368,12 +368,12 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="get_theme"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_theme">[docs]</a><span class="k">def</span> <span class="nf">get_theme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<div class="viewcode-block" id="get_theme"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.get_theme">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_theme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return JS and CSS for the currently active special event theme.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">GLOBAL_THEMES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">get_theme_name</span><span class="p">(),</span> <span class="p">{})</span></div>
 
 
-<div class="viewcode-block" id="dark_mode_enabled"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.dark_mode_enabled">[docs]</a><span class="k">def</span> <span class="nf">dark_mode_enabled</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="viewcode-block" id="dark_mode_enabled"><a class="viewcode-back" href="../../../sourcedoc/intranet.utils.html#intranet.utils.helpers.dark_mode_enabled">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">dark_mode_enabled</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dark&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;dark&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;True&quot;</span><span class="p">]</span>
 
@@ -400,7 +400,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

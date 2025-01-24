@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.bus.models &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.bus.models &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,10 +121,10 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.bus.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
 
 
-<div class="viewcode-block" id="Route"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.Route">[docs]</a><span class="k">class</span> <span class="nc">Route</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Route"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.Route">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Route</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A bus route (e.g. TJ-24)&quot;&quot;&quot;</span>
 
     <span class="n">ARRIVAL_STATUSES</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;Arrived (In the lot)&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;Delayed&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;On Time (Expected)&quot;</span><span class="p">))</span>
@@ -134,33 +134,33 @@
     <span class="n">bus_number</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="s2">&quot;arrival status&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ARRIVAL_STATUSES</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Route.reset_status"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.Route.reset_status">[docs]</a>    <span class="k">def</span> <span class="nf">reset_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Route.reset_status"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.Route.reset_status">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">reset_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset status to (on time)&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;space&quot;</span><span class="p">])</span></div>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">route_name</span>
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;route_name&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="BusAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.BusAnnouncement">[docs]</a><span class="k">class</span> <span class="nc">BusAnnouncement</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="BusAnnouncement"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.BusAnnouncement">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BusAnnouncement</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Announcement on the bus page. Only one instance of this model is allowed.&quot;&quot;&quot;</span>
 
     <span class="n">message</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BusAnnouncement.object"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.BusAnnouncement.object">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">object</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">object</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">first</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BusAnnouncement.save"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.BusAnnouncement.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BusAnnouncement.save"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.bus.html#intranet.apps.bus.models.BusAnnouncement.save">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Bus announcement: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span></div>
 </pre></div>
 
@@ -178,7 +178,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

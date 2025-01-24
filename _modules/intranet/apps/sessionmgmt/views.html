@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.sessionmgmt.views &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.sessionmgmt.views &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,17 +121,17 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.sessionmgmt.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">logout</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">logout</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">.helpers</span> <span class="kn">import</span> <span class="n">trust_session</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">TrustedSession</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">trust_session</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrustedSession</span>
 
 <span class="c1"># Create your views here.</span>
 
@@ -139,7 +139,7 @@
 
 
 <div class="viewcode-block" id="index_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.views.index_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="c1"># Delete expired trusted sessions</span>
     <span class="c1"># There isn&#39;t really a much better place to do this.</span>
     <span class="n">TrustedSession</span><span class="o">.</span><span class="n">delete_expired_sessions</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
@@ -153,7 +153,7 @@
 
 
 <div class="viewcode-block" id="trust_session_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.views.trust_session_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">trust_session_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">trust_session_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;trust&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRUST&quot;</span><span class="p">:</span>
         <span class="n">trust_session</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
@@ -161,7 +161,7 @@
 
 
 <div class="viewcode-block" id="revoke_session_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.views.revoke_session_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">revoke_session_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">revoke_session_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="s2">&quot;session_key&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">trusted_session</span> <span class="o">=</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">session_key</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;session_key&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
@@ -182,7 +182,7 @@
 
 
 <div class="viewcode-block" id="global_logout_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.sessionmgmt.html#intranet.apps.sessionmgmt.views.global_logout_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">global_logout_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">global_logout_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;global_logout&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GLOBAL_LOGOUT&quot;</span><span class="p">:</span>
         <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">last_global_logout_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -214,7 +214,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

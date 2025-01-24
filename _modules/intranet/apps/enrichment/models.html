@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.enrichment.models &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.enrichment.models &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,20 +121,20 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.enrichment.models</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">Group</span> <span class="k">as</span> <span class="n">DjangoGroup</span>
-<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Manager</span>
-<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Group</span> <span class="k">as</span> <span class="n">DjangoGroup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Manager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
-<span class="kn">from</span> <span class="nn">...utils.date</span> <span class="kn">import</span> <span class="n">get_date_range_this_year</span><span class="p">,</span> <span class="n">is_current_year</span>
-<span class="kn">from</span> <span class="nn">...utils.deletion</span> <span class="kn">import</span> <span class="n">set_historical_user</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils.date</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_date_range_this_year</span><span class="p">,</span> <span class="n">is_current_year</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils.deletion</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_historical_user</span>
 
 
-<div class="viewcode-block" id="EnrichmentActivityQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityQuerySet">[docs]</a><span class="k">class</span> <span class="nc">EnrichmentActivityQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
-<div class="viewcode-block" id="EnrichmentActivityQuerySet.this_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityQuerySet.this_year">[docs]</a>    <span class="k">def</span> <span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivityQuerySet"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityQuerySet">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EnrichmentActivityQuerySet</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">QuerySet</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivityQuerySet.this_year"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityQuerySet.this_year">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get enrichment activities created during this school year.</span>
 
 <span class="sd">        Returns:</span>
@@ -144,11 +144,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">added__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">added__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="EnrichmentActivityManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityManager">[docs]</a><span class="k">class</span> <span class="nc">EnrichmentActivityManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
-<div class="viewcode-block" id="EnrichmentActivityManager.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityManager.get_queryset">[docs]</a>    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivityManager"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityManager">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EnrichmentActivityManager</span><span class="p">(</span><span class="n">Manager</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivityManager.get_queryset"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityManager.get_queryset">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">EnrichmentActivityQuerySet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">using</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EnrichmentActivityManager.visible_to_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityManager.visible_to_user">[docs]</a>    <span class="k">def</span> <span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># , user):</span>
+<div class="viewcode-block" id="EnrichmentActivityManager.visible_to_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivityManager.visible_to_user">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># , user):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of visible enrichment activities for a given user (usually request.user).</span>
 
 <span class="sd">        TODO: implement this method. Add group restrictions.</span>
@@ -157,7 +157,7 @@
         <span class="k">return</span> <span class="n">EnrichmentActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="EnrichmentActivity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivity">[docs]</a><span class="k">class</span> <span class="nc">EnrichmentActivity</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivity"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivity">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EnrichmentActivity</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An enrichment activity available to the TJ community.&quot;&quot;&quot;</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">EnrichmentActivityManager</span><span class="p">()</span>
@@ -181,7 +181,7 @@
     <span class="n">groups_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;allowed_enrichments_set&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">groups_blacklisted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;blacklisted_enrichments_set&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="EnrichmentActivity.user_can_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivity.user_can_signup">[docs]</a>    <span class="k">def</span> <span class="nf">user_can_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivity.user_can_signup"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivity.user_can_signup">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">user_can_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether a user can sign up for an enrichment activity.</span>
 
 <span class="sd">        Args:</span>
@@ -194,25 +194,25 @@
             <span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_blacklisted</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="EnrichmentActivity.user_is_blacklisted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivity.user_is_blacklisted">[docs]</a>    <span class="k">def</span> <span class="nf">user_is_blacklisted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+<div class="viewcode-block" id="EnrichmentActivity.user_is_blacklisted"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.enrichment.html#intranet.apps.enrichment.forms.EnrichmentActivity.user_is_blacklisted">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">user_is_blacklisted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_blacklisted</span><span class="o">.</span><span class="n">all</span><span class="p">())</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the enrichment activity was created after the start of the school year.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">is_current_year</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">happened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">happened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether an enrichment activity has happened.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restricted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_allowed</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_too_early_to_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_too_early_to_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether it is too early to sign up for the activity</span>
 <span class="sd">        if it is a presign.</span>
 <span class="sd">        This contains the 2 day presign logic.</span>
@@ -231,10 +231,10 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="n">now</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">activity_date</span> <span class="o">-</span> <span class="n">presign_period</span><span class="p">),</span> <span class="n">activity_date</span> <span class="o">-</span> <span class="n">presign_period</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
         <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">&quot;enrichment activities&quot;</span></div>
 </pre></div>
@@ -253,7 +253,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>

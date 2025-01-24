@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.notifications.views &#8212; TJ Intranet v3 (Build #2642) documentation</title>
+    <title>intranet.apps.notifications.views &#8212; TJ Intranet v3 (Build #2653) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -121,25 +121,25 @@
     <div class="body col-md-12 content" role="main">
       
   <h1>Source code for intranet.apps.notifications.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
-<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
-<span class="kn">from</span> <span class="nn">django.contrib.auth.decorators</span> <span class="kn">import</span> <span class="n">login_required</span>
-<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
-<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
-<span class="kn">from</span> <span class="nn">django.views.decorators.csrf</span> <span class="kn">import</span> <span class="n">csrf_exempt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">messages</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">login_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.shortcuts</span><span class="w"> </span><span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">render</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.views.decorators.csrf</span><span class="w"> </span><span class="kn">import</span> <span class="n">csrf_exempt</span>
 
-<span class="kn">from</span> <span class="nn">..schedule.notifications</span> <span class="kn">import</span> <span class="n">chrome_getdata_check</span>
-<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">GCMNotification</span><span class="p">,</span> <span class="n">NotificationConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..schedule.notifications</span><span class="w"> </span><span class="kn">import</span> <span class="n">chrome_getdata_check</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">GCMNotification</span><span class="p">,</span> <span class="n">NotificationConfig</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="android_setup_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.android_setup_view">[docs]</a><span class="nd">@csrf_exempt</span>
-<span class="k">def</span> <span class="nf">android_setup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">android_setup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up a GCM session.</span>
 <span class="sd">    This does *not* require a valid login session. Instead, a token from the client</span>
 <span class="sd">    session is sent to the Android backend, which queries a POST request to this view.</span>
@@ -166,7 +166,7 @@
 
 
 <div class="viewcode-block" id="chrome_getdata_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.chrome_getdata_view">[docs]</a><span class="nd">@csrf_exempt</span>
-<span class="k">def</span> <span class="nf">chrome_getdata_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">chrome_getdata_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the data of the last notification sent to the current user.</span>
 
 <span class="sd">    This is needed because Chrome, as of version 44, doesn&#39;t support</span>
@@ -208,7 +208,7 @@
 
 
 <div class="viewcode-block" id="chrome_setup_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.chrome_setup_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">chrome_setup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">chrome_setup_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up a browser-side GCM session.</span>
 <span class="sd">    This *requires* a valid login session. A &quot;token&quot; POST parameter is saved under the &quot;gcm_token&quot;</span>
 <span class="sd">    parameter in the logged in user&#39;s NotificationConfig.</span>
@@ -228,7 +228,7 @@
 
 
 <div class="viewcode-block" id="gcm_list_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_list_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">gcm_list_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gcm_list_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;notifications&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
     <span class="n">gcm_notifs</span> <span class="o">=</span> <span class="n">GCMNotification</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-time&quot;</span><span class="p">)</span>
@@ -244,7 +244,7 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;notifications/gcm_list.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="gcm_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_post">[docs]</a><span class="k">def</span> <span class="nf">gcm_post</span><span class="p">(</span><span class="n">nc_users</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="gcm_post"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_post">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">gcm_post</span><span class="p">(</span><span class="n">nc_users</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
@@ -285,7 +285,7 @@
 
 
 <div class="viewcode-block" id="gcm_post_view"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.gcm_post_view">[docs]</a><span class="nd">@login_required</span>
-<span class="k">def</span> <span class="nf">gcm_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">gcm_post_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;notifications&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -319,7 +319,7 @@
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;notifications/gcm_post.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_gcm_schedule_uids"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.get_gcm_schedule_uids">[docs]</a><span class="k">def</span> <span class="nf">get_gcm_schedule_uids</span><span class="p">():</span>
+<div class="viewcode-block" id="get_gcm_schedule_uids"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.notifications.html#intranet.apps.notifications.views.get_gcm_schedule_uids">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_gcm_schedule_uids</span><span class="p">():</span>
     <span class="n">nc_all</span> <span class="o">=</span> <span class="n">NotificationConfig</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">gcm_token</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">gcm_optout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">nc</span> <span class="o">=</span> <span class="n">nc_all</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user__receive_schedule_notifications</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nc</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
@@ -339,7 +339,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2024, TJ Intranet Development Team.<br/>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
     </p>
   </div>
 </footer>
