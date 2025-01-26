@@ -384,6 +384,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/files",
     "dark/welcome",
     "dark/preferences",
+    "dark/printing",
     "dark/about",
     "dark/lostfound",
     "dark/eighth.signup",
