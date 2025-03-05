@@ -6,7 +6,7 @@ import re
 import subprocess
 import tempfile
 from io import BytesIO
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import magic
 from django.conf import settings
@@ -74,7 +74,7 @@ def parse_alerts(alerts: str) -> Tuple[str, bool]:
     }
     alerts = alerts.split()
     alerts_text = ", ".join(known_alerts.get(alert, "error") for alert in alerts)
-    error_alerts = ["paused"]
+    error_alerts = ["paused", "not-responding"]
     broken_alerts = ["media-empty-error", "media-empty-warning", "media-jam-error", "media-jam-warning"]
     printer_class = "working"
     for alert in alerts:
@@ -86,14 +86,14 @@ def parse_alerts(alerts: str) -> Tuple[str, bool]:
     return alerts_text, printer_class
 
 
-def get_printers() -> Dict[str, str]:
+def get_printers() -> Dict[str, List[str]]:
     """Returns a dictionary mapping name:description for available printers.
 
     This requires that a CUPS client be configured on the server.
     Otherwise, this returns an empty dictionary.
 
     Returns:
-        A dictionary mapping name:description for available printers.
+        A dictionary mapping name:[description,alerts] for available printers.
     """
 
     key = "printing:printers"
@@ -128,17 +128,20 @@ def get_printers() -> Dict[str, str]:
                     # extended description we know which printer it's referring to.
                     last_name = name
             elif last_name is not None:
+                if line.strip() == "The printer is not responding.":
+                    printers[last_name].append("not-responding")
                 description_match = DESCRIPTION_LINE_RE.match(line)
                 if description_match is not None:
                     # Pull out the description
                     description = description_match.group(1)
                     # And make sure we don't set an empty description
                     if description:
-                        printers[last_name] = [description]
+                        printers[last_name][0] = description
                 alerts_match = ALERTS_LINE_RE.match(line)
                 if alerts_match is not None:
                     alerts = alerts_match.group(1)
-                    printers[last_name].append(alerts)
+                    if len(printers[last_name]) == 1:  # If already marked as not responding, ignore alerts
+                        printers[last_name].append(alerts)
                     last_name = None
 
         cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
