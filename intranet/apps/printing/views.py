@@ -63,19 +63,21 @@ def set_user_ratelimit_status(username: str) -> None:
         cache.incr(cache_key)
 
 
-def parse_alerts(alerts: str) -> Tuple[str, bool]:
+def parse_alerts(alerts: str) -> Tuple[str, str]:
     known_alerts = {
         "paused": "unavailable",
         "media-empty-error": "out of paper",
         "media-empty-warning": "out of paper",
         "media-jam-error": "jammed",
         "media-jam-warning": "jammed",
+        "toner-empty-error": "out of toner",
+        "toner-empty-warning": "out of toner",
         "none": "working",
     }
     alerts = alerts.split()
     alerts_text = ", ".join(known_alerts.get(alert, "error") for alert in alerts)
     error_alerts = ["paused"]
-    broken_alerts = ["media-empty-error", "media-empty-warning", "media-jam-error", "media-jam-warning"]
+    broken_alerts = ["media-empty-error", "media-empty-warning", "media-jam-error", "media-jam-warning", "toner-empty-warning", "toner-empty-error"]
     printer_class = "working"
     for alert in alerts:
         if alert in error_alerts or alert not in known_alerts:
