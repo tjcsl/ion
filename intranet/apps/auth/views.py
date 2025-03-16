@@ -247,6 +247,11 @@ class LoginView(View):
 
             return response
         else:
+            auth_errors = form.errors.get('__all__', [])
+            lockout_message = _("Your account has been locked due to too many failed login attempts. Please try again in a few minutes.")
+            for error in auth_errors:
+                if "locked" in error:
+                    form.add_error(None, lockout_message)
             log_auth(request, "failed")
             logger.info("Login failed as %s", request.POST.get("username", "unknown"))
             return index_view(request, auth_form=form)
