@@ -29,7 +29,7 @@ env:
 
   python_setup: &python_setup
     name: Set up Python ${{ matrix.python-version }}
-    uses: actions/setup-python@v2
+    uses: actions/setup-python@v5
     with:
       python-version: ${{ matrix.python-version }}
 
@@ -39,13 +39,13 @@ env:
 
   repo_setup_fetch_all: &repo_setup_fetch_all
     name: Set up repo (fetching all commits)
-    uses: actions/checkout@v2
+    uses: actions/checkout@v4
     with:
       fetch-depth: 0
 
   setup_pip_cache: &setup_pip_cache
     name: Set up pip cache
-    uses: actions/cache@v2
+    uses: actions/cache@v4
     with:
       path: ~/.cache/pip
       key: pip-${{ matrix.python-version }}
@@ -171,7 +171,7 @@ jobs:
 
       # Node setup
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install Sass and add Node modules bin to PATH
