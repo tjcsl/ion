@@ -28,6 +28,14 @@ intranet.apps.logs.models module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.logs.tests module
+-------------------------------
+
+.. automodule:: intranet.apps.logs.tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.logs.urls module
 ------------------------------
 

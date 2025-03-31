@@ -34,12 +34,9 @@ class AccessLogMiddleWare:
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         path = request.get_full_path()
 
-        if user_agent and not any(
-            [
-                any(user_agent_substring in user_agent for user_agent_substring in settings.NONLOGGABLE_USER_AGENT_SUBSTRINGS),
-                any(path.startswith(path_beginning) for path_beginning in settings.NONLOGGABLE_PATH_BEGINNINGS),
-                any(path.endswith(path_ending) for path_ending in settings.NONLOGGABLE_PATH_ENDINGS),
-            ]
+        if user_agent and not (
+                any(path.startswith(path_beginning) for path_beginning in settings.NONLOGGABLE_PATH_BEGINNINGS)
+                or any(path.endswith(path_ending) for path_ending in settings.NONLOGGABLE_PATH_ENDINGS)
         ):
             log_line = f'{ip} - {username} - [{timezone.localtime()}] "{path}" "{user_agent}"'
             logger.info(log_line)
@@ -63,7 +60,7 @@ class AccessLogMiddleWare:
                         "body": request_body,
                         "content_type": request.content_type,
                         "content_params": request.content_params,
-                    }
+                    }, default=str
                 ),
             )
 
