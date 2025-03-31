@@ -910,8 +910,7 @@ SIMILAR_THRESHOLD = 5
 # Time that the bus page should change from morning to afternoon display
 BUS_PAGE_CHANGEOVER_HOUR = 12
 
-# Substrings of user agents to not log in the Ion access logs
-NONLOGGABLE_USER_AGENT_SUBSTRINGS = ["Prometheus", "GoogleBot", "UptimeRobot"]
+# Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
 NONLOGGABLE_PATH_ENDINGS = [".png", ".jpg", ".jpeg", ".gif", ".css", ".js", ".ico", "jsi18n/"]
 
