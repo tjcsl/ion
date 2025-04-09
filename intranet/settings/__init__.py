@@ -929,7 +929,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     "pull-sports-schedule": {
         "task": "intranet.apps.events.tasks.pull_sports_schedules",
-        "schedule": celery.schedules.crontab(day_of_month=15, hour=1),
+        "schedule": celery.schedules.crontab(hour=1, minute=0),
         "args": (),
     },
     "follow-up-absence-emails": {

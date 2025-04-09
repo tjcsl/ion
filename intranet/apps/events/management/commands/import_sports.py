@@ -4,10 +4,11 @@ from ...tasks import pull_sports_schedules
 
 
 class Command(BaseCommand):
-    help = "Import sports schedule for specified month"
-
-    def handle(self, *args, **options):
-        pull_sports_schedules(options["month"])
+    help = "Import sports schedule for specified month (or current + next if omitted)"
 
     def add_arguments(self, parser):
-        parser.add_argument("month", type=int)
+        parser.add_argument("month", nargs="?", type=int, help="Optional month (1-12)")
+
+    def handle(self, *args, **options):
+        month = options.get("month")
+        pull_sports_schedules(month)
