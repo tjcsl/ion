@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.announcements package &#8212; TJ Intranet v3 (Build #2653) documentation</title>
+    <title>intranet.apps.announcements package &#8212; TJ Intranet v3 (Build #2694) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -230,6 +230,7 @@
 <li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.notify_post"><code class="docutils literal notranslate"><span class="pre">Announcement.notify_post</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.objects"><code class="docutils literal notranslate"><span class="pre">Announcement.objects</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.pinned"><code class="docutils literal notranslate"><span class="pre">Announcement.pinned</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.public"><code class="docutils literal notranslate"><span class="pre">Announcement.public</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.models.Announcement.save_without_historical_record"><code class="docutils literal notranslate"><span class="pre">Announcement.save_without_historical_record()</span></code></a></li>
 <li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Announcement.title</span></code></a></li>
 <li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Announcement.updated</span></code></a></li>
@@ -426,6 +427,7 @@
 <li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_request_announcement_success_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_request_announcement_success_view()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_show_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_show_announcement_view()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_view_announcement_view"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_view_announcement_view()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.tests.AnnouncementTest.test_visible_to_user"><code class="docutils literal notranslate"><span class="pre">AnnouncementTest.test_visible_to_user()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#intranet.apps.announcements.tests.ApiTest"><code class="docutils literal notranslate"><span class="pre">ApiTest</span></code></a><ul>
@@ -476,6 +478,7 @@
 <li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.objects"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.objects</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.pinned"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.pinned</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.prev_record"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.prev_record</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.public"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.public</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.revert_url"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.revert_url()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.title"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.title</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.announcements.HistoricalAnnouncement.updated"><code class="docutils literal notranslate"><span class="pre">HistoricalAnnouncement.updated</span></code></a></li>
@@ -795,7 +798,7 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.announcements.forms.ClubAnnouncementEditForm.Meta.fields">
-<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['title',</span> <span class="pre">'content',</span> <span class="pre">'expiration_date']</span></em><a class="headerlink" href="#intranet.apps.announcements.forms.ClubAnnouncementEditForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['title',</span> <span class="pre">'content',</span> <span class="pre">'expiration_date',</span> <span class="pre">'public']</span></em><a class="headerlink" href="#intranet.apps.announcements.forms.ClubAnnouncementEditForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -834,7 +837,7 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.announcements.forms.ClubAnnouncementForm.Meta.fields">
-<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['activity',</span> <span class="pre">'title',</span> <span class="pre">'content',</span> <span class="pre">'expiration_date',</span> <span class="pre">'notify_post']</span></em><a class="headerlink" href="#intranet.apps.announcements.forms.ClubAnnouncementForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['activity',</span> <span class="pre">'title',</span> <span class="pre">'content',</span> <span class="pre">'expiration_date',</span> <span class="pre">'notify_post',</span> <span class="pre">'public']</span></em><a class="headerlink" href="#intranet.apps.announcements.forms.ClubAnnouncementForm.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1138,6 +1141,13 @@ object the first time, the query is executed.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.announcements.models.Announcement.pinned">
 <span class="sig-name descname"><span class="pre">pinned</span></span><a class="headerlink" href="#intranet.apps.announcements.models.Announcement.pinned" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.announcements.models.Announcement.public">
+<span class="sig-name descname"><span class="pre">public</span></span><a class="headerlink" href="#intranet.apps.announcements.models.Announcement.public" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2252,6 +2262,12 @@ obj: The announcement request object</p>
 <span class="sig-name descname"><span class="pre">test_view_announcement_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/announcements/tests.html#AnnouncementTest.test_view_announcement_view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.announcements.tests.AnnouncementTest.test_view_announcement_view" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.announcements.tests.AnnouncementTest.test_visible_to_user">
+<span class="sig-name descname"><span class="pre">test_visible_to_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/announcements/tests.html#AnnouncementTest.test_visible_to_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.announcements.tests.AnnouncementTest.test_visible_to_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests <a class="reference internal" href="#intranet.apps.announcements.models.AnnouncementManager.visible_to_user" title="intranet.apps.announcements.models.AnnouncementManager.visible_to_user"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AnnouncementManager.visible_to_user()</span></code></a>.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2296,7 +2312,7 @@ req: the AnnouncementRequest object</p>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-intranet.apps.announcements" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="intranet.apps.announcements.HistoricalAnnouncement">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.announcements.</span></span><span class="sig-name descname"><span class="pre">HistoricalAnnouncement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiration_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notify_post</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notify_email_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pinned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_change_reason</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.announcements.HistoricalAnnouncement" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">intranet.apps.announcements.</span></span><span class="sig-name descname"><span class="pre">HistoricalAnnouncement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expiration_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notify_post</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notify_email_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pinned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_change_reason</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history_user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#intranet.apps.announcements.HistoricalAnnouncement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HistoricalChanges</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="intranet.apps.announcements.HistoricalAnnouncement.DoesNotExist">
@@ -2508,6 +2524,13 @@ object the first time, the query is executed.</p>
 <dt class="sig sig-object py" id="intranet.apps.announcements.HistoricalAnnouncement.prev_record">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_record</span></span><a class="headerlink" href="#intranet.apps.announcements.HistoricalAnnouncement.prev_record" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the previous history record for the instance. <cite>None</cite> if first.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="intranet.apps.announcements.HistoricalAnnouncement.public">
+<span class="sig-name descname"><span class="pre">public</span></span><a class="headerlink" href="#intranet.apps.announcements.HistoricalAnnouncement.public" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="py method">

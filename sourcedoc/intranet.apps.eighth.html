@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #2653) documentation</title>
+    <title>intranet.apps.eighth package &#8212; TJ Intranet v3 (Build #2694) documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -206,6 +206,7 @@
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.available_ids"><code class="docutils literal notranslate"><span class="pre">EighthActivity.available_ids()</span></code></a></li>
 <li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">EighthActivity.both_blocks</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.capacity"><code class="docutils literal notranslate"><span class="pre">EighthActivity.capacity()</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.clean_subscribers"><code class="docutils literal notranslate"><span class="pre">EighthActivity.clean_subscribers()</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.club_sponsors"><code class="docutils literal notranslate"><span class="pre">EighthActivity.club_sponsors</span></code></a></li>
 <li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">EighthActivity.default_capacity</span></code></a></li>
 <li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">EighthActivity.deleted</span></code></a></li>
@@ -224,6 +225,7 @@
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.id"><code class="docutils literal notranslate"><span class="pre">EighthActivity.id</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.is_active"><code class="docutils literal notranslate"><span class="pre">EighthActivity.is_active</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.is_popular"><code class="docutils literal notranslate"><span class="pre">EighthActivity.is_popular</span></code></a></li>
+<li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.is_subscribable_for_user"><code class="docutils literal notranslate"><span class="pre">EighthActivity.is_subscribable_for_user()</span></code></a></li>
 <li><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">EighthActivity.juniors_allowed</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.name"><code class="docutils literal notranslate"><span class="pre">EighthActivity.name</span></code></a></li>
 <li><a class="reference internal" href="#intranet.apps.eighth.models.EighthActivity.name_with_flags"><code class="docutils literal notranslate"><span class="pre">EighthActivity.name_with_flags</span></code></a></li>
@@ -2127,6 +2129,12 @@ object the first time, the query is executed.</p>
 :returns: The activity’s capacity.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.eighth.models.EighthActivity.clean_subscribers">
+<span class="sig-name descname"><span class="pre">clean_subscribers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthActivity.clean_subscribers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.clean_subscribers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes any subscribers who are not allowed to subscribe to the activity.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="intranet.apps.eighth.models.EighthActivity.club_sponsors">
 <span class="sig-name descname"><span class="pre">club_sponsors</span></span><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.club_sponsors" title="Permalink to this definition">¶</a></dt>
@@ -2301,6 +2309,20 @@ An activity is considered to be active if it has been scheduled at all this year
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_popular</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.is_popular" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether this activity has more than <code class="docutils literal notranslate"><span class="pre">settings.SIMILAR_THRESHOLD</span> <span class="pre">*</span> <span class="pre">2</span></code> frequent_users.
 :returns: Whether this activity has more than <code class="docutils literal notranslate"><span class="pre">settings.SIMILAR_THRESHOLD</span> <span class="pre">*</span> <span class="pre">2</span></code> frequent_users.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="intranet.apps.eighth.models.EighthActivity.is_subscribable_for_user">
+<span class="sig-name descname"><span class="pre">is_subscribable_for_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/intranet/apps/eighth/models.html#EighthActivity.is_subscribable_for_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.eighth.models.EighthActivity.is_subscribable_for_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether a user can subscribe to the activity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> – The user to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether the user can subscribe to the activity.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">

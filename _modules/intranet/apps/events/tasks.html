@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>intranet.apps.events.tasks &#8212; TJ Intranet v3 (Build #2694) documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          TJ Intranet</a>
+        <span class="navbar-text navbar-version pull-left"><b>v3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Topics <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../setup/index.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../setup/server.html">Setting up the Server</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/index.html">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../architecture/index.html#technologies">Technologies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developing/index.html">Developing for Intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/eighth-models.html">Understanding the Eighth models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/howto.html">How to do Ion development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/oauth.html">Using OAuth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/requirements.html">Ion Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/styleguide.html">Coding Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/testing.html">Testing Ion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../developing/updates.html">Keeping things up-to-date</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sourcedoc/modules.html">intranet</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sourcedoc/intranet.html">intranet package</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Section <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for intranet.apps.events.tasks</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bs4</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">celery</span><span class="w"> </span><span class="kn">import</span> <span class="n">shared_task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">celery.utils.log</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_task_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_task_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">HOME_SCHOOL</span> <span class="o">=</span> <span class="s2">&quot;Thomas Jefferson Science &amp; Technology High School&quot;</span>
+<span class="n">HOME_SHORT</span> <span class="o">=</span> <span class="s2">&quot;TJHSST&quot;</span>
+
+<span class="n">REQUIRED_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;Description&quot;</span><span class="p">,</span> <span class="s2">&quot;Location&quot;</span><span class="p">]</span>
+
+
+<span class="nd">@shared_task</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pull_sports_schedules</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">month</span><span class="p">:</span>
+        <span class="n">months_to_pull</span> <span class="o">=</span> <span class="p">[(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">current_month</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span>
+        <span class="n">next_month</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">current_month</span> <span class="o">==</span> <span class="mi">12</span> <span class="k">else</span> <span class="n">current_month</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">next_year</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">current_month</span> <span class="o">==</span> <span class="mi">12</span> <span class="k">else</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
+
+        <span class="n">months_to_pull</span> <span class="o">=</span> <span class="p">[(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">current_month</span><span class="p">),</span> <span class="p">(</span><span class="n">next_year</span><span class="p">,</span> <span class="n">next_month</span><span class="p">)]</span>
+
+    <span class="n">all_events</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">year</span><span class="p">,</span> <span class="n">event_month</span> <span class="ow">in</span> <span class="n">months_to_pull</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fetching sports schedule for </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">event_month</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">fetch_sports_events</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">event_month</span><span class="p">)</span>
+        <span class="n">all_events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">all_events</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">REQUIRED_FIELDS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">event</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">event</span><span class="p">[</span><span class="n">field</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> in event: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">event_date</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+        <span class="n">event_title</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span>
+        <span class="n">event_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">))</span>
+
+        <span class="n">existing_event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">event_title</span><span class="p">,</span> <span class="n">time__date</span><span class="o">=</span><span class="n">event_date</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;moved&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">existing_event</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleting cancelled/moved event: </span><span class="si">{</span><span class="n">event_title</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">event_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">existing_event</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">existing_event</span> <span class="ow">or</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span>
+            <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">],</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;Description&quot;</span><span class="p">],</span>
+                <span class="n">location</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">],</span>
+                <span class="n">show_attending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">show_on_dashboard</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">public</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="s2">&quot;sports&quot;</span><span class="p">,</span>
+                <span class="n">open_to</span><span class="o">=</span><span class="s2">&quot;everyone&quot;</span><span class="p">,</span>
+                <span class="n">time</span><span class="o">=</span><span class="n">event_time</span><span class="p">,</span>
+            <span class="p">)</span>
+
+
+<div class="viewcode-block" id="fetch_sports_events"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.events.html#intranet.apps.events.tasks.fetch_sports_events">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">fetch_sports_events</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.northernregionva.org/public/genie/202/school/9/date/</span><span class="si">{year}</span><span class="s2">-</span><span class="si">{month:02d}</span><span class="s2">-</span><span class="si">{day:02d}</span><span class="s2">/view/week/&quot;</span>
+    <span class="n">soup_pages</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">start_day</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">29</span><span class="p">]:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="n">start_day</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fetching: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">soup_pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> due to error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">soup</span> <span class="ow">in</span> <span class="n">soup_pages</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;.contentTitle h2&quot;</span><span class="p">):</span>
+            <span class="n">event_date_str</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">event_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">event_date_str</span><span class="p">,</span> <span class="s2">&quot;%A, %B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">table</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">find_next</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;tbody tr.table-data-styles&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">time</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;data-title&quot;</span><span class="p">:</span> <span class="s2">&quot;Time&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">event_cell</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;data-title&quot;</span><span class="p">:</span> <span class="s2">&quot;Event&quot;</span><span class="p">})</span>
+                    <span class="n">location_cell</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;data-title&quot;</span><span class="p">:</span> <span class="s2">&quot;Location&quot;</span><span class="p">})</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">event_cell</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">location_cell</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Missing structure&quot;</span><span class="p">)</span>
+
+                    <span class="n">title_text</span> <span class="o">=</span> <span class="n">event_cell</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                    <span class="n">row_text</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">text</span>
+                    <span class="k">if</span> <span class="s2">&quot;Cancelled&quot;</span> <span class="ow">in</span> <span class="n">row_text</span><span class="p">:</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
+                    <span class="k">elif</span> <span class="s2">&quot;Date Changed&quot;</span> <span class="ow">in</span> <span class="n">row_text</span><span class="p">:</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;moved&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
+
+                    <span class="n">opponent_line</span> <span class="o">=</span> <span class="n">location_cell</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">location_name</span> <span class="o">=</span> <span class="n">location_cell</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">opponent_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;vs.&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">opponent</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">opponent</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+
+                    <span class="k">if</span> <span class="n">location_name</span> <span class="o">==</span> <span class="n">HOME_SCHOOL</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Home game vs. </span><span class="si">{</span><span class="n">opponent</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">location_display</span> <span class="o">=</span> <span class="n">HOME_SHORT</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Away game vs. </span><span class="si">{</span><span class="n">opponent</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">location_display</span> <span class="o">=</span> <span class="n">location_name</span>
+
+                    <span class="n">time_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s2">&quot;%I:%M%p&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+                    <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="n">title_text</span><span class="p">,</span>
+                            <span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">event_date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">time_obj</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">),</span>
+                            <span class="s2">&quot;Description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                            <span class="s2">&quot;Location&quot;</span><span class="p">:</span> <span class="n">location_display</span><span class="p">,</span>
+                            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping row due to error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">unique_events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">}</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">unique_events</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright 2025, TJ Intranet Development Team.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

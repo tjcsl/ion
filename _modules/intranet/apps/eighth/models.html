@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #2653) documentation</title>
+    <title>intranet.apps.eighth.models &#8212; TJ Intranet v3 (Build #2694) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -546,6 +546,32 @@
 <span class="sd">            Whether this activity has more than ``settings.SIMILAR_THRESHOLD * 2`` frequent_users.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">frequent_users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">SIMILAR_THRESHOLD</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EighthActivity.is_subscribable_for_user"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.is_subscribable_for_user">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_subscribable_for_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether a user can subscribe to the activity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user: The user to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Whether the user can subscribe to the activity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span> <span class="ow">or</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subscriptions_enabled</span>
+            <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">restricted</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">users_allowed</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups_allowed</span><span class="o">.</span><span class="n">all</span><span class="p">())</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EighthActivity.clean_subscribers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.eighth.html#intranet.apps.eighth.models.EighthActivity.clean_subscribers">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">clean_subscribers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes any subscribers who are not allowed to subscribe to the activity.&quot;&quot;&quot;</span>
+        <span class="n">to_keep</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_subscribable_for_user</span><span class="p">(</span><span class="n">sub</span><span class="p">):</span>
+                <span class="n">to_keep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">to_keep</span><span class="p">)</span></div>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">&quot;eighth activities&quot;</span>

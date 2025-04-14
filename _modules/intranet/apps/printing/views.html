@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #2653) documentation</title>
+    <title>intranet.apps.printing.views &#8212; TJ Intranet v3 (Build #2694) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -129,7 +129,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">magic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
@@ -186,19 +186,21 @@
         <span class="n">cache</span><span class="o">.</span><span class="n">incr</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse_alerts"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.parse_alerts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_alerts</span><span class="p">(</span><span class="n">alerts</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+<div class="viewcode-block" id="parse_alerts"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.parse_alerts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_alerts</span><span class="p">(</span><span class="n">alerts</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="n">known_alerts</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="s2">&quot;unavailable&quot;</span><span class="p">,</span>
         <span class="s2">&quot;media-empty-error&quot;</span><span class="p">:</span> <span class="s2">&quot;out of paper&quot;</span><span class="p">,</span>
         <span class="s2">&quot;media-empty-warning&quot;</span><span class="p">:</span> <span class="s2">&quot;out of paper&quot;</span><span class="p">,</span>
         <span class="s2">&quot;media-jam-error&quot;</span><span class="p">:</span> <span class="s2">&quot;jammed&quot;</span><span class="p">,</span>
         <span class="s2">&quot;media-jam-warning&quot;</span><span class="p">:</span> <span class="s2">&quot;jammed&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;toner-empty-error&quot;</span><span class="p">:</span> <span class="s2">&quot;out of toner&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;toner-empty-warning&quot;</span><span class="p">:</span> <span class="s2">&quot;out of toner&quot;</span><span class="p">,</span>
         <span class="s2">&quot;none&quot;</span><span class="p">:</span> <span class="s2">&quot;working&quot;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="n">alerts_text</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">known_alerts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">)</span>
     <span class="n">error_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;paused&quot;</span><span class="p">]</span>
-    <span class="n">broken_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;media-empty-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-empty-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-warning&quot;</span><span class="p">]</span>
+    <span class="n">broken_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;media-empty-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-empty-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;toner-empty-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;toner-empty-error&quot;</span><span class="p">]</span>
     <span class="n">printer_class</span> <span class="o">=</span> <span class="s2">&quot;working&quot;</span>
     <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">error_alerts</span> <span class="ow">or</span> <span class="n">alert</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_alerts</span><span class="p">:</span>
@@ -209,14 +211,14 @@
     <span class="k">return</span> <span class="n">alerts_text</span><span class="p">,</span> <span class="n">printer_class</span></div>
 
 
-<div class="viewcode-block" id="get_printers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_printers">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_printers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_printers"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.printing.html#intranet.apps.printing.views.get_printers">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_printers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dictionary mapping name:description for available printers.</span>
 
 <span class="sd">    This requires that a CUPS client be configured on the server.</span>
 <span class="sd">    Otherwise, this returns an empty dictionary.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A dictionary mapping name:description for available printers.</span>
+<span class="sd">        A dictionary mapping name:[description,alerts] for available printers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;printing:printers&quot;</span>
@@ -251,17 +253,20 @@
                     <span class="c1"># extended description we know which printer it&#39;s referring to.</span>
                     <span class="n">last_name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">elif</span> <span class="n">last_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;The printer is not responding.&quot;</span><span class="p">:</span>
+                    <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;not-responding&quot;</span><span class="p">)</span>
                 <span class="n">description_match</span> <span class="o">=</span> <span class="n">DESCRIPTION_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">description_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># Pull out the description</span>
                     <span class="n">description</span> <span class="o">=</span> <span class="n">description_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                     <span class="c1"># And make sure we don&#39;t set an empty description</span>
                     <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
-                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">description</span><span class="p">]</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
                 <span class="n">alerts_match</span> <span class="o">=</span> <span class="n">ALERTS_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">alerts_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># If already marked as not responding, ignore alerts</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span>
                     <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">printers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">])</span>
