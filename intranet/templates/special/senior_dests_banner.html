@@ -1,0 +1,30 @@
+{% load static %}
+
+{% if dark_mode_enabled %}
+    <link rel="stylesheet" href="{% static 'css/dark/senior_dests_banner.css' %}">
+{% else %}
+    <link rel="stylesheet" href="{% static 'css/senior_dests_banner.css' %}">
+{% endif %}
+
+<script src="{% static 'js/senior_dests_banner.js' %}"></script>
+
+<div class="senior-dests-toggle" style="display:none">
+    <span class="senior-dests-expand" title="Show Senior College Destinations banner">
+        <i class="fas fa-chevron-down"></i>
+    </span>
+    <b class="senior-dests-toggle-text">Senior College Destinations</b>
+</div>
+
+<div class="senior-dests-content open">
+    <span class="senior-dests-collapse" title="Close Senior Destinations banner">
+        <i class="fas fa-chevron-up"></i>
+    </span>
+    <center>
+        <h3>Senior College Destinations</h3>
+        <p>{{ DJANGO_SETTINGS.SENIOR_DESTS_BANNER_TEXT }}</p>
+        <a href="{{ DJANGO_SETTINGS.SENIOR_DESTS_BANNER_LINK }}" target="_blank"
+           class="btn-primary">
+           Fill Out the Form
+        </a>
+    </center>
+</div>
