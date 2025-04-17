@@ -60,6 +60,12 @@ TJSTAR_DATE = datetime.date(end_school_year,
 # When to start showing the tjSTAR banner
 TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
 
+# Senior Destinations Banner
+ENABLE_SENIOR_DESTS_BANNER = True
+SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue form is out! Please submit your " \
+    "senior destinations, quotes, and superlatives to the form attached below by May 2"
+SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
+
 """  -------- END UPDATE ANNUALLY --------  """
 # fmt: on
 
@@ -363,6 +369,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "hoco_ribbon",
     "hoco_scores",
     "tjstar_ribbon",
+    "senior_dests_banner",
     "oauth",
     "bus",
     "signage.page",
@@ -376,6 +383,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/enrichment",
     "dark/dashboard",
     "dark/dashboard.widgets",
+    "dark/senior_dests_banner",
     "dark/schedule.widget",
     "dark/nav",
     "dark/cke",
