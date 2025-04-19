@@ -9,8 +9,9 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Page, Paginator
 from django.db.models import QuerySet
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware
@@ -371,7 +372,7 @@ def paginate_announcements_list_raw(
 
     # limit to 15 to prevent extreme slowdowns for large amounts
     # of club announcements
-    club_items = visible_club_items[:15]
+    club_items = visible_club_items
 
     # set it as an attribute so we can access in the template
     for c in club_items:
@@ -494,6 +495,50 @@ def add_widgets_context(request, context):
 
     return context
 
+@login_required
+def load_more_club_announcements(request: HttpRequest):
+    user = request.user
+
+    try:
+        offset = int(request.GET.get("offset", 0))
+    except ValueError:
+        offset = 0
+
+    try:
+        fetch_limit = int(request.GET.get("fetch_limit", 15))
+    except ValueError:
+        fetch_limit = 15
+
+    user_hidden_announcements = Announcement.objects.hidden_announcements(user).values_list("id", flat=True)
+
+    context = {
+        "user": user,
+        "show_expired": request.GET.get("show_expired") == "1",
+        "show_all": request.GET.get("show_all", "0") != "0",
+        "announcements_admin": user.has_admin_permission("announcements"),
+        "events_admin": user.has_admin_permission("events"),
+    }
+
+    items = get_announcements_list(request, context)
+    _, club_items = split_club_announcements(items)
+    
+    visible_club_items, _, _ = filter_club_announcements(user, user_hidden_announcements, club_items)
+    
+    announcements_html = []
+    for announcement in visible_club_items[fetch_limit+offset:2*fetch_limit]:
+        announcement.can_subscribe = announcement.activity.is_subscribable_for_user(request.user)
+        html = render_to_string('announcements/announcement.html', {
+            'announcement': announcement, 
+            'show_icon': True,
+            'user': user,
+            'user_hidden_announcements': user_hidden_announcements,
+            'hide_announcements': True,
+        }, request=request)
+        announcements_html.append(html)
+    
+    return JsonResponse({
+        'next_announcements': announcements_html,
+    })
 
 @login_required
 def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_club=False, ignore_dashboard_types=None, show_welcome=False):

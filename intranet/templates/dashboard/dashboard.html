@@ -217,16 +217,11 @@
             <div class="club-announcements">
                 <h3 class="club-announcements-header">
                     <i class="fas fa-users"></i>&nbsp;
-                    <!-- This only goes up to 15 items. Removing this restriction causes slowdowns. -->
-                    {% if club_items|length < 15 %}
-                        You have <span class="num-club-announcements">{{ club_items|length }}</span> new club announcement{{ club_items|length|pluralize }}
-                    {% else %}
-                        You have <span class="num-club-announcements">15+</span> new club announcements
-                    {% endif %}
+                    You have <span class="num-club-announcements">{{ club_items|length }}</span> new club announcement{{ club_items|length|pluralize }}
                     <i class="fas fa-chevron-down club-announcements-toggle-icon"></i>
                 </h3>
                 <div class="club-announcements-content">
-                    {% for item in club_items %}
+                    {% for item in club_items|slice:":30" %}
                         {% if not hide_announcements or not item.id in user_hidden_announcements %}
                             {% with announcement=item show_icon=True can_subscribe=item.can_subscribe %}
                                 {% include "announcements/announcement.html" %}
