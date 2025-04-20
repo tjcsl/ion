@@ -1,0 +1,83 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+{% load dates %}
+
+{% block title %}
+    {{ block.super }} - WebPush Notifications Schedule
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Push Notifications Schedule for {{ day }}</h2>
+        {% for key, value in schedules.items %}
+            <h3 style="margin-top: 15px;">{{ key }}</h3>
+            <table class="fancy-table" style="margin-top:10px;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                {% for key, val in value.items %}
+                    <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ val }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endfor %}
+        <h2>Scheduled tasks</h2>
+        <table class="fancy-table" style="margin-top: 5px;">
+            <thead>
+                <tr>
+                    <th>Worker</th>
+                    <th>ETA</th>
+                    <th>Arguments</th>
+                    <th>Task ID</th>
+                    <th>Task Name</th>
+                    <th>Hostname</th>
+                    <th>Acknowledged</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for worker, tasks in scheduled_tasks.items %}
+                    {% for task in tasks %}
+                        <tr>
+                            <td>{{ worker }}</td>
+                            <td>{{ task.eta|strftime }}</td>
+                            <td>{{ task.request.args }}, {{ task.request.kwargs }}</td>
+                            <td>{{ task.request.id }}</td>
+                            <td>{{ task.request.name }}</td>
+                            <td>{{ task.request.hostname }}</td>
+                            <td>{{ task.request.acknowledged }}</td>
+                        </tr>
+                    {% endfor %}
+                {% empty %}
+                    <tr>
+                        <td>No scheduled tasks.</td>
+                    </tr>
+                {% endfor %}
+        </table>
+        <form method="post">
+            {% csrf_token %}
+            <input type="submit" value="Rerun scheduling" style="margin-top: 10px;"/>
+        </form>
+        <p><b>Warning: </b>This action may cause double notifications to be sent if they are already scheduled. Only use this when no notification tasks are already scheduled</p>
+    </div>
+{% endblock %}

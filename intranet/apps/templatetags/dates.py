@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 
+from dateutil import parser
 from django import template
 from django.utils import timezone
 
@@ -73,3 +74,13 @@ def fuzzy_date(date):
             return date.strftime("next %A")
         else:
             return date.strftime("%A, %B %d, %Y")
+
+
+@register.filter()
+def strftime(date, date_format: str = "%B %d, %Y at %I:%M %p"):
+    try:
+        date = parser.parse(date)
+
+        return date.strftime(date_format)
+    except (ValueError, TypeError):
+        return date

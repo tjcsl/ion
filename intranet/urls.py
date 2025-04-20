@@ -4,6 +4,7 @@ from django.urls import include, re_path
 from django.views.generic.base import RedirectView, TemplateView
 
 from intranet.apps.error.views import handle_404_view, handle_500_view, handle_503_view
+from intranet.apps.notifications import views
 from intranet.apps.oauth.views import ApplicationDeleteView, ApplicationRegistrationView, ApplicationUpdateView
 
 admin.autodiscover()
@@ -14,7 +15,6 @@ urlpatterns = [
     re_path(r"^favicon\.ico$", RedirectView.as_view(url="/static/img/favicon/favicon.ico"), name="favicon"),
     re_path(r"^robots\.txt$", RedirectView.as_view(url="/static/robots.txt"), name="robots"),
     re_path(r"^manifest\.json$", RedirectView.as_view(url="/static/manifest.json"), name="chrome_manifest"),
-    re_path(r"^serviceworker\.js$", RedirectView.as_view(url="/static/serviceworker.js"), name="chrome_serviceworker"),
     re_path(r"^api", include("intranet.apps.api.urls"), name="api_root"),
     re_path(r"^", include("intranet.apps.auth.urls")),
     re_path(r"^announcements", include("intranet.apps.announcements.urls")),
@@ -72,6 +72,13 @@ if settings.SHOW_DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns += [re_path(r"^__debug__/", include(debug_toolbar.urls))]  # type: ignore
+
+if not settings.PRODUCTION:
+    urlpatterns += [re_path(
+        r"^serviceworker\.js$",
+        views.serve_serviceworker,
+        name="serve service worker"
+    )]
 
 handler404 = handle_404_view
 handler500 = handle_500_view

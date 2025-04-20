@@ -26,6 +26,7 @@ from .notifications import (
     admin_request_announcement_email,
     announcement_approved_email,
     announcement_posted_email,
+    announcement_posted_push_notification,
     announcement_posted_twitter,
     request_announcement_email,
 )
@@ -62,6 +63,7 @@ def announcement_posted_hook(request, obj):
     """
     if obj.notify_post:
         announcement_posted_twitter(request, obj)
+        announcement_posted_push_notification(obj)
         try:
             notify_all = obj.notify_email_all
         except AttributeError:

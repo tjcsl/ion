@@ -76,6 +76,14 @@ intranet.apps.bus.urls module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.bus.utils module
+------------------------------
+
+.. automodule:: intranet.apps.bus.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.bus.views module
 ------------------------------
 

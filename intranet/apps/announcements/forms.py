@@ -23,7 +23,12 @@ class AnnouncementForm(forms.ModelForm):
         fields = ["title", "author", "content", "groups", "expiration_date", "notify_post", "notify_email_all", "update_added_date", "pinned"]
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
-            "notify_post": "If this box is checked, students who have signed up for notifications will receive an email.",
+            "notify_post": (
+                "If this box is checked, students who have signed up for email "
+                "notifications will receive an email "
+                "and those who have signed up for push notifications will receive a "
+                "push notification."
+            ),
             "notify_email_all": (
                 "This will send an email notification to all of the users who can see this post. "
                 "This option does NOT take users' email notification preferences into account, so please use with care."
@@ -50,9 +55,12 @@ class ClubAnnouncementForm(forms.ModelForm):
         else:
             self.fields["activity"].queryset = []
         self.fields["activity"].required = True
-        self.fields[
-            "notify_post"
-        ].help_text = "If this box is checked, students who have subscribed to your club's announcements will receive an email."
+        self.fields["notify_post"].help_text = (
+            "If this box is checked, students who have signed up for email "
+            "notifications will receive an email "
+            "and those who have signed up for push notifications will receive a "
+            "push notification."
+        )
 
         if "instance" in kwargs:  # Don't allow changing the activity once the announcement has been created
             self.fields["activity"].widget.attrs["disabled"] = True
@@ -92,7 +100,12 @@ class AnnouncementEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["expiration_date"].help_text = "By default, announcements expire after two weeks. Choose the shortest time necessary."
 
-        self.fields["notify_post_resend"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
+        self.fields["notify_post_resend"].help_text = (
+            "If this box is checked, students who have signed up for email "
+            "notifications will receive an email "
+            "and those who have signed up for push notifications will "
+            "receive a push notification."
+        )
 
         self.fields["notify_email_all_resend"].help_text = (
             "This will resend an email notification to all of the users who can see this post. This option "
@@ -153,7 +166,12 @@ class AnnouncementAdminForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["notify_post"].help_text = "If this box is checked, students who have signed up for notifications will receive an email."
+        self.fields["notify_post"].help_text = (
+            "If this box is checked, students who have signed up for email "
+            "notifications will receive an email "
+            "and those who have signed up for push notifications will receive a "
+            "push notification."
+        )
         self.fields["notify_email_all"].help_text = (
             "This will send an email notification to all of the users who can see this post. This option "
             "does NOT take users' email notification preferences into account, so please use with care."
