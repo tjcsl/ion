@@ -66,6 +66,10 @@ input {
         width: 192px;
     }
 
+    &[type=number] {
+        width: 103px;
+    }
+
     &[type=submit] {
         width: 200px;
         margin-top: 6px;
@@ -347,4 +351,41 @@ a.schedule {
 
 .disable-interaction {
     pointer-events: none;
+}
+
+.tooltip {
+    position: relative;
+    display: inline;
+    margin-left: 3px;
+    // border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -125px;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

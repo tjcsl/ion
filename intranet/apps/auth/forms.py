@@ -26,10 +26,23 @@ class AuthenticateForm(AuthenticationForm):
     )
     password = forms.CharField(
         required=True,
-        strip=False,
         label="",
         widget=widgets.PasswordInput(attrs={"placeholder": "Password", "aria-label": "Enter Password"}),
         error_messages={"required": "Invalid password", "inactive": "Access disallowed."},
+    )
+    otp_token = forms.CharField(
+        required=False,
+        label="",
+        widget=widgets.NumberInput(
+            attrs={
+                "placeholder": "2FA OTP Code",
+                "aria-label": "Enter OTP Code",
+                "autocomplete": "one-time-code",
+                "maxlength": 8,
+            }
+        ),
+        error_messages={"required": "Invalid 2FA OTP token", "inactive": "Access disallowed."},
+        help_text="For users with 2FA enabled: Enter the OTP code from your authenticator app. Other users: Leave this field blank.",
     )
 
     trust_device = forms.BooleanField(required=False, initial=True, label="Remember me", label_suffix="")
@@ -49,3 +62,7 @@ class AuthenticateForm(AuthenticationForm):
                 self.fields["password"].widget.attrs.update({"class": "error", "placeholder": message})
 
         return form
+
+    def clean(self):
+        self.cleaned_data["password"] = self.cleaned_data.get("password", "") + self.cleaned_data.get("otp_token", "")
+        return super().clean()
