@@ -149,11 +149,13 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "school_events": school_events,
             "should_not_index_page": has_next_page,
             "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= timezone.now().date() <= settings.TJSTAR_DATE,
-        }
+        }        
         schedule = schedule_context(request)
         data.update(schedule)
         if added_context is not None:
             data.update(added_context)
+        data["show_recaptcha"] = is_suspected_bot(request)
+        data["recaptcha_site_key"] = "6LdfuB4rAAAAAE1GH-_UHRUs7sdJgubF3zs6A3G9"
         return render(request, "auth/login.html", data)
 RECAPTCHA_SITE_KEY = "6LdfuB4rAAAAAE1GH-_UHRUs7sdJgubF3zs6A3G9"
 RECAPTCHA_SECRET_KEY = "6LdfuB4rAAAAAPmSnTQnVuo7k55hcrp_rXQh46QU"
@@ -215,6 +217,8 @@ class LoginView(View):
 
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
 
+            request.session["failed_login_attempts"] = 0
+
             default_next_page = "index"
 
             if request.user.is_student and settings.ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT:
@@ -273,6 +277,7 @@ class LoginView(View):
 
             return response
         else:
+            request.session["failed_login_attempts"] = request.session.get("failed_login_attempts", 0) + 1
             log_auth(request, "failed")
             logger.info("Login failed as %s", request.POST.get("username", "unknown"))
             return index_view(request, auth_form=form)
