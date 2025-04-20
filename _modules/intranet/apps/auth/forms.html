@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>intranet.apps.auth.forms &#8212; TJ Intranet v3 (Build #2713) documentation</title>
+    <title>intranet.apps.auth.forms &#8212; TJ Intranet v3 (Build #2727) documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
     <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
@@ -149,10 +149,23 @@
     <span class="p">)</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">strip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">widget</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">PasswordInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;Password&quot;</span><span class="p">,</span> <span class="s2">&quot;aria-label&quot;</span><span class="p">:</span> <span class="s2">&quot;Enter Password&quot;</span><span class="p">}),</span>
         <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid password&quot;</span><span class="p">,</span> <span class="s2">&quot;inactive&quot;</span><span class="p">:</span> <span class="s2">&quot;Access disallowed.&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">otp_token</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">widget</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">NumberInput</span><span class="p">(</span>
+            <span class="n">attrs</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;2FA OTP Code&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;aria-label&quot;</span><span class="p">:</span> <span class="s2">&quot;Enter OTP Code&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;autocomplete&quot;</span><span class="p">:</span> <span class="s2">&quot;one-time-code&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;maxlength&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">),</span>
+        <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid 2FA OTP token&quot;</span><span class="p">,</span> <span class="s2">&quot;inactive&quot;</span><span class="p">:</span> <span class="s2">&quot;Access disallowed.&quot;</span><span class="p">},</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;For users with 2FA enabled: Enter the OTP code from your authenticator app. Other users: Leave this field blank.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">trust_device</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Remember me&quot;</span><span class="p">,</span> <span class="n">label_suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -171,7 +184,11 @@
                     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Invalid password&quot;</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">})</span>
 
-        <span class="k">return</span> <span class="n">form</span></div></div>
+        <span class="k">return</span> <span class="n">form</span></div>
+
+<div class="viewcode-block" id="AuthenticateForm.clean"><a class="viewcode-back" href="../../../../sourcedoc/intranet.apps.auth.html#intranet.apps.auth.forms.AuthenticateForm.clean">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;otp_token&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span></div></div>
 </pre></div>
 
     </div>
