@@ -32,6 +32,9 @@
 
 {% block js %}
     {{ block.super }}
+    {% if show_recaptcha %}
+        <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+    {% endif %}
     <script src="{% static 'js/schedule.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/vendor/spin.min.js' %}"></script>
@@ -101,6 +104,9 @@
                     {% endif %}
                     {% endfor %}
                     <div id="username-warning"></div>
+                    {% if show_recaptcha %}
+                        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}" data-action="LOGIN"></div>
+                    {% endif %}
                     <input type="submit" value="Login">
                     <div class='spinner-container'></div>
                     {% for field in auth_form %}

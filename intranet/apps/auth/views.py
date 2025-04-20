@@ -1,6 +1,7 @@
 import logging
 import random
 import re
+import requests
 import time
 from datetime import timedelta
 from typing import Container, Tuple
@@ -154,8 +155,10 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         if added_context is not None:
             data.update(added_context)
         return render(request, "auth/login.html", data)
-
-
+RECAPTCHA_SITE_KEY = "6LfCsx4rAAAAAGb9rDzdzVQ4dEWCThPLqbFH0nKp"
+RECAPTCHA_SECRET_KEY = "6LfCsx4rAAAAAA-tNk05rfYMj_Er-JH75SvS-leq"
+def is_suspected_bot(request):
+    return request.session.get("failed_login_attempts", 0) >= 3
 class LoginView(View):
     """Log in and redirect a user."""
 
@@ -178,6 +181,29 @@ class LoginView(View):
             request.session.delete_test_cookie()
         else:
             logger.warning("No cookie support detected! This could cause problems.")
+        if is_suspected_bot(request):
+            recaptcha_response = request.POST.get("g-recaptcha-response")
+            if not recaptcha_response:
+                return index_view(
+                    request,
+                    auth_form=form,
+                    added_context={"auth_message": "Please complete the reCAPTCHA."},
+                )
+            r = requests.post(
+                "https://www.google.com/recaptcha/api/siteverify",
+                data={
+                    "secret": RECAPTCHA_SECRET_KEY,
+                    "response": recaptcha_response,
+                    "remoteip": request.META.get("REMOTE_ADDR"),
+                },
+            )
+            result = r.json()
+            if not result.get("success"):
+                return index_view(
+                    request,
+                    auth_form=form,
+                    added_context={"auth_message": "reCAPTCHA failed. Please try again."},
+                )
 
         if form.is_valid():
             reset_user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
