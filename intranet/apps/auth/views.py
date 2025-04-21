@@ -155,11 +155,10 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         if added_context is not None:
             data.update(added_context)
         data["show_recaptcha"] = is_suspected_bot(request)
-        data["recaptcha_site_key"] = "6LdfuB4rAAAAAE1GH-_UHRUs7sdJgubF3zs6A3G9"
-        data["show_recaptcha"] = True
+        data["recaptcha_site_key"] = RECAPTCHA_SITE_KEY
         return render(request, "auth/login.html", data)
-RECAPTCHA_SITE_KEY = "6LdfuB4rAAAAAE1GH-_UHRUs7sdJgubF3zs6A3G9"
-RECAPTCHA_SECRET_KEY = "6LdfuB4rAAAAAPmSnTQnVuo7k55hcrp_rXQh46QU"
+RECAPTCHA_SITE_KEY = settings.RECAPTCHA_SITE_KEY
+RECAPTCHA_SECRET_KEY = settings.RECAPTCHA_SECRET_KEY
 def is_suspected_bot(request):
     return request.session.get("failed_login_attempts", 0) >= 3
 class LoginView(View):
