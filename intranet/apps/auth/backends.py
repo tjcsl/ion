@@ -105,6 +105,13 @@ class PamAuthenticationBackend:
 
         """
 
+        if request is not None and 'failed_login_attempts' not in request.session:
+            request.session['failed_login_attempts'] = 0
+            print(f"failed_login_attempts: {request.session['failed_login_attempts']}")
+        if request is not None and request.session['failed_login_attempts'] >= 5:
+            logger.info("Too many failed login attempts")
+            return None
+
         if not isinstance(username, str):
             return None
 
@@ -123,13 +130,18 @@ class PamAuthenticationBackend:
                 pam_authenticate_post_failures.inc()
                 return None
 
+            request.session["failed_login_attempts"] = 0
+            print(f"failed_login_attempts: {request.session['failed_login_attempts']}")
             return user
 
         elif result == PamAuthenticationResult.EXPIRED:
             user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             return user
-        else:
+        else: # result == PamAuthenticationResult.FAILURE
             pam_authenticate_failures.inc()
+            if request is not None:
+                request.session["failed_login_attempts"] = request.session.get("failed_login_attempts", 0) + 1
+                print(f"failed_login_attempts: {request.session['failed_login_attempts']}")
             return None
 
     def get_user(self, user_id):

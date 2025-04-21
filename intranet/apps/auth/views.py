@@ -2,7 +2,7 @@ import logging
 import random
 import re
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import Container, Tuple
 
 from dateutil.relativedelta import relativedelta
@@ -151,6 +151,24 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         }
         schedule = schedule_context(request)
         data.update(schedule)
+
+        if 'failed_login_attempts' in request.session and request.session['failed_login_attempts'] >= 5:
+            if 'waiting_period_end' in request.session:
+                minutes = request.session['waiting_period_end_minutes']
+                seconds = request.session['waiting_period_end_seconds']
+                data.update({"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
+            else:
+                time_until_unlock = int((datetime.now() + timedelta(minutes=30)).timestamp())
+
+                now = datetime.now().timestamp()
+                seconds_remaining = int(time_until_unlock - now)
+                minutes, seconds = divmod(seconds_remaining, 60)
+                
+                request.session['waiting_period_end'] = time_until_unlock
+                request.session['waiting_period_end_minutes'] = minutes
+                request.session['waiting_period_end_seconds'] = seconds
+                data.update({"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
+
         if added_context is not None:
             data.update(added_context)
         return render(request, "auth/login.html", data)
@@ -163,6 +181,22 @@ class LoginView(View):
     def post(self, request):
         """Validate and process the login POST request."""
 
+        if 'failed_login_attempts' in request.session and request.session['failed_login_attempts'] >= 5:
+            if 'waiting_period_end' in request.session:
+                now = datetime.now().timestamp()
+                seconds_remaining = int(request.session['waiting_period_end'] - now)
+                minutes, seconds = divmod(seconds_remaining, 60)
+                return index_view(request, added_context={"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."}) 
+
+            time_until_unlock = int((datetime.now() + timedelta(minutes=30)).timestamp())
+
+            now = datetime.now().timestamp()
+            seconds_remaining = int(time_until_unlock - now)
+            minutes, seconds = divmod(seconds_remaining, 60)
+            
+            request.session['waiting_period_end'] = time_until_unlock
+            return index_view(request, added_context={"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
+
         username = request.POST.get("username", "")
 
         """Before September 1st, do not allow Class of [year+4] to log in."""
@@ -171,13 +205,15 @@ class LoginView(View):
 
         if re.search(r"^(\d{4})?[a-zA-Z]+\d?$", username) is None:
             return index_view(request, added_context={"auth_message": "Your username format is incorrect."})
-
+        
         form = AuthenticateForm(data=request.POST)
 
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
         else:
             logger.warning("No cookie support detected! This could cause problems.")
+
+        authenticate(request, username=username, password=request.POST.get("password", ""))
 
         if form.is_valid():
             reset_user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)

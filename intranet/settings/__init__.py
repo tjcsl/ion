@@ -400,15 +400,15 @@ for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE["STYLESHEETS"].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = [
-    "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
+    # "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.PamAuthenticationBackend",
     "oauth2_provider.backends.OAuth2Backend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# The Alpine dev env doesn't work well with PAM
-if not PRODUCTION:
-    AUTHENTICATION_BACKENDS.remove("intranet.apps.auth.backends.PamAuthenticationBackend")
+# # The Alpine dev env doesn't work well with PAM
+# if not PRODUCTION:
+#     AUTHENTICATION_BACKENDS.remove("intranet.apps.auth.backends.PamAuthenticationBackend")
 
 # Default to Argon2, see https://docs.djangoproject.com/en/dev/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
