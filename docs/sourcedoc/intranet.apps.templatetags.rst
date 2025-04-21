@@ -60,6 +60,14 @@ intranet.apps.templatetags.paginate module
    :undoc-members:
    :show-inheritance:
 
+intranet.apps.templatetags.status\_helper module
+------------------------------------------------
+
+.. automodule:: intranet.apps.templatetags.status_helper
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 intranet.apps.templatetags.strings module
 -----------------------------------------
 

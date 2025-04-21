@@ -535,6 +535,7 @@ CACHE_AGE = {
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
     "printers_list": int(datetime.timedelta(minutes=10).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds()),
+    "csl_status": int(datetime.timedelta(minutes=5).total_seconds()),
     "sports_school_events": int(datetime.timedelta(hours=1).total_seconds()),
 }
 
@@ -890,10 +891,11 @@ CLEAR_ABSENCE_DAYS = 14
 # The address for FCPS' Emergency Announcement page
 FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 
+# The address for the CSL's BetterUptime status page
+CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
+
 # The timeout for the request to FCPS' emergency page (in seconds)
 EMERGENCY_TIMEOUT = 5
-
-CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
 
 # How frequently the emergency announcement cache should be updated by the Celerybeat task.
 # This should be less than CACHE_AGE["emerg"].
@@ -908,8 +910,7 @@ SIMILAR_THRESHOLD = 5
 # Time that the bus page should change from morning to afternoon display
 BUS_PAGE_CHANGEOVER_HOUR = 12
 
-# Substrings of user agents to not log in the Ion access logs
-NONLOGGABLE_USER_AGENT_SUBSTRINGS = ["Prometheus", "GoogleBot", "UptimeRobot"]
+# Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
 NONLOGGABLE_PATH_ENDINGS = [".png", ".jpg", ".jpeg", ".gif", ".css", ".js", ".ico", "jsi18n/"]
 

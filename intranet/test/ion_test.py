@@ -55,4 +55,7 @@ class IonTestCase(TestCase):
         # Make user an eighth admin
         group = Group.objects.get_or_create(name="admin_all")[0]
         user.groups.add(group)
+        user.is_superuser = True
+        user.save()
+
         return user

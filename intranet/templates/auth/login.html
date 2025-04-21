@@ -100,7 +100,15 @@
                     {% csrf_token %}
                     {% for field in auth_form %}
                     {% if field.name != "trust_device" %}
-                        {{ field }}<br>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="tooltip" style="display: inline">
+                                <i class="fas fa-question-circle"></i>
+                                <span class="tooltiptext">{{ field.help_text }}</span>
+                            </div>
+                            {% comment %} <span class="help-text" style="font-size: 10px; color: grey;">{{ field.help_text }}</span> {% endcomment %}
+                        {% endif %}
+                        <br>
                     {% endif %}
                     {% endfor %}
                     <div id="username-warning"></div>
@@ -115,7 +123,9 @@
                     {% endif %}
                     {% endfor %}
                     <div class="reset-password-container">
-                        <a href="https://resetter.tjhsst.edu">Reset password</a>
+                        <a href="https://password.tjhsst.edu">Reset password</a>
+                        &bull;
+                        <a href="https://2fa.tjhsst.edu">Manage 2FA</a>
                     </div>
                     {% if auth_form.errors %}
                         <div class="account-docs-link-container">

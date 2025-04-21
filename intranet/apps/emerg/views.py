@@ -1,6 +1,6 @@
-import json
 import logging
 import time
+from typing import Tuple
 
 import requests
 from bs4 import BeautifulSoup
@@ -14,20 +14,19 @@ logger = logging.getLogger(__name__)
 
 
 def check_emerg():
-    """Fetch from FCPS and CSL emergency announcement pages.
+    """Fetch from FCPS emergency announcement pages.
 
-    URLs defined in settings.FCPS_EMERGENCY_PAGE and settings.CSL_STATUS_PAGE
+    URLs defined in settings.FCPS_EMERGENCY_PAGE
 
     Request timeout defined in settings.FCPS_EMERGENCY_TIMEOUT
 
     """
     fcps_page = settings.FCPS_EMERGENCY_PAGE
-    csl_page = settings.CSL_STATUS_PAGE
     announcements = []
 
     if settings.EMERGENCY_MESSAGE:
         return True, settings.EMERGENCY_MESSAGE
-    if not fcps_page or not csl_page:
+    if not fcps_page:
         return None, None
 
     timeout = settings.EMERGENCY_TIMEOUT
@@ -67,44 +66,10 @@ def check_emerg():
 
         announcements.append({"title": f"<a target='_blank' href=\"{get_domain_name(fcps_page)}\">{title}</a>", "body": body})
 
-    try:
-        r = requests.get(csl_page, timeout=timeout)
-    except requests.exceptions.Timeout:
-        pass
-
-    try:
-        csl_status = json.loads(r.text)
-    except json.decoder.JSONDecodeError:
-        return False, None
-
-    for system in csl_status["systems"]:
-        if system["status"] != "ok":
-            status = True
-            issues = system["unresolvedIssues"]
-            for issue in issues:
-                desc = requests.get(issue["permalink"], timeout=timeout).text
-                soup = BeautifulSoup(desc, "html.parser")
-
-                text = soup.find_all(["p", "hr"])
-                desc = text[2 : len(text) - 5]
-                a = {
-                    "title": f"<a target='_blank' href=\"{get_domain_name(csl_page)}\">{issue['title']}</a>",
-                    "body": "".join(d.prettify() for d in desc),
-                }
-                if a not in announcements and issue["severity"] != "notice":
-                    announcements.append(a)
-
-    # Not needed due to the filtering of "p" elements, but as a backup:
-    bad_text = [
-        '<p><strong class="bold">© tjCSL Status, 2022</strong>&nbsp; • &nbsp; <a href="#">Back to top</a></p>',
-        "<p>We continuously monitor the status of our services and if there are any interruptions, a note will be posted here.</p>",
-    ]
-
     message = "".join(
         [
             f"<h3><i class='fas fa-exclamation-triangle'></i>&nbsp; {announcement['title']}</h3><hr />{announcement['body']}\n"
             for announcement in announcements
-            if announcement not in bad_text
         ]
     )
 
@@ -117,12 +82,12 @@ def get_emerg_result(*, custom_logger=None):
         custom_logger = logger
 
     status, message = check_emerg()
-    custom_logger.debug("Fetched emergency info from FCPS and CSL status")
+    custom_logger.debug("Fetched emergency info from FCPS")
     return {"status": status, "message": message}
 
 
 def get_emerg():
-    """Get the cached FCPS emergency page and CSL status page, or check it again.
+    """Get the cached FCPS emergency page, or check it again.
 
     Timeout defined in settings.CACHE_AGE["emerg"]
 
@@ -155,3 +120,36 @@ def update_emerg_cache(*, custom_logger=None) -> None:
     key = f"emerg:{timezone.localdate()}"
     result = get_emerg_result(custom_logger=custom_logger)
     cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])
+
+
+def get_csl_status() -> Tuple[str, bool]:
+    """Get the cached status of the TJCSL status page.
+
+    Returns:
+        Tuple with a string consisting of the aggregate status
+        of the TJ computer systems lab and a bool indicating whether
+        the status cache was updated
+
+        The string of the tuple will be one of the following: "error" (parse error), "operational", "downtime", "degraded", "maintenance"
+    """
+
+    status = cache.get("emerg:csl_status")
+    updated = False
+
+    if not status:
+        response = requests.get(settings.CSL_STATUS_PAGE)
+        if response.status_code != 200:
+            status = "error"
+            logger.error("Could not fetch status page")
+
+        else:
+            try:
+                status = response.json()["data"]["attributes"]["aggregate_state"]
+                updated = True
+            except KeyError as e:
+                status = "error"
+                logger.error("Unexpected status page JSON format. %s", e)
+
+        cache.set("emerg:csl_status", status, settings.CACHE_AGE["csl_status"])
+
+    return status, updated
