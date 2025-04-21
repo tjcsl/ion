@@ -22,6 +22,7 @@ class PamAuthenticationResult(enum.Enum):
     FAILURE = 0  # Authentication failed
     SUCCESS = 1  # Authentication succeeded
     EXPIRED = -1  # Password expired; needs reset
+    LOCKED = -2 # User locked out due to incorrect attempts
 
 
 class PamAuthenticationBackend:
@@ -80,6 +81,8 @@ class PamAuthenticationBackend:
         else:
             logger.debug("PAM failed to authorize %s", username)
             result = PamAuthenticationResult.FAILURE
+            if "have exhausted maximum number of retries for service" in pam_authenticator.reason.lower():
+                result = PamAuthenticationResult.LOCKED
             if "authentication token is no longer valid" in pam_authenticator.reason.lower():
                 result = PamAuthenticationResult.EXPIRED
                 logger.debug("Password for %s@%s expired, needs reset", username, realm)
@@ -128,6 +131,10 @@ class PamAuthenticationBackend:
         elif result == PamAuthenticationResult.EXPIRED:
             user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             return user
+        elif result == PamAuthenticationResult.LOCKED:
+            if request is not None:
+                request.session['user_locked_out'] = 1
+            return None
         else:
             pam_authenticate_failures.inc()
             return None
