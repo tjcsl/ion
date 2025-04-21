@@ -154,19 +154,23 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
 
         if 'failed_login_attempts' in request.session and request.session['failed_login_attempts'] >= 5:
             if 'waiting_period_end' in request.session:
-                minutes = request.session['waiting_period_end_minutes']
-                seconds = request.session['waiting_period_end_seconds']
-                data.update({"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
+                time_until_unlock = request.session['waiting_period_end']
+                now = datetime.now().timestamp()
+                seconds_remaining = int(time_until_unlock - now)
+                minutes, seconds = divmod(seconds_remaining, 60)
+                if minutes < 0:
+                    request.session['failed_login_attempts'] = 0
+                    request.session.pop('waiting_period_end')
+                else:
+                    data.update({"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
             else:
-                time_until_unlock = int((datetime.now() + timedelta(minutes=30)).timestamp())
+                time_until_unlock = int((datetime.now() + timedelta(minutes=1)).timestamp())
 
                 now = datetime.now().timestamp()
                 seconds_remaining = int(time_until_unlock - now)
                 minutes, seconds = divmod(seconds_remaining, 60)
                 
                 request.session['waiting_period_end'] = time_until_unlock
-                request.session['waiting_period_end_minutes'] = minutes
-                request.session['waiting_period_end_seconds'] = seconds
                 data.update({"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
 
         if added_context is not None:
@@ -182,20 +186,7 @@ class LoginView(View):
         """Validate and process the login POST request."""
 
         if 'failed_login_attempts' in request.session and request.session['failed_login_attempts'] >= 5:
-            if 'waiting_period_end' in request.session:
-                now = datetime.now().timestamp()
-                seconds_remaining = int(request.session['waiting_period_end'] - now)
-                minutes, seconds = divmod(seconds_remaining, 60)
-                return index_view(request, added_context={"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."}) 
-
-            time_until_unlock = int((datetime.now() + timedelta(minutes=30)).timestamp())
-
-            now = datetime.now().timestamp()
-            seconds_remaining = int(time_until_unlock - now)
-            minutes, seconds = divmod(seconds_remaining, 60)
-            
-            request.session['waiting_period_end'] = time_until_unlock
-            return index_view(request, added_context={"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
+            return index_view(request)
 
         username = request.POST.get("username", "")
 
