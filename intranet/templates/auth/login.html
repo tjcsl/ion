@@ -32,9 +32,17 @@
 
 {% block js %}
     {{ block.super }}
-    {% if show_recaptcha %}
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    {% endif %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onRecaptchaSubmitInvisible(token) {
+            var form = document.forms['auth_form'];
+            if (form) {
+                form.submit();
+            } else {
+                console.error("Could not find form 'auth_form' to submit.");
+            }
+        }
+    </script>
     <script src="{% static 'js/schedule.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/vendor/spin.min.js' %}"></script>
@@ -106,16 +114,23 @@
                                 <i class="fas fa-question-circle"></i>
                                 <span class="tooltiptext">{{ field.help_text }}</span>
                             </div>
-                            {% comment %} <span class="help-text" style="font-size: 10px; color: grey;">{{ field.help_text }}</span> {% endcomment %}
                         {% endif %}
                         <br>
                     {% endif %}
                     {% endfor %}
                     <div id="username-warning"></div>
                     {% if show_recaptcha %}
-                        <div class="g-recaptcha" data-sitekey= settings.RECAPTCHA_SITE_KEY data-action="LOGIN"></div>
+                        <div class="g-recaptcha" data-sitekey="{{ recaptcha_checkbox_site_key }}"></div>
+                        <input type="submit" value="Login">
+                    {% else %}
+                        <button
+                            class="g-recaptcha"
+                            data-sitekey="{{ recaptcha_invisible_site_key }}"
+                            data-callback="onRecaptchaSubmitInvisible"
+                            data-size="invisible"
+                            type="submit"
+                        >Login</button>
                     {% endif %}
-                    <input type="submit" value="Login">
                     <div class='spinner-container'></div>
                     {% for field in auth_form %}
                     {% if field.name == "trust_device" %}

@@ -38,6 +38,10 @@ from .helpers import change_password
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
 
+RECAPTCHA_CHECKBOX_SITE_KEY = settings.RECAPTCHA_CHECKBOX_SITE_KEY
+RECAPTCHA_CHECKBOX_SECRET_KEY = settings.RECAPTCHA_CHECKBOX_SECRET_KEY
+RECAPTCHA_INVISIBLE_SITE_KEY = settings.RECAPTCHA_INVISIBLE_SITE_KEY
+RECAPTCHA_INVISIBLE_SECRET_KEY = settings.RECAPTCHA_INVISIBLE_SECRET_KEY
 
 def log_auth(request, success):
     if "HTTP_X_REAL_IP" in request.META:
@@ -136,6 +140,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
 
         sports_events, school_events = get_week_sports_school_events()
 
+        show_checkbox_captcha = is_suspected_bot(request)
+
         data = {
             "auth_form": auth_form,
             "request": request,
@@ -149,16 +155,15 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "school_events": school_events,
             "should_not_index_page": has_next_page,
             "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= timezone.now().date() <= settings.TJSTAR_DATE,
+            "show_checkbox_captcha": show_checkbox_captcha,
+            "recaptcha_checkbox_site_key": RECAPTCHA_CHECKBOX_SITE_KEY,
+            "recaptcha_invisible_site_key": RECAPTCHA_INVISIBLE_SITE_KEY,
         }        
         schedule = schedule_context(request)
         data.update(schedule)
         if added_context is not None:
             data.update(added_context)
-        data["show_recaptcha"] = is_suspected_bot(request)
-        data["recaptcha_site_key"] = RECAPTCHA_SITE_KEY
         return render(request, "auth/login.html", data)
-RECAPTCHA_SITE_KEY = settings.RECAPTCHA_SITE_KEY
-RECAPTCHA_SECRET_KEY = settings.RECAPTCHA_SECRET_KEY
 def is_suspected_bot(request):
     return request.session.get("failed_login_attempts", 0) >= 3
 class LoginView(View):
@@ -178,35 +183,50 @@ class LoginView(View):
             return index_view(request, added_context={"auth_message": "Your username format is incorrect."})
 
         form = AuthenticateForm(data=request.POST)
+        recaptcha_response = request.POST.get("g-recaptcha-response")
+        captcha_was_required = is_suspected_bot(request)
+        if not recaptcha_response:
+             logger.warning(f"Login attempt for {username} missing reCAPTCHA token. Checkbox expected: {captcha_was_required}.")
+             return index_view(
+                    request,
+                    auth_form=form,
+                    added_context={"auth_message": "reCAPTCHA verification failed. Please try again or ensure JavaScript is enabled."},
+             )
 
+
+        secret_key_to_use = RECAPTCHA_CHECKBOX_SECRET_KEY if captcha_was_required else RECAPTCHA_INVISIBLE_SECRET_KEY
+
+        try:
+            r = requests.post(
+                "https://www.google.com/recaptcha/api/siteverify",
+                data={
+                    "secret": secret_key_to_use,
+                    "response": recaptcha_response,
+                    "remoteip": request.META.get("REMOTE_ADDR"),
+                },
+                timeout=10
+            )
+            r.raise_for_status()
+            result = r.json()
+
+            if not result.get("success"):
+                logger.warning(f"reCAPTCHA verification failed for {username}. Result: {result.get('error-codes')}")
+                return index_view(
+                    request,
+                    auth_form=form,
+                    added_context={"auth_message": "reCAPTCHA verification failed. Please try again."},
+                )
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Could not verify reCAPTCHA for {username} due to network error: {e}")
+            return index_view(
+                request,
+                auth_form=form,
+                added_context={"auth_message": "Could not verify your request. Please try again later."},
+            )
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
         else:
             logger.warning("No cookie support detected! This could cause problems.")
-        if is_suspected_bot(request):
-            recaptcha_response = request.POST.get("g-recaptcha-response")
-            if not recaptcha_response:
-                return index_view(
-                    request,
-                    auth_form=form,
-                    added_context={"auth_message": "Please complete the reCAPTCHA."},
-                )
-            r = requests.post(
-                "https://www.google.com/recaptcha/api/siteverify",
-                data={
-                    "secret": RECAPTCHA_SECRET_KEY,
-                    "response": recaptcha_response,
-                    "remoteip": request.META.get("REMOTE_ADDR"),
-                },
-            )
-            result = r.json()
-            if not result.get("success"):
-                return index_view(
-                    request,
-                    auth_form=form,
-                    added_context={"auth_message": "reCAPTCHA failed. Please try again."},
-                )
-
         if form.is_valid():
             reset_user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
             if form.get_user() == reset_user:
