@@ -152,7 +152,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         schedule = schedule_context(request)
         data.update(schedule)
 
-        if 'failed_login_attempts' in request.session and request.session['failed_login_attempts'] >= 5:
+        if 'failed_login_attempts' in request.session and request.session['failed_login_attempts'] >= settings.MAX_LOGIN_FAILURES:
             if 'waiting_period_end' in request.session:
                 time_until_unlock = request.session['waiting_period_end']
                 now = datetime.now().timestamp()
@@ -164,7 +164,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
                 else:
                     data.update({"auth_message": f"Your account is temporarily locked due to too many failed login attempts. Please try again in {minutes} minutes and {seconds} seconds."})
             else:
-                time_until_unlock = int((datetime.now() + timedelta(minutes=1)).timestamp())
+                time_until_unlock = int((datetime.now() + timedelta(minutes=settings.LOCK_OUT_MINUTES)).timestamp())
 
                 now = datetime.now().timestamp()
                 seconds_remaining = int(time_until_unlock - now)

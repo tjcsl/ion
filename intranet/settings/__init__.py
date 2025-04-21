@@ -418,6 +418,9 @@ AUTHENTICATION_BACKENDS = [
 if not PRODUCTION:
     AUTHENTICATION_BACKENDS.remove("intranet.apps.auth.backends.PamAuthenticationBackend")
 
+LOCK_OUT_MINUTES = 30
+MAX_LOGIN_FAILURES = 5
+
 # Default to Argon2, see https://docs.djangoproject.com/en/dev/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
