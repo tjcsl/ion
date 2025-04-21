@@ -63,7 +63,7 @@ class ClubAnnouncementForm(forms.ModelForm):
 
     class Meta:
         model = Announcement
-        fields = ["activity", "title", "content", "expiration_date", "notify_post"]
+        fields = ["activity", "title", "content", "expiration_date", "notify_post", "public"]
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
         }
@@ -79,7 +79,7 @@ class ClubAnnouncementEditForm(forms.ModelForm):
 
     class Meta:
         model = Announcement
-        fields = ["title", "content", "expiration_date"]
+        fields = ["title", "content", "expiration_date", "public"]
         help_texts = {
             "expiration_date": "By default, announcements expire after two weeks. Choose the shortest time necessary.",
         }

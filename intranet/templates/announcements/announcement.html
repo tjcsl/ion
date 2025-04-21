@@ -48,7 +48,7 @@
         {% endif %}
 
         <div class="announcement-icon-wrapper">
-            {% if announcement.is_club_announcement %}
+            {% if announcement.is_club_announcement and can_subscribe %}
                 {% if request.user in announcement.activity.subscribers.all %}
                     {% if user_sponsor_obj not in announcement.activity.sponsors.all and request.user not in announcement.activity.club_sponsors.all %}
                       <a class="button small-button unsubscribe-button"

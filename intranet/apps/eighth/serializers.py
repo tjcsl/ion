@@ -124,6 +124,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         name_with_flags_for_user = prefix + (middle if restricted_for_user else "") + suffix
 
         is_activity_sticky = scheduled_activity.is_activity_sticky()
+        subscriptions_enabled = activity.is_subscribable_for_user(request.user) if request is not None else activity.subscriptions_enabled
 
         activity_info = {
             "id": activity.id,
@@ -140,7 +141,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "cancelled": scheduled_activity.cancelled,
             "favorited": activity.id in favorited_activities,
             "subscribed_to": activity.id in subscribed_activities,
-            "subscriptions_enabled": activity.subscriptions_enabled,
+            "subscriptions_enabled": subscriptions_enabled,
             "roster": {
                 "count": 0,
                 "capacity": 0,
