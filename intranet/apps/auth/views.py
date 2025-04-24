@@ -38,11 +38,18 @@ from .helpers import change_password
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
 
-RECAPTCHA_CHECKBOX_SITE_KEY = settings.RECAPTCHA_CHECKBOX_SITE_KEY
-RECAPTCHA_CHECKBOX_SECRET_KEY = settings.RECAPTCHA_CHECKBOX_SECRET_KEY
-RECAPTCHA_INVISIBLE_SITE_KEY = settings.RECAPTCHA_INVISIBLE_SITE_KEY
-RECAPTCHA_INVISIBLE_SECRET_KEY = settings.RECAPTCHA_INVISIBLE_SECRET_KEY
+RECAPTCHA_CHECKBOX_SITE_KEY = "6LdfuB4rAAAAAE1GH-_UHRUs7sdJgubF3zs6A3G9"
+RECAPTCHA_CHECKBOX_SECRET_KEY = "6LdfuB4rAAAAAPmSnTQnVuo7k55hcrp_rXQh46QU"
+RECAPTCHA_INVISIBLE_SITE_KEY = "6LfRLSMrAAAAACyTFuw-9PCbz5QL4gkPBqAEXGd2"
+RECAPTCHA_INVISIBLE_SECRET_KEY = "6LfRLSMrAAAAAN4doo03GxKx5Mfyd_u_PZi9GARX"
+def user_ip(request):
+    if "HTTP_X_REAL_IP" in request.META:
+        ip = request.META["HTTP_X_REAL_IP"]
+    else:
+        ip = request.META.get("REMOTE_ADDR", "")
 
+    if isinstance(ip, set):
+        ip = ip[0]
 def log_auth(request, success):
     if "HTTP_X_REAL_IP" in request.META:
         ip = request.META["HTTP_X_REAL_IP"]
