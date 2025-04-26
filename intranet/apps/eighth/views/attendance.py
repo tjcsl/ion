@@ -1,6 +1,7 @@
 import csv
 import io
 import logging
+from datetime import time as tm
 from html import escape
 
 from cacheops import invalidate_obj
@@ -25,12 +26,14 @@ from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, 
 from ....utils.date import get_date_range_this_year
 from ...auth.decorators import attendance_taker_required, deny_restricted, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
+from ...schedule.models import Day
 from ...schedule.views import decode_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
 from ..tasks import email_scheduled_activity_students_task
 from ..utils import get_start_date
+from .signup import shift_time
 
 logger = logging.getLogger(__name__)
 
@@ -304,12 +307,20 @@ def take_attendance_view(request, scheduled_activity_id):
                 status=403,
             )
 
+        if "att_code_mode" in request.POST:
+            selected_mode = int(request.POST["att_code_mode"])
+            if scheduled_activity.code_mode != selected_mode:
+                scheduled_activity.set_code_mode(selected_mode)
+                redirect_url = reverse(url_name, args=[scheduled_activity.id])
+                return redirect(redirect_url)
+
         if not scheduled_activity.block.locked and request.user.is_eighth_admin:
             messages.success(request, "Note: Taking attendance on an unlocked block.")
 
-        present_user_ids = list(request.POST.keys())
+        present_user_ids = list(request.POST.keys())  # list of member.ids checked off
 
         if request.FILES.get("attendance"):
+            # csv attendance
             try:
                 csv_file = request.FILES["attendance"].read().decode("utf-8")
                 data = csv.DictReader(io.StringIO(csv_file))
@@ -333,6 +344,9 @@ def take_attendance_view(request, scheduled_activity_id):
                     )
             except (csv.Error, ValueError, KeyError, IndexError):
                 messages.error(request, "Could not interpret file. Did you upload a Google Meet attendance report without modification?")
+
+        if "att_code_mode" in present_user_ids:
+            present_user_ids.remove("att_code_mode")
 
         csrf = "csrfmiddlewaretoken"
         if csrf in present_user_ids:
@@ -416,6 +430,7 @@ def take_attendance_view(request, scheduled_activity_id):
             "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin),
             "show_icons": (scheduled_activity.block.locked and scheduled_activity.block.attendance_locked() and not request.user.is_eighth_admin),
             "bbcu_script": settings.BBCU_SCRIPT,
+            "is_sponsor": scheduled_activity.user_is_sponsor(request.user),
         }
 
         if request.user.is_eighth_admin:
@@ -755,3 +770,75 @@ def email_students_view(request, scheduled_activity_id):
     context = {"scheduled_activity": scheduled_activity}
 
     return render(request, "eighth/email_students.html", context)
+
+
+@login_required
+@deny_restricted
+def student_attendance_view(request):
+    blocks = EighthBlock.objects.get_blocks_today()
+    attc = None
+    attf = None
+    attimef = None
+    atteachf = None
+    if request.method == "POST":
+        now = timezone.localtime()
+        dayblks = Day.objects.select_related("day_type").get(date=now).day_type.blocks.all()
+        for blk in blocks:
+            blklet = blk.block_letter
+            code = request.POST.get(blklet)
+            if code is None:
+                continue
+            act = request.user.eighthscheduledactivity_set.get(block=blk)
+            if act.get_code_mode_display() == "Auto":
+                dayblk = None
+                for bk in dayblks:
+                    name = bk.name
+                    if name is None:
+                        continue
+                    if blklet in name and "8" in name:
+                        dayblk = bk
+                        break
+                if dayblk is None:
+                    attimef = blk
+                    break
+                start_time = shift_time(tm(hour=dayblk.start.hour, minute=dayblk.start.minute), -20)
+                end_time = shift_time(tm(hour=dayblk.end.hour, minute=dayblk.end.minute), 20)
+                if not start_time <= now.time() <= end_time:
+                    attimef = blk
+                    break
+            elif act.get_code_mode_display() == "Closed":
+                atteachf = blk
+                break
+            code = code.upper()
+            if code == act.attendance_code:
+                present = EighthSignup.objects.filter(scheduled_activity=act, user__in=[request.user.id])
+                present.update(was_absent=False)
+                attc = blk
+                for s in present:
+                    invalidate_obj(s)
+                act.attendance_taken = True
+                act.save()
+                invalidate_obj(act)
+                break
+            else:
+                attf = blk
+                break
+    if blocks:
+        sch_acts = []
+        for b in blocks:
+            try:
+                act = request.user.eighthscheduledactivity_set.get(block=b)
+                if act.activity.name != "z - Hybrid Sticky":
+                    sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
+
+            except EighthScheduledActivity.DoesNotExist:
+                sch_acts.append([b, None])
+        response = render(
+            request,
+            "eighth/student_submit_attendance.html",
+            context={"sch_acts": sch_acts, "attc": attc, "attf": attf, "attimef": attimef, "atteachf": atteachf},
+        )
+    else:
+        messages.error(request, "There are no eighth period blocks scheduled today.")
+        response = redirect("index")
+    return response

@@ -378,13 +378,7 @@
                             {% if request.user.is_eighth_admin %}
                             <tr>
                                 <td colspan="5">
-                                    {% if not scheduled_activity.block.locked %}
-                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
-                                    {% elif scheduled_activity.block.attendance_locked %}
-                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
-                                    {% else %}
-                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
-                                    {% endif %}
+                                    <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
                                 </td>
                             </tr>
                             {% endif %}
@@ -445,6 +439,29 @@
                             {% endfor %}
                         </tbody>
                         <tfoot class="print-hide">
+                            <tr>
+                                <td colspan="5">
+                                    <br>
+                                    <b>Attendance code: </b><b style="font-family: 'Fira Code', 'Consolas', monospace; font-size: 24px;">{{ scheduled_activity.attendance_code }}</b>
+                                    <p>Share this code with students present at this activity.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                            <td colspan="5">
+                            <b>Select Mode:</b>
+                            <form id="mode-form" method="post">
+                                {% csrf_token %}
+                                {% for value, label in scheduled_activity.mode_choices %}
+                                    <label>
+                                        <input type="radio" name="att_code_mode" value="{{ value }}"
+                                               {% if scheduled_activity.code_mode == value %}checked{% endif %}>
+                                        {{ label }}
+                                    </label>
+                                {% endfor %}
+                            </form>
+                            &nbsp;&nbsp;<button type="submit">Save</button>
+                            </td>
+                            </tr>
                             <tr>
                                 <td colspan="5">
                                     <br>

@@ -350,10 +350,15 @@
                         <% } %>
                     <%}%>
                 <%}%>
-
+                <br>
+                {% endverbatim %}
+                {% if real_user.is_student and attopen and not real_user.is_eighth_admin%}
+                    <a class="button" href="{% url 'student_attendance' %}">Enter Attendance Code for Today's Blocks</a>
+                {% endif %}
                 <div class="error-feedback">
                 </div>
             </div>
+            {% verbatim %}
             <% if (!showingRosterButton) { %>
                 <% if(isEighthAdmin) { %>
                     <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">

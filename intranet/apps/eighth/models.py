@@ -1,6 +1,7 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import datetime
 import logging
+import random
 import string
 from collections.abc import Sequence
 from typing import Collection, Iterable, List, Optional, Union
@@ -822,6 +823,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         attendance_taken
             Whether the :class:`EighthSponsor` for the scheduled
             :class:`EighthActivity` has taken attendance yet
+        attendance_code
+            Random 6-character code of digits and uppercase letters to check attendance
+            Distinct for each 8th activity-block
+        code_mode
+            Whether the activity is automatically enabling/disabling the attendance code based on the daily schedule
+            Is an integer:
+            0 = Automatic; 1 = Open; 2 = Closed
+            default = 0
         special
             Whether this scheduled instance of the activity is special. If
             not set, falls back on the EighthActivity's special setting.
@@ -841,6 +850,17 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         related_name="sticky_scheduledactivity_set",
         blank=True,
     )
+
+    def random_code():
+        return "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+    attendance_code = models.CharField(max_length=6, default=random_code)
+    mode_choices = [
+        (0, "Auto"),
+        (1, "Open"),
+        (2, "Closed"),
+    ]
+    code_mode = models.IntegerField(choices=mode_choices, default=0)
 
     admin_comments = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=1000, blank=True)
@@ -1194,6 +1214,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 emails=unstickied_students,
                 bcc=True,
             )
+
+    def set_code_mode(self, mode):
+        self.code_mode = mode
+        self.save(update_fields=["code_mode"])
 
     @transaction.atomic  # This MUST be run in a transaction. Do NOT remove this decorator.
     def add_user(

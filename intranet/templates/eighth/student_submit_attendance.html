@@ -3,7 +3,7 @@
 {% load static %}
 {% load pipeline %}
 
-{% block title %}{{ block.super }} - Eighth Location{% endblock %}
+{% block title %}{{ block.super }} - Submit Attendance{% endblock %}
 
 
 {% block css %}
@@ -24,7 +24,7 @@
 
 {% block main %}
 <div class="primary-content" id="quick-schedule">
-    <h2>Your upcoming eighth periods are:</h2>
+    <h2>Submit attendance for today's eighth periods:</h2>
     <br>
     {% for s in sch_acts %}
     <h3>{{ s.0.hybrid_text }} Block ({{ s.0.date }})</h3>
@@ -37,16 +37,33 @@
             <p><strong>Comments:</strong> {% if s.1.comments %}{{ s.1.comments }}{% else %}None{% endif %}</p>
             <br>
             <p>{{ s.1.activity.description }}</p>
+            <form method="post" action="">
+                {% csrf_token %}
+                <p><strong>Attendance Code: </strong></p>
+                <input
+                  type="text"
+                  id="attendance-code"
+                  name="{{ s.0.block_letter }}"
+                  maxlength="6"
+                  pattern="[A-Za-z0-9]{6}"
+                />
+                <button type="submit">Submit</button>
+            </form>
+            {% if s.0 == attc %}
+            <p style="color: green;">Attendance marked successfully.</p>
+            {% elif s.0 == attimef %}
+            <p style="color: red;">Invalid time. Please fill this out during {{ s.0.block_letter }} block.</p>
+            {% elif s.0 == attf %}
+            <p style="color: red;">Invalid Code.</p>
+            {% elif s.0 == atteachf %}
+            <p style="color: red;">Error. Ask your teacher to open the attendance code.</p>
+            {% endif %}
             {% else %}
             <p>You are not signed up for any activity.</p>
             {% endif %}
         </div>
         <br><br>
     {% endfor %}
-    {% if real_user.is_student and attopen%}
-        <a class="button" href="{% url 'student_attendance' %}">Enter Attendance Code for Today's Blocks</a>
-    {% endif %}
-    <br>
     <a class="button" href="{% url 'index' %}">Return to Dashboard</a>
 </div>
 {% endblock %}
