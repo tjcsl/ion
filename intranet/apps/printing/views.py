@@ -276,41 +276,37 @@ def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
 
 
 def check_page_range(page_range: str, max_pages: int) -> Optional[int]:
-    """Returns the number of pages included in the range, or None if it is an invalid range.
+    """Returns the number of pages included in the range, or None if the range exceeds max_pages.
 
     Args:
-        page_range: The page range as a string, such as "1-5" or "1,2,3".
+        page_range: The page range as a string, such as "1-5" or "1,2,3". It has already been validated as
+            syntantically correct by the form validator.
         max_pages: The number of pages in the submitted document. If the number of pages in the
             given range exceeds this, it will be considered invalid.
 
     Returns:
-        The number of pages in the range, or None if it is an invalid range.
+        The number of pages in the range, or None if it's higher than max_pages.
 
     """
     pages = 0
     try:
-        for single_range in page_range.split(","):  # check all ranges separated by commas
+        for single_range in page_range.split(","):
             if "-" in single_range:
-                if single_range.count("-") > 1:
-                    return None
-
                 range_low, range_high = map(int, single_range.split("-"))
 
-                # check in page range
-                if range_low <= 0 or range_high <= 0 or range_low > max_pages or range_high > max_pages:
-                    return None
-
-                if range_low > range_high:  # check lower bound <= upper bound
+                # Check the page range.
+                if range_low > max_pages or range_high > max_pages:
                     return None
 
                 pages += range_high - range_low + 1
+
             else:
                 single_range = int(single_range)
-                if single_range <= 0 or single_range > max_pages:  # check in page range
+                if single_range > max_pages:  # Check the page range
                     return None
 
                 pages += 1
-    except ValueError:  # catch int parse fail
+    except ValueError:  # Form has been validated, so int parse error shouldn't occur.
         return None
     return pages
 
@@ -413,7 +409,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
 
         if obj.page_range:
             if not range_count:
-                raise InvalidInputPrintingError("You specified an invalid page range.")
+                raise InvalidInputPrintingError("You specified a page range that exceeds the amount of pages in your document.")
             elif range_count > settings.PRINTING_PAGES_LIMIT_TEACHERS and (obj.user.is_teacher or obj.user.is_printing_admin):
                 raise InvalidInputPrintingError(
                     f"You specified a range of {range_count} pages. "
