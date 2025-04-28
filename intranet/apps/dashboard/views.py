@@ -378,7 +378,7 @@ def paginate_announcements_list_raw(
     for c in club_items:
         c.can_subscribe = c.activity.is_subscribable_for_user(request.user)
     for a in items:
-        if a.activity is not None:
+        if isinstance(a, Announcement) and a.activity is not None:
             a.can_subscribe = a.activity.is_subscribable_for_user(request.user)
 
     return RawPaginationData(
