@@ -22,7 +22,7 @@ class PamAuthenticationResult(enum.Enum):
     FAILURE = 0  # Authentication failed
     SUCCESS = 1  # Authentication succeeded
     EXPIRED = -1  # Password expired; needs reset
-    LOCKED = -2 # User locked out due to incorrect attempts
+    LOCKED = -2  # User locked out due to incorrect attempts
 
 
 class PamAuthenticationBackend:
@@ -133,7 +133,7 @@ class PamAuthenticationBackend:
             return user
         elif result == PamAuthenticationResult.LOCKED:
             if request is not None:
-                request.session['user_locked_out'] = 1
+                request.session["user_locked_out"] = 1
             return None
         else:
             pam_authenticate_failures.inc()

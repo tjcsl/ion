@@ -152,9 +152,9 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         schedule = schedule_context(request)
         data.update(schedule)
 
-        if 'user_locked_out' in request.session and request.session['user_locked_out'] == 1:
-            data.update({"auth_message":"You are locked out due to too many incorrect logins. Please try again later."})
-            request.session.pop('user_locked_out')
+        if "user_locked_out" in request.session and request.session["user_locked_out"] == 1:
+            data.update({"auth_message": "You are locked out due to too many incorrect logins. Please try again later."})
+            request.session.pop("user_locked_out")
 
         if added_context is not None:
             data.update(added_context)
