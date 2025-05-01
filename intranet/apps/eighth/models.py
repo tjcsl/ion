@@ -1,7 +1,7 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import datetime
 import logging
-import random
+import secrets
 import string
 from collections.abc import Sequence
 from typing import Collection, Iterable, List, Optional, Union
@@ -795,6 +795,10 @@ class EighthScheduledActivityManager(Manager):
         return sched_acts
 
 
+def random_code():
+    return "".join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+
+
 class EighthScheduledActivity(AbstractBaseEighthModel):
     r"""Represents the relationship between an activity and a block in which it has been scheduled.
     Attributes:
@@ -850,9 +854,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         related_name="sticky_scheduledactivity_set",
         blank=True,
     )
-
-    def random_code():
-        return "".join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
     attendance_code = models.CharField(max_length=6, default=random_code)
     mode_choices = [

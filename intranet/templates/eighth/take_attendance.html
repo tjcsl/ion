@@ -23,6 +23,7 @@
     <script src="{% static 'js/eighth/attendance.js' %}"></script>
     <script src="{% static 'js/eighth/ui_init.js' %}"></script>
     <script src="{% static 'js/eighth/user_link.js' %}"></script>
+    <script src="{% static 'vendor/qrcode.min.js' %}"></script>
     {% if wizard %}
     <script>
     $(function() {
@@ -439,29 +440,81 @@
                             {% endfor %}
                         </tbody>
                         <tfoot class="print-hide">
+                            {% if not no_edit_perm and not edit_perm_cancelled %}
                             <tr>
                                 <td colspan="5">
                                     <br>
                                     <b>Attendance code: </b><b style="font-family: 'Fira Code', 'Consolas', monospace; font-size: 24px;">{{ scheduled_activity.attendance_code }}</b>
-                                    <p>Share this code with students present at this activity.</p>
+                                    <p>Share this code with students present at this activity. Alternatively, share the QR code.</p>
+                                    <p>They should input this code into the attendance
+                                        form on Ion, accessible from the "Eighth" page.</p>
                                 </td>
                             </tr>
                             <tr>
-                            <td colspan="5">
-                            <b>Select Mode:</b>
-                            <form id="mode-form" method="post">
-                                {% csrf_token %}
-                                {% for value, label in scheduled_activity.mode_choices %}
-                                    <label>
-                                        <input type="radio" name="att_code_mode" value="{{ value }}"
-                                               {% if scheduled_activity.code_mode == value %}checked{% endif %}>
-                                        {{ label }}
-                                    </label>
-                                {% endfor %}
-                            </form>
-                            &nbsp;&nbsp;<button type="submit">Save</button>
-                            </td>
+                                <td colspan="5">
+                                <b>Select Mode:</b>
+                                <form id="mode-form" method="post">
+                                    {% csrf_token %}
+                                    {% for value, label in scheduled_activity.mode_choices %}
+                                        <label>
+                                            <input type="radio" name="att_code_mode" value="{{ value }}"
+                                                   {% if scheduled_activity.code_mode == value %}checked{% endif %}>
+                                            {{ label }}
+                                        </label>
+                                    {% endfor %}
+                                </form>
+                                &nbsp;&nbsp;<button type="submit">Save</button>
+
+                                <div class="activity-card">
+                                    <button type="button" onclick="showQRModal('{{ qrurl }}')">
+                                        Show QR Code
+                                    </button>
+                                </div>
+
+                                <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
+                                    background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
+
+                                    <div style="background:#fff; padding:20px; border-radius:8px; text-align:center; position:relative;">
+                                        <div style="display: flex; flex-direction: row; align-items: center; gap: 40px;">
+
+                                        <div style="font-family: 'Fira Code', 'Consolas', monospace; font-size: 190px;">
+                                            {{ scheduled_activity.attendance_code }}
+                                        </div>
+
+                                        <div id="qrImageContainer" style="max-width:55000px; max-height:550px;"></div>
+                                        </div>
+
+                                        <br>
+                                        <button type="button" onclick="closeQRModal()">Close</button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    function showQRModal(qrUrl) {
+                                      event.preventDefault();
+
+                                      const modal = document.getElementById('qrModal');
+                                      const qrContainer = document.getElementById('qrImageContainer');
+
+                                      qrContainer.innerHTML = '';
+
+                                      new QRCode(qrContainer, {
+                                        text: qrUrl,
+                                        width: 550,
+                                        height: 550,
+                                        correctLevel: QRCode.CorrectLevel.H
+                                      });
+
+                                      modal.style.display = 'flex';
+                                    }
+
+                                    function closeQRModal() {
+                                      document.getElementById('qrModal').style.display = 'none';
+                                    }
+                                  </script>
+                                </td>
                             </tr>
+                            {% endif %}
                             <tr>
                                 <td colspan="5">
                                     <br>

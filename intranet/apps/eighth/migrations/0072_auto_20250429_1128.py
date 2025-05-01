@@ -26,12 +26,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='eighthscheduledactivity',
             name='attendance_code',
-            field=models.CharField(default=intranet.apps.eighth.models.EighthScheduledActivity.random_code, max_length=6),
+            field=models.CharField(default=intranet.apps.eighth.models.random_code, max_length=6),
         ),
         migrations.AddField(
             model_name='historicaleighthscheduledactivity',
             name='attendance_code',
-            field=models.CharField(default=intranet.apps.eighth.models.EighthScheduledActivity.random_code, max_length=6),
+            field=models.CharField(default=intranet.apps.eighth.models.random_code, max_length=6),
         ),
         migrations.RunPython(generate_attendance_codes, reverse_code=migrations.RunPython.noop),
         migrations.AddField(

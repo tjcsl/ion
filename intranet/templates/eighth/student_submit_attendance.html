@@ -37,6 +37,9 @@
             <p><strong>Comments:</strong> {% if s.1.comments %}{{ s.1.comments }}{% else %}None{% endif %}</p>
             <br>
             <p>{{ s.1.activity.description }}</p>
+            {% if s.0 in att_marked%}
+            <p style="color: green;">Attendance marked.</p>
+            {% endif %}
             <form method="post" action="">
                 {% csrf_token %}
                 <p><strong>Attendance Code: </strong></p>
