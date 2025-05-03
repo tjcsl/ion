@@ -9,7 +9,7 @@ from typing import Any, TypeGuard, TypeVar
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Page, Paginator
-from django.db.models import QuerySet
+from django.db.models import Q, QuerySet
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -684,8 +684,17 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
 
         context.update({"awaiting_teacher": awaiting_teacher, "awaiting_approval": awaiting_approval})
 
-    self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user).this_year()
+    self_awaiting_teacher = (
+        AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user)
+        .exclude(Q(teachers_rejected=request.user) | Q(teachers_approved=request.user))
+        .this_year()
+    )
     context.update({"self_awaiting_teacher": self_awaiting_teacher})
+
+    already_teacher_approved = AnnouncementRequest.objects.filter(
+        posted=None, rejected=False, teachers_requested=request.user, teachers_approved=request.user
+    )
+    context.update({"already_teacher_approved": already_teacher_approved})
 
     if show_welcome:
         return render(request, "welcome/student.html", context)
