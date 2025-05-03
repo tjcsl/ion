@@ -61,7 +61,7 @@ TJSTAR_DATE = datetime.date(end_school_year,
 TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
 
 # Senior Destinations Banner
-ENABLE_SENIOR_DESTS_BANNER = True
+ENABLE_SENIOR_DESTS_BANNER = False
 SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue form is out! Please submit your " \
     "senior destinations, quotes, and superlatives to the form attached below by May 2"
 SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
