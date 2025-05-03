@@ -288,6 +288,7 @@ class AnnouncementRequest(models.Model):
 
     teachers_requested = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=False, related_name="teachers_requested")
     teachers_approved = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="teachers_approved")
+    teachers_rejected = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="teachers_rejected")
 
     posted = models.ForeignKey(Announcement, null=True, blank=True, on_delete=models.CASCADE)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name="posted_by", on_delete=set_historical_user)

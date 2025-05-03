@@ -201,8 +201,9 @@
                 </div>
             {% endif %}
         {% endif %}
-        {% if self_awaiting_teacher %}
+        {% if self_awaiting_teacher or already_teacher_approved %}
             <div class="announcement announcement-meta">
+                {% if self_awaiting_teacher %}
                 <h3>
                     <i class="fas fa-exclamation-circle" style="color: red"></i> There {% if self_awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ self_awaiting_teacher|length }} announcement requests{% endif %} waiting for your approval
                 </h3>
@@ -213,6 +214,19 @@
                 </ul>
                 <br>
                 Click on the link{{ self_awaiting_teacher|length|pluralize }} above to approve or reject {% if self_awaiting_teacher|length == 1 %}this announcement{% else %}these announcements{% endif %}.
+                {% endif %}
+                {% if already_teacher_approved %}
+                    {% if self_awaiting_teacher %}<br>{% endif %}
+                    <h3>
+                    <i class="fas fa-info-circle"></i>
+                    There {{ already_teacher_approved|length|pluralize:"is,are" }} {{ already_teacher_approved|length }} announcement request{{ already_teacher_approved|length|pluralize }} you have approved and {{ already_teacher_approved|length|pluralize:"is,are" }} pending admin approval
+                    </h3>
+                    <ul>
+                        {% for req in already_teacher_approved %}
+                            <li>{{ req }} -- requested by {{ req.user.full_name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
         {% endif %}
 
