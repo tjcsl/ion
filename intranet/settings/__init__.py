@@ -919,6 +919,9 @@ BUS_PAGE_CHANGEOVER_HOUR = 12
 # Age (in days) of a lost and found entry until it is hidden
 LOSTFOUND_EXPIRATION = 180
 
+# How many hours till a verification email expires.
+UNVERIFIED_EMAIL_EXPIRE_HOURS = 12
+
 # Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
 NONLOGGABLE_PATH_ENDINGS = [".png", ".jpg", ".jpeg", ".gif", ".css", ".js", ".ico", "jsi18n/"]
@@ -960,6 +963,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(day_of_month=1, hour=1),
         "args": (),
     },
+    "delete-expired-email-links": {
+        "task": "intranet.apps.preferences.tasks.delete_expired_emails",
+        "schedule": celery.schedules.crontab(hour=0, minute=0),
+        "args": (),
+    }
 }
 
 MAINTENANCE_MODE = False
