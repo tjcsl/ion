@@ -31,23 +31,16 @@
                     "uses": "actions/checkout@v2"
                 },
                 {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v5",
-                    "with": {
-                        "python-version": "${{ matrix.python-version }}"
-                    }
+                    "name": "Set up uv",
+                    "uses": "astral-sh/setup-uv@v5"
                 },
                 {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v4",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
+                    "name": "Set up Python ${{ matrix.python-version }}",
+                    "run": "uv python install ${{ matrix.python-version }}"
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "uv sync --group ci --locked"
                 },
                 {
                     "name": "Copy secret.py",
@@ -55,7 +48,7 @@
                 },
                 {
                     "name": "Run pre-commit",
-                    "run": "pre-commit run --all-files"
+                    "run": "uv run pre-commit run --all-files"
                 }
             ]
         },
@@ -78,23 +71,16 @@
                     }
                 },
                 {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v5",
-                    "with": {
-                        "python-version": "${{ matrix.python-version }}"
-                    }
+                    "name": "Set up uv",
+                    "uses": "astral-sh/setup-uv@v5"
                 },
                 {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v4",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
+                    "name": "Set up Python ${{ matrix.python-version }}",
+                    "run": "uv python install ${{ matrix.python-version }}"
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "uv sync --group ci --locked"
                 },
                 {
                     "name": "Copy secret.py",
@@ -102,16 +88,16 @@
                 },
                 {
                     "name": "Regenerate workflow YAML file and check for changes",
-                    "run": "./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py"
+                    "run": "uv run ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py"
                 },
                 {
                     "name": "Check for changes to CI spec",
-                    "run": "./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py"
+                    "run": "uv run ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py"
                 },
                 {
                     "name": "Validate PR commit messages",
                     "if": "github.event_name == 'pull_request'",
-                    "run": "./scripts/validate-commit-messages.py ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+                    "run": "uv run ./scripts/validate-commit-messages.py ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
                 },
                 {
                     "name": "Validate push commit messages",
@@ -119,16 +105,13 @@
                     "run": "git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}"
                 },
                 {
-                    "name": "Install docs dependencies",
-                    "run": "# sphinxcontrib_django imports our django project, so we need the deps\npip install -U -r requirements.txt\ncd docs\npip install -U -r requirements.txt\n"
-                },
-                {
                     "name": "Check docs build up to date",
                     "run": "./scripts/build_ensure_no_changes.sh python3 scripts/build_docs.py"
                 },
                 {
                     "name": "Build docs",
-                    "run": "cd docs\nmake html\n"
+                    "workding_dir": "docs",
+                    "run": "uv run make html"
                 },
                 {
                     "name": "Push docs",
@@ -187,23 +170,16 @@
                     "uses": "actions/checkout@v2"
                 },
                 {
-                    "name": "Set up Python ${{ matrix.python-version }}",
-                    "uses": "actions/setup-python@v5",
-                    "with": {
-                        "python-version": "${{ matrix.python-version }}"
-                    }
+                    "name": "Set up uv",
+                    "uses": "astral-sh/setup-uv@v5"
                 },
                 {
-                    "name": "Set up pip cache",
-                    "uses": "actions/cache@v4",
-                    "with": {
-                        "path": "~/.cache/pip",
-                        "key": "pip-${{ matrix.python-version }}"
-                    }
+                    "name": "Set up Python ${{ matrix.python-version }}",
+                    "run": "uv python install ${{ matrix.python-version }}"
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "uv sync --group ci --locked"
                 },
                 {
                     "name": "Copy secret.py",
@@ -235,24 +211,24 @@
                 {
                     "name": "Run tests (Fork)",
                     "if": "github.repository_owner != 'tjcsl'",
-                    "run": "coverage run -a ./manage.py test --noinput --parallel 4"
+                    "run": "uv run coverage run -a ./manage.py test --noinput --parallel 4"
                 },
                 {
                     "name": "Run tests (PR/Push)",
                     "if": "github.repository_owner == 'tjcsl'",
-                    "run": "coverage run -a ./manage.py test --noinput"
+                    "run": "uv run coverage run -a ./manage.py test --noinput"
                 },
                 {
                     "name": "Check for unmigrated changes",
-                    "run": "coverage run -a ./manage.py makemigrations --noinput --check"
+                    "run": "uv run coverage run -a ./manage.py makemigrations --noinput --check"
                 },
                 {
                     "name": "Migrate database",
-                    "run": "coverage run -a ./manage.py migrate"
+                    "run": "uv run coverage run -a ./manage.py migrate"
                 },
                 {
                     "name": "Collect static files",
-                    "run": "coverage run -a ./manage.py collectstatic --noinput -v 0"
+                    "run": "uv run coverage run -a ./manage.py collectstatic --noinput -v 0"
                 },
                 {
                     "name": "Report coverage to Coveralls",
@@ -264,7 +240,7 @@
                 {
                     "name": "Build coverage XML file",
                     "if": "github.repository_owner == 'tjcsl' && github.event_name != 'pull_request'",
-                    "run": "coverage xml"
+                    "run": "uv run coverage xml"
                 },
                 {
                     "name": "Report coverage to Codacy",

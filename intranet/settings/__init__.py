@@ -3,7 +3,6 @@ import logging
 import os
 import re
 import sys
-from typing import Any, Dict, List, Tuple  # noqa
 
 import celery.schedules
 import pytz
@@ -12,11 +11,7 @@ from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
-from ..utils import helpers  # pylint: disable=wrong-import-position # noqa
-
-if sys.version_info < (3, 5):
-    # Require Python 3.5+
-    raise Exception("Python 3.5 or higher is required.")
+from ..utils import helpers
 
 # Month (1-indexed) after which a new school year begins
 # July = 7
@@ -38,24 +33,24 @@ tjSTAR last updated:       2024-05-03
 
 # When school is scheduled to start and end
 SCHOOL_START_DATE = datetime.date(start_school_year,
-    8, 19  # UPDATE THIS! Value when last updated: August 19, 2024      # noqa: E128
-)                                                                       # noqa: E124
+    8, 19  # UPDATE THIS! Value when last updated: August 19, 2024
+)
 SCHOOL_END_DATE = datetime.date(end_school_year,
-    6, 11  # UPDATE THIS! Value when last updated: June 11, 2025        # noqa: E128
-)                                                                       # noqa: E124
+    6, 11  # UPDATE THIS! Value when last updated: June 11, 2025
+)
 
 # Dates when hoco starts and ends
 HOCO_START_DATE = datetime.date(start_school_year,
-    9, 21  # UPDATE THIS! Value when last updated: September 21, 2024   # noqa: E128
-)                                                                       # noqa: E124
+    9, 21  # UPDATE THIS! Value when last updated: September 21, 2024
+)
 HOCO_END_DATE = datetime.date(start_school_year,
-    9, 29  # UPDATE THIS! Value when last updated: September 29, 2024   # noqa: E128
-)                                                                       # noqa: E124
+    9, 29  # UPDATE THIS! Value when last updated: September 29, 2024
+)
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 21  # UPDATE THIS! Value when last updated: May 21, 2024         # noqa: E128
-)                                                                       # noqa: E124
+    5, 21  # UPDATE THIS! Value when last updated: May 21, 2024
+)
 
 # When to start showing the tjSTAR banner
 TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
