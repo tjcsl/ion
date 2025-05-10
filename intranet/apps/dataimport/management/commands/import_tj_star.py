@@ -68,6 +68,7 @@ class Command(BaseCommand):
                         eighth_block = EighthBlock.objects.get_or_create(
                             date=settings.TJSTAR_DATE,
                             block_letter=f"TJ STAR-{block_letter}",
+                            locked=True,
                         )[0]
 
                         activity_name = f"{lab_1} & {lab_2}" if lab_2 else lab_1

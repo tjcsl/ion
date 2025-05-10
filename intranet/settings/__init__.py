@@ -54,7 +54,7 @@ HOCO_END_DATE = datetime.date(start_school_year,
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 21  # UPDATE THIS! Value when last updated: May 21, 2024         # noqa: E128
+    5, 21  # UPDATE THIS! Value when last updated: May 21, 2025         # noqa: E128
 )                                                                       # noqa: E124
 
 # When to start showing the tjSTAR banner
