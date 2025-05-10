@@ -8,11 +8,11 @@ def generate_attendance_codes(apps, schema_editor):
     HistoricalEighthScheduledActivity = apps.get_model('eighth', 'HistoricalEighthScheduledActivity')
     
     for activity in EighthScheduledActivity.objects.all():
-        activity.attendance_code = intranet.apps.eighth.models.EighthScheduledActivity.random_code()
+        activity.attendance_code = intranet.apps.eighth.models.random_code()
         activity.save(update_fields=['attendance_code'])
     
     for historical_activity in HistoricalEighthScheduledActivity.objects.all():
-        historical_activity.attendance_code = intranet.apps.eighth.models.EighthScheduledActivity.random_code()
+        historical_activity.attendance_code = intranet.apps.eighth.models.random_code()
         historical_activity.save(update_fields=['attendance_code'])
 
 
@@ -43,5 +43,15 @@ class Migration(migrations.Migration):
             model_name='historicaleighthscheduledactivity',
             name='code_mode',
             field=models.IntegerField(choices=[(0, 'Auto'), (1, 'Open'), (2, 'Closed')], default=0),
+        ),
+        migrations.AddField(
+            model_name='eighthsignup',
+            name='attendance_marked',
+            field=models.BooleanField(blank=True, default=False),
+        ),
+        migrations.AddField(
+            model_name='historicaleighthsignup',
+            name='attendance_marked',
+            field=models.BooleanField(blank=True, default=False),
         ),
     ]

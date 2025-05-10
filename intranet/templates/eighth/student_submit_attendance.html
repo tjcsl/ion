@@ -39,7 +39,7 @@
             <p>{{ s.1.activity.description }}</p>
             {% if s.0 in att_marked%}
             <p style="color: green;">Attendance marked.</p>
-            {% endif %}
+            {% else %}
             <form method="post" action="">
                 {% csrf_token %}
                 <p><strong>Attendance Code: </strong></p>
@@ -52,14 +52,9 @@
                 />
                 <button type="submit">Submit</button>
             </form>
-            {% if s.0 == attc %}
-            <p style="color: green;">Attendance marked successfully.</p>
-            {% elif s.0 == attimef %}
-            <p style="color: red;">Invalid time. Please fill this out during {{ s.0.block_letter }} block.</p>
-            {% elif s.0 == attf %}
-            <p style="color: red;">Invalid Code.</p>
-            {% elif s.0 == atteachf %}
-            <p style="color: red;">Error. Ask your teacher to open the attendance code.</p>
+            {% endif %}
+            {% if s.0 == mark_block %}
+            {{ attendance_result|safe }}
             {% endif %}
             {% else %}
             <p>You are not signed up for any activity.</p>

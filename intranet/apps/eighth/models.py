@@ -1728,6 +1728,8 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the pass was accepted
         was_absent
             Whether the student was absent.
+        attendance_marked
+            Whether the student has been marked / filled out attendance.
         absence_acknowledged
             Whether the student has dismissed the absence notification.
         absence_emailed
@@ -1750,6 +1752,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
+    attendance_marked = models.BooleanField(default=False, blank=True)
     absence_acknowledged = models.BooleanField(default=False, blank=True)
     absence_emailed = models.BooleanField(default=False, blank=True)
 
@@ -1839,6 +1842,7 @@ class EighthSignup(AbstractBaseEighthModel):
         """Accepts an eighth period pass for the EighthSignup object."""
         self.was_absent = False
         self.pass_accepted = True
+        self.attendance_marked = True
         self.save(update_fields=["was_absent", "pass_accepted"])
 
     def reject_pass(self):

@@ -254,7 +254,7 @@ def eighth_signup_view(request, block_id=None):
             "activities_list": safe_json(block_info["activities"]),
             "active_block": block,
             "active_block_current_signup": active_block_current_signup,
-            "attopen": attendance_open,
+            "attendance_open": attendance_open,
         }
 
         #######
@@ -508,7 +508,9 @@ def eighth_location(request):
                     attendance_open = True
         except Exception:
             attendance_open = False
-        response = render(request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user, "attopen": attendance_open})
+        response = render(
+            request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user, "attendance_open": attendance_open}
+        )
     else:
         messages.error(request, "There are no eighth period blocks scheduled today.")
         response = redirect("index")

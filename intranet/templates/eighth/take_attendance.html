@@ -466,12 +466,12 @@
                                 &nbsp;&nbsp;<button type="submit">Save</button>
 
                                 <div class="activity-card">
-                                    <button type="button" onclick="showQRModal('{{ qrurl }}')">
+                                    <button type="button" id="show-qr-button">
                                         Show QR Code
                                     </button>
                                 </div>
 
-                                <div id="qrModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
+                                <div id="qr-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
                                     background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
 
                                     <div style="background:#fff; padding:20px; border-radius:8px; text-align:center; position:relative;">
@@ -481,20 +481,33 @@
                                             {{ scheduled_activity.attendance_code }}
                                         </div>
 
-                                        <div id="qrImageContainer" style="max-width:55000px; max-height:550px;"></div>
+                                        <div id="qr-image-container" style="max-width:55000px; max-height:550px;"></div>
                                         </div>
 
                                         <br>
-                                        <button type="button" onclick="closeQRModal()">Close</button>
+                                        <button type="button" id="close-qr-button">Close</button>
                                     </div>
                                 </div>
 
                                 <script>
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                    const show_qr = document.getElementById("show-qr-button");
+                                    const close_qr = document.getElementById("close-qr-button");
+                                    show_qr.addEventListener("click", function (event) {
+                                        event.preventDefault();
+                                        showQRModal('{{ qr_url }}');
+                                        });
+                                    close_qr.addEventListener("click", function (event) {
+                                        event.preventDefault();
+                                        closeQRModal();
+                                        });
+                                    });
+
                                     function showQRModal(qrUrl) {
                                       event.preventDefault();
 
-                                      const modal = document.getElementById('qrModal');
-                                      const qrContainer = document.getElementById('qrImageContainer');
+                                      const modal = document.getElementById('qr-modal');
+                                      const qrContainer = document.getElementById('qr-image-container');
 
                                       qrContainer.innerHTML = '';
 
@@ -509,7 +522,7 @@
                                     }
 
                                     function closeQRModal() {
-                                      document.getElementById('qrModal').style.display = 'none';
+                                      document.getElementById('qr-modal').style.display = 'none';
                                     }
                                   </script>
                                 </td>
