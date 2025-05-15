@@ -215,17 +215,20 @@ h1 {
     align-items: center;
     border-radius: 4px;
     flex-shrink: 1;
-    height: 30px;
+    height: 25px;
     text-decoration: none;
     display: inline-flex;
     vertical-align: middle;
     margin-bottom: 3px;
     margin-right: 10px;
+    padding-left: 3px;
+    padding-right: 3px;
     color: white;
 }
 
 .status-link:hover {
-    background-color: rgba(120, 211, 246, 0.4);
+    background-color: rgba(0, 0, 0, .2);
+    text-decoration: none;
 }
 
 .status-icon {
@@ -235,6 +238,7 @@ h1 {
     text-align: center;
     width: 22px;
     height: 22px;
+    color: white;
 }
 
 .header .username {
@@ -444,6 +448,7 @@ ul.dropdown-menu.absence-notification {
 }
 .user-name {
     margin: 0 3px;
+    color: #fff;
 }
 
 .user-name-eighth {
@@ -510,6 +515,57 @@ ul.dropdown-menu.absence-notification {
 
         a {
             color: $grey;
+        }
+    }
+
+    .nav-status-indicator {
+        margin-top: 10px;
+        display: none; // only show when the nav bar is collapsed
+
+        a {
+            all: unset;
+            margin-left: 5px;
+            display: inline;
+            margin-top: 2px;
+
+            background: linear-gradient(
+                to right,
+                #484848,
+                #939393,
+                #484848
+            );
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: glow-move 4s linear infinite;
+            text-decoration: none;
+        }
+
+        svg > circle {
+            animation: pulse 2.8s infinite;
+            transform-origin: center;
+        }
+
+        @keyframes glow-move {
+          0% {
+              background-position: 200% center;
+          }
+          100% {
+              background-position: -200% center;
+          }
+        }
+
+        @keyframes pulse {
+          0% {
+            transform: scale(0.8);
+          }
+          50% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(0.8);
+          }
         }
     }
 }

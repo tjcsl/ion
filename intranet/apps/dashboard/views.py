@@ -203,6 +203,7 @@ def get_prerender_url(request):
 def get_announcements_list(request, context) -> list[Announcement | Event]:
     """
     An announcement will be shown if:
+
     * It is not expired
 
       * unless ?show_expired=1
@@ -218,6 +219,7 @@ def get_announcements_list(request, context) -> list[Announcement | Event]:
       * ...unless ?show_all=1
 
     An event will be shown if:
+
     * It is not expired
 
       * unless ?show_expired=1
@@ -350,7 +352,6 @@ def paginate_announcements_list_raw(
     Returns:
         A dictionary intended to be merged into the context.
     """
-
     DEFAULT_PAGE_NUM = 1
 
     num = request.GET.get(query_param, "")
@@ -377,7 +378,7 @@ def paginate_announcements_list_raw(
     for c in club_items:
         c.can_subscribe = c.activity.is_subscribable_for_user(request.user)
     for a in items:
-        if a.activity is not None:
+        if isinstance(a, Announcement) and a.activity is not None:
             a.can_subscribe = a.activity.is_subscribable_for_user(request.user)
 
     return RawPaginationData(
@@ -417,6 +418,7 @@ def get_tjstar_mapping(user):
 def add_widgets_context(request, context):
     """
     WIDGETS:
+
     * Eighth signup (STUDENT)
     * Eighth attendance (TEACHER or ADMIN)
     * Enrichment activities (ALL if enrichment activity today)

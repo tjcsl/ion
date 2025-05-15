@@ -119,8 +119,16 @@
                     "run": "git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}"
                 },
                 {
+                    "name": "Install docs dependencies",
+                    "run": "# sphinxcontrib_django imports our django project, so we need the deps\npip install -U -r requirements.txt\ncd docs\npip install -U -r requirements.txt\n"
+                },
+                {
+                    "name": "Check docs build up to date",
+                    "run": "./scripts/build_ensure_no_changes.sh python3 scripts/build_docs.py"
+                },
+                {
                     "name": "Build docs",
-                    "run": "./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh"
+                    "run": "cd docs\nmake html\n"
                 },
                 {
                     "name": "Push docs",

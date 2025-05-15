@@ -54,14 +54,14 @@ HOCO_END_DATE = datetime.date(start_school_year,
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 21  # UPDATE THIS! Value when last updated: May 21, 2024         # noqa: E128
+    5, 21  # UPDATE THIS! Value when last updated: May 21, 2025         # noqa: E128
 )                                                                       # noqa: E124
 
 # When to start showing the tjSTAR banner
 TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
 
 # Senior Destinations Banner
-ENABLE_SENIOR_DESTS_BANNER = True
+ENABLE_SENIOR_DESTS_BANNER = False
 SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue form is out! Please submit your " \
     "senior destinations, quotes, and superlatives to the form attached below by May 2"
 SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
