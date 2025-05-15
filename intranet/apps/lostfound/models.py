@@ -9,6 +9,7 @@ class LostItem(models.Model):
     last_seen = models.DateField()
     added = models.DateTimeField(auto_now_add=True)
     found = models.BooleanField(default=False)
+    expired = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.title)
@@ -24,6 +25,7 @@ class FoundItem(models.Model):
     found = models.DateField()
     added = models.DateTimeField(auto_now_add=True)
     retrieved = models.BooleanField(default=False)
+    expired = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.title)
