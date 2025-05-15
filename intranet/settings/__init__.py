@@ -910,6 +910,9 @@ SIMILAR_THRESHOLD = 5
 # Time that the bus page should change from morning to afternoon display
 BUS_PAGE_CHANGEOVER_HOUR = 12
 
+# Age (in days) of a lost and found entry until it is hidden
+LOSTFOUND_EXPIRATION = 180
+
 # Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
 NONLOGGABLE_PATH_ENDINGS = [".png", ".jpg", ".jpeg", ".gif", ".css", ".js", ".ico", "jsi18n/"]
@@ -944,6 +947,11 @@ CELERY_BEAT_SCHEDULE = {
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
+        "args": (),
+    },
+    "remove-old-lostfound-entries": {
+        "task": "intranet.apps.lostfound.tasks.remove_old_lostfound",
+        "schedule": celery.schedules.crontab(day_of_month=1, hour=1),
         "args": (),
     },
 }
