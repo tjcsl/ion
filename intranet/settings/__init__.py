@@ -894,6 +894,12 @@ FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 # The address for the CSL's BetterUptime status page
 CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
 
+# Number of times to retry accessing the status page above
+CSL_STATUS_PAGE_MAX_RETRIES = 5
+
+# Timeout for accessing CSL_STATUS_PAGE (in seconds)
+CSL_STATUS_PAGE_TIMEOUT = 15
+
 # The timeout for the request to FCPS' emergency page (in seconds)
 EMERGENCY_TIMEOUT = 5
 
