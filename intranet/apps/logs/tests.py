@@ -80,7 +80,7 @@ class LogsTest(IonTestCase):
 
         request_string = str(Request.objects.first())
         self.assertIn(request.user.username, request_string)
-        self.assertIn(request.META["HTTP_X_REAL_IP"], request_string)
+        self.assertIn(request.headers["x-real-ip"], request_string)
 
     def test_logs_request_object_path(self):
         self.create_logs_request()
@@ -135,20 +135,20 @@ class LogsSearchTest(IonTestCase):
 
     def test_logs_user_search(self):
         response = self.client.get(reverse("logs"), data={"user": ["anonymous", self.main_user.username]})
-        self.assertQuerysetEqual(Request.objects.filter(user__isnull=True), response.context["rqs"])  # Should only show anonymous user logs
+        self.assertQuerySetEqual(Request.objects.filter(user__isnull=True), response.context["rqs"])  # Should only show anonymous user logs
 
         response = self.client.get(reverse("logs"), data={"user": self.main_user.username})
-        self.assertQuerysetEqual(Request.objects.filter(user=self.main_user), response.context["rqs"])  # Should only show anonymous user logs
+        self.assertQuerySetEqual(Request.objects.filter(user=self.main_user), response.context["rqs"])  # Should only show anonymous user logs
 
         response = self.client.get(reverse("logs"), data={"user": [self.main_user.username, self.test_user.username]})
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             Request.objects.filter(Q(user=self.main_user) | Q(user=self.test_user)), response.context["rqs"]
         )  # Should only show anonymous user logs
 
     def test_logs_ip_search(self):
         response = self.client.get(reverse("logs"), data={"ip": "0.0.0.0/24"})
 
-        self.assertQuerysetEqual(Request.objects.filter(Q(ip="0.0.0.1") | Q(ip="0.0.0.2")), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(Q(ip="0.0.0.1") | Q(ip="0.0.0.2")), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"ip": "1.1.1.1/15"})
         self.assertContains(response, "Subnet too large")
@@ -158,15 +158,15 @@ class LogsSearchTest(IonTestCase):
 
     def test_logs_method_search(self):
         response = self.client.get(reverse("logs"), data={"method": "GET"})
-        self.assertQuerysetEqual(Request.objects.filter(method="GET"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(method="GET"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"method": ["GET", "POST"]})
-        self.assertQuerysetEqual(Request.objects.filter(Q(method="GET") | Q(method="POST")), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(Q(method="GET") | Q(method="POST")), response.context["rqs"])
 
     def test_logs_from_search(self):
         response = self.client.get(reverse("logs"), data={"from": "2087-03-05 11:0:0"})
 
-        self.assertQuerysetEqual(Request.objects.filter(timestamp=datetime.datetime(2087, 3, 5, 12, 0, 0)), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(timestamp=datetime.datetime(2087, 3, 5, 12, 0, 0)), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"from": "asdjkasdaoij4"})
         self.assertContains(response, "Invalid from time")
@@ -174,41 +174,41 @@ class LogsSearchTest(IonTestCase):
     def test_logs_to_search(self):
         response = self.client.get(reverse("logs"), data={"to": "2087-03-05 11:0:0"})
 
-        self.assertQuerysetEqual(Request.objects.exclude(timestamp=datetime.datetime(2087, 3, 5, 12, 0, 0)), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.exclude(timestamp=datetime.datetime(2087, 3, 5, 12, 0, 0)), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"to": "teojdaosdj"})
         self.assertContains(response, "Invalid to time")
 
     def test_logs_path_type_and_path_search(self):
         response = self.client.get(reverse("logs"), data={"path-type": "contains", "path": "and"})
-        self.assertQuerysetEqual(Request.objects.filter(path__contains="and"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(path__contains="and"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"path-type": "starts", "path": "rand"})
-        self.assertQuerysetEqual(Request.objects.filter(path__startswith="rand"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(path__startswith="rand"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"path-type": "ends", "path": "dom"})
-        self.assertQuerysetEqual(Request.objects.filter(path__endswith="dom"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(path__endswith="dom"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"path-type": "none", "path": "/"})
-        self.assertQuerysetEqual(Request.objects.filter(path="/"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(path="/"), response.context["rqs"])
 
     def test_logs_user_agent_type_and_user_agent_search(self):
         response = self.client.get(reverse("logs"), data={"user-agent-type": "contains", "user-agent": "ql"})
-        self.assertQuerysetEqual(Request.objects.filter(user_agent__contains="ql"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(user_agent__contains="ql"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"user-agent-type": "starts", "user-agent": "uni"})
-        self.assertQuerysetEqual(Request.objects.filter(user_agent__startswith="uni"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(user_agent__startswith="uni"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"user-agent-type": "ends", "user-agent": "qlo"})
-        self.assertQuerysetEqual(Request.objects.filter(user_agent__endswith="qlo"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(user_agent__endswith="qlo"), response.context["rqs"])
 
         response = self.client.get(reverse("logs"), data={"user-agent-type": "none", "user-agent": "test"})
-        self.assertQuerysetEqual(Request.objects.filter(user_agent="test"), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.filter(user_agent="test"), response.context["rqs"])
 
     def test_logs_no_search(self):
         response = self.client.get(reverse("logs"))
-        self.assertQuerysetEqual(Request.objects.all(), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.all(), response.context["rqs"])
 
     def test_logs_page_count_invalid(self):
         response = self.client.get(reverse("logs"), data={"page": "abc"})
-        self.assertQuerysetEqual(Request.objects.all(), response.context["rqs"])
+        self.assertQuerySetEqual(Request.objects.all(), response.context["rqs"])

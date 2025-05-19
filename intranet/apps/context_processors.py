@@ -73,7 +73,7 @@ def mobile_app(request):
 
     ctx = {}
     try:
-        ua = request.META.get("HTTP_USER_AGENT", "")
+        ua = request.headers.get("user-agent", "")
 
         if "IonAndroid: gcmFrame" in ua:
             ctx["is_android_client"] = True
@@ -133,7 +133,7 @@ def show_homecoming(request):
 
 
 def _get_current_ip(request):
-    x_real_ip = request.META.get("HTTP_X_REAL_IP")
+    x_real_ip = request.headers.get("x-real-ip")
     if x_real_ip:
         ip = x_real_ip.split(",", 1)[0]
     else:

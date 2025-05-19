@@ -1,7 +1,6 @@
 import csv
 import logging
 import re
-from typing import List, Optional
 
 from cacheops import invalidate_model, invalidate_obj
 from django import http
@@ -155,7 +154,7 @@ def get_file_string(fileobj):
     return filetext
 
 
-def get_user_info(key: str, val) -> Optional[List[User]]:
+def get_user_info(key: str, val) -> list[User] | None:
     if key in ["username", "id"]:
         try:
             u = get_user_model().objects.filter(**{key: val})
@@ -199,7 +198,7 @@ def handle_group_input(filetext: str):
     return find_users_input(lines)
 
 
-def find_users_input(lines: List[str]):
+def find_users_input(lines: list[str]):
     sure_users = []
     unsure_users = []
     for line in lines:
@@ -353,7 +352,7 @@ def delete_group_view(request, group_id):
         context = {
             "admin_page_title": "Delete Group",
             "item_name": str(group),
-            "help_text": "Deleting this group will remove all records " "of it related to eighth period.",
+            "help_text": "Deleting this group will remove all records of it related to eighth period.",
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
@@ -486,7 +485,7 @@ def eighth_admin_signup_group_action(request, group_id, schact_id):
     )
 
 
-def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request: Optional[http.HttpRequest], skip_users: set):
+def eighth_admin_perform_group_signup(*, group_id: int, schact_id: int, request: http.HttpRequest | None, skip_users: set):
     """Performs sign up of all users in a specific group up for a
     specific scheduled activity.
 

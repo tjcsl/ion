@@ -3,6 +3,30 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from ...settings.__init__ import ATTENDANCE_CODE_BUFFER
+
+
+def shift_time(time: datetime.time, minutes: int) -> datetime.time:
+    """Shifts the given time field by a certain number of minutes, with safeties: if shifting under 0,0,0 or past 23,59,59,
+    it returns 0,0,0 or 23,59,59, respectively.
+    Args:
+        time: A datetime.time object
+        minutes: Number of minutes (int)
+    Returns:
+        A datetime.time object which is the time argument shifted by minutes (if minutes is negative, shifts backwards)
+    """
+    today = datetime.datetime.today()
+    if minutes < 0:
+        t = datetime.time(0, -minutes, 0)
+        if time < t:
+            return datetime.time(0, 0, 0)
+    else:
+        delta = datetime.datetime.combine(today, datetime.time(23, 59, 59)) - datetime.datetime.combine(today, time)
+        if minutes > delta.total_seconds() / 60:
+            return datetime.time(23, 59, 59)
+    dt = datetime.datetime.combine(today, time)
+    return (dt + datetime.timedelta(minutes=minutes)).time()
+
 
 class Time(models.Model):
     hour = models.IntegerField()
@@ -30,9 +54,29 @@ class Block(models.Model):
     start = models.ForeignKey("Time", related_name="blockstart", on_delete=models.CASCADE)
     end = models.ForeignKey("Time", related_name="blockend", on_delete=models.CASCADE)
     order = models.IntegerField(default=0)
+    eighth_auto_open = models.TimeField(
+        null=True, blank=True
+    )  # time when attendance is opened for sch_acts with "auto" mode set, 11:59:59 if not eighth period
+    eighth_auto_close = models.TimeField(null=True, blank=True)  # 00:00:00 if not eighth period
 
     def __str__(self):
         return f"{self.name}: {self.start} - {self.end}"
+
+    def calculate_eighth_auto_times(self):
+        """Generates the times when eighth-block code attendance opens and closes automatically."""
+        if "8" in self.name:
+            start = datetime.time(hour=self.start.hour, minute=self.start.minute)
+            end = datetime.time(hour=self.end.hour, minute=self.end.minute)
+            self.eighth_auto_open = shift_time(start, -ATTENDANCE_CODE_BUFFER)
+            self.eighth_auto_close = shift_time(end, ATTENDANCE_CODE_BUFFER)
+        else:
+            self.eighth_auto_open = None
+            self.eighth_auto_close = None
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.calculate_eighth_auto_times()
+        super().save(update_fields=["eighth_auto_open", "eighth_auto_close"])
 
     class Meta:
         unique_together = ("order", "name", "start", "end")

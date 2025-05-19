@@ -20,7 +20,7 @@
             "strategy": {
                 "matrix": {
                     "python-version": [
-                        3.8
+                        3.13
                     ]
                 },
                 "fail-fast": false
@@ -47,7 +47,7 @@
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\n\nsudo apt-get update\nsudo apt-get install -y libfreetype6-dev\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -64,7 +64,7 @@
             "strategy": {
                 "matrix": {
                     "python-version": [
-                        3.8
+                        3.13
                     ]
                 },
                 "fail-fast": false
@@ -94,7 +94,7 @@
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\n\nsudo apt-get update\nsudo apt-get install -y libfreetype6-dev\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",
@@ -119,12 +119,20 @@
                     "run": "git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}"
                 },
                 {
+                    "name": "Install docs dependencies",
+                    "run": "# sphinxcontrib_django imports our django project, so we need the deps\npip install -U -r requirements.txt\ncd docs\npip install -U -r requirements.txt\n"
+                },
+                {
+                    "name": "Check docs build up to date",
+                    "run": "./scripts/build_ensure_no_changes.sh python3 scripts/build_docs.py"
+                },
+                {
                     "name": "Build docs",
-                    "run": "./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh"
+                    "run": "cd docs\nmake html\n"
                 },
                 {
                     "name": "Push docs",
-                    "if": "github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.8",
+                    "if": "github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.13",
                     "run": "./scripts/push_docs.sh",
                     "env": {
                         "GH_TOKEN": "${{ secrets.DOCS_GH_TOKEN }}"
@@ -137,7 +145,7 @@
             "strategy": {
                 "matrix": {
                     "python-version": [
-                        3.8
+                        3.13
                     ],
                     "node-version": [
                         "14.x"
@@ -195,7 +203,7 @@
                 },
                 {
                     "name": "Set up packages",
-                    "run": "set -e\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
+                    "run": "set -e\n\nsudo apt-get update\nsudo apt-get install -y libfreetype6-dev\n\npip install -U pip setuptools wheel\npip install -U \\\n  pre-commit coveralls pyyaml pytest-django\npip install -U -r requirements.txt\n\necho \"PATH=$PATH\" >> $GITHUB_ENV\n"
                 },
                 {
                     "name": "Copy secret.py",

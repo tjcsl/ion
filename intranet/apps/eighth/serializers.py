@@ -10,6 +10,7 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 
 from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
+from .views.attendance import check_attendance_open
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +140,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "name_with_flags_for_user": name_with_flags_for_user,
             "description": activity.description,
             "cancelled": scheduled_activity.cancelled,
+            "attendance_open": check_attendance_open(scheduled_activity) is None,
+            "attendance_url": reverse("student_attendance", args=[scheduled_activity.id]),
             "favorited": activity.id in favorited_activities,
             "subscribed_to": activity.id in subscribed_activities,
             "subscriptions_enabled": subscriptions_enabled,

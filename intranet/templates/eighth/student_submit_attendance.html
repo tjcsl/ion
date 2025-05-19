@@ -24,44 +24,73 @@
 
 {% block main %}
 <div class="primary-content" id="quick-schedule">
-    <h2>Submit attendance for today's eighth periods:</h2>
+    <h2 style="font-size: 2rem;">Submit attendance for <a href="{% url 'eighth_activity' sch_act.activity.id %}">{{ sch_act.full_title }}</a> on {{ date_string }}, 8{{ sch_act.block.block_letter }}</h2>
     <br>
-    {% for s in sch_acts %}
-    <h3>{{ s.0.hybrid_text }} Block ({{ s.0.date }})</h3>
-        <div class="block-display">
-            {% if s.1 is not None %}
-            <h4><a href="{% url 'eighth_activity' s.1.activity.id %}">{{ s.1.full_title }}</a></h4>
-            <h5><strong>Room(s):</strong> {{ s.2 }}</h5>
-            <h5><strong>Sponsor(s):</strong> {{ s.3 }}</h5>
-            <br>
-            <p><strong>Comments:</strong> {% if s.1.comments %}{{ s.1.comments }}{% else %}None{% endif %}</p>
-            <br>
-            <p>{{ s.1.activity.description }}</p>
-            {% if s.0 in att_marked%}
-            <p style="color: green;">Attendance marked.</p>
-            {% else %}
-            <form method="post" action="">
-                {% csrf_token %}
-                <p><strong>Attendance Code: </strong></p>
-                <input
-                  type="text"
-                  id="attendance-code"
-                  name="{{ s.0.block_letter }}"
-                  maxlength="6"
-                  pattern="[A-Za-z0-9]{6}"
-                />
-                <button type="submit">Submit</button>
-            </form>
-            {% endif %}
-            {% if s.0 == mark_block %}
-            {{ attendance_result|safe }}
-            {% endif %}
-            {% else %}
-            <p>You are not signed up for any activity.</p>
-            {% endif %}
+    {% if show_form %}
+    <form id="attendance-code-form" method="post">
+        {% csrf_token %}
+        <h2><strong>Attendance Code: </strong></h2>
+        <br>
+        <div id="code-inputs" style="display: flex; gap: 5px;">
+        {% for i in "123456" %}
+            <input
+            type="text"
+            maxlength="1"
+            class="code-char"
+            required
+            style="width: 5rem;
+                    height: 5rem;
+                    font-size: 4.5rem;
+                    line-height: 5rem;
+                    text-align: center;
+                    padding: 0;
+                    box-sizing: border-box;
+                    border: 2px solid #ccc;"
+            pattern="[A-Za-z0-9]"
+            />
+        {% endfor %}
         </div>
-        <br><br>
-    {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        const charInputs = document.querySelectorAll('.code-char');
+        const fullCodeInput = document.getElementById('attendance-code');
+        const form = document.getElementById('attendance-code-form')
+        charInputs.forEach((input, idx) => {
+            input.addEventListener('input', () => {
+            if (input.value.length === 1 && idx < charInputs.length - 1) {
+                charInputs[idx + 1].focus();
+            }
+            });
+            input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && input.value === '' && idx > 0) {
+                charInputs[idx - 1].focus();
+            }
+            });
+        });
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            let code = "";
+            charInputs.forEach((input) => {
+                code += input.value;
+            });
+            const sch_activity_id = "{{ sch_act.id }}"
+            form.action = `/eighth/student_attendance/${sch_activity_id}/${code}`;
+            form.submit();
+        });
+    </script>
+    {% endif %}
+    <div style="font-size: 1.4rem;">
+        {{ result_html|safe }}
+    </div>
+    <br><br>
     <a class="button" href="{% url 'index' %}">Return to Dashboard</a>
 </div>
+<script>
+    const cleanUrl = `/eighth/student_attendance/{{ sch_act.id }}`;
+
+    if (window.location.pathname !== cleanUrl) {
+        window.history.replaceState(null, '', cleanUrl);
+    }
+</script>
 {% endblock %}

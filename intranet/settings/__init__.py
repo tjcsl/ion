@@ -54,14 +54,14 @@ HOCO_END_DATE = datetime.date(start_school_year,
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 21  # UPDATE THIS! Value when last updated: May 21, 2024         # noqa: E128
+    5, 21  # UPDATE THIS! Value when last updated: May 21, 2025         # noqa: E128
 )                                                                       # noqa: E124
 
 # When to start showing the tjSTAR banner
 TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
 
 # Senior Destinations Banner
-ENABLE_SENIOR_DESTS_BANNER = True
+ENABLE_SENIOR_DESTS_BANNER = False
 SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue form is out! Please submit your " \
     "senior destinations, quotes, and superlatives to the form attached below by May 2"
 SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
@@ -587,9 +587,11 @@ if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     # extension of django.core.cache.backends.dummy.DummyCache
 else:
     CACHES["default"] = {
-        "BACKEND": "redis_cache.RedisCache",
+        "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PICKLE_VERSION": 4
+                    },
         "KEY_PREFIX": "ion",
     }
 
@@ -695,7 +697,6 @@ INSTALLED_APPS = [
     "oauth2_provider",  # django-oauth-toolkit
     "corsheaders",  # django-cors-headers
     "cacheops",  # django-cacheops
-    "svg",  # django-inline-svg
     "simple_history",  # django-simple-history
     "django_referrer_policy",
     "django_user_agents",
@@ -885,6 +886,10 @@ NEAR_GRADUATION_DAYS = 50
 # taking attendance (10PM)
 ATTENDANCE_LOCK_HOUR = 22
 
+# The time buffer (in minutes) before the start or end of an eighth block (times from the Block model in schedule) during which
+# code/qr attendance is allowed, if the code mode is "auto"
+ATTENDANCE_CODE_BUFFER = 20
+
 # The number of days to show an absence message (2 weeks)
 CLEAR_ABSENCE_DAYS = 14
 
@@ -893,6 +898,12 @@ FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 
 # The address for the CSL's BetterUptime status page
 CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
+
+# Number of times to retry accessing the status page above
+CSL_STATUS_PAGE_MAX_RETRIES = 5
+
+# Timeout for accessing CSL_STATUS_PAGE (in seconds)
+CSL_STATUS_PAGE_TIMEOUT = 15
 
 # The timeout for the request to FCPS' emergency page (in seconds)
 EMERGENCY_TIMEOUT = 5
@@ -909,6 +920,9 @@ SIMILAR_THRESHOLD = 5
 
 # Time that the bus page should change from morning to afternoon display
 BUS_PAGE_CHANGEOVER_HOUR = 12
+
+# Age (in days) of a lost and found entry until it is hidden
+LOSTFOUND_EXPIRATION = 180
 
 # Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
@@ -944,6 +958,11 @@ CELERY_BEAT_SCHEDULE = {
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
+        "args": (),
+    },
+    "remove-old-lostfound-entries": {
+        "task": "intranet.apps.lostfound.tasks.remove_old_lostfound",
+        "schedule": celery.schedules.crontab(day_of_month=1, hour=1),
         "args": (),
     },
 }

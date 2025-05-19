@@ -30,10 +30,10 @@ class Command(BaseCommand):
 
     def chk(self, q, test):
         if test:
-            self.stdout.write("OK: %s" % q)
+            self.stdout.write(f"OK: {q}")
             return True
         else:
-            self.stdout.write("ERROR: %s" % q)
+            self.stdout.write(f"ERROR: {q}")
             self.stdout.write("Abort.")
             return False
 

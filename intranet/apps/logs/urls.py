@@ -1,8 +1,8 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    re_path(r"^$", views.logs_view, name="logs"),
-    re_path(r"^/request/(?P<request_id>\d+)$", views.request_view, name="request"),
+    path("", views.logs_view, name="logs"),
+    path("/request/<int:request_id>", views.request_view, name="request"),
 ]

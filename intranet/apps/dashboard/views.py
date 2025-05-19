@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable, Sequence
 from datetime import datetime, time, timedelta
 from itertools import chain
-from typing import Any, Generic, Iterable, Sequence, TypeVar
+from typing import Any, TypeGuard, TypeVar
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypedDict
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
@@ -93,6 +94,16 @@ def gen_schedule(user, num_blocks: int = 6, surrounding_blocks: Iterable[EighthB
             # don't duplicate this info; already caught
             current_signup = current_signup.replace(" (Cancelled)", "")
 
+        # check if attendance open, if so, will display attendance button
+        attendance_open = False
+        if current_sched_act:
+            from ..eighth.views.attendance import check_attendance_open  # noqa: PLC0415
+
+            attendance_open = check_attendance_open(current_sched_act) is None
+        sch_act_id = None
+        if attendance_open:
+            sch_act_id = current_sched_act.id
+
         info = {
             "id": b.id,
             "block": b,
@@ -107,6 +118,8 @@ def gen_schedule(user, num_blocks: int = 6, surrounding_blocks: Iterable[EighthB
             "signup_time": b.signup_time,
             "signup_time_future": b.signup_time_future(),
             "rooms": rooms,
+            "attendance_open": attendance_open,
+            "sch_act_id": sch_act_id,
         }
         schedule.append(info)
 
@@ -203,6 +216,7 @@ def get_prerender_url(request):
 def get_announcements_list(request, context) -> list[Announcement | Event]:
     """
     An announcement will be shown if:
+
     * It is not expired
 
       * unless ?show_expired=1
@@ -218,6 +232,7 @@ def get_announcements_list(request, context) -> list[Announcement | Event]:
       * ...unless ?show_all=1
 
     An event will be shown if:
+
     * It is not expired
 
       * unless ?show_expired=1
@@ -254,7 +269,7 @@ def get_announcements_list(request, context) -> list[Announcement | Event]:
     if context["events_admin"] and context["show_all"]:
         events = Event.objects.all()
     elif context["show_expired"]:
-        events = Event.objects.visible_to_user(user)
+        events = Event.objects.visible_to_user(user).filter(show_on_dashboard=True)
     else:
         # Unlike announcements, show events for the rest of the day after they occur.
         midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -322,7 +337,7 @@ def filter_club_announcements(
     return visible, hidden, unsubscribed
 
 
-class RawPaginationData(TypedDict, Generic[T]):
+class RawPaginationData[T: Announcement](TypedDict):
     club_items: Sequence[Announcement]
     items: Page[T]
     page_num: int
@@ -332,7 +347,7 @@ class RawPaginationData(TypedDict, Generic[T]):
     page_obj: Paginator[T]
 
 
-def paginate_announcements_list_raw(
+def paginate_announcements_list_raw[T: Announcement](
     request: HttpRequest,
     items: Sequence[T],
     visible_club_items: Sequence[Announcement] = (),
@@ -350,7 +365,6 @@ def paginate_announcements_list_raw(
     Returns:
         A dictionary intended to be merged into the context.
     """
-
     DEFAULT_PAGE_NUM = 1
 
     num = request.GET.get(query_param, "")
@@ -377,7 +391,7 @@ def paginate_announcements_list_raw(
     for c in club_items:
         c.can_subscribe = c.activity.is_subscribable_for_user(request.user)
     for a in items:
-        if a.activity is not None:
+        if isinstance(a, Announcement) and a.activity is not None:
             a.can_subscribe = a.activity.is_subscribable_for_user(request.user)
 
     return RawPaginationData(
@@ -391,7 +405,7 @@ def paginate_announcements_list_raw(
     )
 
 
-def paginate_announcements_list(
+def paginate_announcements_list[T: Announcement](
     request, context: dict[str, Any], items: Sequence[T], visible_club_items: Sequence[Announcement] = ()
 ) -> tuple[dict[str, Any], Page[T]]:
     """Paginate ``items`` in groups of 15
@@ -417,6 +431,7 @@ def get_tjstar_mapping(user):
 def add_widgets_context(request, context):
     """
     WIDGETS:
+
     * Eighth signup (STUDENT)
     * Eighth attendance (TEACHER or ADMIN)
     * Enrichment activities (ALL if enrichment activity today)

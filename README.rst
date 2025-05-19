@@ -18,12 +18,12 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 
 **What does the TJ Intranet do?** Ion allows students, teachers, and staff at TJHSST to access student information, manage activity signups for TJ's Eighth Period program, and view information on news and events. `Read more about how Ion is used at Thomas Jefferson <https://ion.tjhsst.edu/about>`_.
 
-**Ion now requires Python 3.8+** Python 3.8.5 is currently used in both production and testing environments.
+**Ion now requires Python 3.13+** Python 3.13.5 is currently used in both production and testing environments.
 
-**How can I create a testing environment?** Read the section on `Setting up a Dev Environment <https://github.com/tjcsl/ion/blob/master/SETUP.md>`_ in the documentation.
+**How can I create a testing environment?** Read the section on `Setting up a Dev Environment <https://tjcsl.github.io/ion/setup/setup.html>`_ in the documentation.
 
 **How can I contribute to Ion? How can I report a bug? How can I report a security issue/vulnerability?**
 
-Please read our `contributing guide <https://github.com/tjcsl/ion/blob/master/CONTRIBUTING.md>`_ for more information.
+Please read our `contributing guide <https://tjcsl.github.io/ion/developing/contributing.html>`_ for more information.
 
-Current Intranet maintainers: `alanzhu0 <https://github.com/alanzhu0>`_ and `NotFish232 <https://github.com/NotFish232>`_
+Current Intranet maintainers: `aarushtools <https://github.com/aarushtools>`_ and `shrysjain <https://github.com/shrysjain>`_

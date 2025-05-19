@@ -7,6 +7,7 @@ from .forms import SetSignCustomSwitchTimeForm
 from .models import Page, Sign
 
 
+@admin.register(Sign)
 class SignAdmin(admin.ModelAdmin):
     list_display = (
         "name",
@@ -24,6 +25,7 @@ class SignAdmin(admin.ModelAdmin):
         return ", ".join(str(p) for p in obj.pages.all())
 
 
+@admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
     list_display = (
         "name",
@@ -151,7 +153,3 @@ class PageAdmin(admin.ModelAdmin):
             }
         )
         return render(request, "signage/admin/set_custom_switch_time_for_all_signs.html", {"form": form})
-
-
-admin.site.register(Sign, SignAdmin)
-admin.site.register(Page, PageAdmin)

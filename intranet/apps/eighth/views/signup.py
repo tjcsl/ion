@@ -1,8 +1,6 @@
 import datetime
 import logging
 import time
-from datetime import time as tm
-from datetime import timedelta
 
 from django import http
 from django.conf import settings
@@ -20,7 +18,6 @@ from ....utils.helpers import is_entirely_digit
 from ....utils.locking import lock_on
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_admin_required
-from ...schedule.models import Day
 from ..exceptions import SignupException
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist
 from ..serializers import EighthBlockDetailSerializer
@@ -29,11 +26,6 @@ logger = logging.getLogger(__name__)
 
 eighth_signup_visits = Summary("intranet_eighth_signup_visits", "Visits to the eighth signup view")
 eighth_signup_submits = Summary("intranet_eighth_signup_submits", "Number of eighth period signups performed from the eighth signup view")
-
-
-def shift_time(time, minutes):
-    dt = datetime.datetime.combine(datetime.datetime.today(), time)
-    return (dt + timedelta(minutes=minutes)).time()
 
 
 @login_required
@@ -223,30 +215,6 @@ def eighth_signup_view(request, block_id=None):
         except KeyError:
             active_block_current_signup = None
 
-        attendance_open = False
-        try:
-            now = timezone.localtime()
-            dayblks = Day.objects.select_related("day_type").get(date=now).day_type.blocks.all()
-            earliest = None
-            latest = None
-            for blk in dayblks:
-                name = blk.name
-                if name is None:
-                    continue
-                if "8" in name:
-                    start = tm(hour=blk.start.hour, minute=blk.start.minute)
-                    end = tm(hour=blk.end.hour, minute=blk.end.minute)
-                    if earliest is None or start <= earliest:
-                        earliest = start
-                    if latest is None or end >= latest:
-                        latest = end
-            if earliest is not None:
-                earliest = shift_time(earliest, -20)
-                latest = shift_time(latest, 20)
-                if earliest <= now.time() <= latest:
-                    attendance_open = True
-        except Exception:
-            attendance_open = False
         context = {
             "user": user,
             "real_user": request.user,
@@ -254,7 +222,6 @@ def eighth_signup_view(request, block_id=None):
             "activities_list": safe_json(block_info["activities"]),
             "active_block": block,
             "active_block_current_signup": active_block_current_signup,
-            "attendance_open": attendance_open,
         }
 
         #######
@@ -433,7 +400,7 @@ def subscribe_to_club(request, activity_id):
 
     activity.subscribers.add(request.user)
 
-    return redirect(request.META.get("HTTP_REFERER", "/"))
+    return redirect(request.headers.get("referer", "/"))
 
 
 @login_required
@@ -448,7 +415,7 @@ def unsubscribe_from_club(request, activity_id):
     if request.user in activity.subscribers.all():
         activity.subscribers.remove(request.user)
 
-    return redirect(request.META.get("HTTP_REFERER", "/"))
+    return redirect(request.headers.get("referer", "/"))
 
 
 @login_required
@@ -484,33 +451,7 @@ def eighth_location(request):
                     sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
             except EighthScheduledActivity.DoesNotExist:
                 sch_acts.append([b, None])
-        attendance_open = False
-        try:
-            now = timezone.localtime()
-            dayblks = Day.objects.select_related("day_type").get(date=now).day_type.blocks.all()
-            earliest = None
-            latest = None
-            for blk in dayblks:
-                name = blk.name
-                if name is None:
-                    continue
-                if "8" in name:
-                    start = tm(hour=blk.start.hour, minute=blk.start.minute)
-                    end = tm(hour=blk.end.hour, minute=blk.end.minute)
-                    if earliest is None or start <= earliest:
-                        earliest = start
-                    if latest is None or end >= latest:
-                        latest = end
-            if earliest is not None:
-                earliest = shift_time(earliest, -20)
-                latest = shift_time(latest, 20)
-                if earliest <= now.time() <= latest:
-                    attendance_open = True
-        except Exception:
-            attendance_open = False
-        response = render(
-            request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user, "attendance_open": attendance_open}
-        )
+        response = render(request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user})
     else:
         messages.error(request, "There are no eighth period blocks scheduled today.")
         response = redirect("index")

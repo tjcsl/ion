@@ -31,7 +31,9 @@ class EighthAdminSponsorsTest(EighthAbstractTest):
         # Test that error is raised and redirects
         self.assertTemplateUsed(response, "eighth/admin/add_sponsor.html")
 
-        self.assertFormError(response, "form", "user", "Select a valid choice. {} is not one of the available choices.".format(params["user"]))
+        self.assertFormError(
+            response.context["form"], "user", "Select a valid choice. {} is not one of the available choices.".format(params["user"])
+        )
 
         user = self.create_sponsor()
         params = {

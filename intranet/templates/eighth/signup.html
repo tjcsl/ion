@@ -346,15 +346,18 @@
                                 </button>
                             <% } else { %>
                                 <strong>You are currently signed up for this activity.</strong>
+                                <br>
+                                <% if (attendance_open) { %>
+                                    <button class="button" onclick="window.location.href = '<%= attendance_url %>'">
+                                        Enter Attendance Code
+                                    </button>
+                                <% } %>
                             <% } %>
                         <% } %>
                     <%}%>
                 <%}%>
                 <br>
                 {% endverbatim %}
-                {% if real_user.is_student and attendance_open and not real_user.is_eighth_admin%}
-                    <a class="button" href="{% url 'student_attendance' %}">Enter Attendance Code for Today's Blocks</a>
-                {% endif %}
                 <div class="error-feedback">
                 </div>
             </div>

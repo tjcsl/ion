@@ -23,7 +23,7 @@ env:
   # and change that version in the "if" to the latest version
   # you put here.
   python_versions: &python_versions
-    - 3.8
+    - 3.13
   node_versions: &node_versions
     - 14.x
 
@@ -54,6 +54,9 @@ env:
     name: Set up packages
     run: |
       set -e
+
+      sudo apt-get update
+      sudo apt-get install -y libfreetype6-dev
 
       pip install -U pip setuptools wheel
       pip install -U \
@@ -119,11 +122,24 @@ jobs:
         run: 'git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}'
 
       # Build/push docs
+      - name: Install docs dependencies
+        run: |
+          # sphinxcontrib_django imports our django project, so we need the deps
+          pip install -U -r requirements.txt
+          cd docs
+          pip install -U -r requirements.txt
+
+      - name: Check docs build up to date
+        run: ./scripts/build_ensure_no_changes.sh python3 scripts/build_docs.py
+
       - name: Build docs
-        run: ./scripts/build_ensure_no_changes.sh ./scripts/build_docs.sh
+        run: |
+          cd docs
+          make html
+
       - name: Push docs
         # Only run for pushes to the main Ion repo
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.8
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.13
         run: ./scripts/push_docs.sh
         env:
           GH_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}

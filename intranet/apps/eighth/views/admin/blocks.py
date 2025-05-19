@@ -318,7 +318,7 @@ def delete_block_view(request, block_id):
         context = {
             "admin_page_title": "Delete Block",
             "item_name": str(block),
-            "help_text": "Deleting this block will remove all records " "of it related to eighth period.",
+            "help_text": "Deleting this block will remove all records of it related to eighth period.",
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
