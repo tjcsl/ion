@@ -23,7 +23,7 @@
     <script src="{% static 'js/eighth/attendance.js' %}"></script>
     <script src="{% static 'js/eighth/ui_init.js' %}"></script>
     <script src="{% static 'js/eighth/user_link.js' %}"></script>
-    <script src="{% static 'vendor/qrcode.min.js' %}"></script>
+    <script src="{% static 'vendor/qr-code-styling.js' %}"></script>
     {% if wizard %}
     <script>
     $(function() {
@@ -445,7 +445,7 @@
                                 <td colspan="5">
                                     <br>
                                     <b>Attendance code: </b><b style="font-family: 'Fira Code', 'Consolas', monospace; font-size: 24px;">{{ scheduled_activity.attendance_code }}</b>
-                                    <p>Share this code with students present at this activity. Alternatively, share the QR code.</p>
+                                    <p>Share this code with students present at this activity. Alternatively, show the QR code.</p>
                                     <p>They should input this code into the attendance
                                         form on Ion, accessible from the "Eighth" page.</p>
                                 </td>
@@ -460,6 +460,9 @@
                                             <input type="radio" name="att_code_mode" value="{{ value }}"
                                                    {% if scheduled_activity.code_mode == value %}checked{% endif %}>
                                             {{ label }}
+                                            {% if value == 0 %}
+                                            {{ auto_time_string }}
+                                            {% endif %}
                                         </label>
                                     {% endfor %}
                                 </form>
@@ -474,13 +477,25 @@
                                 <div id="qr-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
                                     background:rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:1000;">
 
-                                    <div style="background:#fff; padding:20px; border-radius:8px; text-align:center; position:relative;">
+                                    <div style="background:#fff; padding:20px; border-radius:8px; text-align:center; position:relative; width:85%;">
                                         <div style="display: flex; flex-direction: row; align-items: center; gap: 40px;">
 
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
                                         <div style="font-family: 'Fira Code', 'Consolas', monospace; font-size: 190px;">
                                             {{ scheduled_activity.attendance_code }}
                                         </div>
-
+                                        <br><br><br><br>
+                                        <div style="font-size:20px; width:95%;">
+                                        <p style="font-weight: bold; text-align: left;">Students, to take attendance, you should: </p><br>
+                                        <p>Scan the QR Code</p><br>
+                                        <p style="font-weight: bold;">OR</p><br>
+                                        <ol style="text-align: left; list-style: decimal; gap:10px;" type="1">
+                                            <li>Go to the attendance page on Ion - look for a button which says "Enter Attendance Code" on your dashboard or eighth page.</li><br>
+                                            <li>Enter the code above into the correct box.</li><br>
+                                            <li>You will be told whether your attendance was marked successfully.</li>
+                                        </ol>
+                                        </div>
+                                        </div>
                                         <div id="qr-image-container" style="max-width:55000px; max-height:550px;"></div>
                                         </div>
 
@@ -511,13 +526,32 @@
 
                                       qrContainer.innerHTML = '';
 
-                                      new QRCode(qrContainer, {
-                                        text: qrUrl,
-                                        width: 550,
-                                        height: 550,
-                                        correctLevel: QRCode.CorrectLevel.H
+                                      const qrCode = new QRCodeStyling({
+                                            width: 550,
+                                            height: 550,
+                                            type: "svg",
+                                            data: qrUrl,
+                                            image: "{% static 'img/logos/logo-blue.svg' %}",
+                                            dotsOptions: {
+                                                color: "#000",
+                                                type: "square"
+                                            },
+                                            cornersSquareOptions: {
+                                                type: "extra-rounded",
+                                                color: "#0056b3",
+                                            },
+                                            cornersDotOptions: {
+                                                type: "extra-rounded",
+                                                color: "#0056b3"
+                                            },
+                                            imageOptions: {
+                                                crossOrigin: "anonymous",
+                                                margin: 10,
+                                                imageSize: 0.3
+                                            }
                                       });
 
+                                      qrCode.append(qrContainer)
                                       modal.style.display = 'flex';
                                     }
 

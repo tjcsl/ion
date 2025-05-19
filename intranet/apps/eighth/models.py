@@ -1843,7 +1843,7 @@ class EighthSignup(AbstractBaseEighthModel):
         self.was_absent = False
         self.pass_accepted = True
         self.attendance_marked = True
-        self.save(update_fields=["was_absent", "pass_accepted"])
+        self.save(update_fields=["was_absent", "pass_accepted", "attendance_marked"])
 
     def reject_pass(self):
         """Rejects an eighth period pass for the EighthSignup object."""

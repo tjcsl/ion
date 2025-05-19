@@ -1,8 +1,6 @@
 import datetime
 import logging
 import time
-from datetime import time as tm
-from datetime import timedelta
 
 from django import http
 from django.conf import settings
@@ -29,11 +27,6 @@ logger = logging.getLogger(__name__)
 
 eighth_signup_visits = Summary("intranet_eighth_signup_visits", "Visits to the eighth signup view")
 eighth_signup_submits = Summary("intranet_eighth_signup_submits", "Number of eighth period signups performed from the eighth signup view")
-
-
-def shift_time(time, minutes):
-    dt = datetime.datetime.combine(datetime.datetime.today(), time)
-    return (dt + timedelta(minutes=minutes)).time()
 
 
 @login_required
@@ -226,26 +219,10 @@ def eighth_signup_view(request, block_id=None):
         attendance_open = False
         try:
             now = timezone.localtime()
-            dayblks = Day.objects.select_related("day_type").get(date=now).day_type.blocks.all()
-            earliest = None
-            latest = None
-            for blk in dayblks:
-                name = blk.name
-                if name is None:
-                    continue
-                if "8" in name:
-                    start = tm(hour=blk.start.hour, minute=blk.start.minute)
-                    end = tm(hour=blk.end.hour, minute=blk.end.minute)
-                    if earliest is None or start <= earliest:
-                        earliest = start
-                    if latest is None or end >= latest:
-                        latest = end
-            if earliest is not None:
-                earliest = shift_time(earliest, -20)
-                latest = shift_time(latest, 20)
-                if earliest <= now.time() <= latest:
-                    attendance_open = True
-        except Exception:
+            daytype = Day.objects.select_related("day_type").get(date=now).day_type
+            if daytype.eighth_auto_open <= now.time() <= daytype.eighth_auto_close:
+                attendance_open = True
+        except Day.DoesNotExist:
             attendance_open = False
         context = {
             "user": user,
@@ -477,37 +454,24 @@ def eighth_location(request):
     blocks = EighthBlock.objects.get_blocks_today()
     if blocks:
         sch_acts = []
+        attendance_open = False
         for b in blocks:
             try:
                 act = request.user.eighthscheduledactivity_set.get(block=b)
                 if act.activity.name != "z - Hybrid Sticky":
                     sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
+                if act.code_mode == 1:
+                    attendance_open = True
             except EighthScheduledActivity.DoesNotExist:
                 sch_acts.append([b, None])
-        attendance_open = False
-        try:
-            now = timezone.localtime()
-            dayblks = Day.objects.select_related("day_type").get(date=now).day_type.blocks.all()
-            earliest = None
-            latest = None
-            for blk in dayblks:
-                name = blk.name
-                if name is None:
-                    continue
-                if "8" in name:
-                    start = tm(hour=blk.start.hour, minute=blk.start.minute)
-                    end = tm(hour=blk.end.hour, minute=blk.end.minute)
-                    if earliest is None or start <= earliest:
-                        earliest = start
-                    if latest is None or end >= latest:
-                        latest = end
-            if earliest is not None:
-                earliest = shift_time(earliest, -20)
-                latest = shift_time(latest, 20)
-                if earliest <= now.time() <= latest:
+        if not attendance_open:
+            try:
+                now = timezone.localtime()
+                daytype = Day.objects.select_related("day_type").get(date=now).day_type
+                if daytype.eighth_auto_open <= now.time() <= daytype.eighth_auto_close:
                     attendance_open = True
-        except Exception:
-            attendance_open = False
+            except Day.DoesNotExist:
+                attendance_open = False
         response = render(
             request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user, "attendance_open": attendance_open}
         )

@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -23,17 +23,17 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
+from ....settings.__init__ import ATTENDANCE_CODE_BUFFER
 from ....utils.date import get_date_range_this_year
 from ...auth.decorators import attendance_taker_required, deny_restricted, eighth_admin_required
 from ...dashboard.views import gen_sponsor_schedule
-from ...schedule.models import Day
+from ...schedule.models import Block, Day, shift_time
 from ...schedule.views import decode_date
 from ..forms.admin.activities import ActivitySelectionForm
 from ..forms.admin.blocks import BlockSelectionForm
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
 from ..tasks import email_scheduled_activity_students_task
 from ..utils import get_start_date
-from .signup import shift_time
 
 logger = logging.getLogger(__name__)
 
@@ -420,6 +420,21 @@ def take_attendance_view(request, scheduled_activity_id):
 
         members.sort(key=lambda m: m["name"])
 
+        auto_time_string = ""
+        try:
+            day_block = (
+                Day.objects.select_related("day_type")
+                .get(date=scheduled_activity.block.date)
+                .day_type.blocks.get(name="8" + scheduled_activity.block.block_letter)
+            )
+            start_time = shift_time(tm(hour=day_block.start.hour, minute=day_block.start.minute), -ATTENDANCE_CODE_BUFFER)
+            end_time = shift_time(tm(hour=day_block.end.hour, minute=day_block.end.minute), ATTENDANCE_CODE_BUFFER)
+            auto_time_string = "(" + start_time.strftime("%H:%M") + " - " + end_time.strftime("%H:%M") + ")"
+        except Day.DoesNotExist:
+            auto_time_string = ""
+        except Block.DoesNotExist:
+            auto_time_string = ""
+        print(auto_time_string)
         context = {
             "scheduled_activity": scheduled_activity,
             "passes": passes,
@@ -430,7 +445,8 @@ def take_attendance_view(request, scheduled_activity_id):
             "show_checkboxes": (scheduled_activity.block.locked or request.user.is_eighth_admin),
             "show_icons": (scheduled_activity.block.locked and scheduled_activity.block.attendance_locked() and not request.user.is_eighth_admin),
             "bbcu_script": settings.BBCU_SCRIPT,
-            "qr_url": request.build_absolute_uri(reverse("qr_attendance", args=[scheduled_activity.id, scheduled_activity.attendance_code])),
+            "qr_url": request.build_absolute_uri(reverse("student_attendance", args=[scheduled_activity.id, scheduled_activity.attendance_code])),
+            "auto_time_string": auto_time_string,
         }
 
         if request.user.is_eighth_admin:
@@ -776,67 +792,120 @@ def email_students_view(request, scheduled_activity_id):
 
 @login_required
 @deny_restricted
-def student_attendance_view(request):
+def student_attendance_view(request, act_id=None, code=None):
+    """Marks attendance for code and QR code student-based attendance processes. Renders the student attendance page.
+    Also handles GET requests from students accessing the student attendance page.
+    Args:
+        request: the user's request
+        act_id: (For QR code attendance) the id of the act for which the student is attempting to take attendance
+        code: (For QR code attendance) the code which the student is attempting to take attendance with
+    Returns:
+        An HttpResponse rendering the student attendance view (built from the student_frontend function), possibly with messages
+        regarding the result of the attendance-marking attempt
+        Can also possibly redirect to index or the generic student_attendance page if encountered an error
+    """
     blocks = EighthBlock.objects.get_blocks_today()
     mark_block = None
     mark_result = None
-    if request.method == "POST":
-        now = timezone.localtime()
-        try:
-            day_blocks = Day.objects.select_related("day_type").get(date=now).day_type.blocks
-        except Day.DoesNotExist:
-            messages.error(request, "Error. Attendance is only available on school days.")
-            return redirect("index")
+    qr_mark = False
+    now = timezone.localtime()
+    try:
+        day_blocks = Day.objects.select_related("day_type").get(date=now).day_type.blocks
+    except Day.DoesNotExist:
+        messages.error(request, "Error. Attendance is only available on school days.")
+        return redirect("index")
+    if act_id is None and code is None:
         for block in blocks:
             block_letter = block.block_letter
             code = request.POST.get(block_letter)
             if code is None:
                 continue
             act = request.user.eighthscheduledactivity_set.get(block=block)
-            if act.get_code_mode_display() == "Auto":
-                try:
-                    day_block = day_blocks.get(name="8" + block_letter)
-                except Exception:
-                    mark_result = "invalid_time"
-                    mark_block = block
-                    break
-                start_time = shift_time(tm(hour=day_block.start.hour, minute=day_block.start.minute), -20)
-                end_time = shift_time(tm(hour=day_block.end.hour, minute=day_block.end.minute), 20)
-                if not start_time <= now.time() <= end_time:
-                    mark_result = "invalid_time"
-                    mark_block = block
-                    break
-            elif act.get_code_mode_display() == "Closed":
-                mark_result = "code_closed"
+            result = check_attendance_open(act, day_blocks)
+            if result is not None:
                 mark_block = block
-                break
-            code = code.upper()
-            if code == act.attendance_code:
-                try:
-                    present = EighthSignup.objects.get(scheduled_activity=act, user__in=[request.user.id])
-                    present.was_absent = False
-                    present.attendance_marked = True
-                    present.save()
-                    invalidate_obj(present)
-                    act.attendance_taken = True
-                    act.save()
-                    invalidate_obj(act)
-                    mark_result = "code_correct"
-                    mark_block = block
-                except Exception:
-                    mark_result = "code_fail"
-                    mark_block = block
-                break
-            else:
-                mark_result = "code_fail"
+                mark_result = result
+    elif act_id is not None and code is not None:
+        try:
+            act = request.user.eighthscheduledactivity_set.get(id=act_id)
+            block = act.block
+            result = check_attendance_open(act, day_blocks)
+            qr_mark = True
+            if result is not None:
                 mark_block = block
-                break
+                mark_result = result
+        except EighthScheduledActivity.DoesNotExist:
+            messages.error(request, "Error marking attendance.")
+            return redirect("student_attendance")
+    if code is not None and mark_result is None:
+        mark_result = mark_attendance(request, act, code)
+        mark_block = block
+    if qr_mark:
+        if mark_result != "code_correct":
+            messages.error(request, "Error marking attendance.")
+        return redirect("student_attendance")
     return student_frontend(request, mark_block, mark_result)
+
+
+def mark_attendance(request, act, code):
+    """Handles the process of checking the code and marking attedance for the user.
+    Args:
+        request: the user's request
+        act: the EighthScheduledActivity for which the user attempts to take attendance
+        code: the code which the user is attempting to take attendance
+    Returns:
+        A string reporting the result of the attempt. Either "code_correct" or "code_fail"
+    """
+    if code.upper() == act.attendance_code:
+        try:
+            present = EighthSignup.objects.get(scheduled_activity=act, user__in=[request.user.id])
+            present.was_absent = False
+            present.attendance_marked = True
+            present.save()
+            invalidate_obj(present)
+            act.attendance_taken = True
+            act.save()
+            invalidate_obj(act)
+            return "code_correct"
+        except EighthSignup.DoesNotExist:
+            return "code_fail"
+    return "code_fail"
+
+
+def check_attendance_open(act: EighthScheduledActivity, day_blocks: QuerySet[Block]):
+    """Checks whether attendance is open for an EighthScheduledActivity.
+    Args:
+        act: the EighthScheduledActivity in question
+        day_blocks: the set of Block objects in the current day's day_type (defined in student_attendance_view)
+    Returns:
+        mark_result: a string, either "invalid_time" or "code_closed", or None if attendance is open.
+    """
+    block = act.block
+    mark_result = None
+    if act.get_code_mode_display() == "Auto":
+        try:
+            day_block = day_blocks.get(name="8" + block.block_letter)
+        except Block.DoesNotExist:
+            mark_result = "invalid_time"
+        start_time = shift_time(tm(hour=day_block.start.hour, minute=day_block.start.minute), -ATTENDANCE_CODE_BUFFER)
+        end_time = shift_time(tm(hour=day_block.end.hour, minute=day_block.end.minute), ATTENDANCE_CODE_BUFFER)
+        if not start_time <= timezone.localtime().time() <= end_time:
+            mark_result = "invalid_time"
+    elif act.get_code_mode_display() == "Closed":
+        mark_result = "code_closed"
+    return mark_result
 
 
 @login_required
 @deny_restricted
 def student_frontend(request, mark_block: EighthBlock = None, mark_result: str = None):
+    """Generates the student frontend view for their eighth period blocks.
+    Args:
+        request: the user's HttpRequest, mark_block: the block for which the system attempted to mark the student's attendance,
+        mark_result: the result of that attendance marking attempt ("invalid time", "code_closed", "code_fail", or "code_correct")
+    Returns:
+        An HttpResponse rendering the student frontend using the student_submit_attendance.html template, or redirecting to index.
+    """
     blocks = EighthBlock.objects.get_blocks_today()
     if blocks:
         sch_acts = []
@@ -868,51 +937,3 @@ def student_frontend(request, mark_block: EighthBlock = None, mark_result: str =
         messages.error(request, "There are no eighth period blocks scheduled today.")
         response = redirect("index")
     return response
-
-
-@login_required
-@deny_restricted
-def qr_attendance_view(request, act_id, code):
-    act = get_object_or_404(EighthScheduledActivity, id=act_id)
-    error = False
-    block = act.block
-    mark_result = None
-    if act.get_code_mode_display() == "Auto":
-        now = timezone.localtime()
-        day_blocks = Day.objects.select_related("day_type").get(date=now).day_type.blocks
-        try:
-            day_block = day_blocks.get(name="8" + block.block_letter)
-            start_time = shift_time(tm(hour=day_block.start.hour, minute=day_block.start.minute), -20)
-            end_time = shift_time(tm(hour=day_block.end.hour, minute=day_block.end.minute), 20)
-            if not start_time <= now.time() <= end_time:
-                mark_result = "invalid_time"
-                error = True
-        except Exception:
-            mark_result = "invalid_time"
-            error = True
-    elif act.get_code_mode_display() == "Closed":
-        mark_result = "code_closed"
-        error = True
-    if not error:
-        code = code.upper()
-        if code == act.attendance_code:
-            try:
-                present = EighthSignup.objects.get(scheduled_activity=act, user__in=[request.user.id])
-                present.was_absent = False
-                present.attendance_marked = True
-                present.save()
-                invalidate_obj(present)
-                act.attendance_taken = True
-                act.save()
-                invalidate_obj(act)
-                mark_result = "code_correct"
-                messages.success(request, "Attendance marked.")
-            except Exception:
-                mark_result = "code_fail"
-                messages.error(request, "Failed to mark attendance.")
-        else:
-            mark_result = "code_fail"
-            messages.error(request, "Failed to mark attendance.")
-    else:
-        messages.error(request, "Failed to mark attendance.")
-    return student_frontend(request, block, mark_result)
