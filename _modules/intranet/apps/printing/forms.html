@@ -1089,6 +1089,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.models.LostItem.html">LostItem</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.tasks.html">tasks</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.tests.html">tests</a><input class="toctree-checkbox" id="toctree-checkbox-167" name="toctree-checkbox-167" role="switch" type="checkbox"/><label for="toctree-checkbox-167"><div class="visually-hidden">Toggle navigation of tests</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.tests.LostFoundTestCase.html">LostFoundTestCase</a></li>
 </ul>
@@ -1551,13 +1552,99 @@
         <span class="k">if</span> <span class="n">filesize</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">FILES_MAX_UPLOAD_SIZE</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The file uploaded is above the maximum upload size (</span><span class="si">{</span><span class="n">settings</span><span class="o">.</span><span class="n">FILES_MAX_UPLOAD_SIZE</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1024</span><span class="si">}</span><span class="s2">MB). &quot;</span><span class="p">)</span>
 
+<div class="viewcode-block" id="PrintJobForm.validate_page_range"><a class="viewcode-back" href="../../../../reference/intranet.apps.printing.forms.PrintJobForm.html#intranet.apps.printing.forms.PrintJobForm.validate_page_range">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_page_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Expects string that only includes commas, digits, and dashes (already validated by regex)</span>
+<span class="sd">        Validates that the page_range field&#39;s ranges and numbers correctly selects any pages from 1 to infinity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Return if user specifies all pages.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Gets number with suffix for clean error handling, e.g 1st, 2nd, 3rd</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_number_ordinal</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="mi">11</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="s2">&quot;th&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Codespell thinks &#39;nd&#39; is misspelled</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;th&quot;</span><span class="p">,</span> <span class="s2">&quot;st&quot;</span><span class="p">,</span> <span class="s2">&quot;nd&quot;</span><span class="p">,</span> <span class="s2">&quot;rd&quot;</span><span class="p">,</span> <span class="s2">&quot;th&quot;</span><span class="p">][</span><span class="nb">min</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>  <span class="c1"># codespell:ignore</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">suffix</span>
+
+        <span class="n">range_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">prev_max</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">page_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">single_range</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">range_list</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Present a clean error message if there&#39;s multiple items or or not.</span>
+            <span class="n">error_prefix</span> <span class="o">=</span> <span class="s2">&quot;Input is invalid, &quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">range_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">get_number_ordinal</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="si">}</span><span class="s2"> item is invalid, &quot;</span>
+
+            <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">single_range</span><span class="p">:</span>  <span class="c1"># Handling a range.</span>
+                <span class="n">input_range</span> <span class="o">=</span> <span class="n">single_range</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;make sure the range is properly formatted (x-y).&quot;</span><span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">range_from</span><span class="p">,</span> <span class="n">range_to</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">input_range</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;you must specify two numbers around a dash for ranges.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+                <span class="k">if</span> <span class="n">range_from</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">range_to</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;pages are numbered starting at 1, not 0.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">range_from</span> <span class="o">&gt;</span> <span class="n">range_to</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;the lower bound should be smaller than the upper bound.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">range_to</span> <span class="o">&lt;</span> <span class="n">prev_max</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                        <span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;please make sure your ranges and page numbers are in ascending order and not duplicating.&quot;</span>
+                    <span class="p">)</span>  <span class="c1"># LPR won&#39;t accept non ascending ranges.</span>
+
+                <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">range_from</span><span class="p">,</span> <span class="n">range_to</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">page_set</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                            <span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;you may not specify duplicate page numbers.&quot;</span>
+                        <span class="p">)</span>  <span class="c1"># CUPS will ignore duplicating page numbers, user should be notified.</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">page_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
+
+                <span class="n">prev_max</span> <span class="o">=</span> <span class="n">range_to</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Handling a single number.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">page_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">single_range</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;you may only specify numbers.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+                <span class="k">if</span> <span class="n">page_num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;pages are numbered starting at 1, not 0.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">page_num</span> <span class="o">&lt;</span> <span class="n">prev_max</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                        <span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;please make sure your ranges and page numbers are in ascending order and not duplicating.&quot;</span>
+                    <span class="p">)</span>  <span class="c1"># LPR won&#39;t accept non ascending ranges.</span>
+
+                <span class="k">if</span> <span class="n">page_num</span> <span class="ow">in</span> <span class="n">page_set</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span>
+                        <span class="n">error_prefix</span> <span class="o">+</span> <span class="s2">&quot;you may not specify duplicate page numbers.&quot;</span>
+                    <span class="p">)</span>  <span class="c1"># CUPS will ignore duplicating page numbers, user should be notified.</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">page_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">page_num</span><span class="p">)</span>
+
+                <span class="n">prev_max</span> <span class="o">=</span> <span class="n">page_num</span>
+
+        <span class="k">return</span></div>
+
     <span class="n">file</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_size</span><span class="p">])</span>
     <span class="n">printer</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">()</span>
     <span class="n">page_range</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">RegexField</span><span class="p">(</span>
         <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
         <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">regex</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;^[0-9,\- ]*$&quot;</span><span class="p">,</span>
-        <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;invalid&quot;</span><span class="p">:</span> <span class="s2">&quot;This field must contain only numbers or ranges of numbers.&quot;</span><span class="p">},</span>
+        <span class="n">error_messages</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;invalid&quot;</span><span class="p">:</span> <span class="s2">&quot;This field must contain only a list of comma separated numbers and/or ranges separated by dashes.&quot;</span><span class="p">},</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Specify pages to print as a comma-separated list of ascending numbers and ranges (inclusive), e.g. &#39;1-3, 5, 7&#39;.&quot;</span>
+            <span class="s2">&quot;&lt;br&gt;You may not specify a page to print multiple times.&quot;</span>
+            <span class="s2">&quot;&lt;br&gt;Leave blank for all pages.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">validators</span><span class="o">=</span><span class="p">[</span><span class="n">validate_page_range</span><span class="p">],</span>
         <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;placeholder&quot;</span><span class="p">:</span> <span class="s2">&quot;All Pages&quot;</span><span class="p">}),</span>
     <span class="p">)</span>
 
@@ -1595,7 +1682,7 @@
       
     </aside>
   </div>
-</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=29e7036a"></script>
+</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=ca4d97d8"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

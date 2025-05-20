@@ -1089,6 +1089,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.models.LostItem.html">LostItem</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.tasks.html">tasks</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.tests.html">tests</a><input class="toctree-checkbox" id="toctree-checkbox-167" name="toctree-checkbox-167" role="switch" type="checkbox"/><label for="toctree-checkbox-167"><div class="visually-hidden">Toggle navigation of tests</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.lostfound.tests.LostFoundTestCase.html">LostFoundTestCase</a></li>
 </ul>
@@ -1802,41 +1803,37 @@
 
 
 <div class="viewcode-block" id="check_page_range"><a class="viewcode-back" href="../../../../reference/intranet.apps.printing.views.html#intranet.apps.printing.views.check_page_range">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">check_page_range</span><span class="p">(</span><span class="n">page_range</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_pages</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the number of pages included in the range, or None if it is an invalid range.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the number of pages included in the range, or None if the range exceeds max_pages.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        page_range: The page range as a string, such as &quot;1-5&quot; or &quot;1,2,3&quot;.</span>
+<span class="sd">        page_range: The page range as a string, such as &quot;1-5&quot; or &quot;1,2,3&quot;. It has already been validated as</span>
+<span class="sd">            syntantically correct by the form validator.</span>
 <span class="sd">        max_pages: The number of pages in the submitted document. If the number of pages in the</span>
 <span class="sd">            given range exceeds this, it will be considered invalid.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        The number of pages in the range, or None if it is an invalid range.</span>
+<span class="sd">        The number of pages in the range, or None if it&#39;s higher than max_pages.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pages</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">single_range</span> <span class="ow">in</span> <span class="n">page_range</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>  <span class="c1"># check all ranges separated by commas</span>
+        <span class="k">for</span> <span class="n">single_range</span> <span class="ow">in</span> <span class="n">page_range</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">single_range</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">single_range</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="kc">None</span>
-
                 <span class="n">range_low</span><span class="p">,</span> <span class="n">range_high</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">single_range</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">))</span>
 
-                <span class="c1"># check in page range</span>
-                <span class="k">if</span> <span class="n">range_low</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">range_high</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">range_low</span> <span class="o">&gt;</span> <span class="n">max_pages</span> <span class="ow">or</span> <span class="n">range_high</span> <span class="o">&gt;</span> <span class="n">max_pages</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="kc">None</span>
-
-                <span class="k">if</span> <span class="n">range_low</span> <span class="o">&gt;</span> <span class="n">range_high</span><span class="p">:</span>  <span class="c1"># check lower bound &lt;= upper bound</span>
+                <span class="c1"># Check the page range.</span>
+                <span class="k">if</span> <span class="n">range_low</span> <span class="o">&gt;</span> <span class="n">max_pages</span> <span class="ow">or</span> <span class="n">range_high</span> <span class="o">&gt;</span> <span class="n">max_pages</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">None</span>
 
                 <span class="n">pages</span> <span class="o">+=</span> <span class="n">range_high</span> <span class="o">-</span> <span class="n">range_low</span> <span class="o">+</span> <span class="mi">1</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">single_range</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">single_range</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">single_range</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">single_range</span> <span class="o">&gt;</span> <span class="n">max_pages</span><span class="p">:</span>  <span class="c1"># check in page range</span>
+                <span class="k">if</span> <span class="n">single_range</span> <span class="o">&gt;</span> <span class="n">max_pages</span><span class="p">:</span>  <span class="c1"># Check the page range</span>
                     <span class="k">return</span> <span class="kc">None</span>
 
                 <span class="n">pages</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># catch int parse fail</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>  <span class="c1"># Form has been validated, so int parse error shouldn&#39;t occur.</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">pages</span></div>
 
@@ -1939,7 +1936,7 @@
 
         <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">page_range</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">range_count</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;You specified an invalid page range.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span><span class="s2">&quot;You specified a page range that exceeds the amount of pages in your document.&quot;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">range_count</span> <span class="o">&gt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">PRINTING_PAGES_LIMIT_TEACHERS</span> <span class="ow">and</span> <span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_printing_admin</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">InvalidInputPrintingError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;You specified a range of </span><span class="si">{</span><span class="n">range_count</span><span class="si">}</span><span class="s2"> pages. &quot;</span>
@@ -2101,7 +2098,7 @@
       
     </aside>
   </div>
-</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=29e7036a"></script>
+</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=ca4d97d8"></script>
     <script src="../../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

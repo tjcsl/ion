@@ -1090,6 +1090,7 @@
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.lostfound.models.LostItem.html">LostItem</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="intranet.apps.lostfound.tasks.html">tasks</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="intranet.apps.lostfound.tests.html">tests</a><input class="toctree-checkbox" id="toctree-checkbox-167" name="toctree-checkbox-167" role="switch" type="checkbox"/><label for="toctree-checkbox-167"><div class="visually-hidden">Toggle navigation of tests</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="intranet.apps.lostfound.tests.LostFoundTestCase.html">LostFoundTestCase</a></li>
 </ul>
@@ -1540,17 +1541,18 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="intranet.apps.printing.views.check_page_range">
 <span class="sig-prename descclassname"><span class="pre">intranet.apps.printing.views.</span></span><span class="sig-name descname"><span class="pre">check_page_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/intranet/apps/printing/views.html#check_page_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#intranet.apps.printing.views.check_page_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of pages included in the range, or None if it is an invalid range.</p>
+<dd><p>Returns the number of pages included in the range, or None if the range exceeds max_pages.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>page_range</strong> – The page range as a string, such as “1-5” or “1,2,3”.</p></li>
+<li><p><strong>page_range</strong> – The page range as a string, such as “1-5” or “1,2,3”. It has already been validated as
+syntantically correct by the form validator.</p></li>
 <li><p><strong>max_pages</strong> – The number of pages in the submitted document. If the number of pages in the
 given range exceeds this, it will be considered invalid.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The number of pages in the range, or None if it is an invalid range.</p>
+<dd class="field-even"><p>The number of pages in the range, or None if it’s higher than max_pages.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1726,7 +1728,7 @@ Otherwise, this returns an empty dictionary.</p>
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=29e7036a"></script>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ca4d97d8"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
