@@ -946,6 +946,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
         "args": (),
     },
+    "fetch-fcpsbus-delays": {
+        "task": "intranet.apps.bus.tasks.fetch_fcpsbus_delays",
+        "schedule": 10.0,
+        "args":(),
+    },
 }
 
 MAINTENANCE_MODE = False
