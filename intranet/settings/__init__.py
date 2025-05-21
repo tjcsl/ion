@@ -894,6 +894,12 @@ FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 # The address for the CSL's BetterUptime status page
 CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
 
+# Number of times to retry accessing the status page above
+CSL_STATUS_PAGE_MAX_RETRIES = 5
+
+# Timeout for accessing CSL_STATUS_PAGE (in seconds)
+CSL_STATUS_PAGE_TIMEOUT = 15
+
 # The timeout for the request to FCPS' emergency page (in seconds)
 EMERGENCY_TIMEOUT = 5
 
@@ -909,6 +915,9 @@ SIMILAR_THRESHOLD = 5
 
 # Time that the bus page should change from morning to afternoon display
 BUS_PAGE_CHANGEOVER_HOUR = 12
+
+# Age (in days) of a lost and found entry until it is hidden
+LOSTFOUND_EXPIRATION = 180
 
 # Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
@@ -950,6 +959,11 @@ CELERY_BEAT_SCHEDULE = {
         "task": "intranet.apps.bus.tasks.fetch_fcpsbus_delays",
         "schedule": 10.0,
         "args":(),
+    },
+    "remove-old-lostfound-entries": {
+        "task": "intranet.apps.lostfound.tasks.remove_old_lostfound",
+        "schedule": celery.schedules.crontab(day_of_month=1, hour=1),
+        "args": (),
     },
 }
 

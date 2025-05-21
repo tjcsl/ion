@@ -256,7 +256,7 @@ def get_announcements_list(request, context) -> list[Announcement | Event]:
     if context["events_admin"] and context["show_all"]:
         events = Event.objects.all()
     elif context["show_expired"]:
-        events = Event.objects.visible_to_user(user)
+        events = Event.objects.visible_to_user(user).filter(show_on_dashboard=True)
     else:
         # Unlike announcements, show events for the rest of the day after they occur.
         midnight = timezone.localtime().replace(hour=0, minute=0, second=0, microsecond=0)

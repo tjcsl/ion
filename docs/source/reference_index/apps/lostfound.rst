@@ -11,6 +11,7 @@ lostfound
    apps
    forms
    models
+   tasks
    tests
    urls
    views
