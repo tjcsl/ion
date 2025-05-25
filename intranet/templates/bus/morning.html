@@ -91,6 +91,21 @@
                 JT-100, JT100, jt-100, jt100, or 100.
             </p>
             {% endif %}
+            <div class="delay-announcements">
+                <h3>Current Bus Delays</h3>
+                {% if bus_delays %}
+                    {% for route, delay in bus_delays.items %}
+                        <div class="delay-card">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>
+                                <strong>Bus {{ route }}</strong> delayed due to: {{ delay.reason|lower }} <br/> ETA: {{ delay.estimated_time_delay }} minutes.
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-delays">No current delays reported.</p>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
