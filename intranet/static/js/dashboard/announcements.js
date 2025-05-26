@@ -15,18 +15,19 @@ $(document).ready(function() {
         $(".club-announcements-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
     });
 
-    $(".announcement[data-id] h3").click(function (e) {
+    $(".club-announcements-content").on("click", ".announcement[data-id] h3", function (e) {
         if (e.target !== this) return;
         var btn = $(".announcement-toggle", $(this));
         announcementToggle.call(btn);
     });
 
-    $(".announcement[data-id] h3 .announcement-toggle").click(function (e) {
+    $(".club-announcements-content").on("click", ".announcement[data-id] h3 .announcement-toggle", function (e) {
         e.preventDefault();
-        announcementToggle.call($(this));
+        announcementToggl
+l($(this));
     });
-
-    $(".announcement[data-id] h3 .dashboard-item-icon").click(function (e) {
+    
+    $(".club-announcements-content").on("click", ".announcement[data-id] h3 .dashboard-item-icon", function (e) {
         e.preventDefault();
         var btn = $(".announcement-toggle", $(this).parent());
         announcementToggle.call(btn);
@@ -94,6 +95,34 @@ function updatePartiallyHidden() {
     });
 }
 
+function loadMoreClubAnnouncements(fetchLimit, offset) {
+    $.ajax({
+        url: "/api/announcements/load-more-club-announcements",
+        type: "GET",
+        data: { fetch_limit: fetchLimit, offset },
+        success: function(data) {
+            if (data.next_announcements.length > 0) {
+                data.next_announcements.forEach(function(annHtml) {
+                    const $wrapper = $("<div>").html(annHtml);
+
+                    $wrapper.find(".announcement").addClass("next-club-announcement-to-show");
+
+                    const $filtered = $wrapper.contents().filter(function () {
+                        return this.nodeType === 1 && (this.tagName === "DIV" || this.tagName === "SCRIPT");
+                    });
+
+                    $(".club-announcements-content").append($filtered);
+                });
+                updatePartiallyHidden();
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", status, error);
+            console.error("Response:", xhr.responseText);
+        }
+    })
+}
+
 function announcementToggle() {
     var announcement = $(this).closest(".announcement");
     var announcementContent = $(".announcement-toggle-content", announcement);
@@ -154,11 +183,22 @@ function announcementToggle() {
                 announcement.remove();
                 const numAnnouncementsSpan = $(".num-club-announcements");
                 const numAnnouncements = numAnnouncementsSpan.text().match(/\d+/);
-                // 15 is the cap, and prevent clicking on the button too fast
-                if(numAnnouncements != 15 && !announcement.hasClass("announcement-read")) {
-                  numAnnouncementsSpan.text(numAnnouncements - 1);
-                  announcement.addClass("announcement-read");
+
+                if(!announcement.hasClass("announcement-read")) {
+                    numAnnouncementsSpan.text(numAnnouncements - 1);
+                    announcement.addClass("announcement-read");
+                    let newAnnouncement = $(".next-club-announcement-to-show").first();
+                    newAnnouncement.toggleClass("next-club-announcement-to-show");
+                    newAnnouncement.fadeIn(350);
                 }
+
+                const fetchLimit = 15
+                const offset = 5
+
+                if(numAnnouncements > fetchLimit - offset && $(".next-club-announcement-to-show").length === offset) {
+                    loadMoreClubAnnouncements(fetchLimit, offset);
+                }
+
                 $(".club-announcements:has(.club-announcements-content:not(:has(.announcement)))").slideUp(350);
             }, 450);
         } else {

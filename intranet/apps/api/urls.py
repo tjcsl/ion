@@ -7,11 +7,13 @@ from ..emerg import api as emerg_api
 from ..schedule import api as schedule_api
 from ..users import api as users_api
 from .views import api_root
+from ..dashboard.views import load_more_club_announcements
 
 urlpatterns = [
     re_path(r"^$", api_root, name="api_root"),
     re_path(r"^/announcements$", announcements_api.ListCreateAnnouncement.as_view(), name="api_announcements_list_create"),
     re_path(r"^/announcements/(?P<pk>\d+)$", announcements_api.RetrieveUpdateDestroyAnnouncement.as_view(), name="api_announcements_detail"),
+    re_path(r"^/announcements/load-more-club-announcements", load_more_club_announcements, name="api_announcements_load_more"),
     re_path(r"^/blocks$", eighth_api.EighthBlockList.as_view(), name="api_eighth_block_list"),
     re_path(r"^/blocks/(?P<pk>\d+)$", eighth_api.EighthBlockDetail.as_view(), name="api_eighth_block_detail"),
     re_path(r"^/search/(?P<query>.+)$", users_api.Search.as_view(), name="api_user_search"),
