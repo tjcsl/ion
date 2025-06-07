@@ -26,4 +26,4 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 
 Please read our `contributing guide <https://tjcsl.github.io/ion/developing/contributing.html>`_ for more information.
 
-Current Intranet maintainers: `alanzhu0 <https://github.com/alanzhu0>`_ and `NotFish232 <https://github.com/NotFish232>`_
+Current Intranet maintainers: `aarushtools <https://github.com/aarushtools>`_ and `shrysjain <https://github.com/shrysjain>`_
