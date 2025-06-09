@@ -21,9 +21,9 @@
 </table>
 <br />
 <div class="schedule" data-prev-date="{{ month_data.last_month }}" data-next-date="{{ month_data.next_month }}" data-date="{{ week_data.today }}">
-    {% for week in month_data.weeks %}
     <table class="month-table">
         <tbody>
+        {% for week in month_data.weeks %}
         <tr>
             {% for day in week.days %}
                 {% if day.events_ctx.display == True %}
@@ -44,7 +44,7 @@
                 {% endif %}
             {% endfor %}
         </tr>
+        {% endfor %}
         </tbody>
     </table>
-    {% endfor %}
 </div>

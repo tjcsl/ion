@@ -49,16 +49,6 @@
     {% stylesheet 'dashboard' %}
     {% stylesheet 'events' %}
     {% stylesheet 'enrichment' %}
-
-    {% if is_enrichment_admin %}
-    <style>
-        @media (max-width: 1080px) {
-            .enrichment-container > .enrichment:nth-child(2) {
-                margin-top: 80px !important;
-            }
-        }
-    </style>
-    {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -116,9 +106,9 @@
                     <a id="week-button" class="button" href="#">Week</a>
                 </div>
             {% endif %}
-
         </div>
-        <div class="enrichment-container">
+        <br />
+
         {% if show_all or classic %}
             <div class="enrichment-container">
                 {% for category in enrichments %}
@@ -135,9 +125,6 @@
             </div>
         {% endif %}
 
-            <br />
-            <br />
-        </div>
 
         {% if not show_all and not classic %}
             <div class="enrichment-container" id="view-div"></div>

@@ -148,7 +148,7 @@ tr.schedule-block.current {
 .primary-content {
     position: relative;
     top: 5px;
-
+    max-width: 1450px;
     h2 {
         left: 5px;
     }
@@ -178,15 +178,13 @@ tr.schedule-block.current {
     }
 }
 
-@media (max-width: 1080px) {
+
+
+/* 1225 is where the everything can fit on the screen with the header */
+@media (max-width: 1225px) {
     .arrow-container {
         margin-top: 20px;
         margin-bottom: -20px !important;
-    }
-
-    .week-only {
-        position: relative;
-        right: 8.5%;
     }
 
     .week-table {
@@ -197,7 +195,9 @@ tr.schedule-block.current {
             display: block;
             border-bottom: 1px solid lightgrey;
             padding: 20px 0 !important;
-            width: 120%;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
 
             &:first-child {
                 border-top: 1px solid lightgrey;
@@ -216,5 +216,16 @@ tr.schedule-block.current {
 
     .schedule:first-child {
         margin-top: 20px;
+    }
+}
+
+@media(max-width: 680px) {
+    .week-table {
+        & > tbody > tr > td {
+            width: 120%;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 }
