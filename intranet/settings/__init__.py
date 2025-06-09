@@ -67,6 +67,23 @@ SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue fo
 SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
 
 """  -------- END UPDATE ANNUALLY --------  """
+
+# Bus Delays
+# Buffer are used in timedelta for when to schedule the bus delay fetches that occur every 15s seconds or 1 minute respectively.
+BUS_DELAY_URL = "https://busdelay.fcps.edu/"
+# First Wwindow Buffer: 2.5 hours before start of school to 1 hour after start of school (for 1 minute task)
+FIRST_WINDOW_START_BUFFER = 2.5
+FIRST_WINDOW_END_BUFFER = 1
+# Second Window Buffer: 20 minutes before end of school to 5 minutes before end of school (for 1 minute task)
+SECOND_WINDOW_START_BUFFER = 20
+SECOND_WINDOW_END_BUFFER = 5
+# Third Window Buffer: 20 minutes after end of school to 2 hours after end of school (for 1 minute task)
+THIRD_WINDOW_START_BUFFER = 20
+THIRD_WINDOW_END_BUFFER = 2
+# Active Window Buffer: 5 minutes before end of school to 20 minutes after end of school (for 15 second task)
+ACTIVE_WINDOW_START_BUFFER = 5
+ACTIVE_WINDOW_END_BUFFER = 20
+
 # fmt: on
 
 # Default fallback time for start and end of school if no schedule is available
@@ -953,6 +970,11 @@ CELERY_BEAT_SCHEDULE = {
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
+        "args": (),
+    },
+    "schedule-all-bus-delay-fetches": {
+        "task": "intranet.apps.bus.tasks.schedule_all_bus_delay_fetches",
+        "schedule": celery.schedules.crontab(hour=0,minute=1),
         "args": (),
     },
     "remove-old-lostfound-entries": {
