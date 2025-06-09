@@ -3,6 +3,8 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+from ...settings.__init__ import ATTENDANCE_CODE_BUFFER
+
 
 class Time(models.Model):
     hour = models.IntegerField()
@@ -46,14 +48,68 @@ class CodeName(models.Model):
         return self.name
 
 
+def shift_time(time: datetime.time, minutes: int) -> datetime.time:
+    """Shifts the given time field by a certain number of minutes, with safeties: if shifting under 0,0,0 or past 23,59,59,
+    it returns 0,0,0 or 23,59,59, respectively.
+    Args:
+        time: A datetime.time object
+        minutes: Number of minutes (int)
+    Returns:
+        A datetime.time object which is the time argument shifted by minutes (if minutes is negative, shifts backwards)
+    """
+    today = datetime.datetime.today()
+    if minutes < 0:
+        t = datetime.time(0, -minutes, 0)
+        if time < t:
+            return datetime.time(0, 0, 0)
+    else:
+        delta = datetime.datetime.combine(today, datetime.time(23, 59, 59)) - datetime.datetime.combine(today, time)
+        if minutes > delta.total_seconds() / 60:
+            return datetime.time(23, 59, 59)
+    dt = datetime.datetime.combine(today, time)
+    return (dt + datetime.timedelta(minutes=minutes)).time()
+
+
 class DayType(models.Model):
     name = models.CharField(max_length=100)
     codenames = models.ManyToManyField("CodeName", blank=True)
     special = models.BooleanField(default=False)
     blocks = models.ManyToManyField("Block", blank=True)
+    eighth_auto_open = models.TimeField(
+        null=True, blank=True
+    )  # time when attendance is opened for sch_acts with "auto" mode set, 11:59:59 if no eighth periods
+    eighth_auto_close = models.TimeField(null=True, blank=True)  # 00:00:00 if no eighth periods
 
     def __str__(self):
         return self.name
+
+    def gen_eighth_auto(self):
+        """Generates the times when eighth-block attendance opens generally for this DayType."""
+        earliest = None
+        latest = None
+        for blk in self.blocks.all():
+            name = blk.name
+            if name is None:
+                continue
+            if "8" in name:
+                start = datetime.time(hour=blk.start.hour, minute=blk.start.minute)
+                end = datetime.time(hour=blk.end.hour, minute=blk.end.minute)
+                if earliest is None or start <= earliest:
+                    earliest = start
+                if latest is None or end >= latest:
+                    latest = end
+        if earliest is None or latest is None:
+            self.eighth_auto_open = datetime.time(23, 59, 59)
+            self.eighth_auto_close = datetime.time(0, 0, 0)
+        else:
+            self.eighth_auto_open = shift_time(earliest, -ATTENDANCE_CODE_BUFFER)
+            self.eighth_auto_close = shift_time(latest, ATTENDANCE_CODE_BUFFER)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.eighth_auto_open is None or self.eighth_auto_close is None:
+            self.gen_eighth_auto()
+            self.save()
 
     @property
     def class_name(self):

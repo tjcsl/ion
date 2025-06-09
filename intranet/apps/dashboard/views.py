@@ -22,7 +22,7 @@ from ..announcements.models import Announcement, AnnouncementRequest, WarningAnn
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
 from ..enrichment.models import EnrichmentActivity
 from ..events.models import Event, TJStarUUIDMap
-from ..schedule.models import Day
+from ..schedule.models import Day, DayType
 from ..schedule.views import decode_date, schedule_context
 from ..seniors.models import Senior
 
@@ -685,6 +685,14 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
 
     self_awaiting_teacher = AnnouncementRequest.objects.filter(posted=None, rejected=False, teachers_requested=request.user).this_year()
     context.update({"self_awaiting_teacher": self_awaiting_teacher})
+
+    try:
+        daytype = Day.objects.select_related("day_type").get(date=now).day_type  # For checking whether to display eighth attendance code for students
+        context.update({"attendance_open": daytype.eighth_auto_open <= now.time() <= daytype.eighth_auto_close})
+    except Day.DoesNotExist:
+        context.update({"attendance_open": False})
+    except DayType.DoesNotExist:
+        context.update({"attendance_open": False})
 
     if show_welcome:
         return render(request, "welcome/student.html", context)

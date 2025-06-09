@@ -18,6 +18,7 @@ from ....utils.helpers import is_entirely_digit
 from ....utils.locking import lock_on
 from ....utils.serialization import safe_json
 from ...auth.decorators import deny_restricted, eighth_admin_required
+from ...schedule.models import Day
 from ..exceptions import SignupException
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist
 from ..serializers import EighthBlockDetailSerializer
@@ -215,6 +216,14 @@ def eighth_signup_view(request, block_id=None):
         except KeyError:
             active_block_current_signup = None
 
+        attendance_open = False
+        try:
+            now = timezone.localtime()
+            daytype = Day.objects.select_related("day_type").get(date=now).day_type
+            if daytype.eighth_auto_open <= now.time() <= daytype.eighth_auto_close:
+                attendance_open = True
+        except Day.DoesNotExist:
+            attendance_open = False
         context = {
             "user": user,
             "real_user": request.user,
@@ -222,6 +231,7 @@ def eighth_signup_view(request, block_id=None):
             "activities_list": safe_json(block_info["activities"]),
             "active_block": block,
             "active_block_current_signup": active_block_current_signup,
+            "attendance_open": attendance_open,
         }
 
         #######
@@ -444,15 +454,27 @@ def eighth_location(request):
     blocks = EighthBlock.objects.get_blocks_today()
     if blocks:
         sch_acts = []
+        attendance_open = False
         for b in blocks:
             try:
                 act = request.user.eighthscheduledactivity_set.get(block=b)
                 if act.activity.name != "z - Hybrid Sticky":
                     sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
+                if act.code_mode == 1:
+                    attendance_open = True
             except EighthScheduledActivity.DoesNotExist:
                 sch_acts.append([b, None])
-
-        response = render(request, "eighth/location.html", context={"sch_acts": sch_acts})
+        if not attendance_open:
+            try:
+                now = timezone.localtime()
+                daytype = Day.objects.select_related("day_type").get(date=now).day_type
+                if daytype.eighth_auto_open <= now.time() <= daytype.eighth_auto_close:
+                    attendance_open = True
+            except Day.DoesNotExist:
+                attendance_open = False
+        response = render(
+            request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user, "attendance_open": attendance_open}
+        )
     else:
         messages.error(request, "There are no eighth period blocks scheduled today.")
         response = redirect("index")

@@ -16,7 +16,11 @@
             Upcoming Eighth Periods
         </h2>
         <div class="info">
-            <a href="{% url 'eighth_signup' %}" class="button small-button">View more blocks</a>
+            {% if attendance_open %}
+                <a href="{% url 'student_attendance' %}" class="button small-button">Enter Attendance Code</a>
+            {% else %}
+                <a href="{% url 'eighth_signup' %}" class="button small-button">View more blocks</a>
+            {% endif %}
         </div>
 
     </div>

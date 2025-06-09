@@ -1,0 +1,103 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Submit Attendance{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.schedule' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content" id="quick-schedule">
+    <h2>Submit attendance for today's eighth periods:</h2>
+    <br>
+    {% for s in sch_acts %}
+    <h3>{{ s.0.hybrid_text }} Block ({{ s.0.date }})</h3>
+        <div class="block-display">
+            {% if s.1 is not None %}
+            <h4><a href="{% url 'eighth_activity' s.1.activity.id %}">{{ s.1.full_title }}</a></h4>
+            <h5><strong>Room(s):</strong> {{ s.2 }}</h5>
+            <h5><strong>Sponsor(s):</strong> {{ s.3 }}</h5>
+            <br>
+            <p><strong>Comments:</strong> {% if s.1.comments %}{{ s.1.comments }}{% else %}None{% endif %}</p>
+            <br>
+            <p>{{ s.1.activity.description }}</p>
+            {% if s.0 in att_marked%}
+            <p style="color: green;">Attendance marked.</p>
+            {% else %}
+            <form id="attendance-code-form" method="post" action="">
+                {% csrf_token %}
+                <p><strong>Attendance Code: </strong></p>
+                <input
+                  type="hidden"
+                  id="attendance-code"
+                  name="{{ s.0.block_letter }}"
+                />
+                <div id="code-inputs" style="display: flex; gap: 5px;">
+                {% for i in "123456" %}
+                    <input
+                    type="text"
+                    maxlength="1"
+                    class="code-char"
+                    required
+                    style="width: 2em; text-align: center; font-size: 1.5em; height: 1.5em; padding: 0"
+                    pattern="[A-Za-z0-9]"
+                    />
+                {% endfor %}
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+            <script>
+                const charInputs = document.querySelectorAll('.code-char');
+                const fullCodeInput = document.getElementById('attendance-code');
+                const form = document.getElementById('attendance-code-form')
+                charInputs.forEach((input, idx) => {
+                    input.addEventListener('input', () => {
+                    if (input.value.length === 1 && idx < charInputs.length - 1) {
+                        charInputs[idx + 1].focus();
+                    }
+                    });
+                    input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && input.value === '' && idx > 0) {
+                        charInputs[idx - 1].focus();
+                    }
+                    });
+                });
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    let code = "";
+                    charInputs.forEach((input) => {
+                        code += input.value;
+                    });
+                    fullCodeInput.value = code;
+                    form.submit();
+                });
+            </script>
+            {% endif %}
+            {% if s.0 == mark_block %}
+            {{ attendance_result|safe }}
+            {% endif %}
+            {% else %}
+            <p>You are not signed up for any activity.</p>
+            {% endif %}
+        </div>
+        <br><br>
+    {% endfor %}
+    <a class="button" href="{% url 'index' %}">Return to Dashboard</a>
+</div>
+{% endblock %}
