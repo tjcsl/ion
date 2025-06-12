@@ -12,7 +12,7 @@ body.disable-scroll {
 
 @media (max-width: 800px) {
     .header .search input[type="text"] {
-        width: 158px;
+        width: 250px;
         font-size: 12px;
         padding-right: 3px;
     }
@@ -45,6 +45,10 @@ body.disable-scroll {
         position: absolute !important;
         top: 4px;
         left: 60px;
+
+        body.mobile-nav-show & {
+            display: none;
+        }
     }
 
     .status-icon {
@@ -88,10 +92,10 @@ body.disable-scroll {
             }
         }
 
-        &.has-badge .left > form.search {
+        //&.has-badge .left > form.search {
             //width: 50%;
             //left: 20%;
-        }
+        //}
     }
     .left > a.intranet-title {
         position: absolute;
@@ -158,8 +162,6 @@ body.disable-scroll {
         height: 100%;
         height: calc(100% - 42px);
         overflow-y: auto;
-        background-color: rgb(242, 242, 244);
-        //background-color: rgb(56, 56, 56);
         border-radius: 0;
         border: none;
         /*
@@ -273,6 +275,7 @@ body.disable-scroll {
         cursor: pointer;
     }
     .intranet-title,
+    .status-link,
     .search {
         transition: all 0.2s ease;
         -webkit-transition: all 0.2s ease;
@@ -287,9 +290,30 @@ body.disable-scroll {
  * screens (320x480, iPhone 4)
  */
 
-@media (max-width: 325px) {
+@media (max-width: 420px) {
     body {
         padding-left: 6px;
         padding-right: 6px;
+    }
+
+    // overlaps with the search bar otherwise
+    body.mobile-nav-show {
+        .right {
+            display: none;
+        }
+
+        .left {
+            text-align: center;
+
+            // otherwise the search bar is too close to the back button
+            > form.search {
+                left: 20%;;
+            }
+        }
+
+        // search bar only shows when the mobile nav menu is active
+        .search input[type="text"] {
+            width: 180px; // using the space freed by no right buttons
+        }
     }
 }
