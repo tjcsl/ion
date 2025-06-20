@@ -417,6 +417,7 @@ def admin_daytype_view(request, daytype_id=None):
                 request.POST.getlist("block_name"),
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [9, 0] for i in request.POST.getlist("block_start")],
                 [[int(j) if j else 0 for j in i.split(":")] if ":" in i else [10, 0] for i in request.POST.getlist("block_end")],
+                strict=False,
             )
             model.blocks.all().delete()
             for blk in blocks:

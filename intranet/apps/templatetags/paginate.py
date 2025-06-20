@@ -1,5 +1,3 @@
-from typing import List, Union
-
 from django import template
 
 register = template.Library()
@@ -14,7 +12,7 @@ def query_transform(request, **kwargs):
 
 
 @register.filter  # TODO: replace return type with list[int | None]
-def page_list(paginator, current_page) -> List[Union[int, None]]:
+def page_list(paginator, current_page) -> list[int | None]:
     """Pagination
 
     If there is a ``None`` in the output, it should be replaced

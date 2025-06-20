@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable, Sequence
 from datetime import datetime, time, timedelta
 from itertools import chain
-from typing import Any, Generic, Iterable, Sequence, TypeVar
+from typing import Any, Generic, TypeGuard, TypeVar
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypedDict
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html

@@ -1,6 +1,5 @@
 import logging
 import time
-from typing import Tuple
 
 import requests
 from bs4 import BeautifulSoup
@@ -124,7 +123,7 @@ def update_emerg_cache(*, custom_logger=None) -> None:
     cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])
 
 
-def get_csl_status() -> Tuple[str, bool]:
+def get_csl_status() -> tuple[str, bool]:
     """Get the cached status of the TJCSL status page.
 
     Returns:

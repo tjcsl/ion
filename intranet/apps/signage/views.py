@@ -1,6 +1,5 @@
 import datetime
 import logging
-from typing import Optional
 
 from django import http
 from django.conf import settings
@@ -20,7 +19,7 @@ from .models import Sign
 logger = logging.getLogger(__name__)
 
 
-def check_internal_ip(request) -> Optional[HttpResponse]:
+def check_internal_ip(request) -> HttpResponse | None:
     """
     A method to determine if a request is allowed to load a signage page.
 
