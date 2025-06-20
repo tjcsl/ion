@@ -2,8 +2,8 @@ import logging
 import random
 import re
 import time
+from collections.abc import Container
 from datetime import timedelta
-from typing import Container, Tuple
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -84,7 +84,7 @@ def get_bg_pattern(request):
     return static(file_path + random.choice(files))
 
 
-def get_week_sports_school_events() -> Tuple[Container[Event], Container[Event]]:
+def get_week_sports_school_events() -> tuple[Container[Event], Container[Event]]:
     """Lists the sports/school events for the next week. This information is cached.
 
     Returns:

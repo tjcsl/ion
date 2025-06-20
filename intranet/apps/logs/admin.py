@@ -20,7 +20,7 @@ class TruncatedPathFilter(admin.SimpleListFilter):
         paths = model_admin.model.objects.order_by("path").values_list("path", flat=True).distinct()
         truncated_paths = {path if len(path) < 40 else path[:40] + "..." for path in paths}
         truncated_paths = sorted(truncated_paths)
-        return zip(truncated_paths, gettext_lazy(truncated_paths))
+        return zip(truncated_paths, gettext_lazy(truncated_paths), strict=False)
 
     def queryset(self, request, queryset):
         if self.value():
@@ -38,7 +38,7 @@ class TruncatedUserAgentFilter(admin.SimpleListFilter):
         paths = model_admin.model.objects.order_by("user_agent").values_list("user_agent", flat=True).distinct()
         truncated_paths = {path if len(path) < 40 else path[:40] + "..." for path in paths}
         truncated_paths = sorted(truncated_paths)
-        return zip(truncated_paths, gettext_lazy(truncated_paths))
+        return zip(truncated_paths, gettext_lazy(truncated_paths), strict=False)
 
     def queryset(self, request, queryset):
         if self.value():
@@ -54,7 +54,7 @@ class MethodFilter(admin.SimpleListFilter):
     methods = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"]
 
     def lookups(self, request, model_admin):
-        return zip(self.methods, gettext_lazy(self.methods))
+        return zip(self.methods, gettext_lazy(self.methods), strict=False)
 
     def queryset(self, request, queryset):
         if self.value():
@@ -94,7 +94,7 @@ class PathFilter(admin.SimpleListFilter):
                     self.url_paths_looked_up.append(reverse(path))
                 except Exception as e:
                     logger.exception("Failed to lookup path: %s: %s", path, e)
-        return zip(self.url_paths_looked_up, gettext_lazy(self.url_paths_looked_up))
+        return zip(self.url_paths_looked_up, gettext_lazy(self.url_paths_looked_up), strict=False)
 
     def queryset(self, request, queryset):
         if self.value():

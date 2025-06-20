@@ -6,7 +6,6 @@ import re
 import subprocess
 import tempfile
 from io import BytesIO
-from typing import Dict, List, Optional, Tuple
 
 import magic
 from django.conf import settings
@@ -63,7 +62,7 @@ def set_user_ratelimit_status(username: str) -> None:
         cache.incr(cache_key)
 
 
-def parse_alerts(alerts: str) -> Tuple[str, str]:
+def parse_alerts(alerts: str) -> tuple[str, str]:
     known_alerts = {
         "paused": "unavailable",
         "media-empty-error": "out of paper",
@@ -88,7 +87,7 @@ def parse_alerts(alerts: str) -> Tuple[str, str]:
     return alerts_text, printer_class
 
 
-def get_printers() -> Dict[str, List[str]]:
+def get_printers() -> dict[str, list[str]]:
     """Returns a dictionary mapping name:description for available printers.
 
     This requires that a CUPS client be configured on the server.
@@ -150,7 +149,7 @@ def get_printers() -> Dict[str, List[str]]:
         return printers
 
 
-def convert_soffice(tmpfile_name: str) -> Optional[str]:
+def convert_soffice(tmpfile_name: str) -> str | None:
     """Converts a doc or docx to a PDF with soffice.
 
     Args:
@@ -181,7 +180,7 @@ def convert_soffice(tmpfile_name: str) -> Optional[str]:
     return None
 
 
-def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> Optional[str]:
+def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> str | None:
     new_name = f"{tmpfile_name}.pdf"
     try:
         output = subprocess.check_output([cmdname, tmpfile_name, new_name], stderr=subprocess.STDOUT, universal_newlines=True)
@@ -243,7 +242,7 @@ def get_mimetype(tmpfile_name: str) -> str:
     return mimetype
 
 
-def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
+def convert_file(tmpfile_name: str, orig_fname: str) -> str | None:
     detected = get_mimetype(tmpfile_name)
 
     add_breadcrumb(category="printing", message=f"Detected file type {detected}", level="debug")
@@ -275,7 +274,7 @@ def convert_file(tmpfile_name: str, orig_fname: str) -> Optional[str]:
     raise InvalidInputPrintingError(f"Invalid file type {detected}")
 
 
-def check_page_range(page_range: str, max_pages: int) -> Optional[int]:
+def check_page_range(page_range: str, max_pages: int) -> int | None:
     """Returns the number of pages included in the range, or None if the range exceeds max_pages.
 
     Args:
