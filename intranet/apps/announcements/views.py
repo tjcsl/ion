@@ -256,6 +256,7 @@ def approve_announcement_view(request, req_id):
 
                 return redirect("approve_announcement_success")
             else:
+                obj.teachers_rejected.add(request.user)
                 obj.save()
                 return redirect("approve_announcement_reject")
 
