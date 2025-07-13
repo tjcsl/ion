@@ -16,4 +16,5 @@ templatetags
    paginate
    status_helper
    strings
+   svg
    tests

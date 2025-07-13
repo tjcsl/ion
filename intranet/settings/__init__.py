@@ -697,7 +697,6 @@ INSTALLED_APPS = [
     "oauth2_provider",  # django-oauth-toolkit
     "corsheaders",  # django-cors-headers
     "cacheops",  # django-cacheops
-    "svg",  # django-inline-svg
     "simple_history",  # django-simple-history
     "django_referrer_policy",
     "django_user_agents",
