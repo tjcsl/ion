@@ -1,5 +1,5 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
-urlpatterns = [re_path(r"^$", views.preferences_view, name="preferences"), re_path(r"^/privacy$", views.privacy_options_view, name="privacy_options")]
+urlpatterns = [path("", views.preferences_view, name="preferences"), path("/privacy", views.privacy_options_view, name="privacy_options")]

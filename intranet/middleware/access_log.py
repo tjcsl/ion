@@ -23,15 +23,15 @@ class AccessLogMiddleWare:
         else:
             username = request.user.username
 
-        if "HTTP_X_REAL_IP" in request.META:
-            ip = request.META["HTTP_X_REAL_IP"]
+        if "x-real-ip" in request.headers:
+            ip = request.headers["x-real-ip"]
         else:
             ip = (request.META.get("REMOTE_ADDR", ""),)
 
         if isinstance(ip, set):
             ip = ip[0]
 
-        user_agent = request.META.get("HTTP_USER_AGENT", "")
+        user_agent = request.headers.get("user-agent", "")
         path = request.get_full_path()
 
         if user_agent and not (

@@ -102,6 +102,7 @@ class PathFilter(admin.SimpleListFilter):
         return queryset
 
 
+@admin.register(Request)
 class RequestAdmin(admin.ModelAdmin):
     def truncated_path(self):
         return self.path[:80] + "..." if len(self.path) > 80 else self.path  # pylint: disable=no-member
@@ -178,6 +179,3 @@ class RequestAdmin(admin.ModelAdmin):
 
     class Media:
         css = {"all": ("css/admin.css",)}
-
-
-admin.site.register(Request, RequestAdmin)

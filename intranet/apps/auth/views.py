@@ -39,8 +39,8 @@ auth_logger = logging.getLogger("intranet_auth")
 
 
 def log_auth(request, success):
-    if "HTTP_X_REAL_IP" in request.META:
-        ip = request.META["HTTP_X_REAL_IP"]
+    if "x-real-ip" in request.headers:
+        ip = request.headers["x-real-ip"]
     else:
         ip = request.META.get("REMOTE_ADDR", "")
 
@@ -50,7 +50,7 @@ def log_auth(request, success):
     username = request.POST.get("username", "unknown")
 
     log_line = '{} - {} - auth {} - [{}] "{}" "{}"'.format(
-        ip, username, success, timezone.localtime(), request.get_full_path(), request.META.get("HTTP_USER_AGENT", "")
+        ip, username, success, timezone.localtime(), request.get_full_path(), request.headers.get("user-agent", "")
     )
 
     auth_logger.info(log_line)

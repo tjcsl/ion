@@ -35,18 +35,18 @@ class EighthAdminGeneralTest(EighthAbstractTest):
         self.assertTemplateUsed(response, "eighth/admin/dashboard.html")
 
         self.assertEqual(response.context["start_date"], awaredate())
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             response.context["all_activities"], [repr(activity) for activity in EighthActivity.objects.all().order_by("name")], transform=repr
         )
-        self.assertQuerysetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()], transform=repr)
-        self.assertQuerysetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")], transform=repr)
-        self.assertQuerysetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()], transform=repr)
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(response.context["blocks_after_start_date"], [repr(block) for block in EighthBlock.objects.all()], transform=repr)
+        self.assertQuerySetEqual(response.context["groups"], [repr(group) for group in Group.objects.all().order_by("name")], transform=repr)
+        self.assertQuerySetEqual(response.context["rooms"], [repr(room) for room in EighthRoom.objects.all()], transform=repr)
+        self.assertQuerySetEqual(
             response.context["sponsors"],
             [repr(sponsor) for sponsor in EighthSponsor.objects.order_by("last_name", "first_name").all()],
             transform=repr,
         )
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             response.context["blocks_next"], [repr(block) for block in EighthBlock.objects.filter(date="9001-4-20").all()], transform=repr
         )
         self.assertEqual(response.context["blocks_next_date"], datetime.datetime(9001, 4, 20).date())

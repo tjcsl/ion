@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import PrintJob
 
 
+@admin.register(PrintJob)
 class PrintJobAdmin(admin.ModelAdmin):
     @staticmethod
     def formatted_page_range(obj):
@@ -17,6 +18,3 @@ class PrintJobAdmin(admin.ModelAdmin):
     list_filter = ("time", "printer", "num_pages")
     ordering = ("-time",)
     raw_id_fields = ("user",)
-
-
-admin.site.register(PrintJob, PrintJobAdmin)

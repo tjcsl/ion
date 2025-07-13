@@ -12,8 +12,8 @@ class SameOriginMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        host = request.META.get("HTTP_HOST")
-        origin = request.META.get("HTTP_ORIGIN")
+        host = request.headers.get("host")
+        origin = request.headers.get("origin")
 
         # Note: The "Origin" header is not sent on the main page request, so we need to explicitly
         # handle it being None.

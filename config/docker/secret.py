@@ -7,9 +7,9 @@ SESSION_REDIS = {"host": SESSION_REDIS_HOST, "port": SESSION_REDIS_PORT, "db": S
 CACHEOPS_REDIS = {"host": "redis", "port": 6379, "db": 1, "socket_timeout": 1}
 CACHES = {
     "default": {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": "redis:6379",
-        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient", "PICKLE_VERSION": 4 },
         "KEY_PREFIX": "ion",
     }
 }

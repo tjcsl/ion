@@ -400,7 +400,7 @@ def subscribe_to_club(request, activity_id):
 
     activity.subscribers.add(request.user)
 
-    return redirect(request.META.get("HTTP_REFERER", "/"))
+    return redirect(request.headers.get("referer", "/"))
 
 
 @login_required
@@ -415,7 +415,7 @@ def unsubscribe_from_club(request, activity_id):
     if request.user in activity.subscribers.all():
         activity.subscribers.remove(request.user)
 
-    return redirect(request.META.get("HTTP_REFERER", "/"))
+    return redirect(request.headers.get("referer", "/"))
 
 
 @login_required

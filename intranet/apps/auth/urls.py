@@ -1,12 +1,12 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    re_path(r"^$", views.index_view, name="index"),
-    re_path(r"^login$", views.LoginView.as_view(), name="login"),
-    re_path(r"^logout$", views.logout_view, name="logout"),
-    re_path(r"^about$", views.about_view, name="about"),
-    re_path(r"^reauthenticate$", views.reauthentication_view, name="reauth"),
-    re_path(r"^reset_password$", views.reset_password_view, name="reset_password"),
+    path("", views.index_view, name="index"),
+    path("login", views.LoginView.as_view(), name="login"),
+    path("logout", views.logout_view, name="logout"),
+    path("about", views.about_view, name="about"),
+    path("reauthenticate", views.reauthentication_view, name="reauth"),
+    path("reset_password", views.reset_password_view, name="reset_password"),
 ]

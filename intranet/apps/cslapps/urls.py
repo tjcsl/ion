@@ -1,7 +1,7 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    re_path(r"^$", views.redirect_to_app, name="apps"),
+    path("", views.redirect_to_app, name="apps"),
 ]

@@ -68,7 +68,7 @@ class EighthTest(EighthAbstractTest):
         schact1 = self.schedule_activity(act1.id, block1.id)
         schact1.rooms.add(room2)
 
-        self.assertQuerysetEqual(schact1.get_all_associated_rooms(), [repr(room1), repr(room2)], transform=repr)
+        self.assertQuerySetEqual(schact1.get_all_associated_rooms(), [repr(room1), repr(room2)], transform=repr)
 
     def test_room_use(self):
         """Make sure EighthScheduledActivities return the correct room."""
@@ -312,10 +312,10 @@ class EighthTest(EighthAbstractTest):
         block_today = self.add_block(date=today, block_letter="A")
         block_future = self.add_block(date=year_future, block_letter="A")
 
-        self.assertQuerysetEqual(act.get_active_schedulings(), [])
+        self.assertQuerySetEqual(act.get_active_schedulings(), [])
         EighthScheduledActivity.objects.create(activity=act, block=block_past)
-        self.assertQuerysetEqual(act.get_active_schedulings(), [])
+        self.assertQuerySetEqual(act.get_active_schedulings(), [])
         schact_today = EighthScheduledActivity.objects.create(activity=act, block=block_today)
-        self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)], transform=repr)
+        self.assertQuerySetEqual(act.get_active_schedulings(), [repr(schact_today)], transform=repr)
         EighthScheduledActivity.objects.create(activity=act, block=block_future)
-        self.assertQuerysetEqual(act.get_active_schedulings(), [repr(schact_today)], transform=repr)
+        self.assertQuerySetEqual(act.get_active_schedulings(), [repr(schact_today)], transform=repr)
