@@ -1,10 +1,10 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    re_path(r"^$", views.home, name="bus"),
-    re_path(r"^/morning$", views.morning, name="morning_bus"),
-    re_path(r"^/afternoon$", views.afternoon, name="afternoon_bus"),
-    re_path(r"^/game$", views.game, name="bus_game"),
+    path("", views.home, name="bus"),
+    path("/morning", views.morning, name="morning_bus"),
+    path("/afternoon", views.afternoon, name="afternoon_bus"),
+    path("/game", views.game, name="bus_game"),
 ]

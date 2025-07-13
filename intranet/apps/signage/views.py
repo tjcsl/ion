@@ -29,7 +29,7 @@ def check_internal_ip(request) -> HttpResponse | None:
     Returns:
         a 403 if the request is unauthorized or None if the request is authorized
     """
-    remote_addr = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
+    remote_addr = request.headers["x-real-ip"] if "x-real-ip" in request.headers else request.META.get("REMOTE_ADDR", "")
     if (not request.user.is_authenticated or request.user.is_restricted) and remote_addr not in settings.TJ_IPS:
         return render(request, "error/403.html", {"reason": "You are not authorized to view this page."}, status=403)
 
@@ -145,7 +145,7 @@ def eighth(request):
 def prometheus_metrics(request):
     """Prometheus metrics for signage displays. Currently just whether or not they are online."""
 
-    remote_addr = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
+    remote_addr = request.headers["x-real-ip"] if "x-real-ip" in request.headers else request.META.get("REMOTE_ADDR", "")
     is_admin = request.user.is_authenticated and not request.user.is_restricted and request.user.is_superuser
 
     # If they're not from an IP on the white list and they're not an admin, deny access

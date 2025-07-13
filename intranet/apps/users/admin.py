@@ -3,6 +3,7 @@ from django.contrib import admin
 from ..users.models import Course, Section, User, UserProperties
 
 
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     # Render is_active using checkmarks or crosses
     def user_active(self, obj):
@@ -43,7 +44,6 @@ class UserAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(User, UserAdmin)
 admin.site.register(UserProperties)
 admin.site.register(Course)
 admin.site.register(Section)

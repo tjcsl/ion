@@ -587,9 +587,11 @@ if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     # extension of django.core.cache.backends.dummy.DummyCache
 else:
     CACHES["default"] = {
-        "BACKEND": "redis_cache.RedisCache",
+        "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PICKLE_VERSION": 4
+                    },
         "KEY_PREFIX": "ion",
     }
 

@@ -20,6 +20,7 @@ for u in group.user_set.all():
 """
 
 
+@admin.register(ParkingApplication)
 class ParkingAdmin(admin.ModelAdmin):
     def get_user(self, obj):
         u = obj.user
@@ -56,12 +57,9 @@ class ParkingAdmin(admin.ModelAdmin):
     actions = [export_csv_action()]
 
 
+@admin.register(CarApplication)
 class CarAdmin(admin.ModelAdmin):
     list_display = ("license_plate", "user", "make", "model", "year")
     list_filter = ("added", "updated")
     ordering = ("-added",)
     raw_id_fields = ("user",)
-
-
-admin.site.register(ParkingApplication, ParkingAdmin)
-admin.site.register(CarApplication, CarAdmin)
