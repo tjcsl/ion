@@ -1611,7 +1611,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.save(update_fields=["cancelled"])
 
             if not self.is_both_blocks or self.block.block_letter != "B":
-                from .notifications import activity_cancelled_email  # pylint: disable=import-outside-toplevel,cyclic-import
+                from .notifications import activity_cancelled_email  # noqa: PLC0415
 
                 activity_cancelled_email(self)
 

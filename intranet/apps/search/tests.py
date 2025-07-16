@@ -66,7 +66,7 @@ class SearchTestCase(IonTestCase):
             user_type="student",
         )[0]
         user2 = get_user_model().objects.get_or_create(
-            username=f"{get_senior_graduation_year()+1}hthere",
+            username=f"{get_senior_graduation_year() + 1}hthere",
             student_id=1234568,
             first_name="Hello",
             last_name="There",

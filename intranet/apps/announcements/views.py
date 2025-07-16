@@ -436,7 +436,7 @@ def delete_announcement_view(request, announcement_id):
     """
     announcement = get_object_or_404(Announcement, id=announcement_id)
 
-    if not (request.user.is_announcements_admin or announcement.is_club_announcement and announcement.can_modify(request.user)):
+    if not (request.user.is_announcements_admin or (announcement.is_club_announcement and announcement.can_modify(request.user))):
         messages.error(request, "You do not have permission to delete this announcement.")
         return redirect("index")
 

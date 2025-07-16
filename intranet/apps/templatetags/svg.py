@@ -29,14 +29,14 @@ def svg(filename):
 
     if SVG_DIRS:
         for directory in SVG_DIRS:
-            svg_path = os.path.join(directory, "%s.svg" % filename)
+            svg_path = os.path.join(directory, f"{filename}.svg")
             if os.path.isfile(svg_path):
                 path = svg_path
     else:
-        path = finders.find(os.path.join("svg", "%s.svg" % filename))
+        path = finders.find(os.path.join("svg", f"{filename}.svg"))
 
     if not path:
-        message = "SVG '%s.svg' not found" % filename
+        message = f"SVG '{filename}.svg' not found"
 
         # Raise exception if DEBUG is True, else just log a warning.
         if settings.DEBUG:

@@ -4,7 +4,7 @@ import logging
 from collections.abc import Iterable, Sequence
 from datetime import datetime, time, timedelta
 from itertools import chain
-from typing import Any, Generic, TypeGuard, TypeVar
+from typing import Any, TypeGuard, TypeVar
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -325,7 +325,7 @@ def filter_club_announcements(
     return visible, hidden, unsubscribed
 
 
-class RawPaginationData(TypedDict, Generic[T]):
+class RawPaginationData[T: Announcement](TypedDict):
     club_items: Sequence[Announcement]
     items: Page[T]
     page_num: int
@@ -335,7 +335,7 @@ class RawPaginationData(TypedDict, Generic[T]):
     page_obj: Paginator[T]
 
 
-def paginate_announcements_list_raw(
+def paginate_announcements_list_raw[T: Announcement](
     request: HttpRequest,
     items: Sequence[T],
     visible_club_items: Sequence[Announcement] = (),
@@ -393,7 +393,7 @@ def paginate_announcements_list_raw(
     )
 
 
-def paginate_announcements_list(
+def paginate_announcements_list[T: Announcement](
     request, context: dict[str, Any], items: Sequence[T], visible_club_items: Sequence[Announcement] = ()
 ) -> tuple[dict[str, Any], Page[T]]:
     """Paginate ``items`` in groups of 15

@@ -51,7 +51,7 @@ class SignupException(Exception):
         self.desc_errors = {}
 
     def __repr__(self):
-        return "SignupException(%s)" % ", ".join(sorted(self.errors))
+        return "SignupException({})".format(", ".join(sorted(self.errors)))
 
     def __str__(self):
         return ", ".join(sorted(self.errors))

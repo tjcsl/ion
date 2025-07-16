@@ -423,12 +423,12 @@ def print_job(obj: PrintJob, do_print: bool = True):
 
         elif num_pages > settings.PRINTING_PAGES_LIMIT_TEACHERS and (obj.user.is_teacher or obj.user.is_printing_admin):
             raise InvalidInputPrintingError(
-                f"This file contains {num_pages} pages. " f"You may only print up to {settings.PRINTING_PAGES_LIMIT_TEACHERS} pages using this tool."
+                f"This file contains {num_pages} pages. You may only print up to {settings.PRINTING_PAGES_LIMIT_TEACHERS} pages using this tool."
             )
 
         elif num_pages > settings.PRINTING_PAGES_LIMIT_STUDENTS:
             raise InvalidInputPrintingError(
-                f"This file contains {num_pages} pages. " f"You may only print up to {settings.PRINTING_PAGES_LIMIT_STUDENTS} pages using this tool."
+                f"This file contains {num_pages} pages. You may only print up to {settings.PRINTING_PAGES_LIMIT_STUDENTS} pages using this tool."
             )
 
         if get_user_ratelimit_status(obj.user.username):
