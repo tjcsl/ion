@@ -93,7 +93,7 @@ class EighthTest(EighthAbstractTest):
         """Make sure a room name formatting is correct."""
         self.make_admin()
         room1 = self.add_room(name="999", capacity=1)
-        self.assertEqual("Rm. %s" % room1.name, room1.formatted_name)
+        self.assertEqual(f"Rm. {room1.name}", room1.formatted_name)
         room2 = self.add_room(name="Lab 999", capacity=1)
         self.assertEqual(room2.name, room2.formatted_name)
         room4 = self.add_room(name="Room 999", capacity=1)

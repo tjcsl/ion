@@ -184,7 +184,7 @@ def eighth_admin_assign_hybrid_sticky_blocks(fmtdate: str) -> None:
 
     """
     # Circular dependency
-    from .views.admin.blocks import perform_hybrid_block_signup  # pylint: disable=import-outside-toplevel
+    from .views.admin.blocks import perform_hybrid_block_signup  # noqa: PLC0415
 
     perform_hybrid_block_signup(fmtdate, logger)
 
@@ -203,7 +203,7 @@ def eighth_admin_signup_group_task(*, user_id: int, group_id: int, schact_id: in
             usually because they are stickied into another activity.
     """
     # Circular dependency
-    from .views.admin.groups import eighth_admin_perform_group_signup  # pylint: disable=import-outside-toplevel
+    from .views.admin.groups import eighth_admin_perform_group_signup  # noqa: PLC0415
 
     user = get_user_model().objects.get(id=user_id)
 
@@ -252,7 +252,7 @@ def eighth_admin_signup_group_task_hybrid(*, user_id: int, group_id: int, schact
 
     """
     # Circular dependency
-    from .views.admin.hybrid import eighth_admin_perform_group_signup  # pylint: disable=import-outside-toplevel
+    from .views.admin.hybrid import eighth_admin_perform_group_signup  # noqa: PLC0415
 
     user = get_user_model().objects.get(id=user_id)
 

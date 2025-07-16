@@ -220,7 +220,7 @@ def enrichment_signup_view(request, enrichment_id):
             if too_early_to_signup[0]:
                 messages.error(
                     request,
-                    "You may not sign up for this enrichment activity until " f"{too_early_to_signup[1].strftime('%A, %B %-d at %-I:%M %p')}.",
+                    f"You may not sign up for this enrichment activity until {too_early_to_signup[1].strftime('%A, %B %-d at %-I:%M %p')}.",
                 )
                 return redirect("enrichment")
 

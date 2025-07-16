@@ -521,9 +521,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         permissions_dict = {}
 
-        for prefix in PERMISSIONS_NAMES:
+        for prefix, suffixes in PERMISSIONS_NAMES.items():
             permissions_dict[prefix] = {}
-            for suffix in PERMISSIONS_NAMES[prefix]:
+            for suffix in suffixes:
                 permissions_dict[prefix][suffix] = getattr(self.properties, prefix + "_" + suffix)
 
         return permissions_dict
@@ -1086,7 +1086,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def handle_delete(self):
         """Handle a graduated user being deleted."""
-        from intranet.apps.eighth.models import EighthScheduledActivity  # pylint: disable=import-outside-toplevel
+        from intranet.apps.eighth.models import EighthScheduledActivity  # noqa: PLC0415
 
         EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(archived_member_count=F("archived_member_count") + 1)
 

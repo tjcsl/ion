@@ -184,8 +184,8 @@ class PreferencesTest(IonTestCase):
             prefix: [name[len(prefix) + 1 :] for name in dir(UserProperties) if name.startswith(prefix + "_")] for prefix in ["self", "parent"]
         }
 
-        for permission_type in PERMISSIONS_NAMES.keys():
-            for permission in PERMISSIONS_NAMES[permission_type]:
+        for permission_type, permissions in PERMISSIONS_NAMES.items():
+            for permission in permissions:
                 if permission_type == "self":
                     self.assertIn(f"{permission}-{permission_type}", options.keys())
                     self.assertFalse(options[f"{permission}-{permission_type}"])

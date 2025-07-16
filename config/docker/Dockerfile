@@ -1,4 +1,4 @@
-FROM python:3.11-alpine3.22
+FROM python:3.13-alpine3.22
 
 ENV TZ America/New_York
 ENV C_FORCE_ROOT true

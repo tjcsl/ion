@@ -175,14 +175,12 @@ class Announcement(models.Model):
         return self in Announcement.objects.visible_to_user(user)
 
     def can_modify(self, user):
-        return (
-            user.is_announcements_admin
-            or self.is_club_announcement
+        return user.is_announcements_admin or (
+            self.is_club_announcement
             and (
                 user in self.activity.officers.all()
                 or user in self.activity.club_sponsors.all()
-                or EighthSponsor.objects.filter(user=user).exists()
-                and user.sponsor_obj in self.activity.sponsors.all()
+                or (EighthSponsor.objects.filter(user=user).exists() and user.sponsor_obj in self.activity.sponsors.all())
             )
         )
 
@@ -205,7 +203,7 @@ class Announcement(models.Model):
 
     def is_visible_submitter(self, user):
         try:
-            return self.user == user or self.announcementrequest and user == self.announcementrequest.user
+            return self.user == user or (self.announcementrequest and user == self.announcementrequest.user)
         except get_user_model().DoesNotExist:
             return False
 
