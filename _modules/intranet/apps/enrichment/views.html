@@ -1,23 +1,25 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="../../../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+        <link rel="prefetch" href="../../../../_static/logo-light.svg" as="image" />
+        <link rel="prefetch" href="../../../../_static/logo-dark.svg" as="image" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
         <title>intranet.apps.enrichment.views - TJHSST Intranet</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   --color-content-foreground: #000000;
   --color-background-primary: #ffffff;
   --color-background-border: #ffffff;
@@ -32,8 +34,8 @@
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   --color-content-foreground: #ffffffd9;
   --color-background-primary: #131416;
   --color-background-border: #303335;
@@ -48,8 +50,8 @@
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   --color-content-foreground: #ffffffd9;
   --color-background-primary: #131416;
   --color-background-border: #303335;
@@ -218,7 +220,6 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
-  
   <div class="sidebar-logo-container">
     <img class="sidebar-logo only-light" src="../../../../_static/logo-light.svg" alt="Light Logo"/>
     <img class="sidebar-logo only-dark" src="../../../../_static/logo-dark.svg" alt="Dark Logo"/>
@@ -1399,6 +1400,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.strings.html">strings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.svg.html">svg</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.tests.html">tests</a><input class="toctree-checkbox" id="toctree-checkbox-224" name="toctree-checkbox-224" role="switch" type="checkbox"/><label for="toctree-checkbox-224"><div class="visually-hidden">Toggle navigation of tests</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.tests.TemplateTest.html">TemplateTest</a></li>
 </ul>
@@ -1543,7 +1545,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="date_format"><a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.date_format">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+<div class="viewcode-block" id="date_format">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.date_format">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -1551,7 +1555,10 @@
     <span class="k">return</span> <span class="n">d</span></div>
 
 
-<div class="viewcode-block" id="decode_date"><a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.decode_date">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">decode_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+
+<div class="viewcode-block" id="decode_date">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.decode_date">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">decode_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -1559,11 +1566,17 @@
     <span class="k">return</span> <span class="n">d</span></div>
 
 
-<div class="viewcode-block" id="is_weekday"><a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.is_weekday">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_weekday">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.is_weekday">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="enrichment_context"><a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.enrichment_context">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">enrichment_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="enrichment_context">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.enrichment_context">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">enrichment_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">local_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1599,7 +1612,10 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="week_data"><a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.week_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="week_data">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.week_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">date</span>
     <span class="k">elif</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
@@ -1628,7 +1644,10 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="month_data"><a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.month_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+<div class="viewcode-block" id="month_data">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.month_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1650,6 +1669,7 @@
 
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weeks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">week1</span><span class="p">,</span> <span class="n">week2</span><span class="p">,</span> <span class="n">week3</span><span class="p">,</span> <span class="n">week4</span><span class="p">,</span> <span class="n">week5</span><span class="p">],</span> <span class="s2">&quot;next_month&quot;</span><span class="p">:</span> <span class="n">next_month</span><span class="p">,</span> <span class="s2">&quot;last_month&quot;</span><span class="p">:</span> <span class="n">last_month</span><span class="p">,</span> <span class="s2">&quot;current_month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">data</span></div>
+
 
 
 <span class="nd">@login_required</span>
@@ -1747,7 +1767,7 @@
             <span class="k">if</span> <span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="n">request</span><span class="p">,</span>
-                    <span class="s2">&quot;You may not sign up for this enrichment activity until &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A, %B </span><span class="si">%-d</span><span class="s1"> at %-I:%M %p&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">&quot;You may not sign up for this enrichment activity until </span><span class="si">{</span><span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A, %B </span><span class="si">%-d</span><span class="s1"> at %-I:%M %p&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
 
@@ -1921,10 +1941,10 @@
       
     </aside>
   </div>
-</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=182abe72"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+</div><script src="../../../../_static/documentation_options.js?v=b759228a"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../_static/copybutton.js?v=f281be69"></script>
     </body>

@@ -1,23 +1,25 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="../../../../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../../genindex.html" /><link rel="search" title="Search" href="../../../../../search.html" />
+        <link rel="prefetch" href="../../../../../_static/logo-light.svg" as="image" />
+        <link rel="prefetch" href="../../../../../_static/logo-dark.svg" as="image" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
         <title>intranet.apps.eighth.tests.eighth_test - TJHSST Intranet</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=354aac6f" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   --color-content-foreground: #000000;
   --color-background-primary: #ffffff;
   --color-background-border: #ffffff;
@@ -32,8 +34,8 @@
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   --color-content-foreground: #ffffffd9;
   --color-background-primary: #131416;
   --color-background-border: #303335;
@@ -48,8 +50,8 @@
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   --color-content-foreground: #ffffffd9;
   --color-background-primary: #131416;
   --color-background-border: #303335;
@@ -218,7 +220,6 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../../index.html">
-  
   <div class="sidebar-logo-container">
     <img class="sidebar-logo only-light" src="../../../../../_static/logo-light.svg" alt="Light Logo"/>
     <img class="sidebar-logo only-dark" src="../../../../../_static/logo-dark.svg" alt="Dark Logo"/>
@@ -1399,6 +1400,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../reference/intranet.apps.templatetags.strings.html">strings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../reference/intranet.apps.templatetags.svg.html">svg</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../reference/intranet.apps.templatetags.tests.html">tests</a><input class="toctree-checkbox" id="toctree-checkbox-224" name="toctree-checkbox-224" role="switch" type="checkbox"/><label for="toctree-checkbox-224"><div class="visually-hidden">Toggle navigation of tests</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../reference/intranet.apps.templatetags.tests.TemplateTest.html">TemplateTest</a></li>
 </ul>
@@ -1534,13 +1536,17 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthRoom</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span>
 
 
-<div class="viewcode-block" id="EighthAbstractTest"><a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">EighthAbstractTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="EighthAbstractTest">
+<a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EighthAbstractTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class to be inherited by the test cases for the Eighth app.&quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">8889</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-<div class="viewcode-block" id="EighthAbstractTest.create_sponsor"><a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.create_sponsor">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">create_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<div class="viewcode-block" id="EighthAbstractTest.create_sponsor">
+<a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.create_sponsor">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a teacher.</span>
 
@@ -1550,7 +1556,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;ateacher&quot;</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;Teacher&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="EighthAbstractTest.add_block"><a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_block">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">block_letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthBlock</span><span class="p">:</span>
+
+<div class="viewcode-block" id="EighthAbstractTest.add_block">
+<a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_block">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">block_letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthBlock</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds an EighthBlock.</span>
 <span class="sd">        Arguments are passed to intranet.apps.eighth.forms.admin.blocks.QuickBlockForm.</span>
@@ -1569,7 +1578,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="n">block_letter</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EighthAbstractTest.add_room"><a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_room">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthRoom</span><span class="p">:</span>
+
+<div class="viewcode-block" id="EighthAbstractTest.add_room">
+<a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_room">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthRoom</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds an EighthRoom.</span>
 <span class="sd">        Arguments are passed to intranet.apps.eighth.forms.admin.rooms.RoomForm.</span>
@@ -1586,7 +1598,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EighthAbstractTest.add_activity"><a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_activity">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">add_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthActivity</span><span class="p">:</span>
+
+<div class="viewcode-block" id="EighthAbstractTest.add_activity">
+<a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_activity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthActivity</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add an EighthActivity.</span>
 
@@ -1604,7 +1619,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="EighthAbstractTest.schedule_activity"><a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.schedule_activity">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">schedule_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthScheduledActivity</span><span class="p">:</span>
+
+<div class="viewcode-block" id="EighthAbstractTest.schedule_activity">
+<a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.schedule_activity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">schedule_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthScheduledActivity</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an EighthScheduledActivity; aka schedule an eighth period activity.</span>
 
@@ -1631,11 +1649,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block__id</span><span class="o">=</span><span class="n">block_id</span><span class="p">,</span> <span class="n">activity__id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span></div>
 
+
     <span class="k">def</span><span class="w"> </span><span class="nf">verify_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">schact</span><span class="p">:</span> <span class="n">EighthScheduledActivity</span><span class="p">):</span>
         <span class="n">old_count</span> <span class="o">=</span> <span class="n">schact</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
         <span class="n">schact</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">schact</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">old_count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">schact</span><span class="o">.</span><span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -1667,10 +1687,10 @@
       
     </aside>
   </div>
-</div><script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js?v=182abe72"></script>
-    <script src="../../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script src="../../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+</div><script src="../../../../../_static/documentation_options.js?v=b759228a"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../../_static/copybutton.js?v=f281be69"></script>
     </body>

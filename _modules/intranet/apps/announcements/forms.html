@@ -1,23 +1,25 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="">
+<html class="no-js" lang="en" data-content_root="../../../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+        <link rel="prefetch" href="../../../../_static/logo-light.svg" as="image" />
+        <link rel="prefetch" href="../../../../_static/logo-dark.svg" as="image" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
         <title>intranet.apps.announcements.forms - TJHSST Intranet</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   --color-content-foreground: #000000;
   --color-background-primary: #ffffff;
   --color-background-border: #ffffff;
@@ -32,8 +34,8 @@
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   --color-content-foreground: #ffffffd9;
   --color-background-primary: #131416;
   --color-background-border: #303335;
@@ -48,8 +50,8 @@
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   --color-content-foreground: #ffffffd9;
   --color-background-primary: #131416;
   --color-background-border: #303335;
@@ -218,7 +220,6 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
-  
   <div class="sidebar-logo-container">
     <img class="sidebar-logo only-light" src="../../../../_static/logo-light.svg" alt="Light Logo"/>
     <img class="sidebar-logo only-dark" src="../../../../_static/logo-dark.svg" alt="Dark Logo"/>
@@ -1399,6 +1400,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.strings.html">strings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.svg.html">svg</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.tests.html">tests</a><input class="toctree-checkbox" id="toctree-checkbox-224" name="toctree-checkbox-224" role="switch" type="checkbox"/><label for="toctree-checkbox-224"><div class="visually-hidden">Toggle navigation of tests</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.templatetags.tests.TemplateTest.html">TemplateTest</a></li>
 </ul>
@@ -1538,7 +1540,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="AnnouncementForm"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementForm.html#intranet.apps.announcements.forms.AnnouncementForm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+<div class="viewcode-block" id="AnnouncementForm">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementForm.html#intranet.apps.announcements.forms.AnnouncementForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A form for generating an announcement.&quot;&quot;&quot;</span>
 
     <span class="n">expiration_date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateTimeInput</span><span class="p">()</span>
@@ -1562,10 +1566,15 @@
         <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="ClubAnnouncementForm"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementForm.html#intranet.apps.announcements.forms.ClubAnnouncementForm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ClubAnnouncementForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ClubAnnouncementForm">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementForm.html#intranet.apps.announcements.forms.ClubAnnouncementForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClubAnnouncementForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A form for posting a club announcement.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ClubAnnouncementForm.__init__"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementForm.html#intranet.apps.announcements.forms.ClubAnnouncementForm.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ClubAnnouncementForm.__init__">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementForm.html#intranet.apps.announcements.forms.ClubAnnouncementForm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_announcements_admin</span><span class="p">:</span>
@@ -1585,6 +1594,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">initial</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;instance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">activity</span></div>
 
+
     <span class="n">expiration_date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateTimeInput</span><span class="p">()</span>
     <span class="n">notify_post</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1596,11 +1606,17 @@
         <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="ClubAnnouncementEditForm"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementEditForm.html#intranet.apps.announcements.forms.ClubAnnouncementEditForm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ClubAnnouncementEditForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ClubAnnouncementEditForm">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementEditForm.html#intranet.apps.announcements.forms.ClubAnnouncementEditForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClubAnnouncementEditForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A form for editing a club announcement.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ClubAnnouncementEditForm.__init__"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementEditForm.html#intranet.apps.announcements.forms.ClubAnnouncementEditForm.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ClubAnnouncementEditForm.__init__">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.ClubAnnouncementEditForm.html#intranet.apps.announcements.forms.ClubAnnouncementEditForm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 
     <span class="n">expiration_date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateTimeInput</span><span class="p">()</span>
 
@@ -1612,10 +1628,15 @@
         <span class="p">}</span></div>
 
 
-<div class="viewcode-block" id="AnnouncementEditForm"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementEditForm.html#intranet.apps.announcements.forms.AnnouncementEditForm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementEditForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AnnouncementEditForm">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementEditForm.html#intranet.apps.announcements.forms.AnnouncementEditForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementEditForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A form for generating an announcement.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AnnouncementEditForm.__init__"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementEditForm.html#intranet.apps.announcements.forms.AnnouncementEditForm.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AnnouncementEditForm.__init__">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementEditForm.html#intranet.apps.announcements.forms.AnnouncementEditForm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;expiration_date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;By default, announcements expire after two weeks. Choose the shortest time necessary.&quot;</span>
 
@@ -1632,6 +1653,7 @@
             <span class="s2">&quot;its current position.&quot;</span>
         <span class="p">)</span></div>
 
+
     <span class="n">expiration_date</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">DateTimeInput</span><span class="p">()</span>
     <span class="n">notify_post_resend</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Resend notification&quot;</span><span class="p">)</span>
     <span class="n">notify_email_all_resend</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Resend email to all users&quot;</span><span class="p">)</span>
@@ -1642,10 +1664,15 @@
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="s2">&quot;expiration_date&quot;</span><span class="p">,</span> <span class="s2">&quot;update_added_date&quot;</span><span class="p">,</span> <span class="s2">&quot;pinned&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="AnnouncementRequestForm"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementRequestForm.html#intranet.apps.announcements.forms.AnnouncementRequestForm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementRequestForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AnnouncementRequestForm">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementRequestForm.html#intranet.apps.announcements.forms.AnnouncementRequestForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementRequestForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A form for generating an announcement request.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AnnouncementRequestForm.__init__"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementRequestForm.html#intranet.apps.announcements.forms.AnnouncementRequestForm.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AnnouncementRequestForm.__init__">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementRequestForm.html#intranet.apps.announcements.forms.AnnouncementRequestForm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;The title of the announcement that will appear on Intranet.&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;author&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
@@ -1670,15 +1697,21 @@
             <span class="s2">&quot;one or two.&quot;</span>
         <span class="p">)</span></div>
 
+
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">AnnouncementRequest</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;expiration_date&quot;</span><span class="p">,</span> <span class="s2">&quot;teachers_requested&quot;</span><span class="p">,</span> <span class="s2">&quot;notes&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="AnnouncementAdminForm"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementAdminForm.html#intranet.apps.announcements.forms.AnnouncementAdminForm">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementAdminForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AnnouncementAdminForm">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementAdminForm.html#intranet.apps.announcements.forms.AnnouncementAdminForm">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnnouncementAdminForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A form for allowing admin to edit notifications on requests.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AnnouncementAdminForm.__init__"><a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementAdminForm.html#intranet.apps.announcements.forms.AnnouncementAdminForm.__init__">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AnnouncementAdminForm.__init__">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.announcements.forms.AnnouncementAdminForm.html#intranet.apps.announcements.forms.AnnouncementAdminForm.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notify_post&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;If this box is checked, students who have signed up for notifications will receive an email.&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;notify_email_all&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="p">(</span>
@@ -1686,8 +1719,10 @@
             <span class="s2">&quot;does NOT take users&#39; email notification preferences into account, so please use with care.&quot;</span>
         <span class="p">)</span></div>
 
+
     <span class="n">notify_post</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">notify_email_all</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Send Email to All&quot;</span><span class="p">)</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -1719,10 +1754,10 @@
       
     </aside>
   </div>
-</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=182abe72"></script>
-    <script src="../../../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
-    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+</div><script src="../../../../_static/documentation_options.js?v=b759228a"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../../_static/copybutton.js?v=f281be69"></script>
     </body>
