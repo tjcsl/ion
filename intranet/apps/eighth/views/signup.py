@@ -451,8 +451,7 @@ def eighth_location(request):
                     sch_acts.append([b, act, ", ".join([r.name for r in act.get_true_rooms()]), ", ".join([s.name for s in act.get_true_sponsors()])])
             except EighthScheduledActivity.DoesNotExist:
                 sch_acts.append([b, None])
-
-        response = render(request, "eighth/location.html", context={"sch_acts": sch_acts})
+        response = render(request, "eighth/location.html", context={"sch_acts": sch_acts, "real_user": request.user})
     else:
         messages.error(request, "There are no eighth period blocks scheduled today.")
         response = redirect("index")
