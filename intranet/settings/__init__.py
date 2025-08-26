@@ -946,11 +946,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(hour=BUS_PAGE_CHANGEOVER_HOUR, minute=1),
         "args": (),
     },
-    "pull-sports-schedule": {
-        "task": "intranet.apps.events.tasks.pull_sports_schedules",
-        "schedule": celery.schedules.crontab(hour=1, minute=0),
-        "args": (),
-    },
+    # "pull-sports-schedule": {
+    #     "task": "intranet.apps.events.tasks.pull_sports_schedules",
+    #     "schedule": celery.schedules.crontab(hour=1, minute=0),
+    #     "args": (),
+    # },
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
