@@ -1,26 +1,28 @@
 @import "colors";
 
+.primary-content {
+    position: relative;
+}
+
 .events {
     min-width: 290px; // for 320x480 screens
     max-width: 1000px;
-    margin-bottom: 100px;
 
     h2 {
-        padding-left: 10px;
         line-height: 38px;
 
         &.category {
             font-size: 18px;
             font-weight: normal;
-            padding-left: 10px;
             height: 33px;
         }
     }
 }
 
 .button-container {
-    float: right;
-    margin-top: -38px;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 .button-subcontainer {
@@ -28,31 +30,29 @@
     margin-right: 5px;
 }
 
-@media (max-width: 1080px) {
-    .button-container {
-      margin-top: auto;
-      margin-bottom: 5px;
+@media (max-width: 570px) {
+    .events {
+        max-width: none;
     }
+    .button-container {
+        position: static;
+    }
+}
+
+@media (max-width: 1225px) {
     .arrow-container {
         margin-bottom: -20px !important;
     }
 
-    .events-container > .event:nth-child(2) {
-        margin-top: 43px;
-        @media (max-width: 387px) {
-            margin-top: 80px;
-        }
-    }
-
     .week-only {
         position: relative;
-        right: 8.5%;
+        right: 0;
 
         & > tbody > tr > td {
             display: block;
             border-bottom: 1px solid lightgrey;
             padding: 20px 0 !important;
-            width: 120%;
+            width: 100%;
 
             &:first-child {
                 border-top: 1px solid lightgrey;
@@ -139,13 +139,14 @@
         }
     }
 
-    @media (max-width: 710px) {
+    /* these values are mostly arbitrary but were collected manually and do work */
+    @media (max-width: 710px), (min-width: 960px) and (max-width: 1000px), (min-width: 800px) and (max-width: 880px) {
         .bottom-row {
-            margin-bottom: 23px;
+            margin-bottom: 15px;
 
             .attend-status {
                 left: 0;
-                bottom: -27px;
+                bottom: -15px;
             }
         }
     }
@@ -321,6 +322,7 @@ span.approve-reject {
         width: 19%;
         padding: 10px !important;
         border: 1px solid lightgrey;
+        vertical-align: top;
 
         h2 {
             font-weight: normal;

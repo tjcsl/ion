@@ -31,17 +31,17 @@ end_school_year = start_school_year + 1
 # fmt: off
 """ !! -------- UPDATE ANNUALLY -------- !!
 Update this section annually after summer school ends and before school starts.
-School year last updated:  2024-08-16
+School year last updated:  2025-08-18
 Hoco last updated:         2024-08-16
 tjSTAR last updated:       2024-05-03
 """
 
 # When school is scheduled to start and end
 SCHOOL_START_DATE = datetime.date(start_school_year,
-    8, 19  # UPDATE THIS! Value when last updated: August 19, 2024      # noqa: E128
+    8, 18  # UPDATE THIS! Value when last updated: August 18, 2025      # noqa: E128
 )                                                                       # noqa: E124
 SCHOOL_END_DATE = datetime.date(end_school_year,
-    6, 11  # UPDATE THIS! Value when last updated: June 11, 2025        # noqa: E128
+    6, 17  # UPDATE THIS! Value when last updated: June 17, 2026        # noqa: E128
 )                                                                       # noqa: E124
 
 # Dates when hoco starts and ends
@@ -587,9 +587,11 @@ if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     # extension of django.core.cache.backends.dummy.DummyCache
 else:
     CACHES["default"] = {
-        "BACKEND": "redis_cache.RedisCache",
+        "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PICKLE_VERSION": 4
+                    },
         "KEY_PREFIX": "ion",
     }
 
@@ -695,7 +697,6 @@ INSTALLED_APPS = [
     "oauth2_provider",  # django-oauth-toolkit
     "corsheaders",  # django-cors-headers
     "cacheops",  # django-cacheops
-    "svg",  # django-inline-svg
     "simple_history",  # django-simple-history
     "django_referrer_policy",
     "django_user_agents",
@@ -894,6 +895,12 @@ FCPS_EMERGENCY_PAGE = "https://www.fcps.edu/alert_msg_feed"  # type: str
 # The address for the CSL's BetterUptime status page
 CSL_STATUS_PAGE = "https://status.tjhsst.edu/index.json"
 
+# Number of times to retry accessing the status page above
+CSL_STATUS_PAGE_MAX_RETRIES = 5
+
+# Timeout for accessing CSL_STATUS_PAGE (in seconds)
+CSL_STATUS_PAGE_TIMEOUT = 15
+
 # The timeout for the request to FCPS' emergency page (in seconds)
 EMERGENCY_TIMEOUT = 5
 
@@ -909,6 +916,9 @@ SIMILAR_THRESHOLD = 5
 
 # Time that the bus page should change from morning to afternoon display
 BUS_PAGE_CHANGEOVER_HOUR = 12
+
+# Age (in days) of a lost and found entry until it is hidden
+LOSTFOUND_EXPIRATION = 180
 
 # Substrings of paths to not log in the Ion access logs
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
@@ -936,14 +946,19 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(hour=BUS_PAGE_CHANGEOVER_HOUR, minute=1),
         "args": (),
     },
-    "pull-sports-schedule": {
-        "task": "intranet.apps.events.tasks.pull_sports_schedules",
-        "schedule": celery.schedules.crontab(hour=1, minute=0),
-        "args": (),
-    },
+    # "pull-sports-schedule": {
+    #     "task": "intranet.apps.events.tasks.pull_sports_schedules",
+    #     "schedule": celery.schedules.crontab(hour=1, minute=0),
+    #     "args": (),
+    # },
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
+        "args": (),
+    },
+    "remove-old-lostfound-entries": {
+        "task": "intranet.apps.lostfound.tasks.remove_old_lostfound",
+        "schedule": celery.schedules.crontab(day_of_month=1, hour=1),
         "args": (),
     },
 }

@@ -1,12 +1,13 @@
 import logging
 import time
-from typing import Tuple
 
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
 from ...utils.html import get_domain_name, safe_fcps_emerg_html
 
@@ -122,7 +123,7 @@ def update_emerg_cache(*, custom_logger=None) -> None:
     cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])
 
 
-def get_csl_status() -> Tuple[str, bool]:
+def get_csl_status() -> tuple[str, bool]:
     """Get the cached status of the TJCSL status page.
 
     Returns:
@@ -137,18 +138,22 @@ def get_csl_status() -> Tuple[str, bool]:
     updated = False
 
     if not status:
-        response = requests.get(settings.CSL_STATUS_PAGE)
-        if response.status_code != 200:
-            status = "error"
-            logger.error("Could not fetch status page")
+        session = requests.Session()
+        adapter = HTTPAdapter(
+            max_retries=Retry(
+                total=settings.CSL_STATUS_PAGE_MAX_RETRIES, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504], allowed_methods=["GET"]
+            )
+        )
+        session.mount("https://", adapter)
 
-        else:
-            try:
-                status = response.json()["data"]["attributes"]["aggregate_state"]
-                updated = True
-            except KeyError as e:
-                status = "error"
-                logger.error("Unexpected status page JSON format. %s", e)
+        try:
+            response = session.get(settings.CSL_STATUS_PAGE, timeout=settings.CSL_STATUS_PAGE_TIMEOUT)
+            response.raise_for_status()
+            status = response.json()["data"]["attributes"]["aggregate_state"]
+            updated = True
+        except Exception as ex:
+            status = "error"
+            logger.error(f"Could not fetch status page or incorrect status page JSON format: {ex}")
 
         cache.set("emerg:csl_status", status, settings.CACHE_AGE["csl_status"])
 

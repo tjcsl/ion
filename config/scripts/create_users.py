@@ -5,10 +5,9 @@ import os
 import random
 from datetime import datetime
 
-import names
-from dateutil.relativedelta import relativedelta
-
 import django
+from dateutil.relativedelta import relativedelta
+from faker import Faker
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intranet.settings")
 django.setup()
@@ -17,6 +16,8 @@ from intranet.apps.groups.models import Group  # noqa: E402
 from intranet.apps.users.models import User  # noqa: E402
 
 GRADES = ["freshman", "sophomore", "junior", "senior"]
+
+fake = Faker()
 
 
 def grade_to_year(year: str) -> str:
@@ -103,7 +104,15 @@ def generate_names(args: argparse.Namespace) -> "list[tuple[str]]":
                 last_name = name
                 username += name
         else:
-            first_name, last_name = names.get_full_name(gender=args.gender).split(" ")
+            if args.gender == "male":
+                first_name = fake.first_name_male()
+                last_name = fake.last_name_male()
+            elif args.gender == "female":
+                first_name = fake.first_name_female()
+                last_name = fake.last_name_female()
+            else:
+                first_name = fake.first_name()
+                last_name = fake.last_name()
             username += first_name[0].lower() + last_name[:7].lower()
         args.names[i] = (first_name, last_name, username)
     return args.names

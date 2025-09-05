@@ -111,7 +111,7 @@ class EventsTest(IonTestCase):
         expected_context = {"event": event, "viewable_roster": [], "num_hidden_members": 0, "is_events_admin": False}
         for key, item in expected_context.items():
             self.assertEqual(response.context[key], item)
-        self.assertQuerysetEqual(response.context["full_roster"], get_user_model().objects.none())
+        self.assertQuerySetEqual(response.context["full_roster"], get_user_model().objects.none())
 
         # Test with a few attendees
         num_users = 5
@@ -217,7 +217,7 @@ class EventsTest(IonTestCase):
 
         # Test GET of valid event id
         response = self.client.get(reverse("modify_event", args=[event.id]))
-        expected_context = {"action": "modify", "action_title": "Modify", "id": str(event.id), "is_events_admin": True}
+        expected_context = {"action": "modify", "action_title": "Modify", "id": event.id, "is_events_admin": True}
         for key, item in expected_context.items():
             self.assertEqual(response.context[key], item)
 

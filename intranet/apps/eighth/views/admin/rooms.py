@@ -87,7 +87,7 @@ def delete_room_view(request, room_id):
         context = {
             "admin_page_title": "Delete Room",
             "item_name": str(room),
-            "help_text": "Deleting this room will remove all records " "of it related to eighth period.",
+            "help_text": "Deleting this room will remove all records of it related to eighth period.",
         }
 
         return render(request, "eighth/admin/delete_form.html", context)
@@ -204,8 +204,8 @@ def room_utilization_action(request, start_id, end_id):
     show_opts_defaults = ["block", "rooms", "capacity", "signups", "aid", "activity", "comments", "sponsors"]
     show_opts_hidden = ["admin_comments"]
     if not show_vals:
-        show = {name: True for name in show_opts_defaults}
-        show.update({name: False for name in show_opts_hidden})
+        show = dict.fromkeys(show_opts_defaults, True)
+        show.update(dict.fromkeys(show_opts_hidden, False))
     else:
         show = {name: name in show_vals for name in show_opts}
 

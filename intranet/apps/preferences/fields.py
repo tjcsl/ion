@@ -1,7 +1,7 @@
 from django import forms
 from django.core import validators
 from django.db import models
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 
 
 class PhoneField(models.Field):
@@ -39,7 +39,7 @@ class PhoneFormField(forms.Field):
         """Returns a Unicode object."""
         if value in self.empty_values:
             return ""
-        value = force_text(value).strip()
+        value = force_str(value).strip()
         return value
 
     @staticmethod

@@ -1,5 +1,5 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
-urlpatterns = [re_path(r"^$", views.print_view, name="printing")]
+urlpatterns = [path("", views.print_view, name="printing")]

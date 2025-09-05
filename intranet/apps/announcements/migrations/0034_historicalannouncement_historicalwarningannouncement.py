@@ -4,7 +4,7 @@ import datetime
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-from django.utils.timezone import utc
+from datetime import timezone
 import simple_history.models
 
 
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('author', models.CharField(blank=True, max_length=63)),
                 ('added', models.DateTimeField(blank=True, editable=False)),
                 ('updated', models.DateTimeField(blank=True, editable=False)),
-                ('expiration_date', models.DateTimeField(default=datetime.datetime(3000, 1, 1, 5, 0, tzinfo=utc))),
+                ('expiration_date', models.DateTimeField(default=datetime.datetime(3000, 1, 1, 5, 0, tzinfo=timezone.utc))),
                 ('notify_post', models.BooleanField(default=True)),
                 ('notify_email_all', models.BooleanField(default=False)),
                 ('pinned', models.BooleanField(default=False)),

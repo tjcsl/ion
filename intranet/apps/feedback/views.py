@@ -16,8 +16,8 @@ def send_feedback_email(request, data):
     data["user"] = request.user
     email = request.user.tj_email if request.user.is_authenticated else f"unknown-{request.user}@tjhsst.edu"
     data["email"] = email
-    data["remote_ip"] = request.META["HTTP_X_REAL_IP"] if "HTTP_X_REAL_IP" in request.META else request.META.get("REMOTE_ADDR", "")
-    data["user_agent"] = request.META.get("HTTP_USER_AGENT")
+    data["remote_ip"] = request.headers["x-real-ip"] if "x-real-ip" in request.headers else request.META.get("REMOTE_ADDR", "")
+    data["user_agent"] = request.headers.get("user-agent")
     headers = {"Reply-To": f"{email}; {settings.FEEDBACK_EMAIL}"}
     email_send_task.delay("feedback/email.txt", "feedback/email.html", data, f"Feedback from {request.user}", [settings.FEEDBACK_EMAIL], headers)
 
