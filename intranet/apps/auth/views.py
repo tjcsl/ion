@@ -239,6 +239,7 @@ class LoginView(View):
             if form.get_user() == reset_user:
                 return redirect(reverse("reset_password") + "?expired=True")
             login(request, form.get_user())
+            request.session["failed_login_attempts"] = 0
             # Initial load into session
             logger.info("Login succeeded as %s", request.POST.get("username", "unknown"))
 
