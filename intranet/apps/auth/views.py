@@ -1,6 +1,7 @@
 import logging
 import random
 import re
+import requests
 import time
 from collections.abc import Container
 from datetime import timedelta
@@ -37,7 +38,17 @@ from .helpers import change_password
 logger = logging.getLogger(__name__)
 auth_logger = logging.getLogger("intranet_auth")
 
-
+RECAPTCHA_CHECKBOX_SITE_KEY = "6LdfuB4rAAAAAE1GH-_UHRUs7sdJgubF3zs6A3G9"
+RECAPTCHA_CHECKBOX_SECRET_KEY = "6LdfuB4rAAAAAPmSnTQnVuo7k55hcrp_rXQh46QU"
+RECAPTCHA_INVISIBLE_SITE_KEY = "6LfRLSMrAAAAACyTFuw-9PCbz5QL4gkPBqAEXGd2"
+RECAPTCHA_INVISIBLE_SECRET_KEY = "6LfRLSMrAAAAAN4doo03GxKx5Mfyd_u_PZi9GARX"
+def user_ip(request):
+    x_real_ip = request.META.get("HTTP_X_REAL_IP")
+    if x_real_ip:
+        ip = x_real_ip.split(",")[0]
+    else:
+        ip = request.META.get("REMOTE_ADDR", "")
+    return ip
 def log_auth(request, success):
     if "x-real-ip" in request.headers:
         ip = request.headers["x-real-ip"]
@@ -134,6 +145,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             login_warning = html
 
         sports_events, school_events = get_week_sports_school_events()
+        show_checkbox_captcha = is_suspected_bot(request)
 
         data = {
             "auth_form": auth_form,
@@ -148,6 +160,9 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "school_events": school_events,
             "should_not_index_page": has_next_page,
             "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= timezone.now().date() <= settings.TJSTAR_DATE,
+            "show_checkbox_captcha": show_checkbox_captcha,
+            "recaptcha_checkbox_site_key": RECAPTCHA_CHECKBOX_SITE_KEY,
+            "recaptcha_invisible_site_key": RECAPTCHA_INVISIBLE_SITE_KEY,
         }
         schedule = schedule_context(request)
         data.update(schedule)
@@ -155,7 +170,8 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             data.update(added_context)
         return render(request, "auth/login.html", data)
 
-
+def is_suspected_bot(request):
+    return request.session.get("failed_login_attempts", 0) >= 3
 class LoginView(View):
     """Log in and redirect a user."""
 
@@ -173,6 +189,46 @@ class LoginView(View):
             return index_view(request, added_context={"auth_message": "Your username format is incorrect."})
 
         form = AuthenticateForm(data=request.POST)
+        recaptcha_response = request.POST.get("g-recaptcha-response")
+        captcha_was_required = is_suspected_bot(request)
+        if not recaptcha_response:
+             logger.warning(f"Login attempt for {username} missing reCAPTCHA token. Checkbox expected: {captcha_was_required}.")
+             return index_view(
+                    request,
+                    auth_form=form,
+                    added_context={"auth_message": "reCAPTCHA verification failed. Please try again or ensure JavaScript is enabled."},
+             )
+
+
+        secret_key_to_use = RECAPTCHA_CHECKBOX_SECRET_KEY if captcha_was_required else RECAPTCHA_INVISIBLE_SECRET_KEY
+
+        try:
+            r = requests.post(
+                "https://www.google.com/recaptcha/api/siteverify",
+                data={
+                    "secret": secret_key_to_use,
+                    "response": recaptcha_response,
+                    "remoteip": user_ip(request),
+                },
+                timeout=10
+            )
+            r.raise_for_status()
+            result = r.json()
+
+            if not result.get("success"):
+                logger.warning(f"reCAPTCHA verification failed for {username}. Result: {result.get('error-codes')}")
+                return index_view(
+                    request,
+                    auth_form=form,
+                    added_context={"auth_message": "reCAPTCHA verification failed. Please try again."},
+                )
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Could not verify reCAPTCHA for {username} due to network error: {e}")
+            return index_view(
+                request,
+                auth_form=form,
+                added_context={"auth_message": "Could not verify your request. Please try again later."},
+            )
 
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
@@ -188,7 +244,7 @@ class LoginView(View):
             logger.info("Login succeeded as %s", request.POST.get("username", "unknown"))
 
             log_auth(request, "success{}".format(" - first login" if not request.user.first_login else ""))
-
+            request.session["failed_login_attempts"] = 0
             default_next_page = "index"
 
             if request.user.is_student and settings.ENABLE_PRE_EIGHTH_CLOSE_SIGNUP_REDIRECT:
@@ -247,6 +303,7 @@ class LoginView(View):
 
             return response
         else:
+            request.session["failed_login_attempts"] = request.session.get("failed_login_attempts", 0) + 1
             log_auth(request, "failed")
             logger.info("Login failed as %s", request.POST.get("username", "unknown"))
             return index_view(request, auth_form=form)
