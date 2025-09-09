@@ -270,7 +270,7 @@ def join_event_view(request, event_id):
             else:
                 event.attending.remove(request.user)
 
-            return redirect("events")
+            return redirect(request.META.get("HTTP_REFERER", "events"))
 
     context = {"event": event, "is_events_admin": is_events_admin}
     return render(request, "events/join_event.html", context)
