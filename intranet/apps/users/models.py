@@ -210,6 +210,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # See Phone model for phone numbers
     # See Website model for websites
 
+    user_archived = models.BooleanField(default=False)
     user_locked = models.BooleanField(default=False)
     oauth_and_api_access = models.BooleanField(default=True, help_text="Whether the user can create OAuth applications and access the API.")
 
@@ -840,7 +841,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         """
 
-        return not self.username.startswith("INVALID_USER") and not self.user_locked
+        return not self.username.startswith("INVALID_USER") and not self.user_locked and not self.user_archived
 
     @property
     def is_restricted(self) -> bool:

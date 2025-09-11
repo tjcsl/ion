@@ -1,4 +1,5 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.utils.translation import ngettext
 
 from ..users.models import Course, Section, User, UserProperties
 
@@ -26,6 +27,7 @@ class UserAdmin(admin.ModelAdmin):
         "user_type",
         "is_superuser",
         "user_locked",
+        "user_archived",
         "gender",
         "oauth_and_api_access",
         "receive_news_emails",
@@ -42,6 +44,21 @@ class UserAdmin(admin.ModelAdmin):
         "nickname",
         "student_id",
     )
+
+    @admin.action(description="Archive selected users")
+    def archive_users(self, request, queryset):
+        updated = queryset.update(user_archived=True)
+        self.message_user(
+            request,
+            ngettext(
+                f"Successfully archived {updated} user.",
+                f"Successfully archived {updated} users.",
+                updated,
+            ),
+            messages.SUCCESS,
+        )
+
+    actions = ["archive_users"]
 
 
 admin.site.register(UserProperties)
