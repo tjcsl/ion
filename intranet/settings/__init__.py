@@ -46,7 +46,7 @@ SCHOOL_END_DATE = datetime.date(end_school_year,
 
 # Dates when hoco starts and ends
 HOCO_START_DATE = datetime.date(start_school_year,
-    9, 28  # UPDATE THIS! Value when last updated: September 18, 2025   # noqa: E128
+    9, 19  # UPDATE THIS! Value when last updated: September 18, 2025   # noqa: E128
 )                                                                       # noqa: E124
 HOCO_END_DATE = datetime.date(start_school_year,
     9, 28  # UPDATE THIS! Value when last updated: September 28, 2025   # noqa: E128
