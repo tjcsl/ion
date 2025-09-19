@@ -6,7 +6,7 @@ $(document).ready(function() {
         $.get("https://homecoming.tjhsst.edu/api/", function(data) {
             didConnect = true;
             if (hocoScoresRef) {  // on reconnect
-                $("#hoco-scores").replaceWith(hocoScoresRef).fadeIn();  // restore the backup
+                $("#hoco-scores").replaceWith(hocoScoresRef).fadeTo("slow", 1);  // restore the backup
                 hocoScoresRef = null;
             }
             $("#score-senior").text(data.senior_total ? data.senior_total : 0);
@@ -15,7 +15,7 @@ $(document).ready(function() {
             $("#score-freshman").text(data.freshman_total ? data.freshman_total : 0);
             removeRibbons();
             giveRibbons();
-            $("#hoco-scores").delay(2000).fadeIn();
+            $("#hoco-scores").delay(1500).fadeTo("slow", 1);
         }).fail(function() {
             if (didConnect) {  // only track failed attempts after first successful attempt
                 numDisconnected += 1;
