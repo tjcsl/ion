@@ -1,8 +1,12 @@
 import datetime
+import json
 import os
+from io import StringIO
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.urls import reverse
 from django.utils import timezone
 from oauth2_provider.models import AccessToken, get_application_model
@@ -624,3 +628,83 @@ class ProfileTest(IonTestCase):
                 set(self.user.permissions[k].keys()),
                 {"show_pictures", "show_address", "show_telephone", "show_eighth", "show_schedule"},
             )
+
+
+class UserAdminTest(IonTestCase):
+    def setUp(self):
+        user = self.make_admin()  # noqa: F841
+        self.user1 = get_user_model().objects.create(username="user1", user_archived=False)
+        self.user2 = get_user_model().objects.create(username="user2", user_archived=False)
+        self.user3 = get_user_model().objects.create(username="user3", user_archived=True)
+
+    def test_archive_users_action(self):
+        self.assertFalse(self.user1.user_archived)
+        self.assertFalse(self.user2.user_archived)
+
+        url = reverse("admin:users_user_changelist")
+
+        data = {
+            "action": "archive_users",
+            "_selected_action": [self.user1.pk, self.user2.pk],
+        }
+        response = self.client.post(url, data, follow=True)
+
+        self.assertContains(response, "Successfully archived 2 users.")
+
+        self.user1.refresh_from_db()
+        self.user2.refresh_from_db()
+        self.assertTrue(self.user1.user_archived)
+        self.assertTrue(self.user2.user_archived)
+
+
+class ArchiveUsersCommandTest(IonTestCase):
+    def setUp(self):
+        self.user1 = get_user_model().objects.create(username="user1", user_archived=False)
+        self.user2 = get_user_model().objects.create(username="user2", user_archived=True)
+        self.test_data_path = "test_archive_users.json"
+
+    def tearDown(self):
+        super().tearDown()
+        try:
+            if os.path.exists(self.test_data_path):
+                os.remove(self.test_data_path)
+        except OSError:
+            pass
+
+    def test_archive_users_success(self):
+        data = {"usernames": ["user1"]}
+        with open(self.test_data_path, "w") as f:
+            json.dump(data, f)
+
+        out = StringIO()
+        call_command("archive_users", self.test_data_path, stdout=out, stderr=StringIO())
+
+        self.assertIn("Successfully archived user: user1", out.getvalue())
+        self.user1.refresh_from_db()
+        self.assertTrue(self.user1.user_archived)
+
+    def test_archive_users_already_archived(self):
+        data = {"usernames": ["user2"]}
+        with open(self.test_data_path, "w") as f:
+            json.dump(data, f)
+
+        out = StringIO()
+        call_command("archive_users", self.test_data_path, stdout=out, stderr=StringIO())
+
+        self.assertIn("User already archived: user2", out.getvalue())
+        self.user2.refresh_from_db()
+        self.assertTrue(self.user2.user_archived)
+
+    def test_archive_users_not_found(self):
+        data = {"usernames": ["nonexistent_user"]}
+        with open(self.test_data_path, "w") as f:
+            json.dump(data, f)
+
+        err = StringIO()
+        call_command("archive_users", self.test_data_path, stdout=StringIO(), stderr=err)
+
+        self.assertIn("User not found: nonexistent_user", err.getvalue())
+
+    def test_file_not_found_error(self):
+        with self.assertRaisesMessage(CommandError, "No such file or directory: 'nonexistent.json'"):
+            call_command("archive_users", "nonexistent.json")
