@@ -80,9 +80,12 @@
                 {# if authorization_grant_type is authorization_code, show redirect_uris #}
                 $("#id_authorization_grant_type").change(function() {
                     if ($("#id_authorization_grant_type").val() == "authorization-code") {
+                        $("#id_oidc_enabled").parent().show();
                         $("#id_redirect_uris").attr("required", "required").parent().parent().slideDown();
                     }
                     else {
+                        $("#id_oidc_enabled").parent().hide();
+                        $("#id_oidc_enabled").prop("checked", false);
                         $("#id_redirect_uris").removeAttr("required").parent().parent().slideUp();
                     }
                 });
@@ -123,11 +126,19 @@
 
         {% for field in form %}
             <div class="control-group {% if field.errors %}error{% endif %}">
-                <label class="control-label" for="{{ field.id_for_label }}">
-                    <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }} {% endif %}
-                </label>
                 <div class="controls">
-                    {{ field }}
+                    {% if field.field.widget.input_type == "checkbox" %}
+                        {{ field }} <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }}
+                    {% endif %}
+                    {% else %}
+                        <label class="control-label" for="{{ field.id_for_label }}">
+                            <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }}
+                        {% endif %}
+                        </label>
+                        {{ field }}
+                    {% endif %}
+
+                    {# Place errors (which pretty much happen only with the redirect_uris field anyway) before the client_id and client_secret read-only fields #}
                     {% for error in field.errors %}
                         <span class="help-inline">{{ error }}</span>
                     {% endfor %}

@@ -32,11 +32,13 @@ class ApplicationRegistrationView(ApplicationRegistration):
                 "redirect_uris",
                 "client_id",
                 "client_secret",
+                "oidc_enabled",
             ),
             help_texts={
                 "client_secret": (
                     "Save this now, as you will not be able to access it again. Keep it secure - it acts as your application's password."
                 ),
+                "oidc_enabled": ("Check this box to enable OpenID Connect (OIDC) support in your application. Authorization code grant type only."),
                 "redirect_uris": "Space or line separated list",
             },
         )
@@ -76,14 +78,10 @@ class ApplicationUpdateView(ApplicationUpdate):
 
         return modelform_factory(
             get_application_model(),
-            fields=(
-                "name",
-                "client_type",
-                "authorization_grant_type",
-                "redirect_uris",
-            ),
+            fields=("name", "client_type", "authorization_grant_type", "redirect_uris", "oidc_enabled"),
             help_texts={
                 "redirect_uris": "Space or line separated list",
+                "oidc_enabled": ("Check this box to enable OpenID Connect (OIDC) support in your application. Authorization code grant type only."),
             },
         )
 
