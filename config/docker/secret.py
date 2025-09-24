@@ -1,6 +1,3 @@
-import os
-
-SECRET_KEY = "_5kc##e7(!4=4)h4slxlgm010l+43zd_84g@82771ay6no-1&i"
 SECRET_DATABASE_URL = "postgres://ion:pwd@postgres:5432/ion"
 SESSION_REDIS_HOST = "redis"
 SESSION_REDIS_PORT = 6379
@@ -20,7 +17,6 @@ CHANNEL_LAYERS = {"default": {"BACKEND": "channels_redis.core.RedisChannelLayer"
 # notfish
 MASTER_PASSWORD = "argon2$argon2id$v=19$m=512,t=2,p=2$1JlK3UX2Ho1we5W8MPo2hA$cCXDGVyPD6olv/PbxdDTlA"
 CELERY_BROKER_URL = "redis://redis:6379/0"
-KEY_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../keys/oidc/oidc.key"))
 OIDC_RSA_PRIVATE_KEY = """
 -----BEGIN RSA PRIVATE KEY-----
 MIIJKAIBAAKCAgEArnjKrurrRZpKqSftw30nNXns/pbT2D/Erun71t6CABGy2kfE

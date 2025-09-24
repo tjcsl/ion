@@ -93,13 +93,12 @@ SECRET_DATABASE_URL should be of the following form:
 """
 
 # Dummy values for development and testing.
-MAINTENANCE_MODE: bool | None = None
-TJSTAR_MAP: bool | None = None
-SENTRY_PUBLIC_DSN: str | None = None
-TWITTER_KEYS: str | None = None
-
-from .secret import SECRET_KEY, SECRET_DATABASE_URL, SESSION_REDIS_HOST, SESSION_REDIS_PORT, SESSION_REDIS_DB, SESSION_REDIS_PREFIX, SESSION_REDIS, CACHEOPS_REDIS, CACHES, CHANNEL_LAYERS, MASTER_PASSWORD, CELERY_BROKER_URL, OIDC_RSA_PRIVATE_KEY
-
+# Overridden by the import from secret.py below.
+SECRET_DATABASE_URL = None  # type: str
+MAINTENANCE_MODE = None  # type: bool
+TJSTAR_MAP = None  # type: bool
+TWITTER_KEYS = None  # type: Dict[str,str]
+SENTRY_PUBLIC_DSN = None  # type: str
 USE_SASL = True
 NO_CACHE = False
 PARKING_ENABLED = True
@@ -168,6 +167,8 @@ CSRF_COOKIE_SECURE = PRODUCTION
 ION_AUTHENTICATED_COOKIE_VALUE = "ion_dev_test"  # Set to a random value in production. Used for balancer rate limiting.
 
 if not PRODUCTION:
+    # We don't care about session security when running a testing instance.
+    SECRET_KEY = "_5kc##e7(!4=4)h4slxlgm010l+43zd_84g@82771ay6no-1&i"
     # Trust X-Forwarded-For when testing
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTOCOL", "https")
 
@@ -546,6 +547,8 @@ if not PRODUCTION and os.getenv("SHORT_CACHE", "NO") == "YES":
 
 # Cacheops configuration
 # may be removed in the future
+CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 1}
+
 CACHEOPS = {
     "eighth.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching activity, block lists
     "groups.*": {"timeout": int(datetime.timedelta(hours=24).total_seconds())},  # Only used for caching group list
@@ -561,14 +564,36 @@ if not TESTING:
     # It allows customization of certain session-related behavior. See the comments in intranet/utils/session.py for more details.
     SESSION_ENGINE = "intranet.utils.session"
 
-    # Looking for session redis settings? They're in secret.py
+    SESSION_REDIS_HOST = "127.0.0.1"
+    SESSION_REDIS_PORT = 6379
+    SESSION_REDIS_DB = 0
+    SESSION_REDIS_PREFIX = "ion:session"
+    SESSION_REDIS = {"host": SESSION_REDIS_HOST, "port": SESSION_REDIS_PORT, "db": SESSION_REDIS_DB, "prefix": SESSION_REDIS_PREFIX}
 
     SESSION_COOKIE_AGE = int(datetime.timedelta(hours=2).total_seconds())
     SESSION_SAVE_EVERY_REQUEST = True
 
+CACHES = {
+    "default": {
+        "OPTIONS": {
+            # Avoid conflict between production and testing redis db
+            "DB": (1 if PRODUCTION else 2)
+        }
+    }
+}  # type: Dict[str,Dict[str,Any]]
+
 if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     CACHES["default"] = {"BACKEND": "intranet.utils.cache.DummyCache"}
     # extension of django.core.cache.backends.dummy.DummyCache
+else:
+    CACHES["default"] = {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "127.0.0.1:6379",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PICKLE_VERSION": 4
+                    },
+        "KEY_PREFIX": "ion",
+    }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
@@ -596,10 +621,13 @@ REST_FRAMEWORK = {
 }
 
 # Django OAuth Toolkit configuration
+def get_oidc_private_key():
+    from .secret import OIDC_RSA_PRIVATE_KEY
+
 OAUTH2_PROVIDER = {
     # this enables OIDC
     "OIDC_ENABLED": True,
-    "OIDC_RSA_PRIVATE_KEY": OIDC_RSA_PRIVATE_KEY,
+    "OIDC_RSA_PRIVATE_KEY": get_oidc_private_key(),
     "OIDC_RP_INITIATED_LOGOUT_ENABLED": True,
     "OIDC_RP_INITIATED_LOGOUT_ALWAYS_PROMPT": True,
     # this is the list of available scopes
@@ -698,6 +726,7 @@ INSTALLED_APPS = [
 ]
 
 # Django Channels Configuration (we use this for websockets)
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels_redis.core.RedisChannelLayer", "CONFIG": {"hosts": [("127.0.0.1", 6379)]}}}
 
 ASGI_APPLICATION = "intranet.routing.application"
 
@@ -918,6 +947,9 @@ LOSTFOUND_EXPIRATION = 180
 NONLOGGABLE_PATH_BEGINNINGS = ["/static"]
 NONLOGGABLE_PATH_ENDINGS = [".png", ".jpg", ".jpeg", ".gif", ".css", ".js", ".ico", "jsi18n/"]
 
+# The location of the Celery broker (message transport)
+CELERY_BROKER_URL = "amqp://localhost"
+
 CELERY_ACCEPT_CONTENT = ["json", "pickle"]
 CELERY_TASK_SERIALIZER = "pickle"
 
@@ -982,6 +1014,11 @@ SIGNAGE_HEARTBEAT_OFFLINE_TIMEOUT_SECS = 2 * 60
 # GLOBAL_WARNING = "This is a message to display throughout the application."
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+try:
+    from .secret import *  # noqa
+except ImportError:
+    pass
 
 # In-memory sqlite3 databases significantly speed up running tests.
 if TESTING:

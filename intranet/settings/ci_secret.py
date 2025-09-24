@@ -1,28 +1,9 @@
 # secret.py file for CI runs
-from typing import Any
-
 SECRET_KEY = "*t%yf&0+q!(a3@k(1#!hzr#u%1b*_ta-n-jf)aby5&2kbg6k&)"
 SECRET_DATABASE_URL = "postgres://postgres:postgres@127.0.0.1/ion"
 
 # 'password'
 MASTER_PASSWORD = "pbkdf2_sha256$12000$91eMu4Mn8Orv$Ep+D8cxD9TH+HzoeOq8gSrJXtxYvtHNY3RN4kG2c7lo="
-CELERY_BROKER_URL = "amqp://localhost"
-CACHEOPS_REDIS = {"host": "127.0.0.1", "port": 6379, "db": 1, "socket_timeout": 1}
-CHANNEL_LAYERS = {"default": {"BACKEND": "channels_redis.core.RedisChannelLayer", "CONFIG": {"hosts": [("127.0.0.1", 6379)]}}}
-SESSION_REDIS_HOST = "127.0.0.1"
-SESSION_REDIS_PORT = 6379
-SESSION_REDIS_DB = 0
-SESSION_REDIS_PREFIX = "ion:session"
-SESSION_REDIS = {"host": SESSION_REDIS_HOST, "port": SESSION_REDIS_PORT, "db": SESSION_REDIS_DB,
-                 "prefix": SESSION_REDIS_PREFIX}
-CACHES: dict[str, dict[str, Any]] = {
-    "default": {
-        "BACKEND": "intranet.utils.cache.DummyCache",
-        "OPTIONS": {
-            "DB": 2
-        },
-    }
-}
 
 OIDC_RSA_PRIVATE_KEY = """
 -----BEGIN RSA PRIVATE KEY-----
