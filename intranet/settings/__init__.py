@@ -623,6 +623,7 @@ REST_FRAMEWORK = {
 # Django OAuth Toolkit configuration
 def get_oidc_private_key():
     from .secret import OIDC_RSA_PRIVATE_KEY
+    return OIDC_RSA_PRIVATE_KEY
 
 OAUTH2_PROVIDER = {
     # this enables OIDC
