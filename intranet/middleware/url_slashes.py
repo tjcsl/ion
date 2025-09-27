@@ -13,13 +13,12 @@ class FixSlashes:
 
         # We can't remove slashes from these urls - they're included from
         # first/third party apps
-        exception_prefixes = ["/admin", "/api-auth", "/djangoadmin", "/__debug__", "/oauth"]
-        needs_trailing_slash = False
+        exception_prefixes = ("/admin", "/api-auth", "/djangoadmin", "/__debug__", "/oauth")
+        force_no_rewrite = ("/oauth/.well-known/",)
+        if request.path.startswith(force_no_rewrite):
+            return self.get_response(request)
 
-        for prefix in exception_prefixes:
-            needs_trailing_slash |= request.path.startswith(prefix)
-
-        if needs_trailing_slash:
+        if request.path.startswith(exception_prefixes):
             if not request.path.endswith("/"):
                 new_url = request.path + "/"
                 request.path_info = new_url
