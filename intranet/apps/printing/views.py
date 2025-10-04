@@ -71,6 +71,8 @@ def parse_alerts(alerts: str) -> tuple[str, str]:
         "media-jam-warning": "jammed",
         "toner-empty-error": "out of toner",
         "toner-empty-warning": "out of toner",
+        "toner-low-report": "low on toner",
+        "door-open-report": "door open",
         "none": "working",
     }
     alerts = alerts.split()
