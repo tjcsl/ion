@@ -648,6 +648,9 @@ OAUTH2_PROVIDER = {
         "email": (
             "Access your notification email using OpenID Connect. This is either your personal email or, if unset, your @tjhsst.edu email address."
         ),
+        "groups": (
+            "Access groups you are in using OpenID Connect, such as your grade level."
+        )
     },
     # OAuth refresh tokens expire in 30 days
     "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
