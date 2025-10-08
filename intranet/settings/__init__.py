@@ -913,6 +913,10 @@ NEAR_GRADUATION_DAYS = 50
 # taking attendance (10PM)
 ATTENDANCE_LOCK_HOUR = 22
 
+# The time buffer (in minutes) before the start or end of an eighth block (times from the Block model in schedule) during which
+# code/qr attendance is allowed, if the code mode is "auto"
+ATTENDANCE_CODE_BUFFER = 20
+
 # The number of days to show an absence message (2 weeks)
 CLEAR_ABSENCE_DAYS = 14
 
