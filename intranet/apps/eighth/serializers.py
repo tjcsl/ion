@@ -102,7 +102,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         available_restricted_acts=None,
     ):
         activity = scheduled_activity.activity
-        if user:
+        # Check if user exists in database before accessing properties that require database relationships (bc of signage_user)
+        if user and user.pk and get_user_model().objects.filter(pk=user.pk).exists():
             is_non_student_admin = user.is_eighth_admin and not user.is_student
         else:
             is_non_student_admin = False
@@ -206,7 +207,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     def fetch_activity_list_with_metadata(self, block):
         user = self.context.get("user", self.context["request"].user)
 
-        if user:
+        # Check if user exists and is saved in the database before accessing relationships
+        if user and user.pk and get_user_model().objects.filter(pk=user.pk).exists():
             favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
             recommended_activities = user.recommended_activities
             subscribed_activities = set(user.subscribed_activity_set.values_list("id", flat=True))

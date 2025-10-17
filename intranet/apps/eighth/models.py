@@ -433,7 +433,10 @@ class EighthActivity(AbstractBaseEighthModel):
         Returns:
             Whether the user can subscribe to the activity.
         """
-        return user.is_eighth_admin or (
+        return (
+            user.is_authenticated
+            and user.is_eighth_admin
+        ) or (
             self.subscriptions_enabled
             and user.is_authenticated
             and (
