@@ -30,7 +30,6 @@ def check_internal_ip(request) -> HttpResponse | None:
         a 403 if the request is unauthorized or None if the request is authorized
     """
     remote_addr = request.headers["x-real-ip"] if "x-real-ip" in request.headers else request.META.get("REMOTE_ADDR", "")
-    
     # in development, allow all requests
     if not settings.PRODUCTION:
         return None

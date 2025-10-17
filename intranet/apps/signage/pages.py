@@ -16,9 +16,7 @@ def announcements(page, sign, request):  # pylint: disable=unused-argument
 
     for ann in announcement_list:
         ann.content = nullify_links(ann.content)
-        
     return {"public_announcements": announcement_list}
-
 
 def bus(page, sign, request):  # pylint: disable=unused-argument
     now = timezone.localtime()
