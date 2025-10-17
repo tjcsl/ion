@@ -11,6 +11,19 @@ from .models import SeniorEmailForward
 logger = logging.getLogger(__name__)
 
 
+def add_email_forward(user, email, forward):
+    """Create a new forward if no forward exists or update the existing one."""
+
+    if forward is None:
+        forward = SeniorEmailForward(user=user, email=email.address)
+        forward.save()
+    else:
+        forward.address = email.address
+        forward.save()
+
+    return forward
+
+
 @login_required
 @deny_restricted
 def senior_email_forward_view(request):
@@ -24,20 +37,27 @@ def senior_email_forward_view(request):
         forward = None
 
     if request.method == "POST":
-        if forward:
-            form = SeniorEmailForwardForm(request.POST, instance=forward)
-        else:
-            form = SeniorEmailForwardForm(request.POST)
+        form = SeniorEmailForwardForm(request.user, request.POST)
+
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user
-            obj.save()
-            messages.success(request, "Successfully added forwarding address.")
-            return redirect("index")
+            email = form.cleaned_data["email"]
+
+            if email is None:
+                if forward is not None:
+                    forward.delete()
+                    forward = None
+                messages.success(request, "Successfully cleared email forward.")
+
+            elif email.verified:
+                forward = add_email_forward(request.user, email, forward)
+
+                messages.success(request, "Successfully added forwarding address.")
+            else:
+                messages.error(request, "You can only forward verified emails.")
         else:
             messages.error(request, "Error adding forwarding address.")
-    elif forward:
-        form = SeniorEmailForwardForm(instance=forward)
+
     else:
-        form = SeniorEmailForwardForm()
+        form = SeniorEmailForwardForm(request.user)
+
     return render(request, "emailfwd/senior_forward.html", {"form": form, "forward": forward})
