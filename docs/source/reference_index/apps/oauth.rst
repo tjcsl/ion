@@ -11,4 +11,5 @@ oauth
    apps
    models
    tests
+   validators
    views

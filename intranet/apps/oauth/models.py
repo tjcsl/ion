@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from oauth2_provider.models import AbstractApplication
@@ -5,8 +6,7 @@ from oauth2_provider.models import AbstractApplication
 
 class CSLApplication(AbstractApplication):
     """Extends the default OAuth Application model to add CSL-specific information about an OAuth application.
-    Disables the implicit, password, and OpenID connect hybrid grant types.
-    Disables use of an OIDC algorithm.
+    Disables the implicit, password, and OIDC implicit grant types.
 
     Attributes:
         sanctioned (bool): Whether the application is sanctioned by the tjCSL.
@@ -32,7 +32,7 @@ class CSLApplication(AbstractApplication):
         # (GRANT_IMPLICIT, _("Implicit")),
         # (GRANT_PASSWORD, _("Resource owner password-based")),
         (GRANT_CLIENT_CREDENTIALS, _("Client credentials")),
-        # Disabled because we don't support OIDC
+        # Disabled because we don't support OIDC with implicit
         # (GRANT_OPENID_HYBRID, _("OpenID connect hybrid")),
     )
 
@@ -41,10 +41,12 @@ class CSLApplication(AbstractApplication):
     HS256_ALGORITHM = "HS256"
     ALGORITHM_TYPES = (
         (NO_ALGORITHM, _("No OIDC support")),
-        # Disabled because we don't support OIDC
-        # (RS256_ALGORITHM, _("RSA with SHA-2 256")),
+        # For OIDC authorization code grant types
+        (RS256_ALGORITHM, _("RSA with SHA-2 256")),
         # (HS256_ALGORITHM, _("HMAC with SHA-2 256")),
     )
+
+    oidc_enabled = models.BooleanField(default=False)
 
     name = models.CharField(max_length=255, blank=False)  # make name required
     authorization_grant_type = models.CharField(max_length=32, choices=GRANT_TYPES)
@@ -74,6 +76,15 @@ class CSLApplication(AbstractApplication):
         self.sanctioned_but_do_not_skip_authorization = self.sanctioned and self.sanctioned_but_do_not_skip_authorization
         if self.sanctioned_but_do_not_skip_authorization:
             self.skip_authorization = False
+        if self.oidc_enabled:
+            if self.authorization_grant_type != self.GRANT_AUTHORIZATION_CODE:
+                raise ValidationError("OIDC-enabled applications must use the Authorization Code grant type.")
+
+            self.algorithm = self.RS256_ALGORITHM
+        else:
+            # In case someone later disables OIDC
+            self.algorithm = self.NO_ALGORITHM
+
         super().save(*args, **kwargs)
 
 

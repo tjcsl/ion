@@ -89,7 +89,6 @@
     {% if DJANGO_SETTINGS.ENABLE_SENIOR_DESTINATIONS and is_student %}
         {% include "dashboard/seniors.html" %}
     {% endif %}
-    <br />
 </div>
 {% endif %}
 
@@ -240,18 +239,11 @@
             </div>
         {% endif %}
 
-        {% if show_near_graduation_message %}
+        {% if show_near_graduation_message and page_num == 1 and view_announcements_url != "announcements_archive" and view_announcements_url != "club_announcements" %}
             {% include "dashboard/senior_forwarding.html" %}
         {% endif %}
 
         {% if view_announcements_url == "club_announcements" %}
-              <div class="announcement-banner">
-                  Club announcements is a new Ion feature that enables clubs to better communicate with their members.
-                  It is currently in beta release and is only available to select clubs.
-                  If your club is interested in participating in the rollout, contact
-                  <a href="mailto:intranet@tjhsst.edu" class="announcement-link">intranet@tjhsst.edu</a>.
-                  The feature will be released to the entire TJ community in the near future.
-              </div>
             <div class="club-announcement-filters">
                 <div class="club-announcement-filter subscribed-filter active">Your Subscriptions</div>
                 <div class="club-announcement-filter unsubscribed-filter">Other Club Announcements</div>

@@ -1,10 +1,10 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    re_path(r"^$", views.index_view, name="sessionmgmt"),
-    re_path(r"^/trust$", views.trust_session_view, name="trust_session"),
-    re_path(r"^/revoke$", views.revoke_session_view, name="revoke_session"),
-    re_path(r"^/global-logout$", views.global_logout_view, name="global_logout"),
+    path("", views.index_view, name="sessionmgmt"),
+    path("/trust", views.trust_session_view, name="trust_session"),
+    path("/revoke", views.revoke_session_view, name="revoke_session"),
+    path("/global-logout", views.global_logout_view, name="global_logout"),
 ]

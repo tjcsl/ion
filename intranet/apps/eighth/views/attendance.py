@@ -486,7 +486,7 @@ def accept_pass_view(request, signup_id):
 
     sponsor = request.user.get_eighth_sponsor()
     can_accept = signup.scheduled_activity.block.locked and (
-        sponsor and (sponsor in signup.scheduled_activity.get_true_sponsors()) or request.user.is_eighth_admin
+        (sponsor and (sponsor in signup.scheduled_activity.get_true_sponsors())) or request.user.is_eighth_admin
     )
 
     if not can_accept:
@@ -520,7 +520,9 @@ def accept_all_passes_view(request, scheduled_activity_id):
         raise http.Http404 from e
 
     sponsor = request.user.get_eighth_sponsor()
-    can_accept = scheduled_activity.block.locked and (sponsor and (sponsor in scheduled_activity.get_true_sponsors()) or request.user.is_eighth_admin)
+    can_accept = scheduled_activity.block.locked and (
+        (sponsor and (sponsor in scheduled_activity.get_true_sponsors())) or request.user.is_eighth_admin
+    )
 
     if not can_accept:
         return render(request, "error/403.html", {"reason": "You do not have permission to take accept these passes."}, status=403)

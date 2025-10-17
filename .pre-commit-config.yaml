@@ -24,8 +24,9 @@ repos:
       - id: check-toml
       - id: check-yaml
       - id: detect-private-key
+        exclude: '^(config/docker/secret|intranet/settings/ci_secret)\.py$'
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.12.3
     hooks:
       - id: ruff
         args: [ "--fix", "--exit-non-zero-on-fix" ]
@@ -38,6 +39,3 @@ repos:
     hooks:
       - id: codespell
         files: ^.*\.(py|md|rst)$
-        # TODO: Remove after python version >= 3.11
-        additional_dependencies:
-          - tomli

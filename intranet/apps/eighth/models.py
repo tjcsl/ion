@@ -2,8 +2,8 @@
 import datetime
 import logging
 import string
-from collections.abc import Sequence
-from typing import Collection, Iterable, List, Optional, Union
+from collections.abc import Collection, Iterable, Sequence
+from typing import Optional
 
 from cacheops import invalidate_obj
 from django.conf import settings
@@ -325,7 +325,7 @@ class EighthActivity(AbstractBaseEighthModel):
         """
         return self._name_with_flags(False)
 
-    def _name_with_flags(self, include_restricted: bool, title: Optional[str] = None) -> str:
+    def _name_with_flags(self, include_restricted: bool, title: str | None = None) -> str:
         """Generates the activity's name with flags.
         Args:
             include_restricted: Whether to include the "restricted" flag.
@@ -346,7 +346,7 @@ class EighthActivity(AbstractBaseEighthModel):
         return name
 
     @classmethod
-    def restricted_activities_available_to_user(cls, user: "get_user_model()") -> List[int]:
+    def restricted_activities_available_to_user(cls, user: "get_user_model()") -> list[int]:
         """Finds the restricted activities available to the given user.
         Args:
             user: The User to find the restricted activities for.
@@ -364,7 +364,7 @@ class EighthActivity(AbstractBaseEighthModel):
         return EighthActivity.objects.filter(q).values_list("id", flat=True)
 
     @classmethod
-    def available_ids(cls) -> List[int]:
+    def available_ids(cls) -> list[int]:
         """Returns all available IDs not used by an EighthActivity.
         Returns:
             A list of the available activity IDs.
@@ -376,7 +376,7 @@ class EighthActivity(AbstractBaseEighthModel):
         avail = nums - used
         return list(avail)
 
-    def get_active_schedulings(self) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
+    def get_active_schedulings(self) -> QuerySet | Collection["EighthScheduledActivity"]:  # pylint: disable=unsubscriptable-object
         """Returns all EighthScheduledActivitys scheduled this year for this activity.
         Returns:
             EighthScheduledActivitys of this activity occurring this year.
@@ -395,7 +395,7 @@ class EighthActivity(AbstractBaseEighthModel):
         return self.get_active_schedulings().exists()
 
     @property
-    def frequent_users(self) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def frequent_users(self) -> QuerySet | Collection["get_user_model()"]:  # pylint: disable=unsubscriptable-object
         """Return a QuerySet of user id's and counts that have signed up for this activity more than
         `settings.SIMILAR_THRESHOLD` times.
         This is used for suggesting activities to users.
@@ -458,7 +458,7 @@ class EighthActivity(AbstractBaseEighthModel):
 
 
 class EighthBlockQuerySet(models.query.QuerySet):
-    def this_year(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def this_year(self) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Get EighthBlocks from this school year only.
         Returns:
             A QuerySet containing all of the blocks selected by this QuerySet that occur during this school year.
@@ -466,7 +466,7 @@ class EighthBlockQuerySet(models.query.QuerySet):
         start_date, end_date = get_date_range_this_year()
         return self.filter(date__gte=start_date, date__lte=end_date)
 
-    def filter_today(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def filter_today(self) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets EighthBlocks that occur today.
         Returns:
             A QuerySet containing all of the blocks selected by this QuerySet that occur today.
@@ -478,7 +478,7 @@ class EighthBlockManager(models.Manager):
     def get_queryset(self):
         return EighthBlockQuerySet(self.model, using=self._db)
 
-    def get_upcoming_blocks(self, max_number: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def get_upcoming_blocks(self, max_number: int = -1) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets the given number of upcoming blocks that will take place in the future.
         If there is no block in the future, the most recent block will be returned.
         Returns:
@@ -506,7 +506,7 @@ class EighthBlockManager(models.Manager):
 
         return self.get_upcoming_blocks().first()
 
-    def get_next_upcoming_blocks(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def get_next_upcoming_blocks(self) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets the next upccoming blocks.
         It finds the other blocks that are occurring on the day of the
         first upcoming block.
@@ -522,7 +522,7 @@ class EighthBlockManager(models.Manager):
         next_blocks = EighthBlock.objects.filter(date=next_block.date)
         return next_blocks
 
-    def get_blocks_this_year(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def get_blocks_this_year(self) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets a QuerySet of blocks that occur this school year.
         Returns:
             A QuerySet of all the blocks that occur during this school year.
@@ -532,7 +532,7 @@ class EighthBlockManager(models.Manager):
 
         return EighthBlock.objects.filter(date__gte=date_start, date__lte=date_end)
 
-    def get_blocks_today(self) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def get_blocks_today(self) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets a QuerySet of blocks that occur today.
         Returns:
             A QuerySet of all the blocks that occur today.
@@ -589,7 +589,7 @@ class EighthBlock(AbstractBaseEighthModel):
 
         super().save(*args, **kwargs)
 
-    def next_blocks(self, quantity: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def next_blocks(self, quantity: int = -1) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets future blocks this school year in order.
         Args:
             quantity: The number of blocks to list after this block, or -1 for all following blocks.
@@ -606,7 +606,7 @@ class EighthBlock(AbstractBaseEighthModel):
             return blocks
         return blocks[:quantity]
 
-    def previous_blocks(self, quantity: int = -1) -> Union[QuerySet, Collection["EighthBlock"]]:  # pylint: disable=unsubscriptable-object
+    def previous_blocks(self, quantity: int = -1) -> QuerySet | Collection["EighthBlock"]:  # pylint: disable=unsubscriptable-object
         """Gets the previous blocks this school year in order.
         Args:
             quantity: The number of blocks to list before this block, or -1 for all previous blocks.
@@ -685,7 +685,7 @@ class EighthBlock(AbstractBaseEighthModel):
         signup_users_count = get_user_model().objects.get_students().count()
         return signup_users_count - self.num_signups()
 
-    def get_unsigned_students(self) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_unsigned_students(self) -> QuerySet | Collection["get_user_model()"]:  # pylint: disable=unsubscriptable-object
         """Return a QuerySet of people who haven't signed up for an
         activity during this block.
         Returns:
@@ -693,7 +693,7 @@ class EighthBlock(AbstractBaseEighthModel):
         """
         return get_user_model().objects.get_students().exclude(eighthsignup__scheduled_activity__block=self)
 
-    def get_hidden_signups(self) -> Union[QuerySet, Collection["EighthSignup"]]:  # pylint: disable=unsubscriptable-object
+    def get_hidden_signups(self) -> QuerySet | Collection["EighthSignup"]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of EighthSignups whose users are not students
         but have signed up for an activity.
         This is usually a list of signups for the z-Withdrawn from TJ activity.
@@ -770,7 +770,7 @@ class EighthBlock(AbstractBaseEighthModel):
 class EighthScheduledActivityManager(Manager):
     """Model Manager for EighthScheduledActivity."""
 
-    def for_sponsor(self, sponsor: EighthSponsor, include_cancelled: bool = False) -> Union[QuerySet, Collection["EighthScheduledActivity"]]:  # pylint: disable=unsubscriptable-object
+    def for_sponsor(self, sponsor: EighthSponsor, include_cancelled: bool = False) -> QuerySet | Collection["EighthScheduledActivity"]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of EighthScheduledActivities where the given EighthSponsor is
         sponsoring.
         If a sponsorship is defined in an EighthActivity, it may be overridden
@@ -863,7 +863,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
 
     history = HistoricalRecords()
 
-    def get_all_associated_rooms(self) -> Union[QuerySet, Collection["EighthRoom"]]:  # pylint: disable=unsubscriptable-object
+    def get_all_associated_rooms(self) -> QuerySet | Collection["EighthRoom"]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.
         Returns:
             A QuerySet of all the rooms associated with either this EighthScheduledActivity or its EighthActivity.
@@ -914,7 +914,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self.sticky or self.activity.sticky
 
-    def get_true_sponsors(self) -> Union[QuerySet, Collection[EighthSponsor]]:  # pylint: disable=unsubscriptable-object
+    def get_true_sponsors(self) -> QuerySet | Collection[EighthSponsor]:  # pylint: disable=unsubscriptable-object
         """Retrieves the sponsors for the scheduled activity, taking into account activity defaults and
         overrides.
         Returns:
@@ -931,7 +931,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self.get_true_sponsors().filter(user=user).exists()
 
-    def get_true_rooms(self) -> Union[QuerySet, Collection[EighthRoom]]:  # pylint: disable=unsubscriptable-object
+    def get_true_rooms(self) -> QuerySet | Collection[EighthRoom]:  # pylint: disable=unsubscriptable-object
         """Retrieves the rooms for the scheduled activity, taking into account
         activity defaults and overrides.
         Returns:
@@ -1026,7 +1026,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         capacity = self.get_true_capacity()
         return capacity != -1 and self.eighthsignup_set.count() > capacity
 
-    def is_too_early_to_signup(self, now: Optional[datetime.datetime] = None) -> (bool, datetime):
+    def is_too_early_to_signup(self, now: datetime.datetime | None = None) -> (bool, datetime):
         """Returns whether it is too early to sign up for the activity
         if it is a presign.
         This contains the 2 day pre-signup logic.
@@ -1054,7 +1054,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self.eighthsignup_set.filter(after_deadline=True, pass_accepted=False).exists()
 
-    def _get_viewable_members(self, user: "get_user_model()") -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def _get_viewable_members(self, user: "get_user_model()") -> QuerySet | Collection["get_user_model()"]:  # pylint: disable=unsubscriptable-object
         """Get an unsorted QuerySet of the members that you have permission to view.
         Args:
             user: The user who is attempting to view the member list.
@@ -1069,7 +1069,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 q |= Q(id=user.id)
             return self.members.filter(q)
 
-    def get_viewable_members(self, user: "get_user_model()" = None) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_viewable_members(self, user: "get_user_model()" = None) -> QuerySet | Collection["get_user_model()"]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you have permission to view, sorted alphabetically.
         Args:
             user: The user who is attempting to view the member list.
@@ -1078,7 +1078,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self._get_viewable_members(user).order_by("last_name", "first_name")
 
-    def get_viewable_members_serializer(self, request) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_viewable_members_serializer(self, request) -> QuerySet | Collection["get_user_model()"]:  # pylint: disable=unsubscriptable-object
         """Given a request, returns an unsorted QuerySet of the members that the requesting user
         has permission to view.
         Args:
@@ -1088,7 +1088,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         """
         return self._get_viewable_members(request.user)
 
-    def get_hidden_members(self, user: "get_user_model()" = None) -> Union[QuerySet, Collection["get_user_model()"]]:  # pylint: disable=unsubscriptable-object
+    def get_hidden_members(self, user: "get_user_model()" = None) -> QuerySet | Collection["get_user_model()"]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the members that you do not have permission to view.
         Args:
             user: The user who is attempting to view the member list.
@@ -1199,7 +1199,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
     def add_user(
         self,
         user: AbstractBaseUser,
-        request: Optional[HttpRequest] = None,
+        request: HttpRequest | None = None,
         force: bool = False,
         no_after_deadline: bool = False,
         add_to_waitlist: bool = False,
@@ -1611,7 +1611,7 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             self.save(update_fields=["cancelled"])
 
             if not self.is_both_blocks or self.block.block_letter != "B":
-                from .notifications import activity_cancelled_email  # pylint: disable=import-outside-toplevel,cyclic-import
+                from .notifications import activity_cancelled_email  # noqa: PLC0415
 
                 activity_cancelled_email(self)
 
@@ -1674,7 +1674,7 @@ class EighthSignupManager(Manager):
 
         return signup
 
-    def get_absences(self) -> Union[QuerySet, Collection["EighthSignup"]]:  # pylint: disable=unsubscriptable-object
+    def get_absences(self) -> QuerySet | Collection["EighthSignup"]:  # pylint: disable=unsubscriptable-object
         """Returns all EighthSignups for which the student was marked as absent.
         Returns:
             A QuerySet of all the EighthSignups for which the student was marked as absent.
@@ -1846,7 +1846,7 @@ class EighthSignup(AbstractBaseEighthModel):
 class EighthWaitlistManager(Manager):
     """Model manager for EighthWaitlist."""
 
-    def get_next_waitlist(self, activity: EighthScheduledActivity) -> Union[QuerySet, Collection["EighthWaitlist"]]:  # pylint: disable=unsubscriptable-object
+    def get_next_waitlist(self, activity: EighthScheduledActivity) -> QuerySet | Collection["EighthWaitlist"]:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of all the EighthWaitlist objects for the given
         activity, ordered by signup time.
         Args:

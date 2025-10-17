@@ -1,8 +1,9 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import logging
 from base64 import b64encode
+from collections.abc import Collection
 from datetime import timedelta
-from typing import Collection, Dict, Optional, Union
+from typing import Optional
 
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -41,14 +42,14 @@ class UserManager(DjangoUserManager):
 
     """
 
-    def user_with_student_id(self, student_id: Union[int, str]) -> Optional["User"]:
+    def user_with_student_id(self, student_id: int | str) -> Optional["User"]:
         """Get a unique user object by FCPS student ID. (Ex. 1624472)"""
         results = User.objects.filter(student_id=str(student_id))
         if len(results) == 1:
             return results.first()
         return None
 
-    def user_with_ion_id(self, student_id: Union[int, str]) -> Optional["User"]:
+    def user_with_ion_id(self, student_id: int | str) -> Optional["User"]:
         """Get a unique user object by Ion ID. (Ex. 489)"""
         if isinstance(student_id, str) and not is_entirely_digit(student_id):
             return None
@@ -57,11 +58,11 @@ class UserManager(DjangoUserManager):
             return results.first()
         return None
 
-    def users_in_year(self, year: int) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def users_in_year(self, year: int) -> Collection["User"] | QuerySet:  # pylint: disable=unsubscriptable-object
         """Get a list of users in a specific graduation year."""
         return User.objects.filter(graduation_year=year)
 
-    def user_with_name(self, given_name: Optional[str] = None, last_name: Optional[str] = None) -> "User":  # pylint: disable=unsubscriptable-object
+    def user_with_name(self, given_name: str | None = None, last_name: str | None = None) -> "User":  # pylint: disable=unsubscriptable-object
         """Get a unique user object by given name (first/nickname) and/or last name.
 
         Args:
@@ -85,14 +86,14 @@ class UserManager(DjangoUserManager):
         except (User.DoesNotExist, User.MultipleObjectsReturned):
             return None
 
-    def get_students(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_students(self) -> Collection["User"] | QuerySet:  # pylint: disable=unsubscriptable-object
         """Get user objects that are students (quickly)."""
         users = User.objects.filter(user_type="student", graduation_year__gte=get_senior_graduation_year())
         users = users.exclude(id__in=EXTRA)
 
         return users
 
-    def get_teachers(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_teachers(self) -> Collection["User"] | QuerySet:  # pylint: disable=unsubscriptable-object
         """Get user objects that are teachers (quickly)."""
         users = User.objects.filter(user_type="teacher")
         users = users.exclude(id__in=EXTRA)
@@ -120,7 +121,7 @@ class UserManager(DjangoUserManager):
 
         return users
 
-    def get_teachers_sorted(self) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+    def get_teachers_sorted(self) -> Collection["User"] | QuerySet:  # pylint: disable=unsubscriptable-object
         """Returns a ``QuerySet`` of teachers sorted by last name, then first name.
 
         Returns:
@@ -170,8 +171,8 @@ class UserManager(DjangoUserManager):
 
     def exclude_from_search(
         self,
-        existing_queryset: Optional[Union[Collection["User"], QuerySet]] = None,  # pylint: disable=unsubscriptable-object
-    ) -> Union[Collection["User"], QuerySet]:  # pylint: disable=unsubscriptable-object
+        existing_queryset: Collection["User"] | QuerySet | None = None,  # pylint: disable=unsubscriptable-object
+    ) -> Collection["User"] | QuerySet:  # pylint: disable=unsubscriptable-object
         if existing_queryset is None:
             existing_queryset = self
 
@@ -271,7 +272,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.properties.address
 
     @property
-    def schedule(self) -> Optional[Union[QuerySet, Collection["Section"]]]:  # pylint: disable=unsubscriptable-object
+    def schedule(self) -> QuerySet | Collection["Section"] | None:  # pylint: disable=unsubscriptable-object
         """Returns a QuerySet of the ``Section`` objects representing the classes this student is
         in, or ``None`` if the current user does not have permission to list this student's classes.
 
@@ -283,7 +284,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return self.properties.schedule
 
-    def member_of(self, group: Union[Group, str]) -> bool:
+    def member_of(self, group: Group | str) -> bool:
         """Returns whether a user is a member of a certain group.
 
         Args:
@@ -401,7 +402,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.short_name
 
     @property
-    def primary_email_address(self) -> Optional[str]:
+    def primary_email_address(self) -> str | None:
         try:
             return self.primary_email.address if self.primary_email else None
         except Email.DoesNotExist:
@@ -433,7 +434,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.username}@{domain}"
 
     @property
-    def non_tj_email(self) -> Optional[str]:
+    def non_tj_email(self) -> str | None:
         """
         Returns the user's first non-TJ email found, or None if none is found.
 
@@ -475,7 +476,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return email.address if email and email.address else self.tj_email
 
     @property
-    def default_photo(self) -> Optional[bytes]:
+    def default_photo(self) -> bytes | None:
         """Returns default photo (in binary) that should be used
 
         Returns:
@@ -510,7 +511,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return Grade(self.graduation_year)
 
     @property
-    def permissions(self) -> Dict[str, bool]:
+    def permissions(self) -> dict[str, bool]:
         """Dynamically generate dictionary of privacy options.
 
         Returns:
@@ -520,9 +521,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         permissions_dict = {}
 
-        for prefix in PERMISSIONS_NAMES:
+        for prefix, suffixes in PERMISSIONS_NAMES.items():
             permissions_dict[prefix] = {}
-            for suffix in PERMISSIONS_NAMES[prefix]:
+            for suffix in suffixes:
                 permissions_dict[prefix][suffix] = getattr(self.properties, prefix + "_" + suffix)
 
         return permissions_dict
@@ -752,7 +753,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return self.member_of("admin_all") and self.is_staff and self.is_superuser
 
-    def can_manage_group(self, group: Union[Group, str]) -> bool:
+    def can_manage_group(self, group: Group | str) -> bool:
         """Checks whether this user has permission to edit/manage the given group (either
         a Group or a group name).
 
@@ -1085,7 +1086,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def handle_delete(self):
         """Handle a graduated user being deleted."""
-        from intranet.apps.eighth.models import EighthScheduledActivity  # pylint: disable=import-outside-toplevel
+        from intranet.apps.eighth.models import EighthScheduledActivity  # noqa: PLC0415
 
         EighthScheduledActivity.objects.filter(eighthsignup_set__user=self).update(archived_member_count=F("archived_member_count") + 1)
 
@@ -1397,7 +1398,7 @@ class Photo(models.Model):
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     @cached_property
-    def base64(self) -> Optional[bytes]:
+    def base64(self) -> bytes | None:
         """Returns base64 encoded binary data for a user's picture.
 
         Returns:
@@ -1463,7 +1464,7 @@ class Grade:
             return self._name
 
     @staticmethod
-    def number_from_name(name: str) -> Optional[int]:
+    def number_from_name(name: str) -> int | None:
         if name in Grade.names:
             return Grade.names.index(name) + 9
         return None

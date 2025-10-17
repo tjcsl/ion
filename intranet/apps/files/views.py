@@ -247,9 +247,10 @@ def files_type(request, fstype=None):
         dirbase_escaped = os.path.basename(fsdir)
         dirbase_escaped = slugify(dirbase_escaped)
 
-        with tempfile.TemporaryDirectory(prefix=f"ion_filecenter_{request.user.username}_{dirbase_escaped}_zip") as tmpdir, tempfile.TemporaryFile(
-            prefix=f"ion_filecenter_{request.user.username}_{dirbase_escaped}"
-        ) as tmpfile:
+        with (
+            tempfile.TemporaryDirectory(prefix=f"ion_filecenter_{request.user.username}_{dirbase_escaped}_zip") as tmpdir,
+            tempfile.TemporaryFile(prefix=f"ion_filecenter_{request.user.username}_{dirbase_escaped}") as tmpfile,
+        ):
             remote_directories = [fsdir]
             totalsize = 0
             while remote_directories:

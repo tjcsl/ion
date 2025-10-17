@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable, Sequence
 from datetime import datetime, time, timedelta
 from itertools import chain
-from typing import Any, Generic, Iterable, Sequence, TypeVar
+from typing import Any, TypeGuard, TypeVar
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware
-from typing_extensions import TypedDict, TypeGuard
+from typing_extensions import TypedDict
 
 from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
@@ -324,7 +325,7 @@ def filter_club_announcements(
     return visible, hidden, unsubscribed
 
 
-class RawPaginationData(TypedDict, Generic[T]):
+class RawPaginationData[T: Announcement](TypedDict):
     club_items: Sequence[Announcement]
     items: Page[T]
     page_num: int
@@ -334,7 +335,7 @@ class RawPaginationData(TypedDict, Generic[T]):
     page_obj: Paginator[T]
 
 
-def paginate_announcements_list_raw(
+def paginate_announcements_list_raw[T: Announcement](
     request: HttpRequest,
     items: Sequence[T],
     visible_club_items: Sequence[Announcement] = (),
@@ -392,7 +393,7 @@ def paginate_announcements_list_raw(
     )
 
 
-def paginate_announcements_list(
+def paginate_announcements_list[T: Announcement](
     request, context: dict[str, Any], items: Sequence[T], visible_club_items: Sequence[Announcement] = ()
 ) -> tuple[dict[str, Any], Page[T]]:
     """Paginate ``items`` in groups of 15

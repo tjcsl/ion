@@ -31,25 +31,25 @@ end_school_year = start_school_year + 1
 # fmt: off
 """ !! -------- UPDATE ANNUALLY -------- !!
 Update this section annually after summer school ends and before school starts.
-School year last updated:  2024-08-16
-Hoco last updated:         2024-08-16
+School year last updated:  2025-08-18
+Hoco last updated:         2025-09-06
 tjSTAR last updated:       2024-05-03
 """
 
 # When school is scheduled to start and end
 SCHOOL_START_DATE = datetime.date(start_school_year,
-    8, 19  # UPDATE THIS! Value when last updated: August 19, 2024      # noqa: E128
+    8, 18  # UPDATE THIS! Value when last updated: August 18, 2025      # noqa: E128
 )                                                                       # noqa: E124
 SCHOOL_END_DATE = datetime.date(end_school_year,
-    6, 11  # UPDATE THIS! Value when last updated: June 11, 2025        # noqa: E128
+    6, 17  # UPDATE THIS! Value when last updated: June 17, 2026        # noqa: E128
 )                                                                       # noqa: E124
 
 # Dates when hoco starts and ends
 HOCO_START_DATE = datetime.date(start_school_year,
-    9, 21  # UPDATE THIS! Value when last updated: September 21, 2024   # noqa: E128
+    9, 19  # UPDATE THIS! Value when last updated: September 18, 2025   # noqa: E128
 )                                                                       # noqa: E124
 HOCO_END_DATE = datetime.date(start_school_year,
-    9, 29  # UPDATE THIS! Value when last updated: September 29, 2024   # noqa: E128
+    9, 28  # UPDATE THIS! Value when last updated: September 28, 2025   # noqa: E128
 )                                                                       # noqa: E124
 
 # Date of tjSTAR
@@ -587,9 +587,11 @@ if TESTING or os.getenv("DUMMY_CACHE", "NO") == "YES" or NO_CACHE:
     # extension of django.core.cache.backends.dummy.DummyCache
 else:
     CACHES["default"] = {
-        "BACKEND": "redis_cache.RedisCache",
+        "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "127.0.0.1:6379",
-        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser", "PICKLE_VERSION": 4},
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient",
+                    "PICKLE_VERSION": 4
+                    },
         "KEY_PREFIX": "ion",
     }
 
@@ -619,16 +621,43 @@ REST_FRAMEWORK = {
 }
 
 # Django OAuth Toolkit configuration
+def get_oidc_private_key():
+    from .secret import OIDC_RSA_PRIVATE_KEY
+    return OIDC_RSA_PRIVATE_KEY
+
 OAUTH2_PROVIDER = {
-    # this disables OIDC
-    "OIDC_ENABLED": False,
+    # this enables OIDC
+    "OIDC_ENABLED": True,
+    "OIDC_RSA_PRIVATE_KEY": get_oidc_private_key(),
+    "OIDC_RP_INITIATED_LOGOUT_ENABLED": True,
+    "OIDC_RP_INITIATED_LOGOUT_ALWAYS_PROMPT": True,
     # this is the list of available scopes
-    "SCOPES": {"read": "Read scope", "write": "Write scope"},
+    "SCOPES": {
+        "read": (
+            "View information in Ion that you have access to, such as announcements, schedules, activity history, or your profile. Apps with this scope cannot make changes."
+        ),
+        "write": (
+            "Create or update information in Ion on your behalf, such as signing up for activities. Apps with this scope may modify data."
+        ),
+        "openid": (
+            "Authenticate with Ion using OpenID Connect. This lets apps verify your identity without revealing your personal information."
+        ),
+        "profile": (
+            "Access your full name and username using OpenID Connect."
+        ),
+        "email": (
+            "Access your notification email using OpenID Connect. This is either your personal email or, if unset, your @tjhsst.edu email address."
+        ),
+        "groups": (
+            "Access groups you are in using OpenID Connect, such as your grade level."
+        )
+    },
     # OAuth refresh tokens expire in 30 days
     "REFRESH_TOKEN_EXPIRE_SECONDS": 60 * 60 * 24 * 30,
     "PKCE_REQUIRED": False,
     # Custom Django admin class
     "APPLICATION_ADMIN_CLASS": "intranet.apps.oauth.admin.CSLApplicationAdmin",
+    "OAUTH2_VALIDATOR_CLASS": "intranet.apps.oauth.validators.IonOIDCValidator",
     # Controls whether the user is prompted to authorize the OAuth application every time
     # Default is 'force', which always prompts the user
     # 'auto' will only prompt the user the first time
@@ -695,7 +724,6 @@ INSTALLED_APPS = [
     "oauth2_provider",  # django-oauth-toolkit
     "corsheaders",  # django-cors-headers
     "cacheops",  # django-cacheops
-    "svg",  # django-inline-svg
     "simple_history",  # django-simple-history
     "django_referrer_policy",
     "django_user_agents",
@@ -948,11 +976,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": celery.schedules.crontab(hour=BUS_PAGE_CHANGEOVER_HOUR, minute=1),
         "args": (),
     },
-    "pull-sports-schedule": {
-        "task": "intranet.apps.events.tasks.pull_sports_schedules",
-        "schedule": celery.schedules.crontab(hour=1, minute=0),
-        "args": (),
-    },
+    # "pull-sports-schedule": {
+    #     "task": "intranet.apps.events.tasks.pull_sports_schedules",
+    #     "schedule": celery.schedules.crontab(hour=1, minute=0),
+    #     "args": (),
+    # },
     "follow-up-absence-emails": {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),

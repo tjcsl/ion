@@ -1,6 +1,7 @@
 {% extends "oauth2_provider/base.html" %}
 {% load i18n %}
 {% load static %}
+{% load dictionaries %}
 
 {% block title %}
     <title>Ion - OAuth - Authorize {{ application.name }} Application</title>
@@ -22,9 +23,8 @@
         }
 
         .center-wrapper ul {
-            padding-left: 50%;
-            margin-left: -41px;
-            width: 120px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .center-wrapper li {
@@ -110,8 +110,8 @@
 
                 <p><b>{{ application.name }}</b> requires the following permissions:</p>
                 <ul>
-                    {% for scope in scopes_descriptions %}
-                        <li>{{ scope }}</li>
+                    {% for key in scopes %}
+                        <li><b>{{ key|capfirst }}</b>: {{ scopes_descriptions|lookup:forloop.counter0 }}</li>
                     {% endfor %}
                 </ul>
                 <p style="font-size: 11pt">

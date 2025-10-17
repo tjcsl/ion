@@ -1,5 +1,5 @@
-from django.urls import re_path
+from django.urls import path
 
 from . import views
 
-urlpatterns = [re_path(r"^/senior$", views.senior_email_forward_view, name="senior_emailfwd")]
+urlpatterns = [path("/senior", views.senior_email_forward_view, name="senior_emailfwd")]
