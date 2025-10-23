@@ -10,9 +10,9 @@ from django.shortcuts import redirect, render
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
 from ..users.models import Email
-from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, ThemeForm
+from .forms import BusRouteForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, ThemeForm
 
-# from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
+# from .forms import (BusRouteForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
 #                    WebsiteFormset)
 
 
@@ -276,18 +276,6 @@ def save_gcm_options(request, user):
                 nc.gcm_optout = True
                 nc.save()
                 messages.success(request, "Disabled push notifications")
-
-
-def save_dark_mode_settings(request, user):
-    dark_mode_form = DarkModeForm(user, data=request.POST, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
-    if dark_mode_form.is_valid():
-        if dark_mode_form.has_changed():
-            user.dark_mode_properties.dark_mode_enabled = dark_mode_form.cleaned_data["dark_mode_enabled"]
-            user.dark_mode_properties.save()
-            invalidate_obj(request.user.dark_mode_properties)
-            messages.success(request, ("Dark mode enabled" if user.dark_mode_properties.dark_mode_enabled else "Dark mode disabled"))
-
-    return dark_mode_form
 
 
 def save_theme_settings(request, user):
