@@ -184,6 +184,13 @@ def enable_dark_mode(request):
     """
     return {"dark_mode_enabled": dark_mode_enabled(request)}
 
+def user_theme_choice(request):
+    if request.user.is_authenticated:
+        choice = request.user.theme_properties.theme_choice
+    else:
+        choice = request.COOKIES.get("theme_choice", "light")
+    return {"theme_choice": choice}
+
 
 def oauth_toolkit(request):
     """

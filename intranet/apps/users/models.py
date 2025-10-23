@@ -1095,6 +1095,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             return UserProperties.objects.get_or_create(user=self)[0]
         elif name == "dark_mode_properties":
             return UserDarkModeProperties.objects.get_or_create(user=self)[0]
+        elif name == "theme_properties":
+            return UserThemeProperties.objects.get_or_create(user=self)[0]
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {name!r}")
 
     def __str__(self):
@@ -1284,6 +1286,17 @@ class UserDarkModeProperties(models.Model):
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="dark_mode_properties", on_delete=models.CASCADE)
     dark_mode_enabled = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.user)
+    
+class UserThemeProperties(models.Model):
+    """
+    Contains user properties relating to themes
+    """
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="theme_properties", on_delete=models.CASCADE)
+    theme_choice = models.CharField(max_length=100, default="light_theme")
 
     def __str__(self):
         return str(self.user)

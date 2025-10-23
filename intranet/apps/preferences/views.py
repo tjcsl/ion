@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
 from ..users.models import Email
-from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
+from .forms import BusRouteForm, DarkModeForm, ThemeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
 
 # from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
 #                    WebsiteFormset)
@@ -289,6 +289,17 @@ def save_dark_mode_settings(request, user):
 
     return dark_mode_form
 
+def save_theme_settings(request, user):
+    theme_form = ThemeForm(user, data=request.POST, initial={"theme_choice": user.theme_properties.theme_choice})
+    if theme_form.is_valid():
+        if theme_form.has_changed():
+            user.theme_properties.theme_choice = theme_form.cleaned_data["theme_choice"]
+            user.theme_properties.save()
+            invalidate_obj(request.user.theme_properties)
+            messages.success(request, f"Theme set to {user.theme_properties.theme_choice}")
+
+    return theme_form
+
 
 @login_required
 def preferences_view(request):
@@ -314,7 +325,7 @@ def preferences_view(request):
             privacy_options_form = None
         notification_options_form = save_notification_options(request, user)
 
-        dark_mode_form = save_dark_mode_settings(request, user)
+        theme_form = save_theme_settings(request, user)
 
         for error in errors:
             messages.error(request, error)
@@ -355,7 +366,7 @@ def preferences_view(request):
         notification_options = get_notification_options(user)
         notification_options_form = NotificationOptionsForm(user, initial=notification_options)
 
-        dark_mode_form = DarkModeForm(user, initial={"dark_mode_enabled": user.dark_mode_properties.dark_mode_enabled})
+        theme_form = ThemeForm(user, initial={"theme_choice": user.theme_properties.theme_choice})
 
     context = {
         # "phone_formset": phone_formset,
@@ -365,7 +376,7 @@ def preferences_view(request):
         "privacy_options_form": privacy_options_form,
         "notification_options_form": notification_options_form,
         "bus_route_form": bus_route_form if settings.ENABLE_BUS_APP else None,
-        "dark_mode_form": dark_mode_form,
+        "theme_form": theme_form,
     }
     return render(request, "preferences/preferences.html", context)
 

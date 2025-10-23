@@ -101,6 +101,22 @@ class DarkModeForm(forms.Form):
             initial=user.dark_mode_properties.dark_mode_enabled, label="Enable dark mode?", required=False
         )
 
+class ThemeForm(forms.Form):
+    THEME_CHOICES = [
+        ("light", "Light Theme"),
+        ("dark", "Dark Theme"),
+        ("twilight", "Twilight Theme"),
+    ]
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["theme_choice"] = forms.ChoiceField(
+            choices=self.THEME_CHOICES,
+            initial=user.theme_properties.theme_choice,
+            label="Select your preferred theme:",
+            required=True
+        )
+
 
 class PhoneForm(forms.ModelForm):
     """Represents a phone number (number + purpose)"""

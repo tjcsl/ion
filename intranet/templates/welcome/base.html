@@ -19,8 +19,11 @@
 
 {% block head %}
     {{ block.super }}
-    {% if dark_mode_enabled %}
+    {% if theme_choice == 'dark' or theme_choice == 'twilight' %}
         {% stylesheet 'dark/welcome' %}
+    {% endif %}
+    {% if theme_choice == 'twilight' %}
+        {% stylesheet 'twilight/welcome' %}
     {% endif %}
 {% endblock %}
 

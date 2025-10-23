@@ -15,11 +15,16 @@
 {% endblock %}
 
 {% block head %}
-    {% if dark_mode_enabled %}
+    {% if theme_choice == 'dark' or theme_choice == 'twilight' %}
         {% stylesheet 'dark/base' %}
         {% stylesheet 'dark/nav' %}
     {% endif %}
+    {% if theme_choice == 'twilight' %}
+        {% stylesheet 'twilight/base' %}
+        {% stylesheet 'twilight/nav' %}
+    {% endif %}
 {% endblock %}
+
 
 {% block main %}
 <div class="primary-content">
