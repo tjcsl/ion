@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
 from ..users.models import Email
-from .forms import BusRouteForm, DarkModeForm, ThemeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
+from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm, ThemeForm
 
 # from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
 #                    WebsiteFormset)
@@ -288,6 +288,7 @@ def save_dark_mode_settings(request, user):
             messages.success(request, ("Dark mode enabled" if user.dark_mode_properties.dark_mode_enabled else "Dark mode disabled"))
 
     return dark_mode_form
+
 
 def save_theme_settings(request, user):
     theme_form = ThemeForm(user, data=request.POST, initial={"theme_choice": user.theme_properties.theme_choice})

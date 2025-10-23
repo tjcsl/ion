@@ -1289,7 +1289,8 @@ class UserDarkModeProperties(models.Model):
 
     def __str__(self):
         return str(self.user)
-    
+
+
 class UserThemeProperties(models.Model):
     """
     Contains user properties relating to themes
