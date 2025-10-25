@@ -1,9 +1,13 @@
+import logging
+
 from oauth2_provider.oauth2_validators import OAuth2Validator
+
+logger = logging.getLogger(__name__)
 
 
 class IonOIDCValidator(OAuth2Validator):
     oidc_claim_scope = OAuth2Validator.oidc_claim_scope.copy()
-    oidc_claim_scope.update({"groups": "groups"})  # manually add it since groups is not part of the standard OIDC spec
+    oidc_claim_scope.update({"groups": "groups", "is_sysadmin": "groups"})  # manually add it since groups is not part of the standard OIDC spec
 
     def get_additional_claims(self, request):
         claims = {}
@@ -31,6 +35,7 @@ class IonOIDCValidator(OAuth2Validator):
             claims.update(
                 {
                     "groups": list(user.groups.values_list("name", flat=True)),
+                    "is_sysadmin": user.groups.filter(name="Sysadmin(R) -- Permissions").exists(),
                 }
             )
 
