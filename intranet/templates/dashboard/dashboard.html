@@ -44,7 +44,7 @@
 {% endblock %}
 
 {% block head %}
-    {% if dark_mode_enabled %}
+    {% if theme_choice == 'dark' or theme_choice == 'twilight' %}
         {% stylesheet 'dark/base' %}
         {% stylesheet 'dark/nav' %}
         {% stylesheet 'dark/dashboard' %}
@@ -52,6 +52,11 @@
         {% stylesheet 'dark/schedule' %}
         {% stylesheet 'dark/schedule.widget' %}
         {% stylesheet 'dark/events' %}
+    {% endif %}
+    {% if theme_choice == 'twilight' %}
+        {% stylesheet 'twilight/base' %}
+        {% stylesheet 'twilight/nav' %}
+        {% stylesheet 'twilight/dashboard' %}
     {% endif %}
 {% endblock %}
 
