@@ -6,15 +6,17 @@ from django.utils import timezone
 
 from ..announcements.models import Announcement
 from ..schedule.models import Day
-
+from ...utils.html import nullify_links
 
 def hello_world(page, sign, request):
     return {"message": f"{page.name} from {sign.name} says Hello"}
 
-
 def announcements(page, sign, request):  # pylint: disable=unused-argument
-    return {"public_announcements": Announcement.objects.filter(groups__isnull=True, expiration_date__gt=timezone.now())}
+    announcement_list = Announcement.objects.filter(groups__isnull=True, expiration_date__gt=timezone.now())
 
+    for ann in announcement_list:
+        ann.content = nullify_links(ann.content)
+    return {"public_announcements": announcement_list}
 
 def bus(page, sign, request):  # pylint: disable=unused-argument
     now = timezone.localtime()
