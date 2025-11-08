@@ -1,13 +1,12 @@
 import logging
 import time
+from typing import Literal
 
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
-from requests.adapters import HTTPAdapter
-from urllib3 import Retry
 
 from ...utils.html import get_domain_name, safe_fcps_emerg_html
 
@@ -123,38 +122,14 @@ def update_emerg_cache(*, custom_logger=None) -> None:
     cache.set(key, result, timeout=settings.CACHE_AGE["emerg"])
 
 
-def get_csl_status() -> tuple[str, bool]:
+def get_csl_status() -> Literal["error", "operational", "downtime", "degraded", "maintenance"]:
     """Get the cached status of the TJCSL status page.
 
     Returns:
-        Tuple with a string consisting of the aggregate status
-        of the TJ computer systems lab and a bool indicating whether
-        the status cache was updated
+        A string consisting of the aggregate status
+        of the TJ computer systems lab.
 
         The string of the tuple will be one of the following: "error" (parse error), "operational", "downtime", "degraded", "maintenance"
     """
 
-    status = cache.get("emerg:csl_status")
-    updated = False
-
-    if not status:
-        session = requests.Session()
-        adapter = HTTPAdapter(
-            max_retries=Retry(
-                total=settings.CSL_STATUS_PAGE_MAX_RETRIES, backoff_factor=0.3, status_forcelist=[500, 502, 503, 504], allowed_methods=["GET"]
-            )
-        )
-        session.mount("https://", adapter)
-
-        try:
-            response = session.get(settings.CSL_STATUS_PAGE, timeout=settings.CSL_STATUS_PAGE_TIMEOUT)
-            response.raise_for_status()
-            status = response.json()["data"]["attributes"]["aggregate_state"]
-            updated = True
-        except Exception as ex:
-            status = "error"
-            logger.error(f"Could not fetch status page or incorrect status page JSON format: {ex}")
-
-        cache.set("emerg:csl_status", status, settings.CACHE_AGE["csl_status"])
-
-    return status, updated
+    return cache.get("emerg:csl_status", "error")
