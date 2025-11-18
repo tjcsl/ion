@@ -115,7 +115,7 @@
                 },
                 {
                     "name": "Validate push commit messages",
-                    "if": "github.event_name == 'push' && (github.repository_owner != 'tjcsl' || github.ref != 'refs/heads/master' || github.ref != 'refs/heads/dev')",
+                    "if": "github.event_name == 'push' && (github.repository_owner != 'tjcsl' || github.ref != 'refs/heads/master' || github.ref != 'refs/heads/dev') && github.actor != 'dependabot[bot]'",
                     "run": "git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}"
                 },
                 {
@@ -269,7 +269,7 @@
                 {
                     "name": "Report coverage to Codacy",
                     "uses": "codacy/codacy-coverage-reporter-action@master",
-                    "if": "github.repository_owner == 'tjcsl' && github.event_name != 'pull_request'",
+                    "if": "github.repository_owner == 'tjcsl' && github.event_name != 'pull_request' && github.actor != 'dependabot[bot]'",
                     "with": {
                         "coverage-reports": "coverage.xml",
                         "project-token": "${{ secrets.CODACY_PROJECT_TOKEN }}"
