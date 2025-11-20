@@ -535,7 +535,7 @@ CACHE_AGE = {
     "users_list": int(datetime.timedelta(hours=24).total_seconds()),
     "printers_list": int(datetime.timedelta(minutes=10).total_seconds()),
     "emerg": int(datetime.timedelta(minutes=5).total_seconds()),
-    "csl_status": int(datetime.timedelta(minutes=5).total_seconds()),
+    "csl_status": int(datetime.timedelta(minutes=10).total_seconds()),
     "sports_school_events": int(datetime.timedelta(hours=1).total_seconds()),
 }
 
@@ -961,6 +961,11 @@ CELERY_BEAT_SCHEDULE = {
     "update-fcps-emergency-cache": {
         "task": "intranet.apps.emerg.tasks.update_emerg_cache_task",
         "schedule": FCPS_EMERGENCY_CACHE_UPDATE_INTERVAL,
+        "args": (),
+    },
+    "update-csl-status-cache": {
+        "task": "intranet.apps.emerg.tasks.update_csl_status_task",
+        "schedule": celery.schedules.crontab(minute="*/5"),
         "args": (),
     },
     "reset-routes-afternoon": {
