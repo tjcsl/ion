@@ -1,0 +1,74 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        $(function() {
+            $("form[name=wizard] select").on("change", function() {
+                document.forms["wizard"].submit();
+            });
+        })
+    </script>
+{% endblock %}
+
+{% block admin_main %}
+    {% if wizard %}
+        <form action="" method="post" name="wizard">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+            <br>
+            {{ wizard.form }}
+            {% if wizard.steps.prev %}
+                <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+            {% endif %}
+            {% comment %}
+                {% if wizard.steps.next %}
+                    <input type="submit" value="Next">
+                {% else %}
+                    <input type="submit" value="Transfer Students">
+                {% endif %}
+            {% endcomment %}
+        </form>
+    {% elif moved_students %}
+        <p>
+            The following students were already signed up for activities on {{ dest_act.block }}.
+            These signups have been replaced with {{ dest_act }} and the students have
+            {% if not send_emails %}<b>not</b>{% endif %} been emailed:
+        </p>
+        <ul>
+            {% for s in moved_students %}
+            <li>{{ s }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if dest_unsignup %}
+            <p>Do you want to remove the signups for <b>{{ num }} students</b> from:</p>
+            <p><b>{{ source_act }}</b></p>
+            <br>
+        {% else %}
+            <p>Do you want to transfer <b>{{ num }} students</b> from:</p>
+            <p><b>{{ source_act }}</b></p>
+            to:<br>
+            <p><b>{{ dest_act }}</b></p>
+            <br>
+            <p>
+                <b>WARNING:</b> If the students are already signed up for an activity during {{ dest_act.block }},
+                the previous signups will be deleted. Notify students of this change by enabling "Notify Students" below.
+            </p>
+        {% endif %}
+        <form action="{% url 'eighth_admin_transfer_students_action' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="source_act" value="{{ source_act.id }}">
+            {% if dest_unsignup %}
+                <input type="hidden" name="dest_unsignup" value="{{ dest_unsignup }}">
+            {% else %}
+                <input type="hidden" name="dest_act" value="{{ dest_act.id }}">
+            {% endif %}
+            <input type="hidden" name="confirm" value="true">
+            <input type="checkbox" name="send_emails" value="true"><label>Notify Students</label><br><br>
+            <a href="{% url 'eighth_admin_dashboard' %}" class="button">Cancel</a>
+            <input type="submit" value="Transfer">
+        </form>
+    {% endif %}
+{% endblock %}

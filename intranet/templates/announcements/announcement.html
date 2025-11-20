@@ -1,0 +1,137 @@
+{% load dates %}
+{% load static %}
+{% load users %}
+{% load newtab_links %}
+
+{% block js %}
+    <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+{% endblock %}
+
+<div data-id="{{ announcement.id }}" id="announcement-{{ announcement.id }}"
+    class="announcement
+    {% if view_announcements_url == "club_announcements" %}
+        {% if request.user in announcement.activity.subscribers.all %}
+            subscribed
+        {% else %}
+            unsubscribed
+        {% endif %}
+    {% endif %}
+    {% if announcement.is_club_announcement and view_announcements_url != "club_announcements" %}
+        remove-on-collapse
+    {% endif %}
+    {% if hide_announcements and announcement.id in user_hidden_announcements %}
+        hidden
+    {% endif %}
+    {% if announcement.pinned %}
+        pinned
+    {% endif %}">
+
+    <h3>
+        {% if show_icon and not announcement.pinned and not announcement.is_club_announcement %}
+            <i class="far fa-file-alt dashboard-item-icon" title="Announcement"></i>
+        {% endif %}
+
+        {% if announcement.pinned %}
+            <i class="fas fa-bookmark dashboard-item-icon" title="Pinned announcement"></i>
+        {% endif %}
+
+        {% if announcement.is_club_announcement %}
+            <i class="fas fa-users dashboard-item-icon" title="Club announcement"></i>
+        {% endif %}
+
+        {% if link_to_announcement and not request.user.is_restricted %}
+        <a href="{% url 'view_announcement' announcement.id %}" class="announcement-link">
+            {{ announcement.title }}
+        </a>
+        {% else %}
+            {{ announcement.title }}
+        {% endif %}
+
+        <div class="announcement-icon-wrapper">
+            {% if announcement.is_club_announcement and can_subscribe %}
+                {% if request.user in announcement.activity.subscribers.all %}
+                    {% if user_sponsor_obj not in announcement.activity.sponsors.all and request.user not in announcement.activity.club_sponsors.all %}
+                      <a class="button small-button unsubscribe-button"
+                          id="unsubscribe-button"
+                          href="{% url 'unsubscribe_from_club' announcement.activity.id %}"
+                          title="Unsubscribe from {{ announcement.activity.name }} club announcements">
+                          <i class="fas fa-times"></i>
+                          Unsubscribe
+                      </a>
+                    {% endif %}
+                {% else %}
+                    <a class="button small-button subscribe-button"
+                        id="subscribe-button"
+                        href="{% url 'subscribe_to_club' announcement.activity.id %}"
+                        title="Subscribe to {{ announcement.activity.name }} club announcements">
+                        <i class="fas fa-check"></i>
+                        Subscribe
+                    </a>
+                {% endif %}
+            {% endif %}
+            {% if hide_announcements %}
+                <a href="#" class="announcement-toggle">
+                {% if announcement.id in user_hidden_announcements %}
+                    <i class="announcement-icon fas fa-expand" title="You have hidden this announcement. Click to show." data-visible-title="This announcement is visible. Click to hide." hidden-title="You have hidden this announcement. Click to show."></i>
+                {% else %}
+                    <i class="announcement-icon fas fa-compress" title="This announcement is visible. Click to hide." data-visible-title="This announcement is visible. Click to hide." data-hidden-title="You have hidden this announcement. Click to show."></i>
+                {% endif %}
+                </a>
+            {% endif %}
+            {% if not request.user.is_restricted %}
+                <a href="{% url 'view_announcement' announcement.id %}" title="Announcement permalink">
+                    <i class="fas fa-paperclip fa-flip-horizontal"></i>
+                </a>
+            {% endif %}
+            {% if announcement|argument_request_user:"can_modify" %}
+                {% if announcement.is_club_announcement %}
+                    <a href="{% url 'modify_club_announcement' announcement.id %}" title="Modify club announcement">
+                        <i class="announcement-icon fas fa-pencil-alt"></i>
+                    </a>
+                {% else %}
+                <a href="{% url 'modify_announcement' announcement.id %}" title="Modify announcement">
+                    <i class="announcement-icon fas fa-pencil-alt"></i>
+                </a>
+                {% endif %}
+                <a href="{% url 'delete_announcement' announcement.id %}" class="announcement-delete" title="Delete announcement">
+                    <i class="announcement-icon far fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </h3>
+
+    <div class="announcement-metadata">
+        by {{ announcement.get_author|escape }} &bull; <time class="timeago" datetime="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</time> &bull; to
+        {% if announcement.is_club_announcement %}
+            <a class="club-announcement-meta-link" href="{% url 'eighth_activity' announcement.activity.id %}">{{ announcement.activity.name }}</a>
+        {% else %}
+            {% for group in announcement.groups.all %}
+                {{ group }}
+                {% if not forloop.last %},{% endif %}
+            {% empty %}
+                everyone
+            {% endfor %}
+        {% endif %}
+
+        {% if announcement|argument_request_user:"is_visible_requester" %}
+            &bull; You approved this announcement.
+        {% endif %}
+
+        {% if announcement|argument_request_user:"is_visible_submitter" %}
+            &bull; You submitted this announcement.
+        {% endif %}
+    </div>
+
+    <div class="announcement-toggle-content"{% if hide_announcements and announcement.id in user_hidden_announcements %} style="display: none"{% endif %}>
+        {% if not event and announcement.event_set.count > 0 %}
+            {% for event in announcement.event_set.all %}
+                {% with link_to_event=1 %}
+                    {% include "events/event.html" %}
+                {% endwith %}
+            {% endfor %}
+        {% endif %}
+        <div class="announcement-content">
+            {{ announcement.content|safe|replace_newtab_links }}
+        </div>
+    </div>
+</div>

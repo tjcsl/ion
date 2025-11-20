@@ -1,0 +1,91 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Roster - {{ scheduled_activity }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+    <style>
+    dl dt, dl dd {
+        font-size: 15px;
+    }
+
+    dl dt {
+        float: left;
+        padding-right: 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% if profile_user.is_student %}
+        <script>
+            $(document).ready(function() {
+
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header" style="width: 200px">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+
+    {% if request.user.is_student %}
+    <a href="{% url 'eighth_signup' scheduled_activity.block.id %}?activity={{ scheduled_activity.activity.id }}" class="button">
+        <i class="fas fa-arrow-left"></i> Sign Up
+    </a>
+    {% endif %}
+
+    {% if request.user.is_eighth_admin or is_sponsor %}
+        <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button">View/Modify Attendance</a>
+    {% endif %}
+
+    <h2>Roster for <a href="{% url 'eighth_activity' scheduled_activity.activity.id %}">{{ scheduled_activity.full_title }}</a> on {{ scheduled_activity.block }}:</h2>
+    <dl>
+        <dt>Room{{ scheduled_activity.get_true_rooms|pluralize }}:</dt>
+        <dd>{% for room in scheduled_activity.get_true_rooms %}
+                {{ room.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}None
+            {% endfor %}</dd>
+        <dt>Sponsors:</dt>
+        <dd>{% for sponsor in scheduled_activity.get_true_sponsors %}
+                {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}None
+            {% endfor %}</dd>
+        {% if scheduled_activity.comments %}
+        <dt>Comments:</dt>
+        <dd style="width: 400px">{{ scheduled_activity.comments }}</dd>
+        {% endif %}
+
+        {% if scheduled_activity.activity.description %}
+        <dt>Description:</dt>
+        <dd style="width: 400px">{{ scheduled_activity.activity.description }}</dd>
+        {% endif %}
+        <dt>Signups:</dt>
+        <dd>{{ scheduled_activity.members.all|length }} / {{ scheduled_activity.get_true_capacity }}</dd>
+    </dl>
+
+    {% include "eighth/roster_list.html" %}
+</div>
+{% endblock %}

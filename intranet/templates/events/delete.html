@@ -1,0 +1,45 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Event
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content events">
+        <div class="events-container">
+            {% with show_attend=0 %}
+                {% include "events/event.html" %}
+            {% endwith %}
+        </div>
+
+        <b>Are you sure you want to delete this event?</b>
+        <br>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ event.id }}">
+            <a class="button" href="{% url 'events' %}">Cancel</a>
+            <input type="submit" class="delete-button" value="Delete">
+        </form>
+    </div>
+{% endblock %}

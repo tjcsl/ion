@@ -1,0 +1,65 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }} - Parking
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+$(function() {
+    $("#delete-car").click(function() {
+        if(confirm("Are you SURE you want to delete this joint user?")) {
+            $("form#joint-form").append("<input type='hidden' name='delete' value='1'>");
+            $("input[name='joint']").remove();
+            document.forms["joint-form"].submit();
+        }
+    });
+});
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="parking primary-content" style="max-width: 700px">
+    <h2>
+        Joint Application
+    </h2>
+    <p>If you want to share your parking spot with someone else, enter their TJ Username below.</p>
+    {% if app.joint_user %}
+    <p><b>You currently have a joint parking application with
+        <a href="{% url 'user_profile' app.joint_user.id %}">
+            {{ app.joint_user.first_name }} {{ app.joint_user.last_name }} ({{ app.joint_user.grade_number }})
+        </a>
+    </b></p>
+    {% endif %}
+    <form action="" method="post" name="joint-form" id="joint-form">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>Second user:</th>
+                <td><input type="text" name="joint" value="{% if app.joint_user %}{{ app.joint_user.username }}{% endif %}" placeholder="Enter TJ username">
+            </tr>
+            <tr>
+                {% if app.joint_user %}<td><a style="color: red" class="button" id="delete-car">Delete</a></td>{% endif %}
+
+                <td><input type="submit" value="Submit"></td>
+            </tr>
+        </tr>
+    </form>
+</div>
+{% endblock %}

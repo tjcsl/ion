@@ -1,0 +1,66 @@
+{# Announcements module for signage #}
+{% extends "page_base.html" %}
+
+{% load pipeline %}
+{% load dates %}
+
+{% block css %}
+
+{{ block.super }}
+{% stylesheet 'signage.page' %}
+{% stylesheet 'dashboard' %}
+{% stylesheet 'theme.blue' %}
+
+{% endblock %}
+
+{% block body %}
+<div class="page-announcements">
+    <style>
+    .page-announcements h2 {
+        font-size: 30px;
+        text-align: center;
+    }
+    .page-announcements {
+        font-size: 16px;
+        overflow-y: scroll;
+        margin-top: 10px;
+    }
+    .page-announcements .announcements {
+        position: absolute;
+        top: 75px;
+        left: 10%;
+        width: 80%;
+        padding: 0;
+        margin: 0;
+        min-width: auto;
+        max-width: none;
+    }
+    .page-announcements .announcements .announcement {
+        text-align: left;
+        width: 100%;
+    }
+
+    </style>
+
+    <h2>Announcements</h2>
+    <div class="announcements" id="announcements-scroll">
+        {% for announcement in public_announcements %}
+        <div class="announcement">
+            <h3>{{ announcement.title }}</h3>
+            <div class="announcement-metadata">
+                by {{ announcement.get_author|escape }} &bull; <time class="timeago" datetime="{{ announcement.added|date:'c' }}">{{ announcement.added|fuzzy_date|capfirst }}</time> &bull; to
+                {% for group in announcement.groups.all %}
+                {{ group }}
+                {% if not forloop.last %},{% endif %}
+                {% empty %}
+                everyone
+                {% endfor %}
+            </div>
+            <div class="announcement-content">
+                {{ announcement.content_no_links|safe }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

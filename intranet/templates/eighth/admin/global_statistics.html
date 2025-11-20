@@ -1,0 +1,50 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Generate Global Statistics{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+    <style>
+    .primary-content {
+        overflow: visible;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(document).ready(function() {
+        var type = "csv";
+        $("#generate-form").submit(function(e) {
+            $(this).find("button").hide();
+            $("#generate-status").html("<i class='fas fa-cog fa-spin'></i> Please wait, generating the " + type.toUpperCase() + " file for the " + $("#year option:selected").text()  + " school year...");
+        });
+        $("#generate-form button").click(function(e) {
+            type = $(this).attr("value");
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block admin_main %}
+<h2>Generate Global Activity Statistics</h2>
+<form id="generate-form" method="POST">
+    {% csrf_token %}
+    <p>Select the school year you want to export from the list below, and press Generate. The PDF file takes some time to create.</p><br>
+    <select id="year" name="year">
+        {% for year in years %}
+        <option value="{{ year }}">{{ year|add:"-1" }} - {{ year }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" name="generate" value="pdf"><i class="far fa-file-pdf"></i> Generate PDF</button>
+    <button type="submit" name="generate" value="csv"><i class="fas fa-table"></i> Generate CSV</button>
+    <div id="generate-status"></div>
+</form>
+{% endblock %}

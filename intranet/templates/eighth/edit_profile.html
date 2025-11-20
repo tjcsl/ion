@@ -1,0 +1,95 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Profile - {{ profile_user.full_name }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'js/eighth/admin.js' %}"></script>
+    <style>
+    #cke_1_contents {
+        height: 100px !important;
+    }
+
+    .cke_focus #cke_1_contents {
+        height: 200px !important;
+    }
+    </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/select' %}
+        {% stylesheet 'dark/cke' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+    {% with show_eighth_profile_link=1 %}
+        {% include "eighth/profile_header.html" %}
+    {% endwith %}
+
+    <section class="user-info-edit">
+    <form action="{% url 'eighth_edit_profile' profile_user.id %}" method="POST">
+    {% csrf_token %}
+        <input type="hidden" name="user" value="{{ profile_user.id }}">
+        <h3>
+            Modify User Info: {{ profile_user.full_name }} ({{ profile_user.student_id }})
+        </h3>
+        <table class="edit-table">
+            <tr>
+                <td colspan="2" style="width: 643px">
+                    <input type="submit" style="float: right">
+                </td>
+            </tr>
+            {% for field in user_form %}
+            <tr>
+                <th>
+                    {{ field.label_tag }}
+                </th>
+                <td>
+                    {{ field }}
+                </td>
+            </tr>
+            {% endfor %}
+            <tr><th>Address</th></tr>
+            {% for field in address_form %}
+            <tr>
+                <th>
+                    {{ field.label_tag }}
+                </th>
+                <td>
+                    {{ field }}
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" style="width: 643px">
+                    <input type="submit" style="float: right">
+                </td>
+            </tr>
+        </table>
+    </form>
+    </section>
+</div>
+{% endblock %}

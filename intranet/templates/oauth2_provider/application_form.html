@@ -1,0 +1,166 @@
+{% extends "oauth2_provider/base.html" %}
+
+{% load i18n %}
+{% load static %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    <style>
+        textarea {
+            max-height: 100px;
+        }
+        .controls {
+            margin-bottom: 5px;
+        }
+        .help-inline {
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% if request.user.oauth_and_api_access %} {# Show unauthorized users as little as possible #}
+        <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+        <script>
+            $(document).ready(function() {
+                {# Initialization #}
+                if($("#id_authorization_grant_type").val() != "authorization-code") {
+                    $("#id_redirect_uris").parent().parent().hide();
+                }
+                else {
+                    $("#id_redirect_uris").attr("required", "required");
+                }
+
+                let client_type_desc = {
+                    "confidential": "You have a server backend that can securely store the client secret.",
+                    "public": "You do not have a server backend to perform authentication. Does not use a client secret."
+                };
+
+                let client_grant_desc = {
+                    "authorization-code": "Your application will redirect the user to Ion to login. Ion will then redirect the user back to your application with an authorization code. Confidential or public.",
+                    {% comment "Disabled - see oauth.models.CSLApplication" %}
+                    "implicit": "The application does authentication purely on the client, and there is no server backend.",
+                    "password": "Your application will collect the user's username and password and pass it to Ion.",
+                    "openid-hybrid": "This option is not currently supported on Ion. You can select it, but your application will not work."
+                    {% endcomment %}
+                    "client-credentials": "Your application will obtain an access token on its own, not on behalf of a user. Confidential only.",
+                };
+
+                $("#id_client_type").selectize({
+                    render: {
+                        option: function(item, esc) {
+                            return "<div><b>" + item.text + "</b>" + (item.value == "confidential" ? " (Recommended)" : "") + "<br>" + client_type_desc[item.value] + "</div>";
+                        }
+                    }
+                });
+                $("#id_authorization_grant_type").selectize({
+                    render: {
+                        option: function(item, esc) {
+                            return "<div><b>" + item.text + "</b>" + (item.value == "authorization-code" ? " (Recommended)" : "") + "<br>" + client_grant_desc[item.value] + "</div>";
+                        }
+                    }
+                });
+
+                {# if client_type is public, remove the client_credentials option for authorization_grant_type #}
+                $("#id_client_type").change(function() {
+                    if ($("#id_client_type").val() == "public") {
+                        $("#id_authorization_grant_type")[0].selectize.setValue("authorization-code");
+                        $("#id_authorization_grant_type")[0].selectize.removeOption("client-credentials");
+                    }
+                    else {
+                        $("#id_authorization_grant_type")[0].selectize.addOption({
+                            value: "client-credentials",
+                            text: "Client credentials"
+                        });
+                    }
+                });
+
+                {# if authorization_grant_type is authorization_code, show redirect_uris #}
+                $("#id_authorization_grant_type").change(function() {
+                    if ($("#id_authorization_grant_type").val() == "authorization-code") {
+                        $("#id_oidc_enabled").parent().show();
+                        $("#id_redirect_uris").attr("required", "required").parent().parent().slideDown();
+                    }
+                    else {
+                        $("#id_oidc_enabled").parent().hide();
+                        $("#id_oidc_enabled").prop("checked", false);
+                        $("#id_redirect_uris").removeAttr("required").parent().parent().slideUp();
+                    }
+                });
+
+                $("form").submit(function(e) {
+                    {# Clear redirect_uris if authorization_grant_type is client_credentials #}
+                    if (!$("#id_redirect_uris").attr("required")) {
+                        $("#id_redirect_uris").val("");
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if request.user.oauth_and_api_access %}
+<a href="/oauth/applications/{{ application.id }}" class="back-button button">
+    <i class="fas fa-arrow-left"></i> Back
+</a>
+
+<div class="block-center">
+    <form class="form-horizontal" method="post" action="{% block app-form-action-url %}{% url 'oauth2_provider:update' application.id %}{% endblock app-form-action-url %}">
+        <h3 class="block-center-heading">
+            {% block app-form-title %}
+                {% trans "Edit application" %} {{ application.name }}
+            {% endblock app-form-title %}
+        </h3>
+
+        {% block app-form-description %}
+            <center>
+                For more information on how to use Ion OAuth, click <a target="_blank" href="https://guides.tjhsst.edu/ion/using-ion-oauth">here</a>.
+            </center>
+            <hr noshade>
+        {% endblock %}
+
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="control-group {% if field.errors %}error{% endif %}">
+                <div class="controls">
+                    {% if field.field.widget.input_type == "checkbox" %}
+                        {{ field }} <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }}
+                    {% endif %}
+                    {% else %}
+                        <label class="control-label" for="{{ field.id_for_label }}">
+                            <b>{{ field.label }}</b> {% if field.help_text %}- {{ field.help_text }}
+                        {% endif %}
+                        </label>
+                        {{ field }}
+                    {% endif %}
+
+                    {# Place errors (which pretty much happen only with the redirect_uris field anyway) before the client_id and client_secret read-only fields #}
+                    {% for error in field.errors %}
+                        <span class="help-inline">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="control-group {% if form.non_field_errors %}error{% endif %}">
+            {% for error in form.non_field_errors %}
+                <span class="help-inline">{{ error }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="control-group">
+            <hr noshade>
+            <div class="controls">
+                <button type="submit" class="btn btn-primary pull-right"><i class="fas fa-check"></i> Save</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% else %}
+    <h3 class="block-center-heading">You are not authorized to access this page.</h3>
+{% endif %}
+{% endblock %}

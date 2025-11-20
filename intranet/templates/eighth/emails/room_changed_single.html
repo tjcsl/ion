@@ -1,0 +1,11 @@
+<html><body>
+{% with description="Room changes" target=info_link name="View status" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    The activity you are signed up for on {{ date_str }} during {{ sched_act.block.block_letter }} block ({{ sched_act.activity.name }}) has {% if new_rooms_str %}changed rooms {% if old_rooms_str %}from {{ old_rooms_str }} {% endif %}to <strong>{{ new_rooms_str }}</strong>{% else %}been removed from the room{{ num_old_rooms|pluralize }} <strong>{{ old_rooms_str }}</strong>{% endif %}.
+</p>
+
+{% include "email_footer.html" %}
+</body></html>

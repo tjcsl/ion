@@ -1,0 +1,38 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - View {{ type|capfirst }} Item
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'lostfound' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/lostfound' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="lostitem primary-content">
+    <a href="{% url 'lostfound' %}" class="button">
+        <i class="fas fa-arrow-left"></i> View All Items
+    </a>
+    <h2>
+        View {{ type|capfirst }} Item
+    </h2>
+    {% include "lostfound/lostitem.html" %}
+
+</div>
+{% endblock %}

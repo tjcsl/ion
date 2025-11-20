@@ -1,0 +1,32 @@
+{% with description="Approve announcement" target=info_link name="View announcement" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>The following news post was approved by a sponsor and is in the approval queue:</p>
+<b>Title:</b> {{ formdata.title }}<br>
+<b>Content:</b><br>
+{% autoescape off %}
+    {{ req.content }}
+{% endautoescape %}
+<br>
+<b>Submitted by:</b> {{ req.user.full_name }} ({{ req.user.username }})
+<br>
+<b>Teachers Requested for Approval:</b> {% for teacher in req.teachers_requested.all %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+<br>
+<b>Teachers Approved:</b> {% for teacher in req.teachers_approved.all %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+<br>
+<b>Notes:</b><br>
+{{ req.notes|linebreaks }}
+<br>
+<br>
+To approve or reject this posting, <a href="{{ info_link }}">click on this link</a>.
+<br>
+{% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

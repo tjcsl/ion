@@ -1,0 +1,192 @@
+{% load static %}
+{% load status_helper %}
+
+<ul class="nav">
+    {% block nav %}
+        <li {% if nav_category == "dashboard" %}class="selected"{% endif %}>
+            <a href="{% url 'index' %}">
+                <i class="nav-icon dashboard-icon"></i>
+                Dashboard
+            </a>
+        </li>
+
+        {% if request.user.is_eighth_admin and request.user.is_student %}
+            <li {% if nav_category == "eighth" %}class="selected"{% endif %}>
+                <a href="{% url 'eighth_signup' %}">
+                    <div class="nav-alert-container">
+                        <i class="nav-icon eighth-icon"></i>
+                        {% if not request.user.signed_up_next_few_days %}
+                        <i class="fas fa-exclamation-circle nav-alert"></i>
+                        {% endif %}
+                    </div>
+                    Signup
+                </a>
+            </li>
+            <li {% if nav_category == "eighth_admin" %}class="selected"{% endif %}>
+                <a href="{% url 'eighth_admin_dashboard' %}">
+                    <i class="nav-icon eighth-icon"></i>
+                    Admin
+                </a>
+            </li>
+        {% else %}
+            <li {% if nav_category == "eighth" or nav_category == "eighth_admin" %}class="selected"{% endif %}>
+                <a href="{% if request.user.is_eighth_admin %}{% url 'eighth_admin_dashboard' %}{% else %}{% url 'eighth_redirect' %}{% endif %}">
+                    <div class="nav-alert-container">
+                        <i class="nav-icon eighth-icon"></i>
+                        {% if not request.user.signed_up_next_few_days %}
+                        <i class="fas fa-exclamation-circle nav-alert"></i>
+                        {% endif %}
+                    </div>
+                    Eighth
+                </a>
+            </li>
+        {% endif %}
+
+        {% comment %}
+        <li {% if nav_category == "board" %}class="selected"{% endif %}>
+            <a href="{% url 'board' %}">
+                <i class="fas fa-comments" style="font-size: 28px;padding-bottom: 1px"></i>
+                Connect
+            </a>
+        </li>
+        {% endcomment %}
+        {% if not request.user.is_restricted %}
+
+        {% if DJANGO_SETTINGS.ENABLE_ENRICHMENT_APP %}
+        <li class="thicker-border {% if nav_category == "enrichment" %}selected{% endif %}">
+            <a href="{% url 'enrichment' %}">
+                <i class="nav-icon enrichment-icon"></i>
+                Enrichment
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="{% if not DJANGO_SETTINGS.ENABLE_ENRICHMENT_APP %}thicker-border{% endif %} {% if nav_category == "schedule" %}selected{% endif %}">
+            <a href="{% if request.user.is_schedule_admin and not request.user.is_student %}{% url 'schedule_admin' %}{% else %}{% url 'calendar' %}{% endif %}">
+                <i class="nav-icon bell-icon"></i>
+                Schedule
+            </a>
+        </li>
+
+        <li {% if nav_category == "events" %}class="selected"{% endif %}>
+            <a href="{% url 'events' %}">
+                <i class="nav-icon events-icon"></i>
+                Events
+            </a>
+        </li>
+
+        {% comment %}
+        {% if request.user.is_student %}
+            <li {% if nav_category == "board" %}class="selected"{% endif %}>
+                <a href="{% url 'board' %}">
+                    <i class="nav-icon" style="background: none">
+                        <i class="far fa-file-alt" style="font-size: 22px; line-height: 28px"></i>
+                    </i>
+                    Board
+                </a>
+            </li>
+        {% endif %}
+        {% endcomment %}
+
+        {% comment %}
+        <li {% if nav_category == "groups" %}class="selected"{% endif %}>
+            <a href="{% url 'groups' %}">
+                <i class="nav-icon groups-icon"></i>
+                Groups
+            </a>
+        </li>
+        {% endcomment %}
+
+        {% if request.user.should_see_polls %}
+        <li {% if nav_category == "polls" %}class="selected"{% endif %}>
+            <a href="{% url 'polls' %}">
+                <div class="nav-alert-container">
+                    <i class="nav-icon polls-icon"></i>
+                    {% if request.user.has_unvoted_polls %}
+                    <i class="fas fa-exclamation-circle nav-alert"></i>
+                    {% endif %}
+                </div>
+                Polls
+            </a>
+        </li>
+        {% endif %}
+
+        <li {% if nav_category == "files" %}class="selected"{% endif %}>
+            <a href="{% url 'files' %}">
+                <i class="nav-icon files-icon"></i>
+                Files
+            </a>
+        </li>
+
+        {% if is_tj_ip or request.user.is_printing_admin %}
+            <li {% if nav_category == "printing" %}class="selected"{% endif %}>
+                <a href="{% url 'printing' %}">
+                    <i class="nav-icon print-icon"></i>
+                    Printing
+                </a>
+            </li>
+        {% endif %}
+
+        {% if show_bus_nav %}
+             <li class="thicker-border {% if nav_category == "bus" %}selected{% endif %}">
+                <a href="{% url 'bus' %}">
+                    <i class="nav-icon bus-icon"></i>
+                    Bus
+                </a>
+            </li>
+        {% endif %}
+
+        {% if request.user.is_teacher or request.user.is_eighth_admin %}
+        <li>
+          <a href="{% static "teacher-guide.pdf" %}" target="_blank">
+                <i class="nav-icon help-icon"></i>
+                Help
+            </a>
+        </li>
+        {% endif %}
+        {% endif %}
+
+    {# Assume we already called get_csl_status_from_cache in the page_with_header.html template, which page_with_nav.html extends from #}
+
+    {% if csl_status %}
+
+        <div class="nav-status-indicator">
+            {% if csl_status == "operational" %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18" fill="none" class="status-icon-svg" style="color: green;">
+                <circle cx="9" cy="9" r="9" fill="currentColor" fill-opacity="0.2"></circle>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9 15C10.5913 15 12.1174 14.3679 13.2426 13.2426C14.3679 12.1174 15 10.5913 15 9C15 7.4087 14.3679 5.88258 13.2426 4.75736C12.1174 3.63214 10.5913 3 9 3C7.4087 3 5.88258 3.63214 4.75736 4.75736C3.63214 5.88258 3 7.4087 3 9C3 10.5913 3.63214 12.1174 4.75736 13.2426C5.88258 14.3679 7.4087 15 9 15ZM11.8245 7.50675C11.8779 7.45573 11.9208 7.39469 11.9506 7.32711C11.9805 7.25952 11.9967 7.18673 11.9984 7.11287C12.0001 7.03901 11.9873 6.96554 11.9606 6.89665C11.9339 6.82776 11.8939 6.76481 11.8429 6.71137C11.7919 6.65794 11.7308 6.61508 11.6632 6.58524C11.5956 6.5554 11.5229 6.53917 11.449 6.53746C11.3751 6.53575 11.3017 6.54861 11.2328 6.5753C11.1639 6.60199 11.1009 6.64198 11.0475 6.693C9.91968 7.77061 8.9301 8.98415 8.1015 10.3058L6.96 9.165C6.9085 9.10974 6.8464 9.06541 6.7774 9.03466C6.7084 9.00392 6.63392 8.98739 6.55839 8.98606C6.48286 8.98472 6.40784 8.99862 6.3378 9.02691C6.26776 9.0552 6.20414 9.09731 6.15072 9.15072C6.09731 9.20414 6.0552 9.26776 6.02691 9.3378C5.99862 9.40784 5.98472 9.48286 5.98606 9.55839C5.98739 9.63392 6.00392 9.7084 6.03466 9.7774C6.06541 9.8464 6.10973 9.9085 6.165 9.96L7.815 11.6108C7.8761 11.6719 7.95045 11.7181 8.0323 11.7458C8.11415 11.7736 8.2013 11.7821 8.28696 11.7707C8.37263 11.7593 8.45452 11.7283 8.52629 11.6802C8.59805 11.632 8.65775 11.568 8.70075 11.493C9.54556 10.0214 10.5976 8.67891 11.8245 7.50675Z" fill="currentColor"></path>
+              </svg>
+              <a href="{% get_csl_status_page_url %}">Services operational</a>
+            {% elif csl_status == "downtime" %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18" fill="none" class="status-icon-svg" style="color: red;">
+                <circle cx="9" cy="9" r="9" fill="currentColor" fill-opacity="0.2"></circle>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M15 9C15 10.5913 14.3679 12.1174 13.2426 13.2426C12.1174 14.3679 10.5913 15 9 15C7.4087 15 5.88258 14.3679 4.75736 13.2426C3.63214 12.1174 3 10.5913 3 9C3 7.4087 3.63214 5.88258 4.75736 4.75736C5.88258 3.63214 7.4087 3 9 3C10.5913 3 12.1174 3.63214 13.2426 4.75736C14.3679 5.88258 15 7.4087 15 9ZM9.75 12C9.75 12.1989 9.67098 12.3897 9.53033 12.5303C9.38968 12.671 9.19891 12.75 9 12.75C8.80109 12.75 8.61032 12.671 8.46967 12.5303C8.32902 12.3897 8.25 12.1989 8.25 12C8.25 11.8011 8.32902 11.6103 8.46967 11.4697C8.61032 11.329 8.80109 11.25 9 11.25C9.19891 11.25 9.38968 11.329 9.53033 11.4697C9.67098 11.6103 9.75 11.8011 9.75 12ZM9 5.25C8.80109 5.25 8.61032 5.32902 8.46967 5.46967C8.32902 5.61032 8.25 5.80109 8.25 6V9C8.25 9.19891 8.32902 9.38968 8.46967 9.53033C8.61032 9.67098 8.80109 9.75 9 9.75C9.19891 9.75 9.38968 9.67098 9.53033 9.53033C9.67098 9.38968 9.75 9.19891 9.75 9V6C9.75 5.80109 9.67098 5.61032 9.53033 5.46967C9.38968 5.32902 9.19891 5.25 9 5.25Z" fill="currentColor"></path>
+              </svg>
+              <a href="{% get_csl_status_page_url %}">Services down</a>
+            {% elif csl_status == "degraded" %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18" fill="none" class="status-icon-svg" style="color: #afaf02;">
+                <circle cx="9" cy="9" r="9" fill="currentColor" fill-opacity="0.2"></circle>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M15 9C15 10.5913 14.3679 12.1174 13.2426 13.2426C12.1174 14.3679 10.5913 15 9 15C7.4087 15 5.88258 14.3679 4.75736 13.2426C3.63214 12.1174 3 10.5913 3 9C3 7.4087 3.63214 5.88258 4.75736 4.75736C5.88258 3.63214 7.4087 3 9 3C10.5913 3 12.1174 3.63214 13.2426 4.75736C14.3679 5.88258 15 7.4087 15 9ZM9.75 12C9.75 12.1989 9.67098 12.3897 9.53033 12.5303C9.38968 12.671 9.19891 12.75 9 12.75C8.80109 12.75 8.61032 12.671 8.46967 12.5303C8.32902 12.3897 8.25 12.1989 8.25 12C8.25 11.8011 8.32902 11.6103 8.46967 11.4697C8.61032 11.329 8.80109 11.25 9 11.25C9.19891 11.25 9.38968 11.329 9.53033 11.4697C9.67098 11.6103 9.75 11.8011 9.75 12ZM9 5.25C8.80109 5.25 8.61032 5.32902 8.46967 5.46967C8.32902 5.61032 8.25 5.80109 8.25 6V9C8.25 9.19891 8.32902 9.38968 8.46967 9.53033C8.61032 9.67098 8.80109 9.75 9 9.75C9.19891 9.75 9.38968 9.67098 9.53033 9.53033C9.67098 9.38968 9.75 9.19891 9.75 9V6C9.75 5.80109 9.67098 5.61032 9.53033 5.46967C9.38968 5.32902 9.19891 5.25 9 5.25Z" fill="currentColor"></path>
+              </svg>
+              <a href="{% get_csl_status_page_url %}">Services degraded</a>
+            {% elif csl_status == "maintenance" %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 18 18" fill="none" class="status-icon-svg" style="color: #009393;">
+                  <circle cx="9" cy="9" r="9" fill="currentColor" fill-opacity="0.2"></circle>
+                  <mask>
+                    <circle cx="9" cy="9" r="6" fill="white"></circle>
+                    <path d="M6.96375 8.09363C7.05752 8.18739 7.1847 8.24007 7.3173 8.24007H7.74005C8.0162 8.24007 8.24005 8.01621 8.24005 7.74007V7.31732C8.24005 7.18471 8.18738 7.05754 8.09361 6.96377L7.42189 6.29205C7.17787 6.04803 7.25484 5.63692 7.5969 5.59128C7.8219 5.56126 8.05148 5.56513 8.27787 5.60397C8.73843 5.68299 9.16317 5.90286 9.4936 6.23328C9.82403 6.56371 10.0439 6.98846 10.1229 7.44902C10.1819 7.79284 10.1602 8.144 10.0617 8.47536C10.0013 8.67846 10.035 8.90517 10.1848 9.055L12.1946 11.0647C12.3444 11.2145 12.4286 11.4178 12.4286 11.6296C12.4286 11.8415 12.3444 12.0447 12.1946 12.1946C12.0447 12.3444 11.8415 12.4286 11.6296 12.4286C11.4177 12.4286 11.2145 12.3444 11.0647 12.1946L9.05498 10.1849C8.90515 10.035 8.67844 10.0013 8.47535 10.0617C8.14399 10.1603 7.79282 10.1819 7.449 10.1229C6.98844 10.0439 6.5637 9.82405 6.23327 9.49362C5.90284 9.16319 5.68298 8.73845 5.60396 8.27788C5.56511 8.05149 5.56124 7.82192 5.59126 7.59692C5.6369 7.25485 6.04801 7.17789 6.29203 7.42191L6.96375 8.09363Z" fill="black"></path>
+                  </mask>
+                  <circle cx="9" cy="9" r="6" fill="currentColor" mask="url(#icon)"></circle>
+                </svg>
+                <a href="{% get_csl_status_page_url %}">Maintenance ongoing</a>
+            {% else %}
+                <circle cx="9" cy="9" r="9" fill="currentColor" fill-opacity="0.2"></circle>
+                <i class="fa fa-question-circle"></i>
+                <a href="{% get_csl_status_page_url %}">View status</a>
+            {% endif %}
+            <p>
+        </div>
+    {% endif %}
+
+    {% endblock %}
+</ul>

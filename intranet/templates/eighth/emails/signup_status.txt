@@ -1,0 +1,18 @@
+{{ blocks|length|pluralize:"This is,These are" }} your current signup selection{{ blocks|length|pluralize }} for Eighth Period on {{ block_date }}:
+
+{% for blk in blocks %}
+    {{ blk.block }}: {% if blk.signup %}{{ blk.signup.scheduled_activity.full_title }}{% else %}No activity selected{% endif %}
+    {% if blk.signup %}
+        {% if blk.cancelled %}&#x26a0; The activity you selected was cancelled. You need to choose a new activity.{% else %}&#x2713; You have selected an activity.{% endif %}
+    {% else %}&#x26a0; You have not selected an activity. You need to choose an activity.{% endif %}
+
+
+{% endfor %}
+
+
+{% if issues > 0 %}Please make sure to correct the above issue{{ issues|pluralize }} before {% if block_signup_time %}{{ block_signup_time }} on {{ block_date }}. {% else %}{{ block_date }}.{% endif %}
+{% endif %}
+
+Have a nice day!
+
+{% include "email_footer.txt" %}

@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+git pull --ff-only
+
+./setup.py test
+./manage.py migrate
+./scripts/build_docs.sh
+
+git add .
+./setup.py egg_info
+git reset HEAD
+
+if ! [ -z "`git status --porcelain -uno`" ]; then
+    echo "Modified files found, did you forget to commit something?"
+    git status --porcelain
+    exit 1
+fi
+
+# git push

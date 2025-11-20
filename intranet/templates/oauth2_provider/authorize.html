@@ -1,0 +1,150 @@
+{% extends "oauth2_provider/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load dictionaries %}
+
+{% block title %}
+    <title>Ion - OAuth - Authorize {{ application.name }} Application</title>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+        .block-center {
+            text-align: center;
+        }
+
+        h3.block-center-heading {
+            height: auto;
+        }
+
+        .center-wrapper {
+            font-size: 16px;
+        }
+
+        .center-wrapper ul {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .center-wrapper li {
+            text-align: left;
+        }
+
+        .btn-large {
+            width: 45%;
+            display: inline-block;
+            margin-right: -20px;
+        }
+
+        .control-group {
+            margin-top: 10px;
+        }
+
+        #cancel-button {
+            color: red;
+        }
+
+        #authorize-button {
+            color: green;
+        }
+
+        .spinner {
+            visibility: hidden;
+            position: relative;
+            right: 10px;
+            top: 3px;
+            height: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        $(function () {
+            $("#authorize-button").click(function (){
+                $("#spinner-authorize").css("visibility", "visible").prop("disabled", true);
+                $("#authorizationForm").append('<input type="hidden" name="allow" value="Authorize">').submit();
+            });
+
+            $("#cancel-button").click(function (){
+                $("#spinner-cancel").css("visibility", "visible").prop("disabled", true);
+                $("#authorizationForm").submit();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block back %}
+    {% if request.GET.client_id not in DJANGO_SETTINGS.IOS_APP_CLIENT_IDS %}
+    <ul class="nav dashboard-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fas fa-arrow-left fa-2x" style="padding-bottom: 6px"></i>
+                    Dashboard
+            </a>
+        </li>
+    </ul>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="block-center">
+        {% if request.GET.client_id in DJANGO_SETTINGS.IOS_APP_CLIENT_IDS %}
+            <h2 style="height: initial; white-space: initial; padding: 5px 10px;">Please do not use the unofficial Ion iOS app</h2>
+            <p style="padding: 10px 0px">The app is not maintained by the Sysadmins and has been known to display incorrect signup information. Please use the Ion web interface to sign up for eighth periods.</p>
+            <p style="font-weight: bold">If you're just using the app to pull up Ion quickly, you can instead add Ion to your home screen. To do this, click "Share" (on an iPhone this should be in the bottom center of the screen) and then "Add to Home Screen."</p>
+        {% elif not error %}
+            <form id="authorizationForm" method="post">
+                <h1>Ion OAuth</h1>
+                <hr noshade>
+                <h3 class="block-center-heading">A third-party application wants access to your Intranet account.</h3>
+                {% csrf_token %}
+
+                {% for field in form %}
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% endif %}
+                {% endfor %}
+
+                <p><b>{{ application.name }}</b> requires the following permissions:</p>
+                <ul>
+                    {% for key in scopes %}
+                        <li><b>{{ key|capfirst }}</b>: {{ scopes_descriptions|lookup:forloop.counter0 }}</li>
+                    {% endfor %}
+                </ul>
+                <p style="font-size: 11pt">
+                    {% if application.sanctioned %}
+                        <i class="fas fa-user-check"></i>&nbsp;
+                        This application is trusted by Ion.
+                    {% else %}
+                        This application is not sanctioned by Ion. Please ensure you trust it before continuing.
+                    {% endif %}
+                </p>
+
+                {{ form.errors }}
+                {{ form.non_field_errors }}
+
+                <div class="control-group">
+                    <div class="controls">
+                        <button id="cancel-button" class="btn btn-large">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                        <img id="spinner-cancel" class="spinner" src="{% static 'img/spinner.gif' %}">
+
+                        <button id="authorize-button" class="btn btn-large btn-primary">
+                            <i class="fas fa-check"></i>
+                            Authorize
+                        </button>
+                        <img id="spinner-authorize" class="spinner" src="{% static 'img/spinner.gif' %}">
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <h2>Error: {{ error.error }}</h2>
+            <p>{{ error.description }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

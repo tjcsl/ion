@@ -1,0 +1,39 @@
+{% for class in classes %}
+    <tr>
+        <td><a href="{% url 'period_courses' class.period %}">{{ class.period }}</a></td>
+        <td>
+            <a href="{% url 'section_info' class.section_id %}">
+              {{ class.course.name }}
+            </a>
+        </td>
+        {% if profile_user.is_student %}
+            <td>
+            {% if class.teacher %}
+                <a href="{% url 'user_profile' class.teacher.id %}">
+                    {{ class.teacher.last_name }}
+                </a>
+            {% else %}
+                Unknown
+            {% endif %}
+            </td>
+        {% endif %}
+        <td>
+            {% if class.room %}
+              <a href="{% url 'room_sections' class.room %}">{{ class.room }}</a>
+            {% else %}
+              Unknown
+            {% endif %}
+        </td>
+        <td>
+            {% if class.sem == "YR" %}
+              Full Year
+            {% elif class.sem == "S1" %}
+                First Semester
+            {% elif class.sem == "S2" %}
+                Second Semester
+            {% else %}
+                Unknown
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

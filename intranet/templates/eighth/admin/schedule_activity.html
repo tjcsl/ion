@@ -1,0 +1,364 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load widget_tweaks %}
+{% load dictionaries %}
+{% load static %}
+{% load strings %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
+    <script>
+        window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
+        window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
+        window.all_rooms = _.values(all_rooms_lookup);
+        window.activitySticky = {{ activity.sticky | yesno:"true,false" }};
+    </script>
+
+    <script>
+    $(function() {
+        $(".schedule-form").areYouSure();
+        $("a#schedule-activity").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = '?activity=' + v;
+            }
+        });
+
+        $("a#edit-activity").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = '/eighth/admin/activities/edit/' + v;
+            }
+        });
+
+        $(".unschedule-link").click(function() {
+            var cbox = $('span.unschedule', $(this).parent().parent());
+            cbox.toggle();
+            $(this).hide();
+        });
+
+        $("td[data-field='unschedule'] input").on("change", function() {
+            var chk = $(this).prop("checked");
+            var already_cancelled = ($(this).parent().attr("data-cancelled") == "true");
+            console.debug(already_cancelled);
+            if(!already_cancelled) {
+                var sch = $("td[data-field='scheduled'] input", $(this).parent().parent().parent());
+                if(chk) {
+                    sch.prop("checked", false);
+                } else {
+                    sch.prop("checked", true);
+                }
+            }
+        });
+        var sact = $(".schedule-activity-buttons");
+        $("table.schedule-activity-grid").stickyTableHeaders({ fixedOffset: sact.offset().top + sact.height() });
+        $("#admin_comments_modal").fadeOut();
+        $("#admin_comments_badge").click(function(){
+            $("#admin_comments_modal").slideToggle();
+        });
+
+        $.get({
+          url: "{% url 'eighth_admin_manage_non_graduated' %}",
+          data: {"user_type": "student"},
+          success: function(response) {
+            $("select.remote-sticky-students").each((_, el) => {
+              $(el).selectize({
+                plugins: ["remove_button"],
+                valueField: 'id',
+                labelField: 'name',
+                searchField: 'name',
+                options: response.users,
+              })
+            });
+          }
+        });
+    });
+    </script>
+
+    <script src="{% static 'js/eighth/schedule.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.schedule' %}
+{% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/eighth.schedule' %}
+    {% endif %}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} schedule-activity-page{% if activity %} floating{% endif %}{% endblock %}
+
+{% block admin_main %}
+
+<form method="post" action="" class="schedule-form" onkeypress="return event.keyCode != 13">
+    <div class="schedule-activity-head">
+        <h4>Select an Activity:</h4>
+
+        <table>
+            <tr>
+                <td>
+                    <select id="activity-select" class="url-param-selector" data-param="activity" placeholder="Select or search for an activity" autocomplete="off">
+                        <option value="">Select or search for an activity</option>
+                        {% for a in activities %}
+                            <option value="{{ a.id }}"{% if a == activity %} selected style="font-weight: bold"{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                {% if activity %}
+                    <td style="vertical-align: top">
+                        <a class="button" id="edit-activity">Edit Activity</a>
+                    </td>
+                {% endif %}
+            </tr>
+        </table>
+
+
+
+        {% if activity %}
+            <div class="schedule-activity-buttons">
+                <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+                <input type="submit" value="Save">
+
+                {% if activity.special %}
+                    <span class="badge green" title="This is a special activity.">Special</span>
+                {% endif %}
+                {% if activity.restricted %}
+                    <span class="badge purple" title="This activity is restricted to those on the authorized list.">Restricted</span>
+                {% endif %}
+                {% if activity.sticky %}
+                    <span class="badge orange" title="This activity is sticky: if placed in it, you cannot change your selection.">Sticky</span>
+                {% endif %}
+                {% if activity.both_blocks %}
+                    <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
+                {% endif %}
+                {% if activity.one_a_day %}
+                    <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
+                {% endif %}
+                {% if activity.administrative %}
+                    <span class="badge" title="This activity is administrative.">Administrative</span>
+                {% endif %}
+                {% if activity.presign %}
+                    <span class="badge yellow" title="You may only sign up for this activity 2 days in advance.">2 day Pre-signup</span>
+                {% endif %}
+
+                {% if not activity.is_active %}
+                    <span class="badge" title="This activity isn't scheduled in the next two months.">Inactive</span>
+                {% endif %}
+                {% if activity.wed_a %}
+                    <span class="badge" title="This activity usually meets Wednesday A Block.">Wed A</span>
+                {% endif %}
+                {% if activity.wed_b %}
+                    <span class="badge" title="This activity usually meets Wednesday B Block.">Wed B</span>
+                {% endif %}
+                {% if activity.fri_a %}
+                    <span class="badge" title="This activity usually meets Friday A Block.">Fri A</span>
+                {% endif %}
+                {% if activity.fri_b %}
+                    <span class="badge" title="This activity usually meets Friday B Block.">Fri B</span>
+                {% endif %}
+                {% if activity.default_capacity %}
+                    &nbsp; <b>Activity default capacity: {{ activity.default_capacity }}</b>
+                {% endif %}
+                {% if activity.admin_comments %}
+                    <span class="badge orange" id="admin_comments_badge">Admin Comments</span>
+                    <div id="admin_comments_modal" class="modal">{{ activity.admin_comments }}</div>
+
+                {% endif %}
+            </div>
+
+            <div class="propagate-direction">
+                <b>Propagate Direction:</b>
+                <select onchange="window.updatePropagateDirection(this.value)">
+                    <option value="both" default>Both</option>
+                    <option value="up">Up</option>
+                    <option value="down">Down</option>
+                </select>
+            </div>
+            <div class="propagate-method" style="display: none">
+                <!-- Always uses new -->
+                 <b>Propagate Method:</b>
+                 <select onchange="window.updatePropagateMethod(this.value)">
+                    <option value="only_new" default>New</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
+        {% endif %}
+
+    </div>
+    {% if activity %}
+        {% csrf_token %}
+
+        {{ formset.management_form }}
+        <table class="schedule-activity-grid checkboxes-grid">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>
+                        <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fas fa-caret-down"></i></a>
+                        <div class="select-blocks-popover closed">
+                            <a href="" onclick="return false" class="block-type">Mon B</a>
+                            <a href="" onclick="return false" class="block-type">Wed A</a>
+                            <a href="" onclick="return false" class="block-type">Wed B</a>
+                            <a href="" onclick="return false" class="block-type">Fri A</a>
+                            <a href="" onclick="return false" class="block-type">Fri B</a>
+                        </div>
+                    </th>
+                    <th><!-- Unschedule --></th>
+                    <th>Rooms</th><th></th>
+                    <th>Sign/Cap</th><th></th>
+                    <th>Sponsors</th><th></th>
+                    <th>Title suffix</th><th></th>
+                    <th class="special" colspan="2">
+                        <span>Special</span>
+                    </th><!--th></th-->
+                    <th class="administrative" colspan="2">
+                        <span>Admin</span>
+                    </th><!--th></th-->
+                    <th class="restricted" colspan="2">
+                        <span>Restr</span>
+                    </th><!--th></th-->
+                    <th class="sticky" colspan="2">
+                        <span>Sticky</span>
+                    </th><!--th></th-->
+                    <th class="both_blocks" colspan="2">
+                        <span>A &amp; B</span>
+                    </th>
+                    <th>Comments</th><th></th>
+                    <th>Admin Comments</th><th></th>
+                    <th>Sticky Students</th><th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for block, form in rows %}
+                    {% if forloop.first %}
+                        <tr class="spacer">
+                            <td colspan="30"></td>
+                        </tr>
+                    {% endif %}
+                    {% if form.errors %}
+                        <tr>
+                            <td></td>
+                            <td colspan=6>{{ form.non_field_errors }}</td>
+                        </tr>
+                    {% endif %}
+                    <tr class="form-row{% if form.scheduled.value %} scheduled{% endif %}">
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+
+                        {% for field in form.visible_fields %}
+                            {% if field.name != "cancelled" %}
+                                <td data-field="{{ field.name }}"{% if field.name == 'scheduled' %} class="block-checkbox"{% endif %}>
+                                {{ field.errors }}
+                                {% if field.name == "rooms" %}
+                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-rooms" multiple="multiple" placeholder="{% if not default_rooms %}No default{% else %}{{ default_rooms|join:", " }}{% endif %}">
+                                        {% for val in field.value %}
+                                            <option value="{{ val }}" selected="selected">
+                                                {% with room=rooms|lookup:val %}
+                                                    {{ room.name }} ({{ room.capacity }})
+                                                {% endwith %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif field.name == "sponsors" %}
+                                    <select id="{{ field.id_for_label }}" name="{{ field.html_name }}" class="remote-source remote-sponsors" multiple="multiple" placeholder="{% if not default_sponsors %}No default{% else %}{{ default_sponsors|join:", " }}{% endif %}">
+                                        {% for val in field.value %}
+                                            <option value="{{ val }}" selected="selected">
+                                                {% with sponsor=sponsors|lookup:val %}
+                                                    {{ sponsor.name }}
+                                                {% endwith %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif field.name == "capacity" %}
+                                    {% with bid=form.block.value %}
+                                        {{ all_signups|lookup:bid }} / {% render_field field placeholder=default_capacities|lookup:bid class='capacity' data-default-capacity=default_capacities|lookup:bid data-activity-default-capacity=activity.default_capacity %}
+                                    {% endwith %}
+                                {% elif field.name == "unschedule" %}
+                                    <span class='unschedule' style="{% if not form.cancelled.value %}display:none{% endif %};white-space: nowrap" data-cancelled="{% if form.cancelled.value %}true{% else %}false{% endif %}">
+                                        {% render_field field class='unschedule' %} Unschedule
+                                    </span>
+                                {% elif field.name == "special" %}
+                                    <div style="text-align: center">
+                                        {% render_field field class='special' %}
+                                    </div>
+                                {% elif field.name == "administrative" %}
+                                    <div style="text-align: center">
+                                        {% render_field field class='administrative' %}
+                                    </div>
+                                {% elif field.name == "restricted" %}
+                                    <div style="text-align: center">
+                                        {% render_field field class='restricted' %}
+                                    </div>
+                                {% elif field.name == "sticky" %}
+                                    <div style="text-align: center">
+                                        {% render_field field class='sticky' %}
+                                    </div>
+                                {% elif field.name == "both_blocks" %}
+                                    <div style="text-align: center">
+                                        {% render_field field class='both_blocks' %}
+                                    </div>
+                                {% elif field.name == "scheduled" %}
+                                    {% render_field field class='scheduled' %}
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                                </td>
+
+                                {% if field.name in "rooms capacity sponsors title special administrative restricted sticky both_blocks comments admin_comments sticky_students " %}
+                                <td class="propagate" data-base-field="{{ field.name }}">
+                                    <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
+                                        <i class="fas fa-arrows-alt-v"></i>
+                                    </a>
+                                </td>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if field.name == "scheduled" %}
+                                <td class="block-name">
+                                    <a href="{% url 'eighth_admin_edit_block' block.id %}" class="ui-link">
+                                        {{ block.date|date:"D" }} {{ block.block_letter }}, {{ block.date|date:"m/d/y" }}
+                                    </a>
+                                    {% if form.cancelled.value %}
+                                        <br>
+                                        <b class="cancelled">Cancelled</b>
+                                    {% elif form.scheduled.value %}
+                                        <br><a href="javascript:;" class="unschedule-link">Unschedule</a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+
+                    {% if not forloop.last %}
+                        <tr class="spacer">
+                            <td colspan="30"></td>
+                        </tr>
+                        <tr class="divider">
+                            <td colspan="30"></td>
+                        </tr>
+                        <tr class="spacer">
+                            <td colspan="30"></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="footer-buttons">
+            <br>
+            Showing two months of blocks. Move your start date forward to see later blocks.
+            <br>
+            <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+            <input type="submit" value="Save">
+        </div>
+    {% endif %}
+</form>
+{% endblock %}

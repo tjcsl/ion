@@ -1,0 +1,52 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Announcement Request
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    {% if type == "request" %}
+        <h3>Your announcement request was submitted</h3>
+        {% if self_confirm %}
+            <p>Successfully added and self-approved your announcement request.</p>
+            <p>An Intranet administrator will review and post the announcement shortly. (An email has been sent to the administrators.)</p>
+        {% else %}
+            <p>Successfully added your announcement request.</p>
+            <p>After the teacher sponsor(s) that you entered approve the announcement posting, it will be reviewed and posted by an Intranet administrator shortly. (An email has been sent to the teacher(s).)</p>
+        {% endif %}
+    {% elif type == "approve" %}
+        {% if status == "accept" %}
+            <h3>Announcement request approved</h3>
+            <p>Successfully approved the announcement request.</p>
+            <p>An Intranet administrator will review and post the announcement shortly. (An email has been sent to the administrators.)</p>
+        {% elif status == "reject" %}
+            <h3>Announcement request rejected</h3>
+            <p>Successfully rejected the announcement request.</p>
+            <p>If an additional teacher was named on this request, they will have the opportunity to approve it as well, but they will see that you rejected it.</p>
+            <p>If you have a serious objection against this announcement, please email <a href="mailto:intranet@tjhsst.edu">intranet@tjhsst.edu</a> ASAP to ensure it is not posted.</p>
+        {% endif %}
+    {% endif %}
+    <br>
+    <a href="/" class="button"><i class="fas fa-arrow-left"></i> Dashboard</a>
+</div>
+{% endblock %}

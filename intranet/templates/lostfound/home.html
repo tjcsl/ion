@@ -1,0 +1,80 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Lost and Found
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'lostfound' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/lostfound' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="lostfound primary-content">
+    <h2>
+        Lost and Found
+    </h2>
+
+    <p>Lost something? Found something that isn't yours? Use this public form to report lost and found items. (Please be respectful and courteous; the TJ Honor Code applies.)</p>
+
+    <div class="items-container">
+        <div class="lost-items">
+            <div class="item-header">
+                Lost Items:
+                <a href="{% url 'lostitem_add' %}" class="button">
+                    Add
+                </a>
+            </div>
+            {% for item in lost %}
+                {% include "lostfound/lostitem.html" %}
+            {% empty %}
+                <div class="item item-meta">
+                    <p>There are currently no lost items</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="found-items">
+            <div class="item-header">
+                Found Items:
+                <a href="{% url 'founditem_add' %}" class="button">
+                    Add
+                </a>
+            </div>
+            {% for item in found %}
+                {% include "lostfound/founditem.html" %}
+            {% empty %}
+                <div class="item item-meta">
+                    <p>There are currently no found items</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if lost.has_previous or found.has_previous %}
+        <a href="{% url 'lostfoun' %}?page={{ previous_page }}" class="button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    {% endif %}
+
+    {% if lost.has_next or found.has_next %}
+        <a href="{% url 'lostfound' %}?page={{ next_page }}" class="button" style="float: right">
+            Next <i class="fas fa-arrow-right"></i>
+        </a>
+    {% endif %}
+</div>
+{% endblock %}

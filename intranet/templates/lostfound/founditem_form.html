@@ -1,0 +1,86 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Found Item
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+    $(function() {
+        $("#id_found").datetimepicker({
+            lazyInit: true,
+            format: "Y-m-d"
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'announcements.form' %}
+    <style>
+    .xdsoft_timepicker {
+        display: none !important;
+    }
+
+    .founditem form input,
+    .founditem form textarea {
+        width: 300px;
+    }
+
+    .founditem form input[type="submit"] {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+    {% if action == "add" %}
+    .founditem label[for="id_retrieved"],
+    .founditem #id_retrieved {
+        display: none;
+    }
+    {% endif %}
+    </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/lostfound' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="founditem primary-content">
+    <a href="{% url 'lostfound' %}" class="button">
+        <i class="fas fa-arrow-left"></i> View All Items
+    </a>
+    <h2>
+        {{ action|title }} Found Item
+    </h2>
+    <form action="{% if action == 'add' %}{% url 'founditem_add' %}{% elif id %}{% url 'founditem_modify' id %}{% endif %}" method="post">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td colspan="2"><input type="submit"></td></tr>
+    </table>
+    </form>
+</div>
+<script>
+    // name of <textarea> is content
+    /*
+    CKEDITOR.replace("description", {
+        width: "600px"
+    });
+    */
+</script>
+{% endblock %}

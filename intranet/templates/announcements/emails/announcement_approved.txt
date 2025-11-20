@@ -1,0 +1,14 @@
+{% if role == "approved" %}The announcement that you approved,{% elif role == "submitted" %}The announcement that you submitted,{% else %}The announcement,{% endif %} {{ announcement.title }}, was approved and posted by {% if request.posted_by %}{{ request.posted_by.full_name }}.{% else %}an administrator.{% endif %}
+
+{{ announcement.get_author }} posted an announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
+
+{{ announcement.title }}
+
+{% autoescape off %}
+{{ announcement.content|truncatewords_html:30 }}
+{% endautoescape %}
+
+View this announcement on Intranet: {{ info_link }}
+
+
+{% include "email_footer.txt" %}

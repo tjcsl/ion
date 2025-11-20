@@ -1,0 +1,88 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - Eighth Period Absences
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.common' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <div class="eighth-header">
+            {% if request.user.is_eighth_admin %}
+                <a class="button print-hide" href="{% url 'eighth_profile' user.id %}">
+                    <i class="fas fa-arrow-left"></i> Profile
+                </a>
+                <br>
+            {% endif %}
+            <h2>
+                Eighth Period Absences
+            </h2>
+
+            {% if request.user.is_eighth_admin %}
+                {% include "eighth/admin/start_date.html" %}
+            {% endif %}
+        </div>
+
+        Absence information for <a href="{% url 'user_profile' user.id %}">{{ user.display_name }} (Grade {{ user.grade_number }})</a>{% if user.student_id %} - {{ user.student_id }}{% endif %}: <b>{{ absences|length }} Absence{{ absences|pluralize }}</b>
+        <br><br>
+        {% if request.user.is_student %}
+            <p style="max-width: 600px">
+                To clear an absence print this page. Have the teacher listed sign next to the activity to indicate that you were present. Absences in activities with a substitute teacher or in a stickie cannot be cleared. Bring the signed page to the 8th period office within two weeks of an absence to clear it.
+            </p>
+        {% endif %}
+        <br>
+        <table class="zebra eighth-absences">
+            <thead>
+                <th>Date</th>
+                <th>Block</th>
+                <th>Activity</th>
+                <th>Activity ID</th>
+                <th>Sponsor(s)</th>
+                {% if request.user.is_eighth_admin %}
+                    <th></th>
+                {% endif %}
+            </thead>
+            {% for signup in absences %}
+                <tr>
+                    <td>{{ signup.scheduled_activity.block.date }}</td>
+                    <td>{{ signup.scheduled_activity.block.block_letter }}</td>
+                    <td>
+                        <a href="{% url 'eighth_activity' signup.scheduled_activity.activity.id %}">
+                            {{ signup.scheduled_activity.full_title }}
+                        </a>
+                    </td>
+                    <td>{{ signup.scheduled_activity.activity.id }}</td>
+                    <td>{{ signup.scheduled_activity.get_true_sponsors|join:", " }}</td>
+                    {% if request.user.is_eighth_admin %}
+                        <td>
+                            <form action="{% url 'eighth_admin_clear_absence' signup.id %}?next={{ request.get_full_path|urlencode }}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="print-hide">Remove</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+
+                    <tr><td colspan="5">{% if request.user == user %}<i class="far fa-smile"></i> You have no absences.{% else %}No absences.{% endif %}</td></tr>
+
+            {% endfor %}
+        </table>
+        <br>
+        <button onclick="window.print()" class="print-hide">Print</button>
+    </div>
+{% endblock %}

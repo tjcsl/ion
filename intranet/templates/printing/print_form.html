@@ -1,0 +1,39 @@
+<form action="{% url 'printing' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+    {{ form.as_table }}
+    <tr>
+        <td colspan="2">
+            <input type="submit" value="Print">
+        </td>
+    </tr>
+    </table>
+    <br>
+    <p><span style="font-style:italic">Note</span>: Due to the nature of the .doc and .docx file format, the printing output may not be what you expect. Hence, we do not explicitly support printing those file formats, although they will still print. If possible, print PDF documents for accurate results.</p>
+    <b>The following file formats are supported:</b>
+    <ul>
+        <li>.pdf: Adobe PDF</li>
+        <li>.ps: Adobe PostScript</li>
+        <li>.odt: OpenDocument Text Document</li>
+        <li>.txt: Plain Text</li>
+    </ul>
+    <br>
+    Do <b>NOT</b> attempt to print image files or non-supported file formats.
+    <br>
+    <b>The following restrictions apply:</b>
+    <ul>
+        {% if user.is_teacher or user.is_printing_admin %}
+        <li>Print jobs can have a maximum of {{ DJANGO_SETTINGS.PRINTING_PAGES_LIMIT_TEACHERS }} pages.</li>
+        {% else %}
+        <li>Print jobs can have a maximum of {{ DJANGO_SETTINGS.PRINTING_PAGES_LIMIT_STUDENTS }} pages.</li>
+        {% endif %}
+        {% if not user.is_teacher and not user.is_printing_admin %}
+        <li>You may send up to {{ DJANGO_SETTINGS.PRINT_RATELIMIT_FREQUENCY}} print jobs every {{ DJANGO_SETTINGS.PRINT_RATELIMIT_MINUTES }} minutes.</li>
+        {% endif %}
+        <li>If the printer doesn't appear to be working, do <b>NOT</b> keep attempting to print. Instead, contact the Student Systems Administrators with <a href="{% url 'send_feedback' %}">the Ion feedback form</a>.</li>
+        <li>Please be mindful of other printing users.</li>
+        <li>Do not print documents that use an excessive amount of ink (e.g. dark backgrounds).</li>
+        <li>Abuse of this feature will result in loss of printing privileges.</li>
+    </ul>
+    <br>
+</form>

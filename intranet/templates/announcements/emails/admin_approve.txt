@@ -1,0 +1,29 @@
+The following news post was approved by a sponsor and is in the approval queue:
+
+Title: {{ formdata.title }}
+
+Content:
+{% autoescape off %}
+    {{ req.content }}
+{% endautoescape %}
+
+Submitted by: {{ req.user.full_name }} ({{ req.user.username }})
+
+Teachers Requested for Approval: {% for teacher in req.teachers_requested.all %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+
+Teachers Approved: {% for teacher in req.teachers_approved.all %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+
+Notes:
+{{ req.notes|linebreaks }}
+
+To approve or reject this posting, click on this link: {{ info_link }}
+
+{% with no_unsubscribe=1 %}{% include "email_footer.txt" %}{% endwith %}

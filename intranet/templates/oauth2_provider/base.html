@@ -1,0 +1,46 @@
+{% load static %}
+{% load static %}
+{% load pipeline %}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    {% block title %}
+        <title>Ion - OAuth Authentication</title>
+    {% endblock %}
+    {% include "meta.html" %}
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700">
+    <link href="{% static 'vendor/fontawesome-free-5.11.2/css/all.css' %}" rel="stylesheet">
+    {% block css %}
+        {% stylesheet 'base' %}
+        {% stylesheet 'page_base' %}
+        {% stylesheet 'login' %}
+        {% stylesheet 'about' %}
+        {% stylesheet 'theme.blue' %}
+        {% stylesheet 'oauth' %}
+    {% endblock %}
+    {% block js %}
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous">
+        </script>
+    {% endblock %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/login' %}
+        {% stylesheet 'dark/about' %}
+        {% stylesheet 'dark/oauth' %}
+    {% endif %}
+</head>
+<body class="notransition">
+    {% block back %}{% endblock %}
+    {% if global_warning %}<div class="warning-announcement">{{ global_warning|safe|linebreaks }}</div>{% endif %}
+    <div class="center-wrapper">
+        <div class="center" style="padding-right: 10px; padding-left: 10px">
+        <div class="logo"></div>
+        {% block content %}
+
+        {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+@import 'colors';
+
+$patterns: (('weave', "pixel_weave"), ('boxes', "pw_pattern"), ('transparency', "ps_neutral"));
+$colors: (('grey', $grey), ('blue', rgb(0, 0, 200)), ('light-blue', rgb(0, 100, 160)), ('red', rgb(193, 23, 23)), ('green', rgb(20, 115, 20)), ('violet', rgb(51, 51, 175)), ('purple', rgb(120, 0, 120)));
+
+body.theme {
+    @each $pattern in $patterns {
+        $name: nth($pattern, 1);
+        $filename: nth($pattern, 2);
+        &--pattern-#{$name} {
+            background-image: url(/static/img/patterns/#{$filename}.png);
+        }
+    }
+    @each $color in $colors {
+        $name: nth($color, 1);
+        &--color-#{$name} .header {
+            background: nth($color, 2);
+        }
+    }
+}

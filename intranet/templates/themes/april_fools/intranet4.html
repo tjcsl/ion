@@ -1,0 +1,206 @@
+{% load static %}
+{% load pipeline %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Tangerine:wght@700&display=swap');
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+    #intranet4-welcome {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: white;
+        z-index: 9999999;
+        background: url("https://media.istockphoto.com/id/1329350166/photo/metallic-gold-background-image-the-light-reflected-on-the-gold-foil.jpg?b=1&s=170667a&w=0&k=20&c=Q-S4LhQ__p4JDU_hBQMjuaETiYjWqDMGs1nsjVz9amM=");
+        background-size: cover;
+        background-position: center;
+    }
+
+    #intranet4-welcome .title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        color: black;
+    }
+
+    #title-container {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 50%;
+        width: 75%;
+        background: rgba(255, 255, 255, 0.5);
+        font-size: 32pt;
+    }
+
+    #message {
+        position: absolute;
+        top: 15%;
+        left: 22%;
+        font-size: 12pt;
+        color: #3b3c3d;
+        width: 56%;
+    }
+
+    #message p, .message-body {
+        display: none;
+    }
+
+    .message-header, .message-footer b {
+        font-family: 'Tangerine', cursive;
+        font-weight: bold;
+        font-size: 32pt;
+        color: black;
+    }
+
+    .message-footer b {
+        font-size: 24pt;
+    }
+
+    button {
+        background: rgba(255, 255, 255, 0.5);
+        font-size: 14pt;
+    }
+
+    .button-intranet-3 {
+        border: 1px solid #3b3c3d;
+        color: #3b3c3d;
+        border-radius: 8px;
+        transition: 1s;
+    }
+
+    .button-intranet-3:hover {
+        background: #3b3c3d;
+        color: white;
+    }
+
+    .button-intranet-4 {
+        font-weight: bold;
+        border: 4px solid #ca961b;
+        box-shadow: 0 0 5px #efc96e;
+        border-radius: 10px;
+        color: #3b3c3d;
+        transition: 1s;
+    }
+
+    .button-intranet-4:hover {
+        background: #ca961b;
+        color: white;
+    }
+
+    @media(max-width: 768px) {
+        #title-container {
+            font-size: 18pt;
+        }
+        #message {
+            font-size: 12pt;
+            left: 5%;
+            width: 90%;
+            font-size: 10pt;
+        }
+        .message-header, .message-footer b {
+            font-size: 24pt;
+        }
+
+        .message-footer b {
+            font-size: 18pt;
+        }
+    }
+</style>
+<script>
+    $(function() {
+        $('#intranet4-welcome').fadeIn(3000);
+        setTimeout(function() {
+            $('#title-container').fadeIn(1500);
+        }, 2000);
+
+        setTimeout(function() {
+            if(window.innerWidth > 768) {
+                $("#title-container").animate({
+                    top: '5%',
+                    width: '60%',
+                    height: '15%',
+                    borderRadius: '15px',
+                    fontSize: '24pt',
+                }, 2000);
+            }
+            else {
+                $("#title-container").animate({
+                    top: '5%',
+                    width: '80%',
+                    height: '15%',
+                    borderRadius: '15px',
+                    fontSize: '18pt',
+                }, 2000);
+            }
+        }, 3000);
+        setTimeout(function() {
+            $('.message-header').fadeIn(1500);
+        }, 5000);
+        setTimeout(function() {
+            $('.message-body').fadeIn(1500);
+        }, 6500);
+        setTimeout(function() {
+            $('.message-footer').fadeIn(1500);
+        }, 9000);
+
+        $(".button-intranet-3").click(function() {
+            window.location.href = "{% url 'april_fools_intranet3' %}";
+        });
+        $(".button-intranet-4").click(function() {
+            window.location.href = "{% url 'april_fools_intranet4' %}";
+        });
+    });
+</script>
+
+<div id="intranet4-welcome">
+    <div id="title-container">
+        <center class="title">Welcome to Intranet 4!</center>
+    </div>
+    <div id="message">
+        <p class="message-header">Dear {{ request.user.first_name }},</p>
+        <div class="message-body">
+            The Sysadmins have been working to bring you a new and improved Intranet over the past year.
+            Today, we're excited to offer you a peek at the beta release of <b>Intranet 4</b>,
+            the next generation of the TJ Intranet.
+            <br><br>
+            Intranet 3, or as you might know it, Ion, has served us well for the past 7 years. We will miss it dearly,
+            but we must embrace the influx of new technologies to keep up with the times.
+            <br><br>
+            One of the most exciting features of Intranet 4 is <b>ChatION,</b> your personal assistant that will
+            help you navigate the new and improved Intranet. You can ask ChatION to sign you up for eighth periods, show the day's
+            schedule, summarize announcements, or even tell you a joke.
+            <br><br>
+            To experience the new Intranet now, simply click the <b>Try Intranet 4</b> button below. If you would prefer to
+            continue using Intranet 3 instead, click the <b>Stay on Intranet 3</b> button instead.
+            <br><br>
+            <center>
+                <button class="button-intranet-3">
+                    <i class="fas fa-chevron-left"></i>
+                    Stay on Intranet 3
+                </button> &nbsp; &nbsp; &nbsp;
+                <button class="button-intranet-4">
+                    <img src="{% static 'themes/april_fools/april_fools_logo.png' %}" height="18" width="18" style="position: relative; top: 3px;">
+                    &nbsp;Try Intranet 4
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </center>
+            <br>
+            We hope you enjoy using Intranet 4 as much as we enjoyed building it.
+            <br><br>
+        </div>
+        <p class="message-footer">
+            <b>Sincerely,</b>
+            <br>
+            <i style="color: black">Your Friendly Neighborhood Sysadmins</i>
+        </p>
+    </div>
+</div>

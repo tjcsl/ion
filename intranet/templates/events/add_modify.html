@@ -1,0 +1,100 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Event
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+        $(function() {
+            $("select#id_groups").selectize({
+                plugins: ["remove_button"],
+                placeholder: "Everyone"
+            });
+            $("select#id_category").selectize();
+            $("select#id_open_to").selectize();
+
+            $("#id_time").datetimepicker({
+                lazyInit: true,
+                format: "Y-m-d H:i:s"
+            });
+
+            $("#id_links").selectize({
+                placeholder: "Links",
+                create: true
+            })
+
+            // name of <textarea> is description
+            var editor = CKEDITOR.replace("id_description", {
+                width: "600px"
+            });
+
+            $("form#event_form").bind("submit", function(e) {
+                if($("#id_title").val().match(/\bION\b/) || editor.getData().match(/\bION\b/)) {
+                    // People frequently write "ION" instead of the correct spelling, "Ion." See https://github.com/tjcsl/ion/issues/805
+                    Messenger().error('We have detected the use of "ION" in all caps in your event. Please correct it to use "Ion", <a href="/docs/terminology" target="_blank"  style="color:#7F7FFF">the official name</a>.');
+                    e.preventDefault();
+                    return;
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'announcements.form' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+        {% stylesheet 'dark/cke' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="events announcements primary-content">
+    <h2>
+        {{ action_title }} Event
+    </h2>
+    <form method="post" id="event_form">
+    <table>
+    {% csrf_token %}
+    <tr><td colspan="2">
+        {% if action == "add" or action == "request" %}
+            <p>
+                {% if is_events_admin %}
+                    You can directly post an event to Intranet using this form.
+                {% else %}
+                    You may submit an event to be displayed on Intranet using this form. Please note that it will have to be approved by an administrator.
+                {% endif %}
+            </p>
+            <p>
+                Events posted should relate directly to the TJ community. Examples of this include special club meetings, bake sales, and school sporting events.
+            </p>
+            <br>
+        {% endif %}
+    </td></tr>
+    {{ form.as_table }}
+    <tr><td>&nbsp;</td><td>
+        <input type="submit" style="width: 150px" value="{{ action|title }} Event">
+        {% if id %}
+            <a href="{% url 'delete_event' id %}" class="button delete-button">Delete</a>
+        {% endif %}
+    </td></tr>
+    </table>
+    </form>
+</div>
+{% endblock %}

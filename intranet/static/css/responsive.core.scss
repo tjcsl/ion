@@ -1,0 +1,319 @@
+@import "colors";
+
+/* CORE UI */
+
+.left .dropdown-icon {
+    display: none;
+}
+
+body.disable-scroll {
+    overflow: hidden;
+}
+
+@media (max-width: 800px) {
+    .header .search input[type="text"] {
+        width: 250px;
+        font-size: 12px;
+        padding-right: 3px;
+    }
+}
+
+@media (max-width: 680px) {
+    /* absence notification */
+    ul.dropdown-menu.absence-notification {
+        position: fixed;
+        left: 0;
+        width: 100%;
+        margin-top: 30px;
+
+        .arrow {
+            right: 148px;
+        }
+    }
+
+    .badged-item {
+        position: absolute !important;
+        top: 9px;
+        left: 95px;
+    }
+
+    .status-link .user-name {
+      display: none;
+    }
+
+    .status-link {
+        position: absolute !important;
+        top: 4px;
+        left: 60px;
+
+        body.mobile-nav-show & {
+            display: none;
+        }
+    }
+
+    .status-icon {
+        margin-top: 6px;
+    }
+
+    .nav .nav-status-indicator {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 960px) {
+    .status-link .user-name {
+      display: none;
+    }
+}
+
+@media (max-width: 680px) {
+    /* FIXED HEADER */
+    h1 {
+        margin-right: 0;
+    }
+    .has-dropdown {
+        padding: 0 !important;
+    }
+    .header {
+        position: fixed;
+        z-index: 1042;
+
+        .left > form.search {
+            position: absolute;
+            visibility: hidden;
+            left: 14.5%;
+            opacity: 0;
+
+            body.mobile-nav-show & {
+                opacity: 1;
+                visibility: visible;
+                z-index: 1050;
+            }
+        }
+
+        //&.has-badge .left > form.search {
+            //width: 50%;
+            //left: 20%;
+        //}
+    }
+    .left > a.intranet-title {
+        position: absolute;
+        left: 57%;
+        margin-left: -85px;
+        z-index: 1045;
+
+        body.mobile-nav-show & {
+            opacity: 0;
+            z-index: 1042;
+        }
+    }
+    /* adjust for absences label */
+    .absence-count-label {
+        display: none;
+    }
+    .right > li.notifications {
+        display: none;
+    }
+    /* absence notification */
+    ul.dropdown-menu.absence-notification .arrow {
+        position: absolute;
+        left: 65px;
+    }
+    /* TODO: these proportions look off, and I can't figure out exactly why */
+    .left .dropdown {
+        &-taparea {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 75px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        &-icon {
+            display: block;
+            position: absolute;
+            left: 20px;
+            top: 5px;
+            height: 30px;
+            width: 30px;
+            text-align: center;
+            cursor: pointer;
+
+            > i {
+                font-size: 20px;
+                display: inline-block;
+                vertical-align: top;
+                padding-top: 5px;
+            }
+        }
+    }
+    .no-touch .left .dropdown-taparea:hover > .dropdown-icon,
+    .disable-scroll .dropdown-taparea > .dropdown-icon {
+        background-color: rgba(0, 0, 0, .2);
+        border-radius: 5px;
+    }
+    .main ul.nav {
+        position: fixed;
+        top: 40px;
+        left: -192px;
+        width: 190px;
+        height: 100%;
+        height: calc(100% - 42px);
+        overflow-y: auto;
+        border-radius: 0;
+        border: none;
+        /*
+        -webkit-transition-duration: 0.5s;
+        -moz-transition-duration: 0.5s;
+        -ms-transition-duration: 0.5s;
+        -o-transition-duration: 0.5s;
+        transition-duration: 0.5s;
+        */
+        z-index: 9999;
+
+        > li {
+            padding: 0;
+            height: 58px;
+            border-right: none;
+            border-left: none;
+            border-color: lightgrey;
+            text-align: left;
+
+            .no-touch &:not(.selected):hover {
+                background-color: white;
+            }
+
+            > a {
+                padding: 20px 0;
+                margin: 0;
+                height: 18px;
+
+                .nav-alert-container {
+                    display: inline-block;
+                    float: left;
+
+                    i.fa-exclamation-circle {
+                        right: -2px;
+                    }
+                }
+
+                i {
+                    display: inline-block;
+                    float: left;
+                    margin-left: 16.6px;
+                    margin-top: -8px;
+                    zoom: 1.5;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+    div.main > div.primary-content {
+        padding-left: 0;
+        margin-left: 0;
+    }
+    /* RIGHT DROPDOWN BUTTON */
+    .user-name {
+        display: none;
+    }
+    .header .dropdown-menu a {
+        line-height: 3em;
+        padding: 0 10px;
+    }
+    /*
+    .header .right li.username ul.dropdown-menu {
+        position: fixed;
+        top: 5px;
+        right: 0;
+        width: 200px;
+        height: 100%;
+        box-shadow: none;
+        border-radius: 0;
+        background-color: $grey;
+        border: 1px solid $grey;
+        padding-top: 0;
+        padding-left: 0;
+        z-index: 1042;
+
+        .arrow {
+            display: none;
+        }
+
+        li {
+            height: 59px;
+            color: white;
+            border-bottom: 1px solid #f0f0f0;
+            padding-left: 20px;
+            width: 222px;
+
+            a {
+                color: white;
+                padding: 15px 0;
+            }
+        }
+    }
+
+    .header .left.right-open > form.search {
+        position: absolute;
+        top: 234px;
+        right: 13px;
+        z-index: 1000;
+        display: block;
+    }
+    */
+    .nav-g {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1001;
+        background-color: fade_out($grey, 0.7);
+        cursor: pointer;
+    }
+    .intranet-title,
+    .status-link,
+    .search {
+        transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+    }
+}
+
+
+/* better support for really small
+ * screens (320x480, iPhone 4)
+ */
+
+@media (max-width: 420px) {
+    body {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    // overlaps with the search bar otherwise
+    body.mobile-nav-show {
+        .right {
+            display: none;
+        }
+
+        .left {
+            text-align: center;
+
+            // otherwise the search bar is too close to the back button
+            > form.search {
+                left: 20%;;
+            }
+        }
+
+        // search bar only shows when the mobile nav menu is active
+        .search input[type="text"] {
+            width: 180px; // using the space freed by no right buttons
+        }
+    }
+}

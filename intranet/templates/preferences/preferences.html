@@ -1,0 +1,251 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load forms %}
+{% load form_field %}
+{% load math %}
+{% load strings %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Preferences
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'preferences' %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/jquery.formset.js' %}" charset="utf-8"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script>
+    $(document).ready(function () {
+        $('#phone-formset-table tr').formset({
+            prefix: '{{ phone_formset.prefix }}',
+            formCssClass: 'phone-formset',
+            deleteText: '<button><i class="fas fa-times"></i></button>',
+            addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
+        });
+        $('#email-formset-table tr').formset({
+            prefix: '{{ email_formset.prefix }}',
+            formCssClass: 'email-formset',
+            deleteText: '<button><i class="fas fa-times"></i></button>',
+            addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
+        });
+        $('#website-formset-table tr').formset({
+            prefix: '{{ website_formset.prefix }}',
+            formCssClass: 'website-formset',
+            deleteText: '<button><i class="fas fa-times"></i></button>',
+            addText: '<button><i class="fas fa-plus"></i> Add Another</button>'
+        });
+        $("#id_primary_email").selectize({
+          "allowEmptyOption": true
+        });
+    })
+    $(function() {
+        $('input.disabled').each(function() {
+            $(this).attr('data-state', $(this).prop('checked'));
+            $(this).click(function(e) {
+                e.preventDefault();
+                var state = $(this).attr('data-state');
+                if (!state) {
+                    $(this).removeProp('checked');
+                } else {
+                    $(this).prop('checked', state);
+                }
+            })
+        })
+    })
+
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/preferences' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Preferences</h2>
+        <br>
+        <h3>Authentication</h3>
+        To change your password, or to reset it, go to <a href="https://password.tjhsst.edu">password.tjhsst.edu</a>.
+        <br>
+        To manage or enable 2-Factor Authentication (2FA) for your account, go to <a href="https://2fa.tjhsst.edu">2fa.tjhsst.edu</a>.
+        <br>
+        2FA is a security feature that requires you to enter a code from your phone or other device in addition to your password when logging in
+        and makes your account more secure.
+        <br><br>
+        {% if request.user.is_student %}
+        <h3>Mail Forwarding</h3>
+        <p>Set up email forwarding from your @tjhsst.edu email <a href="https://mailforwarding.tjhsst.edu" target="_blank">here</a>.</p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <br>
+            {% if bus_route_form %}
+                <h3>Bus Route (PM)</h3>
+                    {{ bus_route_form.as_table }}
+                <br>
+            {% endif %}
+            <button type="submit">Save</button>
+            <br>
+            <br>
+            <h3>Notification Options</h3>
+            <p>Change how you receive notifications from Intranet.</p>
+            <table class="notification-options">
+              {% if request.user.notificationconfig and request.user.notificationconfig.gcm_token %}
+              <tr>
+                  <td>
+                      <input id="id_receive_push_notifications" name="receive_push_notifications" type="checkbox" {% if not request.user.notificationconfig.gcm_optout %} checked {% endif %}>
+                  </td>
+                  <td>
+                      <label for="id_receive_push_notifications">Receive Push Notifications</label>
+                  </td>
+              </tr>
+              {% else %}
+              <tr>
+                  <td>
+                      <input id="id_receive_push_notifications" type="checkbox" disabled>
+                  </td>
+                  <td>
+                      <label for="id_receive_push_notifications">Receive Push Notifications</label>
+                  </td>
+              </tr>
+              {% endif %}
+                {% for field in notification_options_form %}
+                <tr>
+                    <td>
+                        {{ field.errors }}
+                        {{ field }}
+                    </td>
+                    <td>
+                        {{ field.label }}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </table>
+
+            <br>
+
+            <h3>Personal Information</h3>
+
+            {% comment "Disabling because of privacy reasons" %}
+            <div class="label">Phone Numbers</div>
+            <table id="phone-formset-table">
+                {{ phone_formset.management_form }}
+                {% for form in phone_formset.forms %}
+                <tr>
+                    {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}{{ form|field_:'_number' }}</td><td>{{ form.purpose }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endcomment %}
+
+            <div class="label">Email Addresses</div>
+            <table id="email-formset-table">
+                {{ email_formset.management_form }}
+                {% for form in email_formset.forms %}
+                <tr>
+                    {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}{{ form.address }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            {% comment "Disabling because of privacy reasons" %}
+            <div class="label">Websites</div>
+            <table id="website-formset-table">
+                {{ website_formset.management_form }}
+                {% for form in website_formset.forms %}
+                <tr>
+                    {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}{{ form.url }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endcomment %}
+
+            {% if preferred_pic_form %}
+            <br>
+            <h3>Preferred Picture</h3>
+            <p>Since the eighth period office and TJ faculty can always see your pictures, it is recommended that you choose your preferred picture.</p>
+
+            {% for choice in preferred_pic_form.preferred_photo %}
+            {{ choice.tag }} {{ choice.choice_label }}<br>
+            {% endfor %}
+            <br>
+            {% endif %}
+
+            {% comment %}
+              The below privacy options form is disabled due to the
+              permissions feature being unused and changes to school policy.
+            {% endcomment %}
+            {% comment %}
+            {% if privacy_options_form %}
+            <h3>Privacy Options</h3>
+            <p>Note that TJ staff members can view all of this information.</p>
+            <table class="privacy-options">
+                <thead>
+                    {% if request.user.is_student %}
+                    <th>Parent<br>Permission</th>
+                    {% else %}
+                    <th>Can<br>Enable</th>
+                    {% endif %}
+                    <th>Your<br>Choice</th>
+                    <th></th>
+                </thead>
+                {% for field in privacy_options_form %}
+                {% if not field.name|endswith:"-self" %}
+                <tr>
+                    <td>
+                        {{ field.errors }}
+                        {{ field }}
+                    </td>
+                    {% else %}
+                    <td>
+                        {{ field.errors }}
+                        {{ field }}
+                    </td>
+                    <td>
+                        {{ field.label }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+            <br>
+            {% endif %}
+          {% endcomment %}
+
+            {% if dark_mode_form %}
+                <h3>Dark Mode</h3>
+                {% for field in dark_mode_form %}
+                    {{ field.label }}
+                    {{ field }}
+                {% endfor %}
+                <br>
+                <br>
+            {% endif %}
+
+            <button type="submit">Save</button>
+            </form>
+
+    </div>
+
+{% endblock %}

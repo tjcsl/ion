@@ -1,0 +1,64 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+
+<h4>Select an Activity:</h4>
+
+<select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+    <option value="">Select or search for an activity</option>
+    {% for a in activities %}
+        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
+    {% endfor %}
+</select>
+
+{% if "activity" in request.GET %}
+    <h3>Schedule for {{ activity.name }}</h3>
+    Click on column titles to sort.
+    <table data-sortable class="sortable fancy-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Rooms</th>
+                <th>Sponsors</th>
+                <th>Signups</th>
+                <th>Capacity</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scheduled_activity in scheduled_activities %}
+                <tr>
+                    <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                    <td>{% for rm in scheduled_activity.get_true_rooms %}{{ rm.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                    <td>{{ scheduled_activity.get_true_sponsors|join:", " }}</td>
+                    <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
+                    <td>{{ scheduled_activity.get_true_capacity }}</td>
+                    <td>{{ scheduled_activity.comments }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan=5>There were no results.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

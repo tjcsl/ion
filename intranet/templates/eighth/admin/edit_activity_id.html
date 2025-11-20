@@ -1,0 +1,72 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(function() {
+        $("#edit-id").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = './' + v;
+            }
+        });
+
+        $("#edit-activity").click(function() {
+            var v = $("#activity-select").val();
+            if(v && v.length > 0) {
+                location.href = '/eighth/admin/activities/edit/' + v;
+            }
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+        <h4>Select an Activity:</h4>
+
+        <div class="select-area">
+            <select id="activity-select" placeholder="Select or search for an activity" autocomplete="off">
+                <option value="">Select or search for an activity</option>
+                {% for a in activities %}
+                    <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.aid }}: {{ a.name_with_flags }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <a id="edit-id" class="button">
+                Edit ID
+            </a>
+            <a id="edit-activity" class="button">
+                Edit Activity
+            </a>
+        </div>
+        <br>
+<form action="" method="post" autocomplete="off" name="edit_form">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Choose an available ID:</th>
+            <td>
+                <select name="new_id" style="width: 100px">
+                {% for i in available_ids %}<option value="{{ i }}">{{ i }}</option>{% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Change ID">
+            </td>
+        </tr>
+    </table>
+
+</form>
+
+
+{% endblock %}

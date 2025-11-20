@@ -1,0 +1,32 @@
+
+<div class="widget extra-widget seniors-widget" data-graduation-date="{{ senior_graduation }}" data-graduation-year="{{ senior_graduation_year }}">
+    <div class="widget-title">
+        <h2>
+            {% if is_senior %}
+                Seniors: Class of {{ senior_graduation_year }}
+            {% else %}
+                {{ user.grade.name_plural|capfirst }}: Class of {{ user.graduation_year }}
+            {% endif %}
+        </h2>
+        <div class="info">
+            <a class="button small-button" href="{% url 'seniors' %}">Senior Destinations</a>
+        </div>
+    </div>
+    <div class="widget-content">
+    {% if is_senior %}
+        <div style="text-align: center"><span class="seniors-clock"></span></div>
+    {% else %}
+        <div style="text-align: center">
+            <span class="seniors-clock">
+                <span class="clock">A very long time</span> until Graduation!
+            </span>
+        </div>
+    {% endif %}
+    <div style="text-align: center">
+        {{ num_senior_destinations }}{% if num_senior_destinations == 1 %} senior has{% else %} seniors have{% endif %} submitted destinations.
+        {% if is_senior %}
+            <br><b><a href="{% url 'seniors_add' %}">Add College Destination</a></b>
+        {% endif %}
+    </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+    p {
+        margin-bottom: 15px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(document).ready(function() {
+        $("form").submit(function() {
+            $(this).find("button").prop("disabled", true).html("<i class='fas fa-cog fa-spin'></i> Importing...");
+        });
+        var block_selectize = $("#block-select")[0].selectize;
+        block_selectize.on("change", function() {
+            var from = block_selectize.getItem(block_selectize.getValue())[0].innerHTML;
+            if (from) {
+                $("#summary").html("You will be importing all of the activites from <b>" + from + "</b> to " + "<b>{{ to_block }}</b>" + ".");
+            }
+            else {
+                $("#summary").html("");
+            }
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block admin_main %}
+
+{% if success %}
+    <p><b>Success!</b></p>
+    <p><b>{{ new_activities }}</b> activit{{ new_activities|pluralize:"y,ies" }} and <b>{{ new_signups }}</b> signup{{ new_signups|pluralize }} have been imported.</p>
+    <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
+{% else %}
+    {% if locked %}
+        <p><i class="fas fa-exclamation-triangle"></i> This block is locked.</p>
+    {% endif %}
+    {% if existing_activities > 0 or existing_signups > 0 %}
+        <p>
+            <i class="fas fa-exclamation-triangle"></i> <b>{{ existing_activities }}</b> activit{{ existing_activities|pluralize:"y,ies" }} and <b>{{ existing_signups }}</b> signup{{ existing_signups|pluralize }} already exist for this block.
+            Importing from another block will <b style="color:red">delete</b> these activities and signups.
+        </p>
+    {% endif %}
+
+    <p>Select a block below to import activities from. Checking import signups will import student signups without attendance information.</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <select id="block-select" name="block" placeholder="Select or search for a block">
+            <option value="">Select or search for a block</option>
+            {% for block in blocks %}
+                <option value="{{ block.id }}">{{ block.id }}: {{ block.formatted_date }} ({{ block.block_letter }})</option>
+            {% endfor %}
+        </select>
+        <div style="margin-bottom: 10px">
+            <label><input type="checkbox" name="signups"> Import Signups</label>
+        </div>
+        <p id="summary"></p>
+        <a class="button" href="{% url 'eighth_admin_edit_block' block_id %}">Go Back</a>
+        <button type="submit">Import Block</button>
+    </form>
+{% endif %}
+
+{% endblock %}

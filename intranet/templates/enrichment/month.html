@@ -1,0 +1,54 @@
+{% load static %}
+
+<table class="arrow-container week-table" style="border-spacing:0;">
+    <tr>
+    <td class="cell-filler"></td>
+    <td class="cell-filler"></td>
+    <td class="date-nav">
+        <a href="?date={{ month_data.last_month }}&view=month" class="button chevron schedule-left" title="Previous Month" id="left-button">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        &nbsp;
+        <b class="week-month-title">{{ month_data.current_month }}</b>
+        &nbsp;
+        <a href="?date={{ month_data.next_month }}&view=month" class="button chevron schedule-right" title="Next Month" id="right-button">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </td>
+    <td class="cell-filler"></td>
+    <td class="cell-filler"></td>
+    </tr>
+</table>
+<br />
+<div class="schedule" data-prev-date="{{ month_data.last_month }}" data-next-date="{{ month_data.next_month }}" data-date="{{ week_data.today }}">
+    {% for week in month_data.weeks %}
+    <table class="month-table">
+        <tbody>
+        <tr>
+            {% for day in week.days %}
+                {% if day.enrichment_ctx.display %}
+                <td id="{{ day.enrichment_ctx.date_today }}" >
+                    <h2 class="schedule-date">{{ day.enrichment_ctx.date|date:"D, N j" }}</h2>
+                    {% if day.enrichment_ctx.has_enrichments %}
+                        {% for enrichment in day.enrichment_ctx.enrichments %}
+                            {% if day.enrichment_ctx.date_today == today %}
+                                {% with enrichment_is_today=True %}
+                                    {% include "enrichment/enrichment.html" %}
+                                {% endwith %}
+                            {% else %}
+                                {% with enrichment_is_today=False %}
+                                    {% include "enrichment/enrichment.html" %}
+                                {% endwith %}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-enrichment no-events">No enrichment activities.</p>
+                    {% endif %}
+                </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+    {% endfor %}
+</div>

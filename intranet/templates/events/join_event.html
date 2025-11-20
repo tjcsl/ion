@@ -1,0 +1,69 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Join Event
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'events' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(function() {
+        $("[data-form-submit]").click(function() {
+            var name = $(this).attr("data-form-submit");
+            document.forms[name].submit();
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content events">
+        <h2>Join Event</h2>
+
+        <b>Will you be attending this event?</b>
+
+        <form action="{% url 'join_event' event.id %}" method="post" name="attend-form-{{ event.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="attending" value="true">
+        </form>
+
+        <form action="{% url 'join_event' event.id %}" method="post" name="no-attend-form-{{ event.id }}">
+            {% csrf_token %}
+            <input type="hidden" name="attending" value="false">
+        </form>
+
+        <a href="#" data-form-submit="attend-form-{{ event.id }}" class="button attend-button">
+            <i class="fas fa-check"></i>
+            Attend
+        </a>
+        &nbsp; &nbsp; &nbsp;
+        <a href="#" data-form-submit="no-attend-form-{{ event.id }}" class="button no-attend-button">
+            <i class="fas fa-times"></i>
+            Don't Attend
+        </a>
+
+        <br><br>
+
+        <div class="events-container">
+            {% with show_date_icon=True %}
+                {% include "events/event.html" %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}

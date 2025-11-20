@@ -1,0 +1,15 @@
+{% extends "error/error_base.html" %}
+
+{% block heading %}
+    {% if reason %}
+        {{ reason }}
+    {% else %}
+        CSRF validation error
+    {% endif %}
+{% endblock %}
+
+{% block description %}
+    <p>
+        <b>Try submitting this request again.</b> If making a scripted request, check the value<br> of the "csrfmiddlewaretoken" POST parameter or "X-CSRFToken" header.
+    </p>
+{% endblock %}

@@ -1,0 +1,401 @@
+@import "colors";
+
+html {
+    height: 100%;
+}
+
+body {
+    text-align: center;
+    overflow-x: hidden;
+    height: 100%;
+    box-sizing: border-box;
+    // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f2f2f4+0,d2d2d2+100
+    //background: #f2f2f4;
+    //background: -moz-radial-gradient(center, ellipse cover, #f2f2f4 0%, #d2d2d2 100%);
+    //background: -webkit-radial-gradient(center, ellipse cover, #f2f2f4 0%,#d2d2d2 100%);
+    //background: radial-gradient(ellipse at center, #f2f2f4 0%,#d2d2d2 100%);
+    //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f2f4', endColorstr='#d2d2d2',GradientType=1 );
+    //background-size: cover;
+}
+
+.center {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    margin-top: -270px;
+
+    &-wrapper {
+        text-align: center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -100px;
+        width: 200px;
+        min-height: 530px;
+        z-index: 10;
+        padding-top: 30px;
+        @media (max-width: 200px) {
+            left: 0;
+            margin: 0;
+        }
+    }
+}
+
+.message {
+    padding: 2px 0;
+    margin: 3px 0;
+    cursor: pointer;
+}
+
+.message-next, .message-info {
+    cursor: auto;
+}
+
+.message-info {
+    color: #888;
+}
+
+#username-warning {
+    color: rgb(181, 0, 0);
+}
+
+input {
+    &[type=text],
+    &[type=password] {
+        width: 192px;
+    }
+
+    &[type=number] {
+        width: 88px;
+    }
+
+    &[type=submit] {
+        width: 200px;
+        margin-top: 6px;
+        height: 36px;
+    }
+}
+
+h1 {
+    height: 37px;
+    width: 200px;
+    line-height: 37px;
+    text-align: center;
+}
+
+.title {
+    margin-bottom: 3px;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 110%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.login {
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+
+    .reset-password-container {
+        margin-top: 5px;
+    }
+
+    .account-docs-link-container {
+        margin-top: 3px;
+    }
+}
+
+.schedule {
+    margin-top: 11px;
+    font-size: 16px;
+    margin-left: -100px;
+
+    .center & {
+        margin-left: 0;
+        padding-bottom: 25px;
+    }
+
+    h2 {
+        max-width: 300px;
+        white-space: normal;
+    }
+}
+
+.chevron {
+    i {
+        font-size: 13px;
+        width: 30px;
+        display: inline-block;
+        color: $grey;
+    }
+
+    &:hover i {
+        text-decoration: none;
+        color: rgb(32, 66, 224);
+    }
+}
+
+.fa-chevron {
+    &-left {
+        text-align: left;
+    }
+
+    &-right {
+        text-align: right;
+    }
+}
+
+.ssl-seal {
+    position: fixed;
+    bottom: 0;
+    left: 4px;
+    z-index: 1;
+
+    img {
+        width: 100px;
+    }
+}
+
+.browser-notice {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -20%;
+    width: 40%;
+    text-align: center;
+
+    a {
+        color: black;
+        text-decoration: none;
+    }
+
+    span {
+        font-size: 20px;
+        font-weight: 200;
+    }
+}
+
+
+/* On small height screens, disable the week view */
+
+@media (max-height: 500px) {
+    .schedule-bottom {
+        display: none;
+    }
+}
+
+.schedule > iframe {
+    position: absolute;
+    left: 50%;
+    margin-left: -154px;
+    width: 308px;
+    @media (max-height: 696px) {
+        /* Fill avail height when iframe causes a scrollbar */
+        height: 100%;
+    }
+}
+
+a.schedule {
+    &-left {
+        float: left;
+    }
+
+    &-right {
+        float: right;
+    }
+}
+
+.git-version {
+    float: right;
+    color: fade_out($grey, 0.6);
+    z-index: 100;
+    margin-right: 10px;
+    min-width: 160px;
+    cursor: pointer;
+    text-align: right;
+
+    i {
+        margin-right: 4px;
+    }
+
+    #revision,
+    .git-github {
+        display: none;
+    }
+
+    &:hover {
+        color: rgba(0, 72, 171, .8);
+
+        #revision,
+        .git-github {
+            display: inline-block;
+        }
+
+        #git-oss,
+        .git-flask {
+            display: none;
+        }
+    }
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    padding: 0 0 3px 6px;
+    font-size: 13px;
+    color: gray;
+    z-index: 99;
+    text-align: left;
+    width: 100%;
+    background: rgba(242, 242, 242, .5);
+}
+
+.links {
+    float: left;
+    min-width: 340px;
+}
+
+.spinner-container {
+    position: relative;
+    top: -19px;
+    left: 50%;
+    z-index: 1;
+}
+
+.login-warning {
+    display: none;
+}
+
+.warning-announcement {
+    z-index: 9999999999;
+}
+
+.logo {
+    background-image: url("/static/img/logos/Login-Logo.svg");
+    background-repeat: no-repeat;
+    height: 74px;
+    width: 90px;
+    margin: auto;
+    cursor: pointer;
+
+    .no-svg & {
+        background-image: url("/static/img/logos/Login-Logo@2x.png");
+    }
+}
+
+.sidebar {
+    display: none;
+    padding: 5px;
+
+    .events-outer {
+        margin: 0 auto;
+    }
+
+    &.has-events {
+        @media (min-width: 800px) {
+            display: block;
+        }
+        z-index: 98;
+        position: fixed;
+        border-right: 1px solid #ccc;
+        width: 250px;
+        height: 100%;
+        left: 1px;
+        background-color: #f2f2f4;
+        overflow-y: auto;
+    }
+
+    &-trigger {
+        display: none;
+        cursor: pointer;
+
+        &.has-events {
+            @media (max-width: 800px) {
+                display: block;
+            }
+        }
+
+        font-size: 30px;
+        z-index: 99;
+        position: fixed;
+        left: 5px;
+        -webkit-transition: left 400ms linear;
+        transition: left 400ms linear;
+        top: 5px;
+        color: #484848;
+        background: #eaeaea;
+        background: -moz-linear-gradient(top, #eaeaea 0%, #dadada 100%);
+        background: -webkit-linear-gradient(top, #eaeaea 0%, #dadada 100%);
+        background: linear-gradient(to bottom, #eaeaea 0%, #dadada 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eaeaea', endColorstr='#dadada', GradientType=0);
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        padding: 0;
+        margin: 0;
+    }
+
+    h1 {
+        width: auto;
+        height: auto;
+        line-height: initial;
+    }
+
+    h2 {
+        margin-top: 5px;
+    }
+}
+
+.disable-interaction {
+    pointer-events: none;
+}
+
+.tooltip {
+    position: relative;
+    display: inline;
+    margin-left: 3px;
+    // border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -125px;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+#id_otp_token::-webkit-outer-spin-button,
+#id_otp_token::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#id_otp_token[type=number] {
+    -moz-appearance: textfield;
+}

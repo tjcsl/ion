@@ -1,0 +1,144 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load forms %}
+{% load math %}
+{% load strings %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Preferences
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'preferences' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/eighth/admin.js' %}"></script>
+
+    <script>
+    $(function() {
+        $("#user_select").selectize();
+        $("#select_all_checkbox").click(function(){
+            if ($(this).is(":checked")) {
+                $(".privacy-options .parent input[type=checkbox]").each(function() {
+                    $(this).prop("checked", true);
+                });
+            }
+            else {
+                $(".privacy-options .parent input[type=checkbox]").each(function() {
+                    $(this).prop("checked", false);
+                });
+            }
+        });
+        $(".privacy-options .parent input[type=checkbox]").each(function() {
+            $(this).click(function() {
+                if($(".privacy-options .parent input[type=checkbox]").length == $(".privacy-options .parent input[type=checkbox]:checked").length) {
+                    $("#select_all_checkbox").prop("checked", true);
+                }
+                else {
+                    $("#select_all_checkbox").prop("checked", false);
+                }
+            });
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/preferences' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin and request.GET.user %}
+        <a class="button" href="{% url 'eighth_profile' request.GET.user %}">
+            <i class="fas fa-arrow-left"></i>
+            Profile
+        </a>
+    {% endif %}
+    <h2>Privacy Options</h2>
+
+    <br>
+
+    {% if request.user.is_eighth_admin %}
+        <form action="" method="get">
+        <table>
+            <tr>
+            <td style="line-height: 32px">
+                Enter Student ID:
+            </td>
+            <td>
+                <input type="text" name="student_id" value="{{ request.GET.student_id|default:""|escape }}">
+            </td>
+            <td>
+                <input type="submit" value="Edit">
+            </td>
+            </tr>
+        </table>
+        </form>
+
+        <br>
+
+        {% if profile_user %}
+        <h3>Student: {{ profile_user.full_name }} ({{ profile_user.student_id|default:profile_user.id }})</h3>
+        {% else %}
+        <h3>Student not found.</h3>
+        {% endif %}
+    {% endif %}
+
+    <section class="user-privacy-edit">
+        {% if privacy_options_form %}
+         <form action="" method="post">
+            {% csrf_token %}
+            <table class="privacy-options">
+                <thead>
+                    <th>Parent<br>Permission</th>
+                    <th>Student<br>Choice</th>
+                    <th></th>
+                </thead>
+                {% for field in privacy_options_form %}
+                    {% if not field.name|endswith:"-self" %}
+                        <tr>
+                            <td class="parent">
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                    {% else %}
+                            <td>
+                                {{ field.errors }}
+                                {{ field }}
+                            </td>
+                            <td>
+                                {{ field.label }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+
+            {% if request.user.is_eighth_admin %}
+                <br>
+                <label>
+                    <input type="checkbox" id="select_all_checkbox"> Select All Parent Permissions
+                </label>
+                <br>
+            {% endif %}
+
+            <br>
+
+            <button type="submit">Save</button>
+        </form>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

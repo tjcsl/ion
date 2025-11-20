@@ -1,0 +1,132 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Enrichment Activity: {{ enrichment.title }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
+    {% stylesheet 'enrichment' %}
+    {% stylesheet 'eighth.attendance' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/enrichment.js' %}"></script>
+    <script src="{% static 'js/eighth/user_link.js' %}"></script>
+    <script src="{% static 'js/eighth/attendance.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+        {% stylesheet 'dark/enrichment' %}
+        {% stylesheet 'dark/eighth.attendance' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content enrichment events">
+
+        <div class="enrichment-container">
+            {% include "enrichment/enrichment.html" %}
+        </div>
+
+        {% if is_enrichment_admin %}
+            <h2>Roster</h2>
+            {% if roster %}
+                <p style="margin-left: 10px;">
+                    <i style="font-style: italic">{{ roster|length }} students signed up</i>
+                </p>
+                <br>
+            {% endif %}
+
+            <form method="post">
+            {% csrf_token %}
+            <table class="take-attendance-roster{% if not roster %} no-members{% endif %}" style="margin-left: 12px;">
+                <thead>
+                {% if roster %}
+                    <input type="submit" class="attendance-button print-hide" value="{% if enrichment.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                    {% if enrichment.attendance_taken %}
+                        <b class="attendance-status" style="color: rgb(0, 180, 0)">
+                            <i class="fas fa-check"></i> Attendance Taken
+                        </b>
+                    {% else %}
+                        <b class="attendance-status">
+                            <i class="fas fa-exclamation-triangle"></i> Attendance Not Taken
+                        </b>
+                    {% endif %}
+                    <tr class="members-header">
+                        <br>
+                        <th class="cb-col">
+                            <input type="checkbox" class="print-hide"> Present
+                        </th>
+                        <th class="user-col" width="250">Student</th>
+                        <th class="sid-col">Student ID</th>
+                        <th class="grade-col">Grade</th>
+                        <th class="email-col">Email</th>
+                    </tr>
+                {% endif %}
+                </thead>
+                <tbody>
+                {% for member in roster %}
+                    <tr class="student-attendance-row bbcu-selector">
+                        <td class="present-checkbox">
+                            <input type="checkbox" name="{{ member.user.id }}"{% if member.present %} checked{% endif %}>
+                        </td>
+                        <td class="user-col user-link" data-user-id="{{ member.user.id }}">
+                            <a class="user-name-eighth" href="{% url 'user_profile' member.user.id %}">
+                                {{ member.user.full_name }}
+                            </a>
+                        </td>
+                        <td class="sid-col id">
+                            {% if member.user.student_id %}
+                                {{ member.user.student_id }}
+                            {% else %}
+                                (Ion {{ member.user.id }})
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center">{{ member.user.grade.number }}</td>
+                        <td class="email-col">{{ member.user.tj_email }}</td>
+                        <img class='user-pic' data-user-id="{{ member.user.id }}" src="/profile/picture/{{ member.user.id }}" width="172" height="215" style="display:none">
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">
+                            <i class="fas fa-info-circle"></i> There are no signups.
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if roster %}
+                <input type="submit" class="attendance-button print-hide" style="margin-top: 10px" value="{% if enrichment.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+            {% endif %}
+
+            </form>
+        {% elif enrichment_is_today and request.user in enrichment.attending.all %}
+            <div class="attending-badge">
+                <i class="fas fa-check"></i>
+                <br>
+                <b style="font-size: 18pt">{{ enrichment.title }}</b> <br>
+                <hr>
+                {{ enrichment.time|date:"l, F j"}} <br>
+                {{ enrichment.time|date:"P"|title}} <br>
+                <hr>
+                <b>{{ request.user.first_name }} {{ request.user.last_name }}</b> <br>
+                <i style="font-style: italic; font-size: 12pt">Signed up</i>
+            </div>
+        {% endif %}
+    </div>
+
+    {# This needs to be at the bottom for the content to properly load #}
+    <script src="{% static 'js/events.js' %}"></script>
+{% endblock %}

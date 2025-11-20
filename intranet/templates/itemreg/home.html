@@ -1,0 +1,137 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+  {{ block.super }} - Item Registration
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+{% endblock %}
+
+{% block css %}
+  {{ block.super }}
+  {% stylesheet 'lostfound' %}
+  <style>
+  ul.fontawesome {
+    list-style-type: none;
+  }
+
+  ul.fontawesome li:before {
+    font-family: 'Font Awesome 5 Free';
+    display: inline-block;
+    margin-left: -1.5em;
+    width: 1.0em;
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  ul.fontawesome li.calc:before {
+    content: "\f1ec"; /* fa-calculator */
+  }
+
+  ul.fontawesome li.comp:before {
+    content: "\f109"; /* fa-laptop */
+  }
+
+  ul.fontawesome li.phone:before {
+    content: "\f3cd"; /* fa-mobile-alt */
+  }
+</style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="lostfound primary-content">
+  <h2>
+    Item Registration
+  </h2>
+
+  <p>
+    Registering your calculator, computer, and phone through Intranet helps staff members return your device if it is found.
+  </p>
+
+  {% if request.user.is_teacher or is_itemreg_admin %}
+    <p>Staff -- if you've found a lost item, <b>use this tool to check the item registration database:</b>
+    <br>
+    <a href="{% url 'itemreg_search' %}" class="button">
+      Search Database
+    </a>
+  {% endif %}
+
+  {% if registered_devices %}
+    <p>You've registered the following devices:</p>
+    <ul class="fontawesome">
+    {% for calc in calculators %}
+      <li class="calc">
+        <b>Calculator:</b> {{ calc.get_calc_type_display }}
+        <br>
+        Serial: {{ calc.calc_serial }}
+        <br>
+        ID: {{ calc.calc_id }}
+        <br>
+        Added: {{ calc.added }}
+        <br>
+        <a href="{% url 'itemreg_delete' 'calculator' calc.id %}">
+          <i class="far fa-trash-alt"></i> Delete
+        </a>
+        <br>
+        <br>
+      </li>
+    {% endfor %}
+
+    {% for comp in computers %}
+      <li class="comp">
+        <b>Computer:</b> {{ comp.computer_name }}
+        <br>
+        Serial: {{ comp.serial }}
+        <br>
+        Added: {{ comp.added }}
+        <br>
+        <a href="{% url 'itemreg_delete' 'computer' comp.id %}">
+          <i class="far fa-trash-alt"></i> Delete
+        </a>
+        <br>
+        <br>
+      </li>
+    {% endfor %}
+
+    {% for phone in phones %}
+      <li class="phone">
+        <b>Phone:</b> {{ phone.manufacturer_name }} {{ phone.model }}
+        <br>
+        IMEI: {{ phone.imei }}
+        <br>
+        Added: {{ phone.added }}
+        <br>
+        <a href="{% url 'itemreg_delete' 'phone' phone.id %}">
+          <i class="far fa-trash-alt"></i> Delete
+        </a>
+        <br>
+        <br>
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven't registered any devices! Register a device using the buttons below.</p>
+  {% endif %}
+  <br>
+
+  <a href="{% url 'itemreg_register' 'calculator' %}" class="button">
+    Register Calculator
+  </a> &nbsp; &nbsp;
+  <a href="{% url 'itemreg_register' 'computer' %}" class="button">
+    Register Computer
+  </a> &nbsp; &nbsp;
+  <a href="{% url 'itemreg_register' 'phone' %}" class="button">
+    Register Phone
+  </a>
+{% endblock %}

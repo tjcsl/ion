@@ -1,0 +1,239 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Profile - {{ profile_user.full_name }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/eighth/admin.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+    {% if show_profile_header %}
+        {% with show_view_history_link=1 show_view_often_link=1 %}
+            {% include "eighth/profile_header.html" %}
+        {% endwith %}
+    {% else %}
+        <a href="{% url 'eighth_redirect' %}" class="button">
+            <i class="fas fa-arrow-left"></i> Eighth Home
+        </a>
+        &nbsp; <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a>
+        &nbsp; <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a>
+        <br>
+        <h2>Eighth Period - {{ date_now }}{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}</h2>
+    {% endif %}
+
+    <section class="user-info-eighth">
+    <form action="{% url 'eighth_signup' %}" method="GET">
+
+        <input type="hidden" name="user" value="{{ profile_user.id }}">
+        {% if show_profile_header %}
+            <h3>
+                Eighth Period - {{ date_now }}
+            </h3>
+        {% endif %}
+
+        {% if skipped_ahead %}
+            There were no blocks the week of {{ date_now }}.{% if eighth_schedule %} Skipped to the next block in the future.{% endif %}
+        {% endif %}
+    {% if profile_user.is_student %}
+        <table class="eighth-table {% if eighth_schedule %}zebra{% endif %} checkboxes-grid">
+        <thead>
+            <tr>
+                <td class="button-container" colspan="7">
+                    <span class="button-left">
+                        <a href="?date={{ date_previous }}" class="button">
+                            <i class="fas fa-arrow-left"></i> Back Two Weeks
+                        </a>
+                    </span>
+                    <span class="button-center">
+                    {% if eighth_schedule %}
+                        {% if request.user.is_eighth_admin or request.user == profile_user %}
+                            <input type="submit" value="Change Selected">
+                        {% endif %}
+                    {% endif %}
+
+                        {% if custom_date_set %}
+                            <a href="?" class="button">Reset Date</a>
+                        {% endif %}
+                    </span>
+                    <span class="button-right">
+                        <a href="?date={{ date_next }}" class="button">
+                            Forward Two Weeks <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </span>
+                </td>
+            </tr>
+
+            {% if eighth_schedule %}
+            <tr class="desc">
+                <th class="center checkbox">
+                    <input type="checkbox">
+                </th>
+                <th>
+                    <a href="" onclick="return false" class="select-blocks-popover-toggle">Select All <i class="fas fa-caret-down"></i></a>
+                    <div class="select-blocks-popover closed">
+                        <a href="" onclick="return false" class="block-type">Mon B</a>
+                        <a href="" onclick="return false" class="block-type">Wed A</a>
+                        <a href="" onclick="return false" class="block-type">Wed B</a>
+                        <a href="" onclick="return false" class="block-type">Fri A</a>
+                        <a href="" onclick="return false" class="block-type">Fri B</a>
+                    </div>
+                </th>
+                <th class="center">Block</th>
+                <th>Activity</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Attended</th>
+                <th></th>
+            </tr>
+            {% endif %}
+        </thead>
+        {% for sch in eighth_schedule %}
+        <tr class="form-row">
+        <td class="center checkbox block-checkbox">
+                <input type="checkbox" name="block" value="{{ sch.block.id }}">
+            </td>
+            <td>
+                {{ sch.block.date|date:'D, N j, Y' }}
+            </td>
+            <td class="center block-name">
+                {% if hybrid %}
+                    <span style="display:none">{{ sch.block.date|date:'D' }} </span>{{ sch.block.hybrid_text }}
+                {% else %}
+                    <span style="display:none">{{ sch.block.date|date:'D' }} </span>{{ sch.block.block_letter }}
+                {% endif %}
+            </td>
+            {% if sch.signup %}
+            <td>
+            <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}"{% if sch.signup.scheduled_activity.cancelled %} style="color: red; font-weight: bold"{% endif %}>
+                <b>{{ sch.signup.scheduled_activity.activity.id }}:</b> {{ sch.signup.scheduled_activity.title_with_flags }}
+            </a>
+            </td>
+            <td>
+                {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
+            </td>
+            <td>
+                {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
+            </td>
+            <td>
+                {% if sch.signup.scheduled_activity.attendance_taken %}
+                    {% if sch.signup.was_absent %}
+                        No{% if request.user.is_eighth_admin and not sch.signup.pass_accepted %}: Pass Rejected{% endif %}
+                    {% else %}
+                        {% if sch.signup.after_deadline and not sch.signup.pass_accepted %}
+                            ...{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
+                        {% else %}
+                            Yes{% if request.user.is_eighth_admin and sch.signup.pass_accepted %}: Pass Accepted{% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    &nbsp; &nbsp; &mdash;
+                {% endif %}
+            </td>
+            {% else %}
+            <td colspan="4">
+                <span class="no-activity-selected">No activity selected</span>
+            </td>
+            {% endif %}
+            <td class="button-row">
+            {% if request.user.is_eighth_admin or request.user == profile_user %}
+                <a href="{% url 'eighth_profile_signup' profile_user.id sch.block.id %}" class="button">
+                    {% if sch.signup %}
+                        Change
+                    {% else %}
+                        Sign Up
+                    {% endif %}
+                </a>
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <br><b>This user is not a student. They may not be signed up for activities.</b>
+    {% endif %}
+    </form>
+    </section>
+    {% if profile_user.is_eighth_sponsor %}
+        <section class="user-info-eighth sponsor">
+            <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Sponsored Activities{% endif %}</h3>
+            <table data-sortable class="sortable fancy-table sponsor-table">
+                {% if eighth_sponsor_schedule %}
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Block</th>
+                        <th>Activity</th>
+                        <th>Comments</th>
+                        <th>Room</th>
+                        <th>Capacity</th>
+                        <th>Signups</th>
+                        {% if request.user.is_eighth_admin %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                {% endif %}
+                <tbody>
+                    {% for scheduled_activity in eighth_sponsor_schedule %}
+                        <tr>
+                            <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}</td>
+                            {% if hybrid %}
+                                <td>{{ scheduled_activity.block.hybrid_text }}</td>
+                            {% else %}
+                                <td>{{ scheduled_activity.block.block_letter }}</td>
+                            {% endif %}
+                            <td>{{ scheduled_activity.activity.id }}: {{ scheduled_activity.activity.name_with_flags }}</td>
+                            <td>{{ scheduled_activity.comments }}</td>
+                            <td>{{ scheduled_activity.get_true_rooms|join:", " }}</td>
+                            <td>{{ scheduled_activity.get_true_capacity }}</td>
+                            <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
+                            {% if request.user.is_eighth_admin %}
+                                <td>
+                                    <a href="{% url 'eighth_take_attendance' scheduled_activity.id %}" class="button">
+                                        {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">
+                                This user is not sponsoring any activities in the future.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        </section>
+    {% elif profile_user.is_teacher %}
+        <b>This user is a teacher, but not an eighth period sponsor.</b>
+    {% endif %}
+</div>
+{% endblock %}

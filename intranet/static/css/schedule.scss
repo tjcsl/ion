@@ -1,0 +1,231 @@
+.bellschedule-table {
+    margin: 0;
+    width: 100%;
+    font-size: 16px;
+
+    tr {
+        th {
+            text-align: right;
+            padding-right: 14px;
+        }
+
+        td {
+            text-align: left;
+            width: 100px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        /*
+        &.current th {
+            &:before {
+                content: "\f0da";
+                float: left;
+                font-family: FontAwesome;
+            }
+
+            &:after {
+                content: "\f0d9";
+                float: right;
+                font-family: FontAwesome;
+            }
+        }
+        */
+    }
+}
+
+.login-page .bellschedule-table {
+    transform: translateX(-50%);
+    left: 50%;
+    position: relative;
+}
+
+.schedule {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+.week-table, .month-table {
+    border-collapse: separate;
+    border-spacing: 30px;
+    margin: 0;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 1100px;
+
+    th {
+        width: 50%;
+    }
+
+    td {
+        text-align: center;
+        width: 19%;
+
+        h2 {
+            font-weight: normal;
+
+            &.schedule-date, &.day-name {
+                padding-bottom: 5px;
+            }
+        }
+
+        &.today {
+            h2 {
+                font-weight: bold;
+            }
+        }
+
+        &.chevron {
+            width: 2.5%;
+        }
+    }
+
+    > tbody > tr > td {
+        padding-bottom: 10px;
+    }
+}
+
+.button-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 107px;
+    height: 35px;
+    margin-left: -53.5px;
+    margin-top: -12.5px;
+}
+
+.day-name {
+    &.day-type-blue {
+        color: blue;
+        //color: rgb(0, 72, 171)?
+    }
+
+    &.day-type-red {
+        color: red;
+        //color: rgb(171, 0, 72)?
+    }
+
+    &.day-type-anchor {
+        color: green;
+        //color: rgb(72, 171, 0)?
+    }
+}
+
+a.day-name.day-type-other {
+    color: black;
+}
+
+tr.schedule-block.current {
+    font-weight: bold;
+
+    .week-table & {
+        font-weight: normal;
+    }
+
+    .today & {
+        font-weight: bold;
+    }
+}
+
+.month-container {
+    text-align: center;
+    vertical-align: center;
+    width: 100%;
+
+    & .month-name {
+        font-size: 25px;
+        font-weight: bold;
+        padding: 5%;
+    }
+
+    .far, .fas, .fab {
+        color: black;
+    }
+}
+
+.primary-content {
+    position: relative;
+    top: 5px;
+    max-width: 1450px;
+    h2 {
+        left: 5px;
+    }
+}
+
+.arrow-container {
+    text-align:center;
+}
+
+.week-month-title {
+    font-size: 16px;
+    position: relative;
+    top: 3px;
+}
+
+.button-container {
+    float: right;
+    margin-top: -38px;
+}
+
+.month-table {
+    border-spacing: 0;
+
+    & > tbody > tr > td {
+        padding: 20px;
+        border: 1px solid lightgrey;
+    }
+}
+
+
+
+/* 1225 is where the everything can fit on the screen with the header */
+@media (max-width: 1225px) {
+    .arrow-container {
+        margin-top: 20px;
+        margin-bottom: -20px !important;
+    }
+
+    .week-table {
+        min-width: auto !important;
+        width: 100% !important;
+
+        & > tbody > tr > td {
+            display: block;
+            border-bottom: 1px solid lightgrey;
+            padding: 20px 0 !important;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+
+            &:first-child {
+                border-top: 1px solid lightgrey;
+            }
+        }
+    }
+
+    .month-table {
+        min-width: 1680px !important;
+    }
+
+
+    .schedule-container {
+        overflow-x: auto;
+    }
+
+    .schedule:first-child {
+        margin-top: 20px;
+    }
+}
+
+@media(max-width: 680px) {
+    .week-table {
+        & > tbody > tr > td {
+            width: 120%;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
+}

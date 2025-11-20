@@ -1,0 +1,427 @@
+@import "colors";
+
+.polls {
+    min-width: 290px;
+    /* for 320x480 screens */
+    max-width: 1000px;
+    margin-bottom: 100px;
+
+    h2 {
+        line-height: 38px;
+
+        &.category {
+            font-size: 18px;
+            font-weight: normal;
+            padding-left: 10px;
+            height: 33px;
+        }
+    }
+}
+
+.button-container {
+    float: right;
+    margin-top: -38px;
+}
+
+.poll {
+    background-color: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(216, 216, 216);
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    overflow-x: auto;
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
+    h3>a.poll-link {
+        cursor: pointer;
+        color: $grey  !important;
+    }
+
+    .not-voted {
+        color: #F57C00;
+    }
+
+    .voted {
+        color: #388E3C;
+    }
+
+    .poll-content {
+
+        b,
+        strong {
+            font-weight: bold;
+        }
+
+        i,
+        em {
+            font-style: italic;
+        }
+
+        ol {
+            list-style-type: decimal;
+            list-style-position: outside;
+            padding-left: 30px;
+        }
+    }
+}
+
+.poll-head {
+    margin-left: 10px;
+}
+
+.polls-icon-wrapper {
+    float: right;
+
+    .poll:hover & {
+        display: block;
+    }
+}
+
+.poll-metadata {
+    color: rgb(144, 144, 144);
+    font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 5px;
+}
+
+.poll-icon-wrapper {
+    float: right;
+
+    >a {
+        color: $grey;
+        text-decoration: none !important;
+        padding-left: 2px;
+
+        &:hover {
+            color: rgb(32, 66, 224);
+        }
+    }
+}
+
+.poll-icon {
+    cursor: pointer;
+}
+
+.bottom-row {
+    position: relative;
+}
+
+.attend-status {
+    color: gray;
+    position: absolute;
+    left: 270px;
+    max-width: 280px;
+    white-space: nowrap;
+
+    .bottom-row.show-attend & {
+        width: 280px;
+    }
+}
+
+.signup-status {
+    color: gray;
+
+    >a.button {
+        margin-top: -2px;
+        position: absolute;
+        left: 140px;
+    }
+}
+
+.attend-status {
+    position: absolute;
+    left: 270px;
+}
+
+a.button {
+    &.attend-button {
+        color: green;
+        margin-top: -3px;
+        float: right;
+    }
+
+    &.no-attend-button {
+        color: red;
+        margin-top: -3px;
+        float: right;
+    }
+}
+
+@media (max-width: 710px) {
+    .poll .bottom-row {
+        margin-bottom: 23px;
+
+        .attend-status {
+            left: 0;
+            bottom: -27px;
+        }
+    }
+}
+
+
+/*
+ * on announcement page, switch to separate rows more quickly
+ */
+
+@media (max-width: 1060px) {
+    .announcements.primary-content .announcement .poll .bottom-row {
+        margin-bottom: 23px;
+
+        .attend-status {
+            left: 0;
+            bottom: -23px;
+        }
+    }
+}
+
+.poll-approve-table {
+    color: grey;
+    margin-bottom: 4px
+}
+
+.user-selections {
+    display: none;
+}
+
+.desc {
+    margin-top: 10px
+}
+
+ol.questions {
+    list-style: decimal;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+ul.answers {
+    list-style: none;
+    margin-left: -20px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+
+    label.clear-vote {
+        font-style: italic;
+    }
+}
+
+ul.rank-answers {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 5px;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 4px;
+}
+
+.rank-choice-number {
+    padding-left: 2px;
+}
+.question {
+    margin-top: 5px;
+
+    .question-writing {
+        width: 400px;
+        height: 60px;
+
+        &.short {
+            width: 200px;
+            height: 20px;
+        }
+    }
+
+    .question-other-writing {
+        margin-left: 5px;
+        height: 15px;
+        width: 300px;
+    }
+}
+
+.directions {
+    font-style: italic;
+}
+
+.q {
+    font-size: 1.1em;
+}
+
+.choice-item {
+    margin-bottom: 5px;
+    float: left;
+    display: flex;
+
+
+    .box {
+        float: left
+    }
+
+    .choice-desc {
+        padding-left: 0.7rem;
+    }
+
+    .rank-choice-desc {
+        margin-bottom: 10px;
+        padding-left: 0.7rem;
+    }
+
+}
+
+strong,
+b {
+    font-weight: bold;
+}
+
+em,
+i {
+    font-style: italic;
+}
+
+ol {
+    list-style: decimal;
+    padding-left: 25px;
+}
+
+input.vote-button {
+    width: calc(100% - 45px);
+    position: relative;
+    left: 45px;
+}
+
+@media print {
+    .print-hide {
+        display: none !important;
+    }
+}
+
+.hide {
+    display: none;
+}
+
+select {
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    color: #484848;
+    font-weight: bold;
+    background-color: rgb(222, 222, 222);
+    width: 200px;
+}
+
+.fa-angle-up, .fa-angle-down {
+    float: right;
+    font-size: 14pt;
+    position:relative;
+    right: 5px;
+}
+
+.candidate-info {
+    background-color: #e7e7e7;
+    padding: 5px;
+    width: 99.4%;
+    margin-right: 0;
+    padding-right: 0;
+    border-radius: 4px;
+
+    & ul {
+        border-top: 2px solid rgb(171, 171, 171);
+    }
+
+    @media (max-width: 1233px) {
+        width: 99.2%;
+    }
+
+    @media (max-width: 550px) {
+        width: 99%;
+    }
+
+    @media (max-width: 420px) {
+        width: 98.5%;
+    }
+}
+
+.candidate-info-header {
+    cursor: pointer;
+}
+
+.q {
+    border-bottom: 2px solid rgb(171, 171, 171);
+}
+.rank-q-header {
+    cursor: pointer;
+}
+
+.info-icon {
+    font-size: 13pt !important;
+    position: relative;
+    top: 4px;
+    right: 2px;
+}
+
+.rank-choice-info {
+    color: #3c69b6 !important;
+    position: relative;
+    right: 2px;
+}
+
+.info-icon-add {
+    font-size: 12pt !important;
+    position: relative;
+    top: 3px;
+}
+
+.info-text-add {
+    font-weight: normal;
+    font-size: 9pt;
+}
+
+.error-info {
+    position: relative;
+    right: 2px;
+    color: red;
+}
+
+#error-list {
+    position: relative;
+    left: 4px;
+
+    height: fit-content;
+    max-height: 55px;
+    overflow-y: scroll;
+
+    width: fit-content;
+    padding-right: 10px;
+
+    &::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #d6d6d6;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}
+
+.expand-collapse-all {
+    float: right;
+    cursor: pointer;
+    color: #009459 !important;
+    padding: 3px;
+    position: relative;
+    left: 3px;
+    border-radius: 4px;
+
+    &:hover {
+        background-color:rgb(216, 216, 216);
+    }
+}

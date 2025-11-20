@@ -1,0 +1,32 @@
+{% extends "welcome/base.html" %}
+{% load static %}
+
+{% block step1 %}
+    {{ block.super }}
+    <div style="text-align: center">
+        <button id="continue-step-1" class="continue-step-1">How to Navigate <i class="fas fa-chevron-right"></i></button>
+    </div>
+{% endblock %}
+
+{% block step2 %}
+    <h2>
+        How to Navigate
+    </h2>
+    <p>Intranet is fully optimized for small screens. On your phone, tablet, or other mobile device, simply visit <a href="https://ion.tjhsst.edu" target="_blank">ion.tjhsst.edu</a>. To access navigation items and the search bar, press the icon on the top left of the page next to the Intranet logo.</p>
+    <p>For detailed instructions on using the Ion teacher interface, press the <b>Help</b> button on the left-side navigation, or ask 8th Period Office Coordinator {{ DJANGO_SETTINGS.EIGHTH_COORDINATOR_NAME }}.</p>
+
+    <div style="text-align: center">
+        <button id="continue-step-2" class="continue-step-2">About Intranet <i class="fas fa-chevron-right"></i></button>
+    </div>
+{% endblock %}
+
+{% block step3 %}
+    Have a question or request for the Sysadmins? Please don't hesitate to reach out to us at <a href="mailto:sysadmins@tjhsst.edu">sysadmins@tjhsst.edu</a>.</p>
+
+    <hr>
+    <p>Teachers, we are looking for your feedback in order to make your experience better. As students, we have attempted to make the teacher-specific features easier to use, but you are the ones who use this functionality on a daily basis. Please use the "Send Feedback" tool, which is accessed by clicking on your user icon in the top right corner, or email <a href="mailto:intranet@tjhsst.edu" target="_blank">intranet@tjhsst.edu</a> with your questions, comments, and concerns. Thank you!</p>
+    <p>Thanks for reading! If you want to see the welcome message again, click the "Show Ion Welcome" button next to the Eighth Period Information widget near the center right of the Dashboard.</p>
+    <div style="text-align: center">
+      <a id="continue-step-3" href="{% url "welcome_done" %}" class="button continue-step-3"><i class="fas fa-tachometer-alt fa-2x"></i><br>Go to Dashboard</a>
+    </div>
+{% endblock %}

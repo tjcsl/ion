@@ -1,0 +1,116 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - No Signups Roster - {{ eighthblock }}{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+    <style>
+    dl dt, dl dd {
+        font-size: 15px;
+    }
+
+    dl dt {
+        float: left;
+        padding-right: 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% if profile_user.is_student %}
+        <script>
+            $(document).ready(function() {
+
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header" style="width: 200px">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+
+    {% if request.user.is_eighth_admin %}
+        <a href="{% url 'eighth_admin_distribute_unsigned' %}?block={{ eighthblock.id }}" class="button">Distribute Unsigned</a>
+    {% endif %}
+
+    <h2>No Signups Roster for {{ eighthblock }}:</h2>
+    <dl>
+        <dt>Number of Students:</dt>
+        <dd>{{ users|length }}</dd>
+    </dl>
+
+    <a href="{% url 'eighth_admin_no_signups_csv' eighthblock.id %}" class="button">Export CSV</a>
+    <br>
+
+    <table class="members-table fancy-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr class="item-row">
+                <td>
+                <a href="{% url 'user_profile' user.id %}">
+                    {{ user.last_name }}, {{ user.first_name }}
+                </a>
+                </td>
+                <td>{{ user.grade_number }}</td>
+            </tr>
+        {% empty %}
+            <tr class="item-row">
+                <td colspan="2">There are no users.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if user_signups_hidden %}
+    <br><br>
+    The following {{ user_signups_hidden.count }} users are not in the All Students group, but have signed up for these activities:
+    <br>
+    <table class="fancy-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Activity</th>
+            </tr>
+        </thead>
+        {% for signup in user_signups_hidden %}
+            <tr class="item-row">
+                <td>
+                <a href="{% url 'user_profile' signup.user.id %}">
+                    {{ signup.user.last_name }}, {{ signup.user.first_name }}
+                </a>
+                </td>
+                <td>{{ signup.user.grade_number }}</td>
+                <td>{{ signup.scheduled_activity }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ announcement.title }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'events' %}
+    {% stylesheet 'dashboard' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>var disable_partially_hidden_announcements = true;</script>
+    <script src="{% static 'js/dashboard/announcements.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/dashboard' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <div class="announcements-header">
+        <h2>
+            {% if announcement.is_club_announcement %}
+                Club Announcement for
+                <a href="{% url 'eighth_activity' announcement.activity.id %}">{{ announcement.activity|escape }}</a>:
+            {% else %}
+            Announcement:
+            {% endif %}
+            {{ announcement.title|escape }}
+        </h2>
+    </div>
+
+    <div class="announcements-container">
+        {% with show_icon=True %}
+            {% include "announcements/announcement.html" %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}

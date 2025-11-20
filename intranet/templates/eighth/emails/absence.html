@@ -1,0 +1,26 @@
+{% with description="You received an Eighth Period absence" target=info_link name="View absence" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    You now have {{ num_absences }} Eighth Period absence{{ num_absences|pluralize }}:</p>
+
+
+    <b>{{ signup.scheduled_activity.block }}</b>:
+        {{ signup.scheduled_activity.full_title }}
+    <br>
+        <span style="color: orange">
+            &#x26a0; {% if signup.scheduled_activity.attendance_taken and signup.was_absent %}
+                        Absent
+                    {% elif signup.was_absent %}
+                        Absent (Attendance not taken on block)
+                    {% else %}
+                        Present
+                    {% endif %}
+        </span>
+    <br>
+    <br>
+
+    <p>To clear an absence, log in to Intranet and <a href="{{ info_link }}">view the instructions on the Absences page</a>. If you have any questions, or believe that you were marked absent in error, contact the Eighth Period Office.</p>
+
+{% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

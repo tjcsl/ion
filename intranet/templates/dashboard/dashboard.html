@@ -1,0 +1,358 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load cacheops %}
+{% load pipeline %}
+{% load paginate %}
+
+{% block title %}
+    {{ block.super }} - {{ dashboard_title }}
+{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <link rel="prerender" href="{{ prerender_url }}">
+    <link rel="prefetch" href="{{ prerender_url }}">
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'events' %}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'dashboard.widgets' %}
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'schedule.widget' %}
+    {% if dash_warning %}
+        {% stylesheet 'emerg' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+
+    <script src="{% static 'js/dashboard/eighth-widget.js' %}"></script>
+    <script src="{% static 'js/schedule.js' %}"></script>
+    <script src="{% static 'js/events.js' %}"></script>
+    <script src="{% static 'js/dashboard/common.js' %}"></script>
+    <script src="{% static 'js/dashboard/announcements.js' %}"></script>
+    <script src="{% static 'js/dashboard/events.js' %}"></script>
+    <script src="{% static 'js/events.js' %}"></script>
+    {% if is_senior %}
+        <script src="{% static 'js/dashboard/seniors.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'js/features.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/dashboard.widgets' %}
+        {% stylesheet 'dark/schedule' %}
+        {% stylesheet 'dark/schedule.widget' %}
+        {% stylesheet 'dark/events' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+
+{% if show_widgets %}
+
+<div class="widgets{% if eighth_sponsor and request.user.is_student %} student-sponsor{% endif %}">
+    {% if is_student %}
+        {% include "eighth/signup_widget.html" %}
+    {% endif %}
+    {% if is_teacher or eighth_sponsor %}
+        {% include "eighth/sponsor_widget.html" %}
+    {% endif %}
+
+    {% if enrichments %}
+        {% include "enrichment/signup_widget.html" %}
+    {% endif %}
+
+    {% if tjstar_uuid %}
+        {% include "events/tjstar_widget.html" %}
+    {% endif %}
+
+    {% include "schedule/widget.html" %}
+
+    <button class="widget extra-widgets-show">Show more widgets</button>
+    {% if show_admin_widget %}
+        {% include "dashboard/admin.html" %}
+    {% endif %}
+
+    {% include "dashboard/eighth_info.html" %}
+
+    {% include "dashboard/links.html" %}
+
+    {% if DJANGO_SETTINGS.ENABLE_SENIOR_DESTINATIONS and is_student %}
+        {% include "dashboard/seniors.html" %}
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="primary-content">
+    {% include "feature_announcements.html" %}
+</div>
+
+<div class="announcements primary-content{% if not show_widgets %} no-widgets{% endif %}">
+    {% if dash_warning %}
+        <div class="warning-announcement">{{ dash_warning|safe|linebreaks }}</div>
+    {% endif %}
+
+    <div class="announcements-header">
+
+        <h2>{{ dashboard_header }}</h2>
+
+            <span class="announcements-icon-wrapper">
+            {% if show_expired or not show_widgets %}
+                <a href="{% url 'index' %}" class="button" style="float:left"><i class="fas fa-arrow-left" style="width: 11px"></i> Dashboard</a>
+                &nbsp;
+            {% endif %}
+            {% if request.user.is_restricted %}
+                <a class="button announcement-request" href="{% url 'request_announcement' %}">
+                    <i class="far fa-file-alt"></i>
+                    Request Post
+                </a>
+            {% else %}
+                {% if view_announcements_url != "club_announcements" %}
+                    <a class="button club-announcements-button" href="{% url 'club_announcements' %}{% if "show_all" in request.GET %}?show_all=1{% endif %}">
+                        <i class="fas fa-users"></i>
+                        Club Announcements
+                    </a>
+                {% endif %}
+                {% if announcements_admin %}
+                    {% if view_announcements_url == "club_announcements" %}
+                        <a class="button announcement-request" href="{% url 'add_club_announcement' %}">
+                            <i class="fas fa-plus"></i>
+                            Post
+                        </a>
+                    {% endif %}
+                    {% if request.GET.show_all is not None and request.GET.show_all != "0" %}
+                        <a class="button" href="{% url view_announcements_url %}">
+                            <i class="fas fa-times"></i> Don't Show All
+                        </a>
+                    {% else %}
+                        <a class="button" href="{% url view_announcements_url %}?{% query_transform request show_all=1 %}">
+                            Show All
+                        </a>
+                    {% endif %}
+                    {% if view_announcements_url != "club_announcements" %}
+                        <a class="button announcement-add" href="{% url 'add_announcement' %}">
+                            <i class="fas fa-plus"></i>
+                            Add
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {% if view_announcements_url == "club_announcements" %}
+                        {% if request.user.is_club_officer or request.user.is_club_sponsor %}
+                            <a class="button announcement-request" href="{% url 'add_club_announcement' %}">
+                                <i class="fas fa-plus"></i>
+                                Post
+                            </a>
+                        {% endif %}
+                        {% if request.GET.show_expired == "1" %}
+                            <a class="button" href="{% url view_announcements_url %}?{% query_transform request show_expired=0 %}">
+                                <i class="fas fa-times"></i> Don't Show Expired
+                            </a>
+                        {% else %}
+                            <a class="button" href="{% url view_announcements_url %}?{% query_transform request show_expired=1 %}">
+                                Show Expired
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a class="button announcement-request" href="{% url 'request_announcement' %}">
+                            <i class="far fa-file-alt"></i>
+                            Request Post
+                        </a>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            </span>
+    </div>
+
+    <div class="announcements-container {% if view_announcements_url == "club_announcements" %}club-announcements-container{% endif %}">
+        {% if show_homecoming and not view_announcements_url == "club_announcements" and not view_announcements_url == "announcements_archive" %}
+            {% include "special/hoco_ribbon.html" %}
+        {% endif %}
+        {% if show_tjstar %}
+            {% include "special/tjstar_ribbon.html" %}
+        {% endif %}
+        {% if DJANGO_SETTINGS.ENABLE_SENIOR_DESTS_BANNER and is_senior %}
+            {% include "special/senior_dests_banner.html" %}
+        {% endif %}
+        {% if announcements_admin %}
+            {% if awaiting_teacher or awaiting_approval %}
+                <div class="announcement-meta">
+                {% if awaiting_approval %}
+                    <h3>
+                    <i class="fas fa-exclamation-circle" style="color: red"></i> There {% if awaiting_approval|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_approval|length }} announcement requests{% endif %} waiting for admin approval</h3>
+                    <ul>
+                    {% for req in awaiting_approval %}
+                        <li><a href="{% url 'admin_approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if awaiting_teacher %}
+                    <h3> <i class="fas fa-info-circle"></i> There {% if awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ awaiting_teacher|length }} announcement requests{% endif %} pending teacher approval</h3>
+                {% endif %}
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if self_awaiting_teacher %}
+            <div class="announcement announcement-meta">
+                <h3>
+                    <i class="fas fa-exclamation-circle" style="color: red"></i> There {% if self_awaiting_teacher|length == 1 %}is 1 announcement request{% else %}are {{ self_awaiting_teacher|length }} announcement requests{% endif %} waiting for your approval
+                </h3>
+                <ul>
+                {% for req in self_awaiting_teacher %}
+                    <li><a href="{% url 'approve_announcement' req.id %}">{{ req }}</a> -- requested by {{ req.user.full_name }}</li>
+                {% endfor %}
+                </ul>
+                <br>
+                Click on the link{{ self_awaiting_teacher|length|pluralize }} above to approve or reject {% if self_awaiting_teacher|length == 1 %}this announcement{% else %}these announcements{% endif %}.
+            </div>
+        {% endif %}
+
+        {% if club_items %}
+            <div class="club-announcements">
+                <h3 class="club-announcements-header">
+                    <i class="fas fa-users"></i>&nbsp;
+                    <!-- This only goes up to 15 items. Removing this restriction causes slowdowns. -->
+                    {% if club_items|length < 15 %}
+                        You have <span class="num-club-announcements">{{ club_items|length }}</span> new club announcement{{ club_items|length|pluralize }}
+                    {% else %}
+                        You have <span class="num-club-announcements">15+</span> new club announcements
+                    {% endif %}
+                    <i class="fas fa-chevron-down club-announcements-toggle-icon"></i>
+                </h3>
+                <div class="club-announcements-content">
+                    {% for item in club_items %}
+                        {% if not hide_announcements or not item.id in user_hidden_announcements %}
+                            {% with announcement=item show_icon=True can_subscribe=item.can_subscribe %}
+                                {% include "announcements/announcement.html" %}
+                            {% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if show_near_graduation_message and page_num == 1 and view_announcements_url != "announcements_archive" and view_announcements_url != "club_announcements" %}
+            {% include "dashboard/senior_forwarding.html" %}
+        {% endif %}
+
+        {% if view_announcements_url == "club_announcements" %}
+            <div class="club-announcement-filters">
+                <div class="club-announcement-filter subscribed-filter active">Your Subscriptions</div>
+                <div class="club-announcement-filter unsubscribed-filter">Other Club Announcements</div>
+            </div>
+        {% endif %}
+
+        {% for item in all_items %}
+            {% if item.dashboard_type in ignore_dashboard_types %}
+                <!-- {{ item.dashboard_type }} hidden -->
+            {% elif item.dashboard_type == "announcement" %}
+                {% with announcement=item show_icon=True can_subscribe=item.can_subscribe %}
+                    {% include "announcements/announcement.html" %}
+                {% endwith %}
+            {% elif item.dashboard_type == "event" %}
+                {% with event=item show_date_icon=True %}
+                    {% include "events/event.html" %}
+                {% endwith %}
+            {% endif %}
+        {% empty %}
+            <div class="announcement exclude-subscribed-filer">
+                {% if not request.user.is_restricted %}
+                There are no announcements to display at this time.
+                {% else %}
+                You do not have permission to view announcements.
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% if not request.user.is_restricted %}
+            <div id="subscriptions-pagination">
+                {% if page_num == 1 and view_announcements_url != "announcements_archive" and view_announcements_url != "club_announcements" %}
+                    <a href="{% url 'announcements_archive' %}" class="button" style="float:left"><i class="fas fa-archive" style="width: 13px"></i> View Archive</a>
+                {% endif %}
+                {% if page_obj.num_pages > 1 %}
+                    <div style="display:grid;grid-template-columns:1fr max-content 1fr">
+                        <div style="text-align:center;grid-column-start:2">
+                          <a {% if prev_page > 0 %}
+                            href="{% url view_announcements_url %}?{% query_transform request page=prev_page flip_to="subscribed" %}"
+                            {% else %}
+                            disabled
+                            {% endif %}
+                            class="button"
+                          >&lt;</a>
+
+                        {% for page in page_obj|page_list:items %}
+                        <a class="{% if page %}button {% else %}ellipses{% endif %}"
+                          style="{% if page == items.number %}background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;{% endif %}"
+                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request page=page flip_to="subscribed" %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
+                        {% endfor %}
+
+                        <a {% if more_items %}
+                          href="{% url view_announcements_url %}?{% query_transform request page=next_page flip_to="subscribed" %}"
+                          {% else %}
+                          disabled
+                          {% endif %}
+                          class="button"
+                        >&gt;</a>
+                    </div>
+                    <div style="text-align:right">
+                        <form action="{% url view_announcements_url %}" method="get" style="display:inline;float:right">
+                            <input name="page" type="number"
+                            min="1" max={{ page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
+                            placeholder={{ items.number }}> of {{ page_obj.num_pages }}
+                            <input type="submit" value="Go"/>
+                        </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div id="non-subscriptions-pagination" style="display:none">
+                {% if unsubscribed.page_obj.num_pages > 1 %}
+                    <div style="display:grid;grid-template-columns:1fr max-content 1fr">
+                        <div style="text-align:center;grid-column-start:2">
+                          <a {% if unsubscribed.prev_page > 0 %}
+                            href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.prev_page flip_to="unsubscribed" %}"
+                            {% else %}
+                            disabled
+                            {% endif %}
+                            class="button"
+                          >&lt;</a>
+
+                        {% for page in unsubscribed.page_obj|page_list:unsubscribed.items %}
+                        <a class="{% if page %}button {% else %}ellipses{% endif %}"
+                          style="{% if page == unsubscribed.items.number %}background-image: linear-gradient(to bottom, #858585 0%, #5f5f5f 100%); color: white;{% endif %}"
+                          href="{% url view_announcements_url %}{% if page %}?{% query_transform request unsubscribed_page=page flip_to="unsubscribed" %}{% else %}#{% endif %}">{{ page|default:"..." }}</a>
+                        {% endfor %}
+
+                        <a {% if unsubscribed.more_items %}
+                          href="{% url view_announcements_url %}?{% query_transform request unsubscribed_page=unsubscribed.next_page flip_to="unsubscribed" %}"
+                          {% else %}
+                          disabled
+                          {% endif %}
+                          class="button"
+                        >&gt;</a>
+                    </div>
+                    <div style="text-align:right">
+                        <form action="{% url view_announcements_url %}" method="get" style="display:inline;float:right">
+                            <input name="page" type="number"
+                            min="1" max={{ unsubscribed.page_obj.num_pages }} class="dashboard-textinput" style="width: 75px"
+                            placeholder={{ unsubscribed.items.number }}> of {{ unsubscribed.page_obj.num_pages }}
+                            <input type="submit" value="Go"/>
+                        </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% endblock %}

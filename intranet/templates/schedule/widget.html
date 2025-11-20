@@ -1,0 +1,41 @@
+{% load static %}
+{% load dates %}
+{% if not request.GET.no_outer %}<div class="widget schedule-widget schedule-outer">{% endif %}
+    <div class="widget-title">
+        <h2>
+            Bell Schedule
+        </h2>
+        <div class="info">
+            <span class="schedule-arrows">
+                <a href="/?date={{ sched_ctx.date_yesterday }}" class="chevron schedule-left"><i class="fas fa-chevron-left"></i></a>
+                <span class="schedule-date">{{ sched_ctx.date|date:"D, N j" }}</span>
+                <a href="/?date={{ sched_ctx.date_tomorrow }}" class="chevron schedule-right"><i class="fas fa-chevron-right"></i></a>
+            </span>
+            <a href="{% url 'calendar' %}" class="button small-button">Calendar</a>
+        </div>
+    </div>
+    <div class="widget-content schedule" data-endpoint="{% url 'schedule_widget' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}" data-date="{{ sched_ctx.date_today }}"{% if sched_ctx.dayobj %} data-daytype-name="{{ sched_ctx.dayobj.day_type.name }}"{% endif %}>
+        {% if sched_ctx.dayobj.day_type.name %}
+            <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name|safe }}{% if sched_ctx.comment %} {{ sched_ctx.comment }}{% endif %}</h2>
+        {% endif %}
+        {% if sched_ctx.dayobj %}
+            <table class="bellschedule-table">
+            {% for block in sched_ctx.blocks %}
+                <tr class="schedule-block" data-block-name="{{ block.name|safe }}" data-block-start="{{ block.start.str_12_hr }}" data-block-end="{{ block.end.str_12_hr }}" data-block-order="{{ block.order }}">
+                    <th class="block">{{ block.name|safe }}:</th>
+                    <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% else %}
+            <div class="bellschedule-blank-message">
+                {% if sched_ctx.is_weekday %}
+                    No schedule available
+                {% else %}
+                    No school
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+{% if not request.GET.no_outer %}</div>{% endif %}

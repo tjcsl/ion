@@ -1,0 +1,127 @@
+{% load static %}
+{% load signage %}
+{% load pipeline %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Ion Signage</title>
+
+        <link href="{% static 'vendor/fontawesome-free-5.11.2/css/all.css' %}" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700">
+
+        {% stylesheet 'base' %}
+        {% stylesheet 'page_base' %}
+        {% stylesheet 'dashboard' %}
+        {% stylesheet 'theme.blue' %}
+        {% stylesheet 'schedule' %}
+        {% stylesheet 'login' %}
+
+        {% stylesheet 'signage.base' %}
+
+
+        {% if sign.lock_page %}
+        <style>
+            section.signage-section iframe.signage-iframe {
+                width: 100vw;
+            }
+        </style>
+        {% endif %}
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/static/signage/serviceworker.js');
+            }
+            window.lockPage = '{{ sign.lock_page.pk }}';
+            window.defaultPage = '{{ sign.default_page.pk }}';
+            window.endSwitchPage = '{% if not sign.lock_page %}{{ sign.day_end_switch_page.pk }}{% endif %}';
+            window.endSwitchHour = {{ end_switch_page_time.hour }};
+            window.endSwitchMinute = {{ end_switch_page_time.minute }};
+            window.customSwitchPage = '{{ sign.custom_switch_page.pk }}';
+            {% if sign.custom_switch_page_lock %}
+                window.customSwitchPageLock = '{{ sign.custom_switch_page_lock }}';
+            {% else %}
+                window.customSwitchPageLock = null;
+            {% endif %}
+            {% if custom_switch_time %}
+                window.customSwitchHour = {{ custom_switch_time.hour }};
+                window.customSwitchMinute = {{ custom_switch_time.minute }};
+            {% else %}
+                {# Technically not needed, but just in case #}
+                window.customSwitchHour = null;
+                window.customSwitchMinute = null;
+            {% endif %}
+            window.signageHeartbeatIntervalSecs = {{ DJANGO_SETTINGS.SIGNAGE_HEARTBEAT_INTERVAL }};
+
+            var now = new Date();
+            var reloadTime = new Date();
+            reloadTime.setHours(1, 30, 0);
+            if(reloadTime > now) {
+                setTimeout(function() {
+                    window.location.reload(true);
+                }, reloadTime - now);
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+            integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+            crossorigin="anonymous">
+        </script>
+        <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+        <script src="{% static 'js/signage.js' %}"></script>
+        <script src="{% static 'js/schedule.js' %}"></script>
+    </head>
+    <body class="signage {% if sign.landscape %}landscape{% else %}portrait{% endif %}">
+        <div class="signage-container">
+            <section class="signage-section signage-home home" style="background-image: url('{{ sign.img_path }}')">
+                <div class="wrapper">
+                    <img class="tjlogo" src="{% static 'img/tjlogo-words.png' %}" alt="TJHSST logo">
+                    <br>
+                    <h1 class="name">{{ sign.name }}</h1>
+                    <br>
+                    <div class="time">&nbsp;</div>
+                    {% comment %}
+                    {% include "signage/ap_week_schedule.html" %}
+                    {% endcomment %}
+                    <div class="schedule-outer">
+                        {% with hide_arrows=1 hide_date=1 %}
+                        {% include "schedule/view.html" %}
+                        {% endwith %}
+                    </div>
+                </div>
+                {% if show_homecoming %}
+                {% include "special/hoco_scores.html" %}
+                {% endif %}
+            </section>
+            {% for page in sign.pages.order_properly %}
+            <section class="signage-section signage-page page{% if page.iframe %} iframe{% else %} server{% endif %} {{ page.strip_links | yesno:"strip-links," }}" id="{{ page.pk }}">
+                {% if page.iframe %}
+                <iframe class="signage-iframe" src="{{ page.url }}" {% if page.sandbox %}sandbox{% endif %}>
+                </iframe>
+                {% else %}
+                 <iframe class="signage-iframe" srcdoc="{{ page | render_page:page_args | force_escape }}">
+                {#{{ page | render_page:page_args }}#}
+                </iframe>
+                {% endif %}
+            </section>
+            {% endfor %}
+        </div>
+        <nav class="signage-nav show-back">
+                <a href="#page-home" data-page="home" class="signage-home-button"><i class="fas fa-2x fa-home"></i></a>
+            {% for page in sign.pages.order_properly %}
+                {% if page.button %}
+                {# TODO: less hacky way of detecting button type #}
+                {% if "<" in page.button %}
+                <a href="#page-{{ page.pk }}" data-page="{{ page.pk }}">{{ page.button|safe }}</a>
+                {% else %}
+                <a href="#page-{{ page.pk }}" data-page="{{ page.pk }}"><i class="fa-2x {{ page.button }}"></i></a>
+                {% endif %}
+                {% endif %}
+            {% endfor %}
+        </nav>
+        <div class="signage-message">
+            This sign is currently offline. Some features might not work.
+        </div>
+    </body>
+</html>

@@ -1,0 +1,64 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Groups
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'groups' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <div class="groups-header">
+            <h2>
+                Groups
+            </h2>
+            {% if group_admin %}
+            <span class="groups-icon-wrapper">
+                <a class="button groups-add" href="{% url 'eighth_admin_dashboard' %}#add-group-form">
+                    <i class="fas fa-plus"></i>
+                    Add
+                </a>
+            </span>
+            {% endif %}
+        </div>
+        {% if request.user == user %}
+            You are in the following groups:
+        {% else %}
+            <b>{{ user }}</b> is in the following groups:
+        {% endif %}
+        <ul>
+            {% for group in user.groups.all %}
+                <li>
+                    <a href="{% if group_admin %}{% url 'eighth_admin_edit_group' group.id %}{% endif %}">{{ group }}</a>
+                </li>
+            {% empty %}
+                (no groups)
+            {% endfor %}
+        </ul>
+        {% if group_admin %}
+            <br>
+            The following groups exist:
+            <ul>
+                {% for group in all_groups %}
+                    <li>
+                        <a href="{% if group_admin %}{% url 'eighth_admin_edit_group' group.id %}{% endif %}">{{ group }}</a>
+                    </li>
+                {% empty %}
+                    (no groups)
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}

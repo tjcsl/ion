@@ -1,0 +1,62 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+    <p>The date range below is for the date in which the after-deadline signup was created, not the date of the block in question.</p>
+    <form action="" method="get">
+        Results from <input type="text" class="datepicker" name="start" value="{{ start_date|date:'Y-m-d' }}" > to <input type="text" class="datepicker" name="end" value="{{ end_date|date:'Y-m-d' }}"> <input type="submit" value="Go">
+    </form>
+    <a href="javascript:;" onclick="location.href = location.href.replace('after_deadline_signups', 'after_deadline_signups/csv')" class="button">
+        Export CSV
+    </a>
+    <br>
+    <br>
+    {% if signups %}
+        Click on column titles to sort.
+        <table data-sortable class="sortable zebra fancy-table" style="min-width: 1000px">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Block</th>
+                    <th>Student</th>
+                    <th>From Activity</th>
+                    <th>From Sponsor</th>
+                    <th>To Activity</th>
+                    <th>To Sponsor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for signup in signups %}
+                    <tr>
+                        <td data-value={{ signup.time|date:"U" }}>{{ signup.time }}</td>
+                        <td>{{ signup.scheduled_activity.block }}</td>
+                        <td>{{ signup.user.last_name }}, {{ signup.user.first_name }} ({{ signup.user.student_id }}, {{ signup.user.grade_number }})</td>
+                        <td>{{ signup.previous_activity_name }}</td>
+                        <td>{{ signup.previous_activity_sponsors }}</td>
+                        <td>{{ signup.scheduled_activity.activity.name_with_flags }} ({{ signup.scheduled_activity.activity.id }})</td>
+                        <td>{{ signup.scheduled_activity.get_true_sponsors|join:", " }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>There were no results.</p>
+    {% endif %}
+
+{% endblock %}

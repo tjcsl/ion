@@ -1,0 +1,19 @@
+<html><body>
+{% with description="Removing withdrawn students." target=info_link name="View status" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    The following student(s) has/have been placed in the {{ withdrawn_group_str }} group and is/are in the process of being deleted from Intranet:
+</p>
+<ul>
+    {% for user_str in users %}
+        <li>{{ user_str }}</li>
+    {% endfor %}
+</ul>
+<p>
+    This process should be completed soon. If this is being done in error, email <a href="mailto:{{ help_email }}">{{ help_email }}</a> as soon as possible. Have a nice day!
+</p>
+
+{% include "email_footer.html" %}
+</body></html>

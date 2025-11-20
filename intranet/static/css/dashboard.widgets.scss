@@ -1,0 +1,625 @@
+@import "colors";
+
+$font-stack: "Open Sans", "Helvetica Neue", sans-serif;
+
+.widgets {
+    display: block;
+    position: relative;
+    float: right;
+    width: 416px;
+    height: 500px;
+    z-index: 1;
+}
+
+.widget {
+    border: 2px solid rgb(216, 216, 216);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #f2f2f2;
+    margin-bottom: 10px;
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
+    .info {
+        font-size: 12px;
+        color: rgb(144, 144, 144);
+        position: absolute;
+        right: 8px;
+
+        @media (max-width: 800px) {
+            font-size: 12px;
+        }
+    }
+}
+
+.widget-title {
+    // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f9f9f9+0,f2f2f2+100;Widget
+    background: #f9f9f9;
+    //background: -moz-linear-gradient(top, #f9f9f9 0%, #f2f2f2 100%);
+    //background: -webkit-linear-gradient(top, #f9f9f9 0%, #f2f2f2 100%);
+    //background: linear-gradient(to bottom, #f9f9f9 0%, #f2f2f2 100%);
+    //filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#f2f2f2', GradientType=0 );
+    //-pie-background-image: none;
+    border-bottom: 2px solid rgb(216, 216, 216);
+    padding: 0 8px;
+    line-height: 30px;
+    height: 30px;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+    position: relative;
+
+    h2 {
+        font-size: 14px;
+        float: left;
+    }
+}
+
+@media (max-width: 960px) {
+
+    /* when widget is resized next to announcements,
+       the text nearly goes over the box */
+    .widget.eighth-widget .info,
+    .widget.sponsor-widget .info {
+        font-size: 11px;
+    }
+
+    /* move buttons over a few pixels */
+    .block-header a {
+        margin-right: -4px;
+    }
+
+    .widget-title .info a {
+        margin-right: -4px;
+        font-size: 9px;
+    }
+}
+
+.widget .warning-icon {
+    float: left;
+    display: inline;
+    padding-right: 4px;
+    color: red;
+}
+
+// .widget .widget-title .warning i {
+//     //color: rgb(255, 72, 72);
+// }
+
+.main div.widgets {
+    @media (max-width: 355px) {
+        width: 303px;
+    }
+
+    // 320x480 screens
+    @media (max-width: 355px) {
+        width: 100%;
+        //width: 343px;
+        min-width: 300px;
+    }
+}
+
+@media (max-width: 355px) {
+    body {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+.block-header {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 8px;
+
+    .info {
+        display: none;
+    }
+
+    a {
+        float: right;
+    }
+
+    .no-touch &:hover .info {
+        display: inline;
+    }
+}
+
+.eighth-block {
+    &.clickable {
+        margin-bottom: 2px;
+        cursor: pointer;
+
+        &:hover .block-header a {
+            text-decoration: underline;
+        }
+    }
+
+    &.open .info {
+        display: inline;
+    }
+
+    &.warning a {
+        color: rgb(255, 72, 72);
+    }
+
+    &.cancelled .block-signup {
+        color: rgb(255, 72, 72);
+        font-weight: bold;
+    }
+}
+
+.eighth-activities {
+    display: block;
+    background-color: rgb(231, 231, 233);
+    height: 0;
+    overflow: hidden;
+
+    .eighth-block.open & {
+        max-height: 90px;
+        height: auto;
+        overflow: auto;
+    }
+}
+
+.no-activity-selected {
+    color: rgb(170, 170, 170);
+}
+
+.block-header {
+    position: relative;
+
+    .block-letter {
+        width: auto;
+        padding: 0 4px;
+    }
+
+    .block-letter-date {
+        max-width: 180px;
+        overflow: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+        height: 30px;
+        white-space: nowrap;
+    }
+}
+
+.eighth-widget > .widget-title {
+    margin-bottom: 2px;
+}
+
+.block-signup,
+.block-sponsorship {
+    position: absolute;
+    left: 185px;
+    /* "Modify" text */
+    width: calc(100% - 247px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.block-sponsorship {
+    width: calc(100% - 267px);
+}
+
+.block-rooms {
+    position: absolute;
+    left: 185px;
+    top: 13px;
+    font-size: 10px;
+    width: calc(100% - 247px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Attendance Locked/Signup Unlocked */
+
+.eighth-block.no-attendance.locked {
+
+    .block-date,
+    .block-sponsorship,
+    .block-attendance-take {
+        color: rgb(0, 132, 62);
+        /* green */
+    }
+
+    &.no-attendance-lock .block-letter {
+        background-color: rgb(0, 132, 62);
+        color: rgb(242, 242, 242);
+    }
+}
+
+// .block-sponsorship {
+//     /* Attendance Taken */
+//     /* taken icon has a larger width */
+//     &.attendance-taken {
+//         .eighth-block & {
+//             /* 13x13px not 8x13px */
+//             left: 112px;
+//         }
+
+//         > i {
+//             padding-right: 1px;
+//         }
+//     }
+
+//     /* Open Passes */
+//     &.open-passes {
+//         .eighth-block & {
+//             left: 113px;
+//         }
+
+//         > i {
+//             padding-right: 2px;
+//         }
+//     }
+// }
+
+/* No Act Selected */
+
+.block-signup.no-activity-selected.today {
+    color: $grey;
+    font-weight: bold;
+    /* color: rgb(255, 72, 72); red */
+}
+
+/* make sure "Not sponsoring an activity" always shows;
+   there is no button on the right so it can take 100% */
+
+div.eighth-block .block-sponsorship.no-activity-selected {
+    width: calc(100% - 195px);
+    text-overflow: ellipsis;
+}
+
+/* No Sponsorship Today */
+
+/* red on white block letter icon */
+
+.eighth-block {
+
+    &.warning .block-letter,
+    &.no-attendance.today.no-attendance-lock .block-letter {
+        background-color: rgb(255, 72, 72);
+        /* red */
+        color: rgb(242, 242, 242);
+    }
+
+    &.no-attendance.today.no-attendance-lock {
+
+        .block-sponsorship,
+        .btn-link {
+            color: rgb(255, 72, 72); //red
+        }
+    }
+}
+
+/* Open Passes */
+
+/* needs to override */
+
+div.eighth-block.open-passes>div.block-header {
+
+    >.block-sponsorship,
+    >.btn-link {
+        color: rgb(255, 107, 0);
+        /* orange */
+    }
+
+    /* orange on white block letter icon */
+    >.block-letter {
+        background-color: rgb(255, 107, 0);
+        /* orange */
+        color: rgb(242, 242, 242);
+    }
+}
+
+.block-info {
+    font-size: 11px;
+    margin-left: 15px;
+    white-space: nowrap;
+    margin-top: -4px;
+    margin-bottom: -4px;
+
+    &.with-timeleft {
+        margin-bottom: 4px;
+    }
+
+    .eighth-block:last-child & {
+        margin-bottom: 4px;
+    }
+}
+
+.block-timeleft {
+    font-size: 11px;
+    margin-left: 28px;
+    white-space: nowrap;
+    margin-top: -4px;
+}
+
+.sponsor-widget .widget-title h2 {
+    width: 100%;
+}
+
+.eighth-date-arrows {
+    position: absolute;
+    right: 8px;
+    width: 150px;
+    display: inline-block;
+    white-space: nowrap;
+    text-align: center;
+    margin-right: 1px;
+
+    .chevron>i {
+        text-align: left;
+    }
+
+    @media (max-width: 960px) {
+        width: calc(100% - 148px);
+    }
+
+    @media (max-width: 800px) {
+        width: 150px;
+    }
+}
+
+a#eighth-sponsor {
+    &-left {
+        float: left;
+        width: 10px;
+    }
+
+    &-right {
+        float: right;
+        width: 10px;
+    }
+}
+
+/* Extra widgets */
+
+.widget {
+    &.extra-widget {
+        display: block;
+
+        @media (max-width: 800px) {
+            display: none;
+
+            body.show-extra-widgets & {
+                display: block;
+            }
+        }
+    }
+
+    &.extra-widgets-show {
+        display: none;
+        width: 100%;
+
+        @media (max-width: 800px) {
+            display: block;
+            width: calc(100% - 78px);
+
+            body.show-extra-widgets & {
+                display: none;
+            }
+        }
+
+        @media (max-width: 680px) {
+            width: 100%;
+        }
+    }
+}
+
+.btn-link {
+    text-decoration: none;
+    color: $grey;
+    display: inline-block;
+    line-height: 18px;
+    padding: 0 3px;
+    margin: 5px 0;
+    /*0 -4px;*/
+    font-size: 9px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    // Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7f7f4+0,eaeaea+100
+    background: #f7f7f4;
+    background: -moz-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
+    background: -webkit-linear-gradient(top, #f7f7f4 0%, #eaeaea 100%);
+    background: linear-gradient(to bottom, #f7f7f4 0%, #eaeaea 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f4', endColorstr='#eaeaea', GradientType=0);
+    border: 1px solid rgb(221, 221, 221);
+    border-bottom-color: rgb(197, 197, 197);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+}
+
+a.btn-link {
+
+    &:link,
+    &:visited,
+    &:hover,
+    &:active {
+        color: $grey;
+    }
+
+    .block-header & {
+        text-align: center;
+
+        .eighth-widget & {
+            width: 37px;
+        }
+
+        .sponsor-widget & {
+            width: 66px;
+        }
+    }
+}
+
+.block-header i {
+    &.fa-arrow-right {
+        /* make arrow take less space */
+        margin: 0 -2px 0 0;
+    }
+
+    &.fa-check {
+        /* make check take less space */
+        margin: 0 -3px 0 -2px;
+    }
+}
+
+/* Pagination */
+.ellipses {
+    padding: 7px 10px;
+    margin: 2px 0;
+    font-size: 13px;
+    font-weight: bold;
+    --ellipses-color: $grey;
+    color: var(--ellipses-color);
+
+    &:hover {
+        color: var(--ellipses-color);
+        text-decoration: none;
+        // don't change cursor while hovering on
+        // ...'s in pagination
+        cursor: default;
+    }
+
+    &:visited {
+        color: var(--ellipses-color);
+    }
+}
+
+.button:disabled,
+.button[disabled]
+{
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* BIRTHDAYS */
+
+.birthdays-widget {
+    .widget-content {
+        padding: 5px 15px;
+
+        table {
+            width: 100%;
+        }
+
+        b,
+        strong {
+            font-weight: bold;
+        }
+
+        i,
+        em {
+            font-style: italic;
+        }
+    }
+
+    .widget-title form {
+        display: inline;
+        float: right;
+    }
+
+    .birthday-field {
+        font-family: $font-stack;
+        background: transparent;
+        border: 1px solid rgb(216, 216, 216);
+        padding: 0 4px;
+        height: 18px;
+        width: 16px;
+        text-align: center;
+    }
+
+    .slash {
+        color: black;
+        font-weight: normal;
+    }
+
+    input {
+        &[name="birthday_month"] {
+            margin-right: -3px;
+            border-right: 0;
+            padding-right: 5px;
+            text-align: right;
+        }
+
+        &[name="birthday_day"] {
+            margin-left: -2px;
+            border-left: 0;
+            text-align: left;
+        }
+
+        &[name="birthday_day"]:focus,
+        &[name="birthday_month"]:focus {
+            outline: 0;
+        }
+
+        &[type="submit"] {
+            margin-top: -3px;
+        }
+    }
+}
+
+/* LINKS */
+
+.links-widget {
+    .widget-content {
+        td {
+            padding-left: 10px;
+        }
+
+        padding: 5px 10px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .link-heading {
+        font-weight: bold;
+        margin-left: -10px;
+    }
+
+    a {
+        margin-left: -5px;
+    }
+}
+
+/* SENIORS */
+
+.seniors-widget {
+    .widget-content {
+        padding: 5px;
+    }
+
+    .seniors-clock .clock {
+        font-size: 16px;
+        padding-right: 2px;
+
+        @media (max-width: 960px) {
+            font-size: 14px;
+        }
+
+        @media (max-width: 800px) {
+            font-size: 16px;
+        }
+    }
+}

@@ -1,0 +1,122 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Profile - {{ profile_user.full_name }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+    <style>
+    tr.highlight, tr.highlight td {
+        background-color: yellow;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'js/eighth/admin.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+    {% if show_profile_header %}
+        {% with show_eighth_profile_link=1 show_view_often_link=1 %}
+            {% include "eighth/profile_header.html" %}
+        {% endwith %}
+    {% else %}
+        <a href="{% url 'eighth_redirect' %}" class="button">
+            <i class="fas fa-arrow-left"></i> Eighth Home
+        </a>
+        &nbsp; <a href="{% url 'eighth_profile' profile_user.id %}" class="button"><i class="fas fa-table"></i> Classic Signup</a>
+        &nbsp; <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a>
+        <br>
+        <h2>
+            Attendance History{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
+        </h2>
+    {% endif %}
+
+    <section class="user-history">
+        {% if show_profile_header %}
+            <h3>
+                Attendance History{% if profile_user != request.user %}: {{ profile_user.full_name }} {% if profile_user.student_id %}({{ profile_user.student_id }}){% endif %}{% endif %}
+            </h3>
+        {% endif %}
+
+        <table class="fancy-table user-signups-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Block</th>
+                <th>Activity</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Attended</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sch in eighth_schedule %}
+        <tr{% if sch.highlighted %} class="highlight"{% endif %}>
+            <td>
+                {{ sch.block.date|date:'D, N j, Y' }}
+            </td>
+            <td class="center block-name">
+                <span style="display:none">{{ sch.block.date|date:'D' }} </span>{{ sch.block.block_letter }}
+            </td>
+            {% if sch.signup %}
+                <td>
+                    <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}">
+                        {{ sch.signup.scheduled_activity.activity.id }}: {{ sch.signup.scheduled_activity.full_title }}
+                    </a>
+                </td>
+                <td>
+                    {{ sch.signup.scheduled_activity.get_true_sponsors|join:", " }}
+                </td>
+                <td>
+                    {{ sch.signup.scheduled_activity.get_true_rooms|join:", " }}
+                </td>
+                <td>
+                {% if sch.signup.scheduled_activity.attendance_taken %}
+                    {% if sch.signup.was_absent %}
+                        No{% if request.user.is_eighth_admin and not sch.signup.pass_accepted %}: Pass Rejected{% endif %}
+                    {% else %}
+                        {% if sch.signup.after_deadline and not sch.signup.pass_accepted %}
+                            ...{% if request.user.is_eighth_admin %} (Pass Waiting){% endif %}
+                        {% else %}
+                            Yes{% if request.user.is_eighth_admin and sch.signup.pass_accepted %}: Pass Accepted{% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    &mdash;
+                {% endif %}
+                </td>
+            {% else %}
+                <td colspan="4">
+                    No activity selected
+                </td>
+            {% endif %}
+        {% endfor %}
+        </table>
+
+    </section>
+</div>
+{% endblock %}

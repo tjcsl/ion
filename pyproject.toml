@@ -1,0 +1,136 @@
+[project]
+name = "Ion"
+description = "The next-generation Intranet platform for TJHSST"
+readme = "README.rst"
+authors = [
+    {name = "The TJHSST Computer Systems Lab", email = "intranet@tjhsst.edu"}
+]
+requires-python = ">=3.13"
+version = "1.0"
+dynamic = ["dependencies"]
+license = { text = "GPLv2+" }
+classifiers=[
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.13",
+  "Framework :: Django :: 5.2",
+]
+[project.urls]
+Repository = "https://github.com/tjcsl/ion"
+[tool.setuptools]
+packages = ["intranet", "migrations"]
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+[tool.black]
+line-length = 150
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | media
+  | migrations
+  | secret.*
+  | stubs
+)/
+'''
+
+[tool.ruff]
+extend-exclude = [
+  "Ion.egg-info",
+  "build",
+  ".env",
+  "env",
+  "migrations",
+]
+
+# show fixes made in stdout
+# show-fixes = true
+
+line-length = 150
+
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    # flake8-bugbear
+    "B",
+    # flake8-comprehensions
+    "C4",
+    # flake8-django
+    "DJ",
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # isort
+    "I",
+    # flake8-no-pep420
+    "INP",
+    # Pylint
+    "PL",
+    # ruff
+    "RUF",
+    # pyupgrade
+    "UP",
+]
+ignore = [
+  # default arguments for timezone.now()
+  "B008",
+  # null=True on CharField/TextField
+  "DJ001",
+  # No __str__ method on Model
+  "DJ008",
+  # Django order of model methods
+  "DJ012",
+  # ambiguous variable name
+  "E741",
+  # as recommended by https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules
+  "E111",
+  "E114",
+  "E117",
+  "E501",
+  # branching
+  "PLR09",
+  # avoid magic numbers
+  "PLR2004",
+  # loop variables overwritten by assignment
+  "PLW2901",
+  # Use ternary operator (x if cond else y)
+  "RUF005",
+  # mutable class attrs annotated as typing.ClassVar
+  "RUF012",
+  # implicit Optional
+  "RUF013",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = [
+  "F401",
+  "F403",
+]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+parametrize-names-type = "tuple"
+parametrize-values-type = "tuple"
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+
+[tool.codespell]
+write-changes = true
+skip = "*.pyi,*/vendor,*/migrations,*media"
+ignore-words-list = "num,ans,intranet,ther,usera,userb"
+# match: # codespell: ignore
+ignore-regex=".+# *codespell: *ignore"

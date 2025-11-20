@@ -1,0 +1,63 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+        });
+    </script>
+
+    <script>
+$(function() {
+    $("input[type=checkbox].all").change(function() {
+        var chk = $(this).prop("checked");
+        $(".choose-activities tbody input").each(function() {
+            $(this).prop("checked", chk);
+        })
+    });
+});
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+    <b>Block:</b> {{ eighthblock }}<br>
+    <br>
+    <form action="" method="post">{% csrf_token %}
+        <input type="submit" value="Print Roster">
+        <br>
+        Click on column titles to sort on this selection screen.<br> The exported PDF will be sorted by <b>the first listed sponsor's last name</b>.
+        <table data-sortable class="sortable fancy-table choose-activities zebra">
+        <thead>
+            <tr>
+                <th data-sortable="false"><input type="checkbox" class="all" checked></th>
+                <th>Activity Name</th>
+                <!-- automatically sorted by sponsor -->
+                <th data-sorted="true" data-sorted-direction="ascending">Sponsors</th>
+                <th>Rooms</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for schact in schacts %}
+        <tr>
+            <td data-sortable="false"><input type="checkbox" name="schact_id" value="{{ schact.id }}" checked></td>
+            <td>{{ schact.full_title }}</td>
+            <td>{{ schact.get_true_sponsors|join:"; " }}</td>
+            <td>{{ schact.get_true_rooms|join:"; " }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+
+        <input type="submit" value="Print Roster">
+    </form>
+{% endblock %}

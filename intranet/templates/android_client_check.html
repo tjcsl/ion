@@ -1,0 +1,23 @@
+{% if is_android_client %}
+    <script>
+        window.onload = function() {
+            console.info("Android client");
+            $("body").addClass("mobile-app", "android-app", "android-webview");
+        };
+
+        window.androidNotifSetup = IonAndroidInterface.isIonSetup();
+
+        {% if android_client_rand %}
+            if(typeof IonAndroidInterface != "undefined") {
+                if(window.androidNotifSetup != "true") {
+                    console.info("Setting up ADM", "{{ android_client_rand }}");
+                    IonAndroidInterface.gcmSetup("{{ android_client_rand }}");
+                } else {
+                    console.info("ADM setup", window.androidNotifSetup);
+                }
+            } else {
+                console.error("No IonAndroidInterface");
+            }
+        {% endif %}
+    </script>
+{% endif %}

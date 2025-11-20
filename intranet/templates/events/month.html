@@ -1,0 +1,50 @@
+{% load static %}
+
+<table class="arrow-container week-table" style="border-spacing:0;">
+    <tr>
+    <td class="cell-filler"></td>
+    <td class="cell-filler"></td>
+    <td class="date-nav">
+        <a href="?date={{ month_data.last_month }}&view=month" class="button chevron schedule-left" title="Previous Month" id="left-button">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        &nbsp;
+        <b class="week-month-title">{{ month_data.current_month }}</b>
+        &nbsp;
+        <a href="?date={{ month_data.next_month }}&view=month" class="button chevron schedule-right" title="Next Month" id="right-button">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </td>
+    <td class="cell-filler"></td>
+    <td class="cell-filler"></td>
+    </tr>
+</table>
+<br />
+<div class="schedule" data-prev-date="{{ month_data.last_month }}" data-next-date="{{ month_data.next_month }}" data-date="{{ week_data.today }}">
+    <table class="month-table">
+        <tbody>
+        {% for week in month_data.weeks %}
+        <tr>
+            {% for day in week.days %}
+                {% if day.events_ctx.display == True %}
+                <td id="{{ day.events_ctx.date_today }}" >
+                    <h2 class="schedule-date">{{ day.events_ctx.date|date:"D, N j" }}</h2>
+                    {% if day.events_ctx.has_events %}
+                        {% for event in day.events_ctx.events %}
+
+                            {% with not_show_attend_form=True %}
+                                {% include "events/event.html" %}
+                            {% endwith %}
+
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-events">No events.</p>
+                    {% endif %}
+                </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

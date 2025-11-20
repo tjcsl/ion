@@ -1,0 +1,79 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }} - Parking
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+$(function() {
+    $("#delete-car").click(function() {
+        if(confirm("Are you SURE you want to delete this car?")) {
+            $("form#car-form").append("<input type='hidden' name='delete' value='1'>");
+            document.forms["car-form"].submit();
+        }
+    });
+});
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="parking primary-content" style="max-width: 700px">
+    <h2>
+        Parking Applications: {% if car %}Modify{% else %}Add{% endif %} Car
+    </h2>
+    {% if car %}
+    <table>
+        <tr>
+            <th>
+    Car Owner
+            </th>
+            <td>
+                <a href="{% url 'user_profile' car.user.id %}">{{ car.user.first_name }} {{ car.user.last_name }} ({{ car.user.grade_number }}; {{ car.user.absence_count }} absences)</a>
+            </td>
+        </tr>
+        <tr>
+            <th>
+               First submitted:
+            </th>
+            <td>
+                {{ car.added }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Last updated:
+            </th>
+            <td>
+                {{ car.updated }}
+            </td>
+        </tr>
+    </table>
+    {% endif %}
+    <form action="" method="post" name="car-form" id="car-form">
+        {% csrf_token %}
+        <table>
+        {{ form.as_table }}
+        <tr>
+            <td><a style="color: red" class="button" id="delete-car">Delete</a></td>
+            <td><input type="submit" value="Submit"></td>
+        </tr>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="schedule" data-endpoint="{% url 'schedule' %}" data-prev-date="{{ sched_ctx.date_yesterday }}" data-next-date="{{ sched_ctx.date_tomorrow }}" data-date="{{ sched_ctx.date_today }}">
+    {% if not hide_date %}{% if not hide_arrows %}<a href="/?date={{ sched_ctx.date_yesterday }}" class="chevron schedule-left" title="Previous Day"><i class="fas fa-chevron-left"></i></a>{% endif %}
+    <span class="schedule-date">{{ sched_ctx.date|date:"D, N j" }}</span>
+    {% if not hide_arrows %}<a href="/?date={{ sched_ctx.date_tomorrow }}" class="chevron schedule-right" title="Next Day"><i class="fas fa-chevron-right"></i></a>{% endif %}
+    <br>{% endif %}
+    {% if sched_ctx.dayobj %}
+        <h2 class="day-name {{ sched_ctx.dayobj.day_type.class_name }}">{{ sched_ctx.dayobj.day_type.name|safe }}{% if sched_ctx.comment %} {{ sched_ctx.comment }}{% endif %}</h2>
+        <br>
+        <table class="bellschedule-table today">
+        {% for block in sched_ctx.blocks %}
+            <tr class="schedule-block" data-block-name="{{ block.name|safe }}" data-block-start="{{ block.start.str_12_hr }}" data-block-end="{{ block.end.str_12_hr }}" data-block-order="{{ block.order }}">
+                <th class="block">{{ block.name|safe }}:</th>
+                <td class="times">{{ block.start.str_12_hr }} - {{ block.end.str_12_hr }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        {% if sched_ctx.is_weekday %}
+            No schedule available
+        {% else %}
+            No school
+        {% endif %}
+    {% endif %}
+</div>

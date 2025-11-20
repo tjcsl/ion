@@ -1,0 +1,31 @@
+{% with description="Announcement approved" target=info_link name="View" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+{% if role == "approved" %}
+    The announcement that you approved,
+{% elif role == "submitted" %}
+    The announcement that you submitted,
+{% else %}
+    The announcement,
+{% endif %} <b>{{ announcement.title }}</b>, was posted by
+{% if request.posted_by %}
+    {{ request.posted_by.full_name }}.
+{% else %}
+    an administrator.
+{% endif %}
+</p>
+
+{{ announcement.get_author }}  posted an announcement on {{ announcement.added|date:"l, F j, Y"}} at {{ announcement.added|date:"P"}} to {% if announcement.groups.count == 0 %}everyone{% else %}{{ announcement.groups.all|join:", " }}{% endif %}:
+</p>
+
+<h2>{{ announcement.title }}</h2>
+
+{% autoescape off %}
+{{ announcement.content|truncatewords_html:30 }}
+{% endautoescape %}
+
+<p><a href="{{ info_link }}">View this announcement on Intranet</a></p>
+
+{% include "email_footer.html" %}

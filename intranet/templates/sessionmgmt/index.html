@@ -1,0 +1,70 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Session Management
+{% endblock %}
+
+{% block head %}
+    {% stylesheet 'sessionmgmt' %}
+
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/sessionmgmt' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Trusted devices</h2>
+        {% if trusted_sessions %}
+        <ul class="trusted-sessions">
+            {% for trusted_session in trusted_sessions %}
+            <li>
+                <div class="container">
+                    {% if trusted_session.device_type == "mobile" %}
+                        <i class="device-icon device-icon-large fas fa-mobile-alt"></i>
+                    {% elif trusted_session.device_type == "tablet" %}
+                        <i class="device-icon device-icon-large fas fa-tablet-alt"></i>
+                    {% elif trusted_session.device_type == "computer" %}
+                        <i class="device-icon device-icon-medium fas fa-desktop"></i>
+                    {% endif %}
+                    <div class="info">
+                        {% if trusted_session.session_key == request.session.session_key %}
+                            <strong>Current device</strong><br>
+                        {% endif %}
+                        {{ trusted_session.description }} ({{ trusted_session.get_device_type_display }})<br>
+                        First added {{ trusted_session.first_trusted_date|date:"M d, Y g:i:s A" }}
+                    </div>
+                    <form action="{% url 'revoke_session' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="session_key" value="{{ trusted_session.session_key }}">
+                        <input type="submit" value="Revoke">
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You have no trusted devices.</p>
+        {% endif %}
+
+        {% if not cur_session_trusted %}
+            <br>
+            <form action="{% url 'trust_session' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="trust" value="TRUST">
+                <input type="submit" value="Trust this device">
+            </form>
+        {% endif %}
+
+        <br>
+        <form action="{% url 'global_logout' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="global_logout" value="GLOBAL_LOGOUT">
+            <input type="submit" value="Log me out everywhere">
+        </form>
+    </div>
+{% endblock %}

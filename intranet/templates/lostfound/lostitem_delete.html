@@ -1,0 +1,52 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Delete {{ type|title }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="lostitem primary-content">
+    <a href="{% url 'lostfound' %}" class="button">
+        <i class="fas fa-arrow-left"></i> Lost and Found
+    </a>
+    <h2>
+        Delete {{ lostitem.title }}
+    </h2>
+    <br>
+
+    <b>Are you sure you want to delete {{ lostitem.title }}?</b>
+    <form method="post" action="">
+        {% csrf_token %}
+        <input type="radio" name="full_delete" id="full_delete" value="y">
+        <label for="full_delete">Full Delete</label>
+        <br>
+        <input type="radio" name="mark_found" id="mark_found" value="">
+        <label for="mark_found">Mark Found</label>
+        <br>
+
+        <input type="hidden" name="confirm" value="1">
+        <a href="{% url 'lostfound' %}" class="button">Cancel</a> &nbsp;
+        <input type="submit" value="Delete">
+    </form>
+
+    </form>
+</div>
+{% endblock %}

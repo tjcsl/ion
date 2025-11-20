@@ -1,0 +1,380 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load svg %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Bus
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'bus' %}
+    {% stylesheet 'polls' %}
+    {% stylesheet 'dashboard' %}
+    <link rel="stylesheet" href="{% static 'vendor/messenger/build/css/messenger.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/messenger/build/css/messenger-theme-flat.css' %}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        window.isAdmin = {{ admin | yesno:"true,false" }};
+        window.isSignage = {{ signage | yesno:"true,false" }};
+        window.websocketHost = "{{ ws_host }}";
+        window.websocketProtocol = "{{ ws_protocol }}";
+        window.endHour = "{{ school_end_hour }}";
+        window.endMinute = "{{ school_end_time }}";
+        window.enableBusDriver = false;
+        window.label_status_strings = {
+            "a": {
+                empty_text: "No buses have arrived yet.",
+                name: "Arrived",
+                personal: "has arrived.",
+                icon: "check",
+                color: "green",
+            },
+            "o": {
+                empty_text: "All buses have arrived or are delayed.",
+                name: "On Time",
+                personal: "is on time.",
+                icon: "clock",
+                color: "blue",
+            },
+            "d": {
+                empty_text: "No delays.",
+                name: "Delayed",
+                personal: "is delayed.",
+                icon: "exclamation-circle",
+                color: "red",
+            },
+        };
+
+        window.onload = function () {
+            var now = new Date();
+            var changeTime = new Date();
+            changeTime.setHours(parseInt("{{ changeover_time }}", 10), 00, 0);
+            if (changeTime > now) {
+                document.getElementById('morning').hidden = false;
+                document.getElementById('afternoon').hidden = true;
+                setTimeout(function() {
+                    document.getElementById('morning').hidden = true;
+                    document.getElementById('afternoon').hidden = false;
+                }, changeTime - now);
+            } else {
+                document.getElementById('morning').hidden = true;
+                document.getElementById('afternoon').hidden = false;
+            }
+
+            setInterval(function() {
+                var now = new Date();
+                var hr = now.getHours();
+                var ampm = 'AM';
+                if (hr >= 12) {
+                    hr -= 12;
+                    ampm = 'PM';
+                }
+                if (hr === 0) {
+                    hr = 12;
+                }
+                var min = now.getMinutes();
+                if (min < 10) {
+                    min = '0' + min;
+                }
+                $('.time').html(hr + ':' + min + ' ' + ampm);
+            }, 1000);
+        }
+    </script>
+    <script src="{% static 'js/vendor/reconnecting-websocket.min.js' %}"></script>
+    <script src="{% static 'js/vendor/svg.min.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script type="module" src="{% static 'js/bus-morning.js' %}"></script>
+    <script type="module" src="{% static 'js/bus-afternoon.js' %}"></script>
+    <script src="{% static 'js/pages/bus.js' %}"></script>
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/backbone-min.js' %}"></script>
+    <script src="{% static 'js/common.header.js' %}"></script>
+    <script src="{% static 'vendor/messenger/build/js/messenger.min.js' %}"></script>
+    <script src="{% static 'vendor/messenger/build/js/messenger-theme-flat.js' %}"></script>
+
+    <style media="screen">
+    svg {
+        width: 50%;
+        height: 90vh;
+        margin-top: 5vh;
+    }
+
+    .text {
+        position: absolute;
+        top: 42%;
+        right: 6%;
+        width: 50%;
+        padding: 20px !important;
+
+        font-size: 36px;
+        text-align: center;
+        background-color: white;
+        padding: 20px;
+        display: inline-block;
+
+        border-radius: 5px;
+        border: 1px solid #d8d8d8;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        margin-right: 6px;
+
+        {% if not sign.landscape %}
+        right: 1%;
+        padding: 12px !important;
+        {% endif %}
+    }
+
+    .logo {
+        position: absolute;
+        top: 400px;
+        right: 30%;
+        height: 30px;
+    }
+
+    svg text {
+        font-weight: bold;
+        font-size: 110%;
+    }
+    svg text.small {
+        font-size: 100%;
+    }
+    svg text.extra-small {
+        font-size: 90%;
+    }
+
+    .bus-col {
+        display: inline-block;
+        width: 33.333333%;
+        height: 100%;
+        vertical-align: top;
+        margin-right: -4px;
+    }
+
+    .bus-heading {
+        width: 100%;
+        height: 50px;
+    }
+
+    .bus-heading {
+        width: 100%;
+        height: 100%;
+    }
+
+    .welcome-text {
+        font-size: 50px;
+        padding: 40px 20px;
+    }
+
+    .bus-header {
+        font-size: 30px;
+        padding: 15px;
+    }
+
+    .list-bus {
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    .logo-ion {
+        position: absolute;
+        top: 30px;
+        right: 280px;
+        width: 48px;
+    }
+
+    .logo-bus {
+        position: absolute;
+        top: 33px;
+        right: 230px;
+        font-size: 30pt;
+    }
+
+    .bus-title {
+        position: absolute;
+        top: 30px;
+        right: 60px;
+        font-size: 24pt;
+    }
+
+    .time {
+        font-size: 36px;
+        font-weight: bold;
+        position: fixed;
+        bottom: 30px;
+        right: 3%;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .list p {
+        padding: 10px 15px;
+        font-size: 18pt;
+    }
+
+    .bus-announcement-container {
+        position: absolute;
+        top: 55%;
+        right: 6%;
+        width: 50%;
+        padding: 20px !important;
+
+        font-size: 30px;
+        text-align: center;
+        padding: 20px;
+        display: inline-block;
+
+        background-color: #dbdada;
+        border-radius: 5px;
+        border: 1px solid #d8d8d8;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        margin-right: 6px;
+        overflow: show;
+
+        {% if not sign.landscape %}
+        right: 1%;
+        padding: 12px !important;
+        {% endif %}
+
+    }
+
+    .bus-announcement-header {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        font-size: 24px;
+    }
+
+    .bus-announcement {
+        margin-top: 25px;
+        font-size: 20px;
+        width: 100%;
+        text-align: left;
+        overflow-wrap: break-word;
+    }
+
+    #morning .bus-announcement-container {
+        top: 50%;
+        right: 3%;
+        width: 27%;
+    }
+
+    #morning .bus-announcement-header {
+        left: 10%;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div id="title-container">
+        <img class="logo-ion" src="/static/img/logos/Icon-96@2x.png" alt="Ion">
+        <i class="fa-2x fas fa-bus logo-bus"></i>
+        <h2 class="bus-title">Bus Board</h2>
+    </div>
+    <div class="time">&nbsp;</div>
+    <div id="morning">
+        <h1 class="welcome-text">Good morning!</h1>
+        <div class="bus-heading">
+            <div class="bus-col">
+                <h2 class="green bus-header">
+                    <i class="fas fa-regular fa-check"></i>
+                    Arrived
+                </h2>
+            </div>
+            <div class="bus-col">
+                <h2 class="blue bus-header">
+                    <i class="fas fa-regular fa-clock"></i>
+                    On Time
+                </h2>
+            </div>
+            <div class="bus-col">
+                <h2 class="red bus-header">
+                    <i class="fas fa-regular fa-exclamation-circle"></i>
+                    Delayed
+                </h2>
+            </div>
+        </div>
+        <div class="bus-body">
+            <div class="bus-col">
+                <div class="list" id="arrived"></div>
+            </div>
+            <div class="bus-col">
+                <div class="list" id="ontime"></div>
+            </div>
+            <div class="bus-col">
+                <div class="list" id="delayed"></div>
+            </div>
+        </div>
+        <div class="bus-announcement-container bus-signage">
+            <h2 class="bordered-element bus-announcement-header">
+                <i class="fas fa-bullhorn"></i>&nbsp;
+                <b>Announcements</b>
+            </h2>
+            <div class="bus-announcement bordered-element"></div>
+        </div>
+    </div>
+    <div id="afternoon">
+        {% verbatim %}
+        <script type="text/template" id="personal-status"></script>
+        <script type="text/template" id="route-view">
+            <span class="route-name"><%= route_name %></span>
+            <br>
+            <% if (bus_number) { %>
+                <span class="bus-number"> #<%= bus_number %> </span>
+            <% } else { %>
+                <span class="bus-number"> No bus number recorded. </span>
+            <% } %>
+            <% if (isAdmin) { %>
+                <select name="status" id="<%= id %>">
+                    <% for (var key in label_status_strings) { %>
+                        <option value="<%= key %>" <% if (key === status) print("selected") %>> <%= label_status_strings[key].name %> </option>
+                    <% } %>
+                </select>
+            <% } %>
+        </script>
+        <script type="text/template" id="status-group-view">
+            <% console.log(name, empty_text, collection)%>
+            <h2 class="status"> <%= name %> </h2>
+            <% if (collection.length === 0) { %>
+                <h3 class="empty"> <%= empty_text %> </h3>
+            <% } %>
+        </script>
+        <script type="text/template" id="action-button-view">
+        </script>
+        <script type="text/template" id="search-widget-view">
+            <div class="search-widget">
+                <i class="back-button fas fa-arrow-left"></i>
+                <select name="buses" id="buses"></select>
+            </div>
+        </script>
+        {% endverbatim %}
+        <div class="primary-content">
+            <div class="info bus-signage" style="width: 65%;">  </div>
+            <div class="bus-announcement-container bus-signage">
+                <h2 class="bordered-element bus-announcement-header">
+                    <i class="fas fa-bullhorn"></i>&nbsp;
+                    <b>Announcements</b>
+                </h2>
+                <div class="bus-announcement bordered-element"></div>
+            </div>
+            <div class="text">
+                <i class="fas fa-info-circle"></i>
+                Trying to connect...
+            </div>
+            <!--<div class="logo">
+                <img src="{% static 'img/csl_logo.png' %}">
+            </div>-->
+        </div>
+        <script type="text/template" id="map-view">
+            {% svg 'optimized_bus_map_v2' %}
+        </script>
+    </div>
+{% endblock %}

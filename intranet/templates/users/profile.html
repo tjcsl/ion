@@ -1,0 +1,458 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }} - Profile - {{ profile_user.full_name }}
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'profile' %}
+    {% if profile_user.is_eighth_sponsor and profile_user.is_student %}
+    <style>
+    .user-info-eighth.signups {
+        clear: left;
+        float: left;
+    }
+
+    .user-info-eighth.sponsor {
+        float: left;
+        clear: none;
+        margin-left: 20px;
+    }
+    </style>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% if profile_user.is_student %}
+        <script>
+            $(document).ready(function() {
+                $('.preferred-user-picture img, .preferred-user-picture span').click(function() {
+                    $(".user-pictures img").each(function() {
+                        var src = $(this).attr("src");
+                        var datasrc = $(this).attr("data-src");
+                        console.debug($(this).attr("alt"), src);
+                        if(!src) {
+                            $(this).attr("src", datasrc);
+                        }
+                    })
+                    $('.user-pictures').slideToggle();
+                });
+                $('.user-pictures').click(function() {
+                    $('.user-pictures').slideToggle();
+                });
+            });
+        </script>
+    {% endif %}
+    {% if request.user.is_eighth_admin %}
+        <script>
+        $(document).ready(function() {
+            $("#user-groups form").submit(function(e) {
+                if (!confirm("Are you sure you want to remove " + $.trim($(".user-title h2").text()) + " from the group " + $.trim($(this).closest(".group").find("a").text()) + "?")) {
+                    e.preventDefault();
+                }
+            });
+        });
+        </script>
+    {% endif %}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <div class="user-pictures">
+        {% if profile_user.is_student %}
+            <table>
+                <tr>
+                    <td>
+                        <img class="freshman" data-src="{% url 'profile_picture' profile_user.id 'freshman' %}" alt="Freshman Picture" title="Freshman Picture">
+                        <br>Freshman
+                    </td>
+                    <td>
+                        <img class="sophomore" data-src="{% url 'profile_picture' profile_user.id 'sophomore' %}" alt="Sophomore Picture" title="Sophomore Picture">
+                        <br>Sophomore
+                    </td>
+                    <td>
+                        <img class="junior" data-src="{% url 'profile_picture' profile_user.id 'junior' %}" alt="Junior Picture" title="Junior Picture">
+                        <br>Junior
+                    </td>
+                    <td>
+                        <img class="senior" data-src="{% url 'profile_picture' profile_user.id 'senior' %}" alt="Senior Picture" title="Senior Picture">
+                        <br>Senior
+                    </td>
+                </tr>
+            </table>
+        {% else %}
+            No other pictures are available.
+        {% endif %}
+        </div>
+        <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">
+            <img src="{% url 'profile_picture' profile_user.id %}" alt="Preferred Picture" title="View pictures" width="172">
+            {% if profile_user.is_student %}
+                <span>
+                    View all pictures
+                </span>
+            {% endif %}
+
+
+            {% if request.user.is_eighth_admin or request.user.is_teacher %}
+                <div style="text-align: center">
+                    <br>
+                    <a href="{% url 'eighth_profile' profile_user.id %}" class="button" style="margin-left: 0px">View Eighth Profile</a>
+                    {% if request.user.is_eighth_admin %}
+                        <br>
+                        <a href="/profile/{{ profile_user.id }}?clear_cache=1&amp;full=1" class="button small-button" title="Clear cached information for this user.">Clear Cache</a> &nbsp;
+                    {% endif %}
+                    <br>
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <div class="user-info">
+            <div class="user-container">
+                <div class="user-info-left">
+                    <div class="user-title">
+                        <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
+                            {{ profile_user.full_name }}
+                            {% if profile_user.nickname %}({{ profile_user.nickname }}){% endif %}
+                        </h2>
+                        <h3>
+                        {% if profile_user.is_student %}
+                            {% if profile_user.graduation_year %}
+                                {{ profile_user.grade|capfirst }}
+                                ({{ profile_user.graduation_year }})
+                            {% else %}
+                                Student
+                            {% endif %}
+                        {% elif profile_user.is_alum %}
+                            Alumnus
+                        {% else %}
+                            Staff
+                        {% endif %}
+                        </h3>
+                        {% if profile_user.is_eighth_admin %}
+                            <b><i class="fas fa-flask"></i> This user is an Intranet administrator.</b>
+                        {% endif %}
+                        {% if profile_user.user_locked and request.user.is_eighth_admin %}
+                            <b><i class="fas fa-lock"></i> This user's account is locked.</b>
+                        {% endif %}
+                    </div>
+                    <table class="user-info-contact">
+                        {% if profile_user.display_name %}
+                            <tr>
+                                <th>Full Name</th>
+                                <td>{{ profile_user.display_name }}{% if profile_user.nickname %} ({{ profile_user.nickname }}){% endif %}</td>
+                            </tr>
+                        {% endif %}
+                        {% if profile_user.gender is not None %}
+                            <tr>
+                                <th>Gender</th>
+                                <td>{% if profile_user.is_male is True %}Male{% elif profile_user.is_female%}Female{% elif profile_user.is_nonbinary%}Non-Binary{% endif %}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Username</th>
+                            <td>{{ profile_user.ion_username }}</td>
+                        </tr>
+                        {% if request.user.is_teacher or request.user.is_eighth_admin and profile_user.student_id %}
+                            <tr>
+                                <th>Student ID</th>
+                                <td>{{ profile_user.student_id }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if request.user.is_teacher or request.user.is_eighth_admin %}
+                            <tr>
+                                <th>TJ Email</th>
+                                <td><a href="mailto:{{ profile_user.tj_email }}">
+                                    {{ profile_user.tj_email }}
+                                </a></td>
+                            </tr>
+                        {% endif %}
+                        {% comment "Removing for privacy reasons" %}
+                        {% if profile_user.birthday %}
+                        <tr>
+                            <th>Birthday</th>
+                            <td>{{ profile_user.birthday|date:"F j, Y" }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endcomment %}
+                        {% if profile_user.user_type == "student" and profile_user.counselor and request.user.is_teacher or request.user.is_eighth_admin %}
+                            <tr>
+                                <th>Counselor</th>
+                                <td> {{ profile_user.counselor.last_name }} </td>
+                            </div>
+                        {% endif %}
+
+                        {% comment "Removing for privacy reasons" %}
+                        {% if profile_user.emails.exists %}
+                        {% if request.user.is_teacher and not profile_user.non_tj_email or request.user.is_eighth_admin and not profile_user.non_tj_email %}
+                            <!-- Don't duplicate TJ email -->
+                        {% else %}
+                        <tr>
+                            <th>
+                                Email{{ profile_user.emails.all|pluralize }}
+                            </th>
+                            <td>
+                                {% for email in profile_user.emails.all %}
+                                {% if request.user.is_teacher and email == profile_user.tj_email or request.user.is_eighth_admin and email == profile_user.tj_email %}
+                                    <!-- Don't duplicate TJ email -->
+                                {% else %}
+                                    <a href="mailto:{{ email }}">
+                                        {{ email }}
+                                    </a>
+                                    {% if not forloop.last %}<br>{% endif %}
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+
+                        {% if profile_user.websites.exists %}
+                        <tr>
+                            <th>
+                                Web
+                            </th>
+                            <td>
+                                {% for url in profile_user.websites.all %}
+                                <a href="{% if "javascript:" in url %}{{ url|cut:"http://"|cut:"https://" }}{% else %}{{ url }}{% endif %}">{{ url|cut:"http://"|cut:"https://" }}</a>
+                                {% if not forloop.last %}<br>{% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        {% if profile_user.skype or profile_user.google_talk %}
+                        <tr>
+                            <th>Social</th>
+                            <td>
+                                {% if profile_user.skype %}
+                                        <a href="skype:{{ profile_user.skype }}">
+                                            {{ profile_user.skype }} (Skype)
+                                        </a>
+                                        {% if profile_user.google_talk %}<br>{% endif %}
+                                {% endif %}
+                                {% if profile_user.google_talk %}
+                                    <a href="gtalk:{{ profile_user.google_talk }}">
+                                        {{ profile_user.google_talk }} (Google Talk)
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                        {% if profile_user.phones.exists %}
+                        {% if profile_user.can_view_phone or request.user == profile_user or request.user.is_teacher or request.user.is_eighth_admin %}
+                        <tr>
+                            <th>
+                                Phone Number{{ profile_user.phones.all|pluralize }}
+                            </th>
+                            <td>
+                                {% for phone in profile_user.phones.all %}
+                                    {% if phone.number %}
+                                    <a href="tel:{{ phone.number }}">
+                                        {{ phone.number|dashes }}
+                                    </a>
+                                    <span>({{ phone.get_purpose_display }})</span>
+                                    <br>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endif %}
+                        {% if profile_user.address %}
+                        <tr>
+                            <th>Address</th>
+                            <td>
+                                <a href="//maps.google.com/?q={{ profile_user.address|urlencode }}" title="Google Maps link">
+                                    {{ profile_user.address|linebreaksbr }}
+                                </a></td>
+                        </tr>
+                        {% endif %}
+                        {% endcomment %}
+
+                        {% if DJANGO_SETTINGS.ENABLE_SENIOR_DESTINATIONS and profile_user.has_senior %}
+                        {% with senior=profile_user.senior %}
+                            {% if senior.college %}
+                            <tr>
+                                <th>Attending</th>
+                                <td class="senior-{% if not senior.college_sure %}un{% endif %}sure">
+                                    {{ senior.college }}{% if not senior.college_sure %} (unsure){% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            {% if senior.major %}
+                            <tr>
+                                <th>Major</th>
+                                <td class="senior-{% if not senior.major_sure %}un{% endif %}sure">
+                                    {{ senior.major }}{% if not senior.major_sure %} (unsure){% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endwith %}
+                        {% endif %}
+
+                    </table>
+                </div>
+                {% if profile_user.section_set.exists or profile_user.schedule and profile_user.schedule.exists %}
+                <section class="user-info-schedule class-info">
+                        <div class="inline-warning">This is class schedule information for the 2017-2018 school year, as of Feb 1, 2018.</div>
+                        <h3>Schedule</h3>
+                        <table class="sortable fancy-table zebra" data-sortable>
+                            <thead>
+                                <th>Period</th>
+                                <th>Name</th>
+                                {% if profile_user.is_student %}
+                                    <th>Teacher</th>
+                                {% endif %}
+                                <th>Room</th>
+                                <th>Semester</th>
+                            </thead>
+                            {% if profile_user.is_student %}
+                              {% include "users/schedule_rows.html" with classes=profile_user.schedule.all|dictsort:"sem"|dictsort:"period" %}
+                            {% elif profile_user.is_teacher %}
+                              {% include "users/schedule_rows.html" with classes=profile_user.section_set.all|dictsort:"sem"|dictsort:"period" %}
+                            {% endif %}
+                        </table>
+                </section>
+                {% endif %}
+           </div>
+
+            {% if nominations_active %}
+                {% if request.user.is_student and profile_user.grade_number ==  request.user.grade_number %}
+                <section class="nomination">
+                    <br>
+                    {% if has_been_nominated %}
+                        <a disabled href="#" class="button disabled" style="color: #656565; margin-left:0">You have nominated {{ profile_user.first_name }} for {{ nomination_position }}.</a>
+                    {% else %}
+                        <a href="{% url 'vote_for_user' profile_user.username nomination_position %}" class="button" style="margin-left: 0px">Nominate {{ profile_user.first_name }} for {{ nomination_position }}</a>
+                    {% endif %}
+                    <br>
+                </section>
+                {% endif %}
+            {% endif %}
+            {% if profile_user.is_student and eighth_schedule %}
+            <section class="user-info-eighth signups">
+                <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Signups{% endif %}</h3>
+                {% if eighth_restricted_msg %}
+                    <b>This info is restricted to {% if request.user.is_student %} other{% endif %} students.</b> {% if request.user.is_teacher %}Please keep this in mind.{% endif %}
+                    <br><br>
+                {% endif %}
+                <table class="fancy-table">
+                <thead>
+                <tr>
+                    <th>Block</th>
+                    <th>Activity</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sch in eighth_schedule %}
+                    <tr>
+                        <th>
+                            {{ sch.block }}
+                        </th>
+                        <td>
+                        {% if sch.signup %}
+                            <a href="{% url 'eighth_roster' sch.signup.scheduled_activity.id %}">
+                                {{ sch.signup.scheduled_activity.activity }}
+                            </a>
+                        {% else %}
+                            <span class="no-activity-selected">No activity selected</span>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </form>
+                <br>
+                {% if user == profile_user and profile_user.is_student %}
+                    <a href="{% url 'eighth_signup' %}" class="button">Modify Schedule</a>
+                {% else %}
+
+                    {% if request.user.is_eighth_admin and profile_user.is_student %}
+                        <a href="{% url 'eighth_signup' %}?user={{ profile_user.id }}" class="button">Modify Schedule</a>
+                    {% endif %}
+
+                {% endif %}
+
+            </section>
+            {% endif %}
+            {% if profile_user.is_eighth_sponsor %}
+            <section class="user-info-eighth sponsor">
+                <h3>Eighth Period{% if profile_user.is_eighth_sponsor and profile_user.is_student %} Sponsored Activities{% endif %}</h3>
+                <table class="fancy-table">
+                <thead>
+                <tr>
+                    <th>Block</th>
+                    <th>Activity</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sch in eighth_sponsor_schedule %}
+                    <tr>
+                        <th>
+                            {{ sch.block }}
+                        </th>
+                        <td>
+                        {% if sch.activity %}
+                            <a href="{% url 'eighth_roster' sch.id %}">
+                                {{ sch.title_with_flags }}
+                            </a>
+                        {% else %}
+                            <span class="no-activity-selected">None</span>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                    <td colspan="2">
+                        This user is not sponsoring any activities in the future.
+                    </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            </form>
+            </section>
+            {% endif %}
+
+            {% if request.user.is_eighth_admin %}
+            <section class="user-info-eighth groups">
+                <h3>Groups</h3>
+                <div id="user-groups">
+                {% for g in profile_user.groups.all|dictsort:"name" %}
+                    <div class="group">
+                        <form action="{% url 'eighth_admin_remove_member_from_group' g.id profile_user.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_id" value="{{ profile_user.id }}">
+                            <input type="submit" value="Remove" class="button small-button">
+                        </form>
+                        <a href="{% url 'eighth_admin_edit_group' g.id %}">{{ g.name }}</a>
+                    </div>
+                {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

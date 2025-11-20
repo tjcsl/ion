@@ -1,0 +1,31 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/eighth.maintenance.css' %}">
+{% endblock %}
+
+{% block admin_main %}
+
+{% if completed %}
+<h3>Success!</h3>
+<p><b>{{ deleted_comments_count }}</b> admin comment{{ deleted_comments_count|pluralize }} have been deleted. The box below contains a list of deleted comments.</p>
+<pre>{{ deleted_comments }}</pre>
+<a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a>
+{% else %}
+<form id="clear-comments" action="{% url 'eighth_admin_maintenance_clear_comments' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="confirm" value="true">
+    <p><b>Are you sure? <span style="color:red">This action will DESTROY data!</span></b></p>
+    <p>Pressing the button below will delete the Admin Comments field of <b>all of the students</b> in the database.</p>
+    <a class="button" href="{% url 'eighth_admin_maintenance' %}">Go Back</a> <button type="submit">Confirm Action</button>
+</form>
+{% endif %}
+
+{% endblock %}

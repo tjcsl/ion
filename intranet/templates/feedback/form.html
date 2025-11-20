@@ -1,0 +1,84 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Send Feedback
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+
+    .primary-content p {
+        max-width: 700px;
+        margin-bottom: 0.5em;
+    }
+
+    div.cke_chrome {
+        margin: 10px 0;
+    }
+
+    #cke_id_comments {
+        width: 600px;
+        margin-bottom: -15px;
+    }
+
+    @media (max-width: 730px) {
+        div#cke_id_comments {
+            width: calc(100% + 13px);
+        }
+    }
+
+    label {
+        padding-left: 0px;
+    }
+
+
+    </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/cke' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="feedback primary-content">
+    <h2>
+        Send Intranet Feedback
+    </h2>
+    <p>
+        Please use this form to send feedback about Intranet. Your name, as well as some browser and system information, will be sent along with your comments. We may follow up with you via your primary email address under Preferences, so make sure it's an address you check regularly. Thanks!
+    </p>
+    <p>
+        Note that if you're having technical issues, we recommend that you email <a href="mailto:intranet@tjhsst.edu">intranet@tjhsst.edu</a> instead.
+    </p>
+
+    <form action="{% url 'send_feedback' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            <p>
+                If you'd like to add a screenshot, use "Snipping Tool" on Windows or Cmd-Shift-4 on a Mac, upload the file to <a href="http://drive.google.com/drive/my-drive">Google Drive</a> or another file host, and share a public link above.
+            </p>
+            <input type="submit" value="Submit">
+    </form>
+</div>
+<script>
+    // name of <textarea> is content
+    CKEDITOR.replace("comments", {
+
+    });
+
+</script>
+{% endblock %}

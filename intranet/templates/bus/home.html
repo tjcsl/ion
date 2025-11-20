@@ -1,0 +1,124 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load svg %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Bus
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'bus' %}
+    {% stylesheet 'dashboard' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% include "bus/bus_head.html" %}
+    <script type="module" src="{% static 'js/bus-afternoon.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/bus' %}
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+{% endblock %}
+
+{% block main %}
+    {% verbatim %}
+    <script type="text/template" id="personal-status">
+        <% if (route_name !== "Empty route") { %>
+            <h2 class="personal-status bordered-element colored-header <%= label_status_strings[status].color %>">
+                <i class="fas fa-regular fa-<%= label_status_strings[status].icon %>"></i>&nbsp;
+                <strong> <%= route_name %> </strong>
+                <%= label_status_strings[status].personal %>
+            </h2>
+        <% } else { %>
+    {% endverbatim %}
+        <h2 class="personal-status bordered-element">
+            <i class="fas fa-info-circle"></i>
+            <a href="{% url 'preferences' %}#id_bus_route" target="_blank">
+                 Register your bus route for personalized status updates.
+            </a>
+        </h2>
+    {% verbatim %}
+        <% } %>
+    </script>
+    <script type="text/template" id="route-view">
+        <span class="route-name"><%= route_name %></span>
+        <br>
+        <% if (bus_number) { %>
+            <span class="bus-number"> #<%= bus_number %> </span>
+        <% } else { %>
+            <span class="bus-number"> No bus number recorded. </span>
+        <% } %>
+        <% if (isAdmin) { %>
+            <select name="status" id="<%= id %>">
+                <% for (var key in label_status_strings) { %>
+                    <option value="<%= key %>" <% if (key === status) print("selected") %>> <%= label_status_strings[key].name %> </option>
+                <% } %>
+            </select>
+        <% } %>
+    </script>
+    <script type="text/template" id="status-group-view">
+        <h2 class="status"> <%= name %> </h2>
+        <% if (collection.length === 0) { %>
+            <h3 class="empty"> <%= empty_text %> </h3>
+        <% } %>
+    </script>
+    <script type="text/template" id="action-button-view">
+        <div class="action-button">
+            <i class="<%= icon %>"></i>
+            <span class="action-button-text"> <%= text %></span>
+        </div>
+    </script>
+    <script type="text/template" id="search-widget-view">
+        <div class="search-widget">
+            <i class="back-button fas fa-arrow-left"></i>
+            <select name="buses" id="buses"></select>
+        </div>
+    </script>
+    {% endverbatim %}
+    <div class="primary-content">
+        <div class="info"> </div>
+        <div class="bus-announcement-container">
+            <h2 class="bordered-element bus-announcement-header">
+                <i class="fas fa-bullhorn"></i>&nbsp;
+                <b>Announcements</b>
+                {% if admin %}
+                    <button class="button bus-announcement-save">
+                        Save
+                    </button>
+                    <button class="button bus-announcement-clear">
+                        Clear
+                    </button>
+                {% endif %}
+            </h2>
+            <div class="bus-announcement bordered-element" {% if admin %} contenteditable {% endif %}></div>
+            {% if admin %}
+            <p class="bus-announcement-help bordered-element">
+                <i class="fas fa-info-circle"></i>
+                Type in the box above to add an announcement, then click <b>Save</b> to publish it.
+                Click <b>Clear</b> to hide the announcement.
+                <br><br>
+                <b>Tip:</b> If you want to alert students riding a specific bus, include the bus name
+                in the announcement and Ion will alert students riding that bus to read this announcement.
+                For example, if you want to alert students riding JT-100, the following will work:
+                <br>
+                JT-100, JT100, jt-100, jt100, or 100.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    <script type="text/template" id="map-view">
+        {% if enable_bus_driver %}
+            <iframe src="{% url 'bus_game' %}" width="825" height="620" style="border:none;display:none;" id='busgame'></iframe>
+        {% endif %}
+        {% svg 'optimized_bus_map_v2' %}
+    </script>
+{% endblock %}

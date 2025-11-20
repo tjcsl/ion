@@ -1,0 +1,41 @@
+default_stages: [pre-commit, pre-push]
+fail_fast: false
+exclude: ^(intranet/middleware|intranet/apps/.*/migrations|intranet/static/.*vendor/.*|intranet/.*/stubs|Ion.egg-info|\.github)
+
+# This is for pre-commit ci
+# After adding pre-commit ci, the "linting" stage of the tests
+# can be safely deleted
+ci:
+  autofix_commit_msg: |
+    chore: auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autoupdate_commit_msg: 'build: pre-commit autoupdate'
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-ast
+        name: Validate Python
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+      - id: check-toml
+      - id: check-yaml
+      - id: detect-private-key
+        exclude: '^(config/docker/secret|intranet/settings/ci_secret)\.py$'
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.3
+    hooks:
+      - id: ruff
+        args: [ "--fix", "--exit-non-zero-on-fix" ]
+        name: ruff lint
+        files: ^intranet/apps/.*
+      - id: ruff-format
+        files: ^intranet/apps/.*
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.5
+    hooks:
+      - id: codespell
+        files: ^.*\.(py|md|rst)$

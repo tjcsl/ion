@@ -1,0 +1,51 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Enrichment Activity
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
+    {% stylesheet 'enrichment' %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+        {% stylesheet 'dark/enrichment' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content events enrichment">
+        <div class="events-container enrichment-container">
+            {% include "enrichment/enrichment.html" %}
+        </div>
+
+        <b>Are you sure you want to delete this enrichment activity?</b>
+        <br>
+        {% if enrichment.happened %}
+            <p class="happened">
+                <i class="fas fa-info-circle"></i>
+                Note: The start time of this enrichment activity has passed.
+            </p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ enrichment.id }}">
+            <a class="button" href="{% url 'enrichment' %}">Cancel</a>
+            <input type="submit" class="delete-button" value="Delete">
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block admin_main %}
+    <h4>Do you want to clear everything in the cache?</h4>
+    <p>Model information is currently stored for:</p>
+    <ul>
+    {% for name, to in cache_length.iteritems %}
+        <li><b>{{ name|capfirst }}</b>: {{ to }} hour{{ to|pluralize }}</li>
+    {% endfor %}
+    </ul>
+    <br>
+    <p>You should only run this function if there is something wrong with the caching process, and it is suspected that information in some parts of the application appear to be out-of-date.</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+        <input type="hidden" name="invalidate_all" value="1">
+        <input type="submit" value="Invalidate All">
+    </form>
+{% endblock %}

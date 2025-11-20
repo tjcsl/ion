@@ -1,0 +1,24 @@
+{% with description="You've requested notifications for an activity" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    There's an open spot for the activity you requested notifications for. Here is some more information about the activity:</p>
+
+
+    <b>{{ activity.block }}</b>:
+        <span style="color: orange">{{ activity.full_title }}</span>
+    <br>
+    <br>
+
+    <p>
+        <a href="https://ion.tjhsst.edu{% url 'eighth_signup' activity.block.id %}?activity={{ activity.activity.id }}">Click here to sign up.</a>
+    </p>
+    <br>
+    <br>
+
+
+
+    <p>If you have any questions or believe this is an error, please email <a href="mailto:intranet@tjhsst.edu">the Intranet admins</a>.</p>
+
+{% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

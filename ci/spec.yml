@@ -1,0 +1,261 @@
+# Based off of:
+# - https://github.com/actions/starter-workflows/blob/master/ci/python-app.yml
+# - https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
+# - https://help.github.com/en/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# - https://github.community/t/using-a-rabbitmq-service-to-test-npm-package/16265
+# - https://github.com/actions/example-services/
+
+# WARNING: After modifying this file, make sure to run ci/regen-workflow.py!
+
+name: CI
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PRODUCTION: 'TRUE'
+
+.anchors:
+  # WARNING: Adding a new Python version here?
+  # Go below to the push docs step (in the build job)
+  # and change that version in the "if" to the latest version
+  # you put here.
+  python_versions: &python_versions
+    - 3.13
+  node_versions: &node_versions
+    - 14.x
+
+  python_setup: &python_setup
+    name: Set up Python ${{ matrix.python-version }}
+    uses: actions/setup-python@v5
+    with:
+      python-version: ${{ matrix.python-version }}
+
+  repo_setup: &repo_setup
+    name: Set up repo
+    uses: actions/checkout@v2
+
+  repo_setup_fetch_all: &repo_setup_fetch_all
+    name: Set up repo (fetching all commits)
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+
+  setup_pip_cache: &setup_pip_cache
+    name: Set up pip cache
+    uses: actions/cache@v4
+    with:
+      path: ~/.cache/pip
+      key: pip-${{ matrix.python-version }}
+
+  setup_packages: &setup_packages
+    name: Set up packages
+    run: |
+      set -e
+
+      sudo apt-get update
+      sudo apt-get install -y libfreetype6-dev
+
+      pip install -U pip setuptools wheel
+      pip install -U \
+        pre-commit coveralls pyyaml pytest-django
+      pip install -U -r requirements.txt
+
+      echo "PATH=$PATH" >> $GITHUB_ENV
+
+  .copy_secret: &copy_secret
+    name: Copy secret.py
+    run: cp intranet/settings/ci_secret.py intranet/settings/secret.py
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+      fail-fast: false
+
+    steps:
+      - *repo_setup
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_packages
+      - *copy_secret
+
+      - name: Run pre-commit
+        run: 'pre-commit run --all-files'
+
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+      fail-fast: false
+
+    steps:
+      # We need the full history so we can validate commit messages.
+      - *repo_setup_fetch_all
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_packages
+      - *copy_secret
+
+      - name: Regenerate workflow YAML file and check for changes
+        run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
+
+      # Check for changes to CI spec
+      - name: Check for changes to CI spec
+        run: ./scripts/build_ensure_no_changes.sh ./ci/regen-workflow.py
+
+      # Validate commit messages
+      - name: Validate PR commit messages
+        # Validate commit messages for PRs
+        if: "github.event_name == 'pull_request'"
+        run: ./scripts/validate-commit-messages.py ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+      - name: Validate push commit messages
+        # Validate commit messages for forks and branches that aren't dev or master
+        if: "github.event_name == 'push' && (github.repository_owner != 'tjcsl' || github.ref != 'refs/heads/master' || github.ref != 'refs/heads/dev')"
+        run: 'git fetch origin ${{ github.event.before }} && ./scripts/validate-commit-messages.py ${{ github.event.before }}..${{ github.event.after }}'
+
+      # Build/push docs
+      - name: Install docs dependencies
+        run: |
+          # sphinxcontrib_django imports our django project, so we need the deps
+          pip install -U -r requirements.txt
+          cd docs
+          pip install -U -r requirements.txt
+
+      - name: Check docs build up to date
+        run: ./scripts/build_ensure_no_changes.sh python3 scripts/build_docs.py
+
+      - name: Build docs
+        run: |
+          cd docs
+          make html
+
+      - name: Push docs
+        # Only run for pushes to the main Ion repo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'tjcsl' && matrix.python-version == 3.13
+        run: ./scripts/push_docs.sh
+        env:
+          GH_TOKEN: ${{ secrets.DOCS_GH_TOKEN }}
+
+
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: *python_versions
+        node-version: *node_versions
+      fail-fast: false
+
+    services:
+      rabbitmq:
+        image: rabbitmq:latest
+        ports:
+          - 5672:5672
+        options: --health-cmd "rabbitmqctl node_health_check" --health-interval 6s --health-timeout 5s --health-retries 10
+
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 6s --health-timeout 5s --health-retries 9
+
+    steps:
+      - *repo_setup
+      - *python_setup
+      - *setup_pip_cache
+      - *setup_packages
+      - *copy_secret
+
+      # Node setup
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Sass and add Node modules bin to PATH
+        run: |
+          set -e
+          npm install sass
+          echo "PATH=${{ github.workspace }}/node_modules/.bin:$PATH" >> $GITHUB_ENV
+
+      # Postgres setup
+      - name: Set and create PGPASSFILE
+        run: |
+          set -e
+          PGPASSFILE=${{ runner.temp }}/.pgpass
+          echo "PGPASSFILE=$PGPASSFILE" >> $GITHUB_ENV
+          echo 127.0.0.1:5432:postgres:postgres:postgres >$PGPASSFILE
+          chmod 600 $PGPASSFILE
+
+      - name: Create database
+        run: psql -U postgres -h 127.0.0.1 -c 'create database ion'
+
+      - name: install Kerberos
+        run: |
+          sudo apt update
+          sudo apt install -y krb5-user
+
+      # Tests
+      - name: Run tests (Fork)
+        if: github.repository_owner != 'tjcsl'
+        run: coverage run -a ./manage.py test --noinput --parallel 4
+      - name: Run tests (PR/Push)
+        if: github.repository_owner == 'tjcsl'  # Run single-threaded for accurate coverage reporting on Ion GitHub
+        run: coverage run -a ./manage.py test --noinput
+      # Check for unmigrated changes
+      - name: Check for unmigrated changes
+        run: coverage run -a ./manage.py makemigrations --noinput --check
+      - name: Migrate database
+        run: coverage run -a ./manage.py migrate
+      - name: Collect static files
+        run: coverage run -a ./manage.py collectstatic --noinput -v 0
+
+      # Coveralls
+      - name: Report coverage to Coveralls
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel: true
+
+      # Codacy
+      - name: Build coverage XML file
+        if: github.repository_owner == 'tjcsl' && github.event_name != 'pull_request'
+        run: coverage xml
+      - name: Report coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@master
+        if: github.repository_owner == 'tjcsl' && github.event_name != 'pull_request'
+        with:
+          coverage-reports: coverage.xml
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
+  finish_success:
+    needs:
+      - linting
+      - build
+      - tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Tell Coveralls that parallel jobs have finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true

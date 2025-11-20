@@ -1,0 +1,236 @@
+@import "eighth.common";
+
+h2 {
+    padding-bottom: 10px;
+}
+
+h3 {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+h4 {
+    font-weight: bold;
+    margin-top: 6px;
+    margin-bottom: 4px;
+}
+
+.admin-dashboard {
+    width: 100%;
+
+    h3 {
+        width: 100%;
+        border-bottom: 1px solid rgb(1, 94, 222);
+    }
+
+    .admin-section {
+        height: 200px;
+        width: 50%;
+
+        &.attendance {
+            height: 220px;
+        }
+    }
+
+    li {
+        line-height: 25px;
+
+        .fas, .far, .fab {
+            font-size: 18px;
+        }
+    }
+
+    .fa-ul {
+        margin-left: 35px;
+        margin-top: 6px;
+
+        a {
+            color: inherit;
+        }
+    }
+}
+
+.primary-content {
+    margin-left: 100px;
+}
+
+.admin-section .selectize-control {
+    width: 100%;
+}
+
+tr .admin-section {
+    &:first-of-type {
+        padding-right: 20px;
+    }
+
+    &:last-of-type:not(:first-of-type) {
+        padding-left: 20px;
+    }
+}
+
+.schedule-activity-grid {
+    margin-top: 10px;
+
+    .selectize-control {
+        width: auto;
+        min-width: 150px;
+    }
+
+    tr {
+        &.spacer {
+            height: 5px;
+        }
+
+        &.divider {
+            background-color: #ccc;
+            height: 1px;
+            width: 100%;
+        }
+    }
+}
+
+.select-blocks-popover {
+    background: white;
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    line-height: 1.7;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    //border: 1px solid rgb(129, 129, 129);
+    z-index: 3;
+
+    &.closed {
+        display: none;
+    }
+}
+
+a.select-blocks-popover-toggle,
+a.block-type {
+    color: inherit;
+}
+
+a.block-type {
+    display: block;
+}
+
+input.capacity {
+    width: 50px;
+}
+
+td[data-field="title"] input,
+td[data-field="comments"] input,
+td[data-field="admin_comments"] {
+    width: 150px;
+}
+
+.select-form {
+    display: inline-block;
+}
+
+select {
+    display: none;
+
+    &[multiple="multiple"] + .selectize-loading .selectize-input {
+        overflow: inherit;
+    }
+}
+
+select#id_title,
+select#id_gender,
+select#year {
+    display: initial;
+}
+
+@media print {
+    .start-date {
+        display: none;
+    }
+}
+
+th,
+table.fancy-table,
+table.fancy-table td {
+    padding: 5px 10px;
+}
+
+table.fancy-table tbody tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* SELECTIZE */
+
+.selectize-dropdown-content {
+    max-height: 450px;
+}
+
+table.choose-fields td {
+    vertical-align: middle;
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 945px) {
+    .primary-content .admin-dashboard #add-room-form {
+        #id_name {
+            width: 60px;
+        }
+
+        th,
+        td {
+            padding: 0 3px 0 0;
+        }
+    }
+}
+
+@media (max-width: 785px) {
+    tr .admin-section {
+        &:last-of-type:not(:first-of-type) {
+            padding-left: 5px;
+        }
+
+        &:first-of-type {
+            padding-right: 5px;
+        }
+    }
+}
+
+.admin-section .selectize-control.single .selectize-input {
+    background: white;
+
+    &.dropdown-active {
+        outline: none;
+        border-color: rgb(0, 72, 171);
+    }
+}
+
+.sticky-check-table {
+    th {
+        padding: 0 20px 0 0;
+    }
+
+    td {
+        padding: 0 30px 0 0 !important;
+    }
+}
+
+button,
+a.button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    border: 1px solid rgba(0, 72, 171, 0.3);
+}
+
+form[name=edit_form] input[type=checkbox] {
+    position: relative;
+    top: 5px;
+}
+
+tr.club-announcements-field > td, tr.club-announcements-field > th {
+    padding-bottom: 15px;
+    vertical-align: top;
+}

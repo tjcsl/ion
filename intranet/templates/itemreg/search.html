@@ -1,0 +1,206 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+{% load texthighlight %}
+
+{% block title %}
+    {{ block.super }} - Lost and Found
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+    $(function() {
+        $("#id_calc_type, #id_manufacturer").selectize();
+    })
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'lostfound' %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    <style>
+    .errorlist {
+        display: none;
+    }
+
+    label[for="id_description"],
+    #id_description {
+        display: none;
+    }
+
+    .item-search {
+        width: 100%;
+    }
+
+    .item-search > tr > td {
+        vertical-align: top;
+    }
+
+    .helptext {
+        display: none;
+    }
+
+    .lostfound form th {
+        vertical-align: top;
+        padding-top: 9px;
+    }
+
+    .lostfound form th label {
+        padding-left: 0px;
+    }
+
+    </style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/select' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="lostfound primary-content">
+    <a href="{% url 'itemreg' %}" class="button">
+        <i class="fas fa-arrow-left"></i> Item Registration
+    </a>
+    <h2>
+        Item Search
+    </h2>
+
+    <br>
+
+    <div class="table">
+        <div class="table-row">
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Find Calculator:</h3>
+                <input type="hidden" name="type" value="calculator">
+                <table>
+                {{ calc_form }}
+                <tr><td>&nbsp;</td><td><input type="submit" value="Search"></td></tr>
+                </table>
+            </form>
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Find Computer:</h3>
+                <input type="hidden" name="type" value="computer">
+                <table>
+                {{ comp_form }}
+                <tr><td>&nbsp;</td><td><input type="submit" value="Search"></td></tr>
+                </table>
+            </form>
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <h3 style="font-size: 16px; margin-bottom: 5px;">Find Phone:</h3>
+                <input type="hidden" name="type" value="phone">
+                <table>
+                {{ phone_form }}
+                <tr><td>&nbsp;</td><td><input type="submit" value="Search"></td></tr>
+                </table>
+            </form>
+        </div>
+        <div class="table-row">
+            <form action="{% url 'itemreg_search' %}" method="get">
+                <h3 style="font-size: 16px;">Find By User:</h3>
+                <input type="hidden" name="type" value="all">
+                <input type="text" name="user" value="" placeholder="Enter ID or name">
+                &nbsp;<input type="submit" value="Search">
+            </form>
+        </div>
+    </div>
+
+    <br>
+
+    {% if results.calculator %}
+    <br>
+    <div style="font-size: 16px">Calculators Matched:</div>
+    <table class="fancy-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Serial</th>
+                <th>ID</th>
+                <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in results.calculator %}
+        <tr>
+            <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
+            <td>{{ c.get_calc_type_display }}</td>
+            <td>{{ c.calc_serial|highlight:getargs.calc_serial|safe }}</td>
+            <td>{{ c.calc_id|highlight:getargs.calc_id|safe }}</td>
+            <td>{{ c.added }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% if results.computer %}
+    <br>
+    <h3 style="font-size: 16px">Computers Matched:</h3>
+    <table class="fancy-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>Screen Size</th>
+                <th>Serial</th>
+                <th>Description</th>
+                <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in results.computer %}
+        <tr>
+            <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
+            <td>{{ c.get_manufacturer_display|highlight:getargs.manufacturer|safe }}</td>
+            <td>{{ c.model|highlight:getargs.model|safe }}</td>
+            <td>{{ c.screen_size|highlight:getargs.screen_size|safe }}</td>
+            <td>{{ c.serial|highlight:getargs.serial|safe }}</td>
+            <td>{{ c.description|highlight:getargs.description|safe }}</td>
+            <td>{{ c.added }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% if results.phone %}
+    <br>
+    <div style="font-size: 16px">Phones Matched:</div>
+    <table class="fancy-table" style="width: 100%">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Manufacturer</th>
+                <th>Model</th>
+                <th>IMEI</th>
+                <th>Description</th>
+                <th>Added</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for c in results.phone %}
+        <tr>
+            <td><a href="{% url 'user_profile' c.user.id %}">{{ c.user.full_name }}</a></td>
+            <td>{{ c.get_manufacturer_display|highlight:getargs.manufacturer|safe }}</td>
+            <td>{{ c.model|highlight:getargs.model|safe }}</td>
+            <td>{{ c.imei|highlight:getargs.imei|safe }}</td>
+            <td>{{ c.description|highlight:getargs.description|safe }}</td>
+            <td>{{ c.added }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% if no_results %}
+        No results. Enter search criteria above, or hit the button below each category to display all entires of that type.
+    {% endif %}
+
+</div>
+{% endblock %}

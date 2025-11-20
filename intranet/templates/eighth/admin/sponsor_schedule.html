@@ -1,0 +1,81 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+            $("#sponsor-select").on("change", function() {
+                var val = $(this).val();
+                if(val) {
+                    location.href = "/eighth/admin/sponsors/schedule/" + val;
+                }
+            })
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+    <style>
+    tr.cancelled td {
+        color: red;
+    }
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+<select id="sponsor-select" placeholder="Select or search for a sponsor">
+    <option value="">Select or search for a sponsor</option>
+    {% for sp in all_sponsors %}
+        <option value="{{ sp.id }}"{% if sp.id == sponsor.id %} selected{% endif %}>{{ sp.name }}{% if sp.user.id %} (User {{ sp.user.id }}){% else %} (No user){% endif %}</option>
+    {% endfor %}
+</select>
+
+<h4>Select an Activity:</h4>
+
+<select class="url-param-selector" data-param="activity" placeholder="Select or search for an activity">
+    <option value="">Select or search for an activity</option>
+    {% for a in activities %}
+        <option value="{{ a.id }}"{% if a == activity %} selected{% endif %}>{{ a.id }}: {{ a.name_with_flags }}</option>
+    {% endfor %}
+</select>
+{% if activity %}
+    <a href="{% url 'eighth_admin_sponsor_schedule' sponsor.id %}" class="button">Show All Activities</a>
+{% endif %}
+
+<h4>Schedule for {{ sponsor }}</h4>
+Click on column titles to sort.
+<table data-sortable class="sortable fancy-table">
+    <thead>
+        <tr>
+            <th>Block</th>
+            <th>AID</th>
+            <th>Activity</th>
+            <th>Comments</th>
+            <th>Room</th>
+            <th>Signups</th>
+            <th>Capacity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for scheduled_activity in scheduled_activities %}
+            <tr{% if scheduled_activity.cancelled %} class="cancelled"{% endif %}>
+                <td>{{ scheduled_activity.block.date|date:"D, M d, Y" }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                <td>{{ scheduled_activity.activity.aid }}</td>
+                <td>{{ scheduled_activity.title_with_flags }}</td>
+                <td>{{ scheduled_activity.comments }}</td>
+                <td>{% for rm in scheduled_activity.get_true_rooms %}{{ rm.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                <td>{{ scheduled_activity.eighthsignup_set.count }}</td>
+                <td>{{ scheduled_activity.get_true_capacity }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

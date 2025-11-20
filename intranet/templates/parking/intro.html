@@ -1,0 +1,68 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Parking
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style>b { font-weight: bold }
+p {
+    padding: 10px 0;
+}</style>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="parking primary-content" style="max-width: 700px">
+    {% if request.user.is_parking_admin %}
+        <p>You are a parking admin. <a href="/djangoadmin/parking/">View the admin interface</a></p>
+    {% endif %}
+
+    <h2>
+        Parking Applications
+    </h2>
+
+    <p>Parking applicants,</p>
+
+    <p>For the 2019-2020 school year, a limited number of parking spaces will be available for student parking.</p>
+
+    <p>Complete the following online application no later than June 7th, 2019. In addition to completing this online component, <a href="https://ion.tjhsst.edu/uploads/parking_2019-20.doc">THIS FORM</a> must be downloaded, completed, and <b>TURNED IN</b> to the Security Office by June 7th, 2019. <b>Do not include payment</b> with the application; payment is due in the fall when you pick up your parking permit. You must also plan to have your driver's license at the time you pick up your pass, and have no more than {{ max_absences }} eighth period unexcused absences to be eligible. You must have no outstanding debts to TJHSST.</p>
+
+    <p>Based on the number of student applications received, the following prioritized criteria will be used for allocating student parking spaces:</p>
+
+    <ul>
+        <li>Mentorship students driving to work locations</li>
+        <li>Seniors with no Eighth Period Unexcused Absences</li>
+        <li>Seniors with 1 to {{ max_absences }} Eighth Period Unexcused Absences</li>
+    </ul>
+
+    <p>All juniors and seniors with {{ max_absences|add:1 }} or more Unexcused Absences are <b>INELIGIBLE</b>. Students failing to apply online during the designated "online application period" will be allocated a parking space AFTER all other spaces have been assigned, if they qualify and any are available.</p>
+
+    <p>Parking spaces will be assigned randomly within the above listed priorities.</p>
+
+    <p>If you believe there is a mistake regarding 8th period absences, please clear incorrect unexcused absences with the 8th period office immediately. Final applications are due June 7th, 2019. A joint application means that two students will share one spot and one parking permit. This allows the two students to collectively only ever have one car on campus on a given day. Joint applications must be stapled together when turned in to the Safety &amp; Security Office. The cost of the parking pass is $200.00 for the calendar year 2019-20.</p>
+
+    <p>Parking fees will no longer be prorated throughout the year.</p>
+
+    {% if absences > max_absences %}
+    <p>You have too many absences to request a parking space.</p>
+    {% else %}
+    <a href="{% url 'parking_form' %}" class="button">Continue</a>
+    {% endif %}
+
+</div>
+{% endblock %}

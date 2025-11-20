@@ -1,0 +1,341 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+    <script src="{% static 'vendor/sortable-0.8.0/js/sortable.min.js' %}"></script>
+    {{ block.super }}
+    <script>
+        $(function() {
+            Sortable.init();
+
+            updateRoomChoices = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var room_ids = $("#room-select").val();
+                if(!room_ids) room_ids = [];
+                console.debug("updateRoomChoices", room_ids)
+                for(var i=0; i<room_ids.length; i++) {
+                    var el = $("<input type='hidden' name='room'>");
+                    el.val(room_ids[i]);
+                    $(form).append(el);
+                }
+            }
+
+            showUsedRooms = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var el = $("<input type='hidden' name='show_used' value=1>");
+                $(form).append(el);
+            }
+
+            showAllRooms = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var el = $("<input type='hidden' name='show_all' value=1>");
+                $(form).append(el);
+            }
+
+            showAvailableForEighth = function() {
+                var form = document.forms["choose-fields"];
+                form.action = "";
+                $("input[name=room]", form).remove();
+                var el = $("<input type='hidden' name='show_available_for_eighth' value=1>");
+                $(form).append(el);
+            }
+
+            $("#rooms-submit").click(function(event) {
+                event.preventDefault();
+                updateRoomChoices();
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#show-used-rooms").click(function(event) {
+                event.preventDefault();
+                showUsedRooms();
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#show-all-rooms").click(function(event) {
+                event.preventDefault();
+                showAllRooms();
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#show-available-for-eighth").click(function(event) {
+                event.preventDefault();
+                showAvailableForEighth();
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#export-csv").click(function(event) {
+                event.preventDefault();
+                updateRoomChoices();
+                document.forms["choose-fields"].action = $(this).attr("href");
+                document.forms["choose-fields"].submit();
+
+            });
+
+            $("#print-page").click(function(event) {
+                window.print();
+            })
+
+            $("#apply-btn").click(function(event) {
+                event.preventDefault();
+                updateRoomChoices();
+                document.forms["choose-fields"].action = "";
+                document.forms["choose-fields"].submit();
+            });
+
+            $("#hide-administrative").on("change", function() {
+                var sel = $(this).prop("checked");
+                if(document.forms["choose-fields"].hide_administrative) {
+                    document.forms["choose-fields"].hide_administrative.value = sel?1:0;
+                }
+            });
+            {% if hide_administrative %}
+                $("tr.administrative").toggle();
+            {% endif %}
+
+            $("#only-show-overbooked").on("change", function() {
+                var sel = $(this).prop("checked");
+                if(document.forms["choose-fields"].only_show_overbooked) {
+                    document.forms["choose-fields"].only_show_overbooked.value = sel?1:0;
+                }
+            });
+            {% if only_show_overbooked %}
+                $("tr.underbooked").toggle();
+            {% endif %}
+
+        {% if not scheduled_activities and wizard %}
+            $("form > select").on("change", function() {
+                var val = $(this).val();
+                if(val) {
+                    this.form.submit();
+                }
+            });
+        {% endif %}
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {{ block.super }}
+    <style>
+#room-util-table tr.restricted {
+    color: #ff6600;
+}
+
+#room-util-table tr.almost-full {
+    color: #00878d;
+    font-weight: bold;
+}
+
+#room-util-table tr.full {
+    color: #0000ff;
+    font-weight: bold;
+}
+
+#room-util-table tr.cancelled {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.tbd-tba {
+    color: red;
+    text-decoration: underline;
+}
+
+i.i {
+    font-style: italic;
+}
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+{% if not scheduled_activities and wizard %}
+        <form action="" method="post">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p><br>
+            {{ wizard.form }}
+            {% if wizard.steps.prev %}
+                {% comment %}<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>{% endcomment %}
+                <a href="{% url 'eighth_admin_room_utilization' %}" class="button">Previous Step</a>
+            {% endif %}
+            {% if wizard.steps.next %}
+                <input type="submit" value="Next">
+            {% else %}
+                <input type="submit" value="Show Room Utilization">
+            {% endif %}
+        </form>
+        {% if wizard.steps.step1 == 1 %}
+            <br>
+            <br>
+            <a href="{% url 'eighth_admin_room_utilization' %}/{{ first_block }}/{{ last_block }}" class="button">Select All Blocks</a>
+        {% endif %}
+{% else %}
+    <table style="width: 100%">
+    <tr>
+        <td>
+        <br>
+        {% if start_block == end_block %}
+            <strong>Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
+        {% else %}
+            <strong>Start Block:</strong> {{ start_block.date|date:"D, N j, Y" }} ({{ start_block.block_letter }})
+            <br>
+            <strong>End Block:</strong> {{ end_block.date|date:"D, N j, Y" }} ({{ end_block.block_letter }})
+        {% endif %}
+        </td>
+        <td>
+
+            <b>Filter by room:</b>
+            <form action="" method="get" name="choose-rooms">
+                <select multiple="multiple" name="room" id="room-select" placeholder="Select or search for a room">
+                    <option value="">Select or search for a room</option>
+                    {% for room in all_rooms %}
+                        <option value="{{ room.id }}"{% if room.id in room_ids %} selected{% endif %}>{{ room.name }} ({{ room.capacity }})</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Filter Rooms" id="rooms-submit">
+                {% if not show_used_rooms %}
+                    &nbsp; &nbsp; <a href="#" id="show-used-rooms" class="button">Show Used Rooms</a>
+                {% endif %}
+                {% if not show_all_rooms %}
+                    &nbsp; &nbsp; <a href="#" id="show-all-rooms" class="button">Show All Rooms</a>
+                {% endif %}
+                {% if not show_available_for_eighth %}
+                    &nbsp; &nbsp; <a href="#" id="show-available-for-eighth" class="button">Show Available for Eighth</a>
+                {% endif %}
+            </form>
+        </td>
+        <td>
+            <br>
+            <input type="checkbox" id="hide-administrative"{% if hide_administrative %} checked{% endif %}>
+            <label for="hide-administrative">Hide administrative</label>
+            <br>
+            <input type="checkbox" id="only-show-overbooked">
+            <label for="only-show-overbooked">Only show overbooked</label>
+        </td>
+    </tr>
+    </table>
+
+    <br>
+    Choose the fields that you wish to display:
+    <form action="" method="get" name="choose-fields">
+        <table class="choose-fields fancy-table">
+            <tr>
+                <input type="hidden" name="hide_administrative" value="{% if hide_administrative %}1{% else %}0{% endif %}">
+                <input type="hidden" name="only_show_overbooked" value="{% if only_show_overbooked %}1{% else %}0{% endif %}">
+            {% for room in room_ids %}
+                <input type="hidden" name="room" value="{{ room }}">
+            {% endfor %}
+                <td><input type="checkbox" name="show" value="block"{% if show.block %} checked{% endif %}><br>Block</td>
+                <td><input type="checkbox" name="show" value="rooms"{% if show.rooms %} checked{% endif %}><br>Rooms</td>
+                <td><input type="checkbox" name="show" value="capacity"{% if show.capacity %} checked{% endif %}><br>Capacity</td>
+                <td><input type="checkbox" name="show" value="signups"{% if show.signups %} checked{% endif %}><br>Signups</td>
+                <td><input type="checkbox" name="show" value="aid"{% if show.aid %} checked{% endif %}><br>AID</td>
+                <td><input type="checkbox" name="show" value="activity"{% if show.activity %} checked{% endif %}><br>Activity</td>
+                <td><input type="checkbox" name="show" value="sponsors"{% if show.sponsors %} checked{% endif %}><br>Sponsors</td>
+                <td><input type="checkbox" name="show" value="comments"{% if show.comments %} checked{% endif %}><br>Comments</td>
+                <td><input type="checkbox" name="show" value="admin_comments"{% if show.admin_comments %} checked{% endif %}><br>Admin Comments</td>
+                {% if show_listing %}
+                    <th><input type="submit" value="Apply" id="apply-btn"></th>
+                    <th><a href="{% url 'eighth_admin_room_utilization_csv' start_block.id end_block.id %}" class="button" id="export-csv">Export CSV</a></th>
+                    <th><a href="" class="button" id="print-page">Print</a></th>
+                {% endif %}
+            </tr>
+        </table>
+
+    {% if show_listing %}
+        <br>
+        Click on column titles to sort.
+        <table id="room-util-table" data-sortable class="sortable fancy-table">
+            <thead>
+                <tr>
+                    {% if show.block %}<th data-sortable-type="alpha" style="min-width: 150px">Block</th>{% endif %}
+                    {% if show.rooms %}<th data-sortable-type="alpha">Rooms</th>{% endif %}
+                    {% if show.capacity %}<th style="min-width: 66px">Cap</th>{% endif %}
+                    {% if show.signups %}<th style="min-width: 68px">Sign</th>{% endif %}
+                    {% if show.aid %}<th style="min-width: 45px">AID</th>{% endif %}
+                    {% if show.activity %}<th data-sortable-type="alpha">Activity</th>{% endif %}
+                    {% if show.comments %}<th data-sortable-type="alpha" style="min-width: 92px">Comments</th>{% endif %}
+                    {% if show.sponsors %}<th data-sortable-type="alpha">Sponsors</th>{% endif %}
+                    {% if show.admin_comments %}<th data-sortable-type="alpha">Admin Comments</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for sched_act in scheduled_activities %}
+                    <tr class="{% if sched_act.activity.administrative %}administrative{% endif %}
+                               {% if not sched_act.is_overbooked %}underbooked{% endif %}
+                               {% if sched_act.cancelled %}cancelled{% endif %}
+                               {% if sched_act.activity.restricted %}restricted{% endif %}
+                               {% if sched_act.is_full %}full{% endif %}
+                               {% if sched_act.is_almost_full %}almost-full{% endif %}">
+                        {% if show.block %}
+                            {% if  sched_act.empty %}
+                                <td data-value='-1'>Room is Unused</td>
+                            {% else %}
+                                 <td data-value='{{ sched_act.block.date|date:"c" }}{{ sched_act.block.block_letter }}'>
+                                    {{ sched_act.block.date|date:"D, N j, Y" }} ({{ sched_act.block.block_letter }})
+                                </td>
+                            {% endif %}
+                        {% endif %}
+                        {% if show.rooms %}
+                            <td>
+                            {% if sched_act.empty %}
+                               {{ sched_act.room.name }}
+                            {% else %}
+                                {% for rm in sched_act.get_true_rooms %}
+                                    {% if rm.to_be_determined %}
+                                        <span class="tbd-tba">{{ rm }}</span>
+                                    {% else %}{{ rm.name }}{% endif %}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            </td>
+                        {% endif %}
+                        {% if show.capacity %}
+                            <td>{% if sched_act.get_true_capacity != -1 %}{{ sched_act.get_true_capacity }}{% else %}Unlimited{% endif %}</td>
+                        {% endif %}
+                        {% if show.signups %}
+                            <td>{{ sched_act.members.count }}</td>
+                        {% endif %}
+                        {% if show.aid %}
+                            <td>{{ sched_act.activity.aid }}</td>
+                        {% endif %}
+                        {% if show.activity %}
+                            <td>{{ sched_act.title_with_flags }}</td>
+                        {% endif %}
+                        {% if show.comments %}
+                            <td>{{ sched_act.comments }}</td>
+                        {% endif %}
+                        {% if show.sponsors %}
+                            <td>
+                            {% for sp in sched_act.get_true_sponsors %}
+                                {% if sp.to_be_assigned %}
+                                    <span class="tbd-tba">{{ sp }}</span>{% else %}
+                                    {{ sp }}{% endif %}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            </td>
+                        {% endif %}
+                        {% if show.admin_comments %}
+                            <td>{{ sched_act.admin_comments }}</td>
+                        {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7">There were no results.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <br>
+        <p>Adjust the search criteria above and press <b>Filter Rooms</b>, or press <b>Show All Rooms</b> to show all results.</p>
+    {% endif %}
+    </form>
+{% endif %}
+
+{% endblock %}

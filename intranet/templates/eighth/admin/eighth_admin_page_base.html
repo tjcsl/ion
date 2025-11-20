@@ -1,0 +1,42 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+{{ block.super }} - Eighth Admin{% if admin_page_title and request.resolver_match.url_name != "eighth_admin_dashboard" %} - {{ admin_page_title }}{% endif %}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
+    <script src="{% static 'js/eighth/ui_init.js' %}"></script>
+    <script src="{% static 'js/eighth/admin.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+    <div class="eighth-header">
+            <h2>
+                {% block admin_page_title %}{{ admin_page_title }}{% endblock %}
+            </h2>
+
+            {% include "eighth/admin/start_date.html" %}
+    </div>
+    {% block admin_main %}{% endblock %}
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - GCM Notifications
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    <style>
+    .gcm-form input {
+        font-size: 13px;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+        $(function() {
+            $("select[name=nc_users]").selectize();
+        });
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Post GCM Message</h2>
+        <a class="button" href="{% url 'notif_gcm_list' %}">View Sent Messages</a>
+        {% if has_tokens %}
+            <form action="{% url 'notif_gcm_post' %}" method="post" name="gcm_post" class="gcm-form">
+            {% csrf_token %}
+                <table class="fancy-table">
+                    <tr>
+                        <th>Users:</th>
+                        <td>
+                            <select name="nc_users" multiple="multiple">
+                            {% for nc in nc_all %}
+                                <option value="{{ nc.id }}">{{ nc.user }}</option>
+                            {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Title:</th>
+                        <td><input name="title"></td>
+                    </tr>
+                    <tr>
+                        <th>Text:</th>
+                        <td><textarea name="text"></textarea></td>
+                    </tr>
+                    <tr>
+                        <th>URL (optional):</th>
+                        <td><input name="url"></td>
+                    </tr>
+                    <!--<tr>
+                        <th>Sound:</th>
+                        <td><input type="checkbox" name="sound" value="true"></td>
+                    </tr>
+                    <tr>
+                        <th>Wakeup:</th>
+                        <td><input type="checkbox" name="wakeup" value="true"></td>
+                    </tr>
+                    <tr>
+                        <th>Vibrate:</th>
+                        <td><input type="checkbox" name="vibrate" value="true"></td>
+                    </tr>-->
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" value="Post">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        {% else %}
+            <p>You do not have Google Cloud Messaging tokens set up.</p>
+        {% endif %}
+    </div>
+{% endblock %}

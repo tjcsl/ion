@@ -1,0 +1,36 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block admin_main %}
+    <h4>Select a Block:</h4>
+
+    <select class="url-param-selector" data-param="block" placeholder="Select or search for a block">
+        <option value="">Select or search for a block</option>
+        {% for b in blocks %}
+            <option value="{{ b.id }}"{% if b == chosen_block %} selected{% endif %}>{{ b.id }}: {{ b.date }} ({{ b.block_letter}})</option>
+        {% endfor %}
+    </select>
+
+    {% if chosen_block %}
+        {% if not room_conflicts %}
+            No conflicts for this block
+        {% else %}
+            <ul>
+                {% for conflict in room_conflicts %}
+                    <li>
+                        <strong>Conflicts for Room: {{ conflict.room_name }}</strong>
+                        <ul>
+                            {% for activity in conflict.activities %}
+                                <li>
+                                    <a href="{% url 'eighth_admin_schedule_activity' %}?activity={{ activity.id }}">
+                                        {{ activity.name_with_flags }} - #{{ activity.id }}
+                                    </a>
+                                    </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Class: {{ class.name }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'courses' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <section class="class-info">
+            <h2>{{ class.course.name }}</h2>
+            <h3>
+                Period <a href="{% url 'period_courses' class.period %}">{{ class.period }}</a>
+            </h3>
+            <h3>
+                Teacher:
+                {% if class.teacher %}
+                    <a href="{% url 'user_profile' class.teacher.id %}">{{ class.teacher.full_name }}</a>
+                {% else %}
+                    Unknown
+                {% endif %}
+
+            </h3>
+            <h3>
+                Room:
+                {% if class.room %}
+                  <a href="{% url 'room_sections' class.room %}">{{ class.room }}</a>
+                {% else %}
+                  Unknown
+                {% endif %}
+            </h3>
+            <h3>
+                {% if class.sem == "YR" %}
+                    Full Year
+                {% elif class.sem == "S1" %}
+                    First Semester
+                {% elif class.sem == "S2" %}
+                    Second Semester
+                {% else %}
+                    Unknown
+                {% endif %}
+            </h3>
+        </section>
+
+        <section class="students-info">
+            <b>Students in this class:</b>
+            <table class="sortable fancy-table zebra" data-sortable>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Grade</th>
+                        <th class="email-col">TJ Email</th>
+                    </tr>
+                </thead>
+                {% for student in class.students|dictsort:"last_name"|dictsort:"first_name" %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user_profile' student.id %}">{{ student.last_first }}</a>
+                        </td>
+                        <td>{{ student.grade_number }}</td>
+                        <td class="email-col">{{ student.tj_email }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </section>
+
+        <section class="section-info">
+            <b>Other sections of {{ class.course.name }}:</b>
+            <table class="sortable fancy-table zebra" data-sortable>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Name</th>
+                        <th>Teacher</th>
+                        <th>Room</th>
+                        <th>Semester</th>
+                    </tr>
+                </thead>
+                {% for tclass in class.course.sections.all|dictsort:"period" %}
+                    <tr>
+                        <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                            <a href="{% url 'period_courses' tclass.period %}">{{ tclass.period }}</a>
+                            {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                        </td>
+                        <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                            <a href="{% url 'section_info' tclass.section_id %}">
+                                {{ tclass.course.name }}
+                            </a>
+                            {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                        </td>
+                        <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                            {% if tclass.teacher %}
+                            <a href="{% url 'user_profile' tclass.teacher.id %}">
+                                {{ tclass.teacher.last_name }}
+                            </a>
+                            {% else %}
+                                Unknown
+                            {% endif %}
+                            {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                        </td>
+                        <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                                <a href="{% url 'room_sections' tclass.room %}">{{ tclass.room }}</a>
+                            {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                        </td>
+                        <td>{% if class.section_id == tclass.section_id %}<b>{% endif %}
+                              {% if tclass.sem == "YR" %}
+                                Full Year
+                              {% elif tclass.sem == "S1" %}
+                                  First Semester
+                              {% elif tclass.sem == "S2" %}
+                                  Second Semester
+                              {% else %}
+                                  Unknown
+                              {% endif %}
+                            {% if class.section_id == tclass.section_id %}</b>{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br>
+            <b><a href="{% url 'all_courses' %}">View all classes</a></b>
+        </section>
+    </div>
+{% endblock %}

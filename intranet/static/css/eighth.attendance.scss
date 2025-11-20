@@ -1,0 +1,347 @@
+@import "colors";
+
+$red: rgb(255, 72, 72);
+$green: rgb(0, 180, 0);
+$orange: rgb(255, 135, 0);
+
+input[type="checkbox"] {
+    zoom: 1.25;
+    margin-right: -1px;
+    margin-bottom: 3px;
+    vertical-align: middle;
+}
+
+.attendance-container {
+    display: inline-block;
+    width: 100%;
+    max-width: 800px;
+}
+
+.no-attendance {
+    color: $red;
+    font-weight: bold;
+}
+
+.attendance-taken {
+    color: $green;
+    font-weight: bold;
+}
+
+.no-passes {
+    color: $green;
+    font-weight: bold;
+}
+
+.passes-notice {
+    color: $orange;
+    font-weight: bold;
+}
+
+.attendance-taken,
+.no-attendance,
+.passes-notice {
+    font-size: 20px;
+}
+
+.take-attendance-roster {
+    td {
+        padding-right: 20px;
+    }
+
+    tr {
+        line-height: 25px;
+    }
+
+    th.cb-col {
+        input[type="checkbox"] {
+            margin-bottom: 4px;
+        }
+    }
+}
+
+.save-button {
+    float: right;
+}
+
+h3 {
+    font-weight: bold;
+    font-size: 18px;
+    clear: both;
+    margin-top: 20px;
+}
+
+.activity-attributes {
+    margin-bottom: 10px;
+}
+
+form .accept-all-passes {
+    float: right;
+    margin-bottom: 40px;
+    margin-top: 15px;
+}
+
+.attendance-container td {
+    padding-right: 10px;
+}
+
+.present-checkbox {
+    text-align: center;
+}
+
+.take-passes {
+    tr {
+        line-height: 25px;
+    }
+
+    td.form {
+        text-align: center;
+    }
+}
+
+.pass-container {
+    margin-bottom: 25px;
+    @media (min-width: 900px) {
+        position: absolute;
+        left: 750px;
+        &.eighth-admin {
+            top: 266px;
+        }
+        &.has-passes {
+            position: static;
+        }
+    }
+    @media (min-width: 1100px) {
+        &.has-passes {
+            position: absolute;
+            left: 750px;
+            background: #f0f0f0;
+            padding: 0 30px;
+
+            &.eighth-admin {
+                top: 266px;
+            }
+        }
+    }
+}
+
+table.take-attendance-roster,
+table.take-passes {
+    vertical-align: middle;
+    @media (max-width: 500px) {
+        width: 100%;
+        zoom: 0.8;
+    }
+}
+
+a.pass-form-submit-link.button {
+    padding: 3px 10px;
+    font-weight: normal;
+    margin: 0;
+    line-height: 15px;
+}
+
+.save-button {
+    text-align: center;
+}
+
+.choose-block {
+    select#block-select,
+    .selectize-control {
+        width: 400px;
+    }
+}
+
+.choose-activity {
+    select#activity-select,
+    .selectize-control {
+        width: 400px;
+    }
+}
+
+@media (max-width: 430px) {
+    .choose-block,
+    .choose-activity {
+        select#block-select,
+        .selectize-control {
+            width: 100%;
+        }
+    }
+}
+
+.user-link {
+    a {
+        color: $grey;
+    }
+
+    &[data-user-id]:hover {
+        //font-weight: bold;
+    }
+}
+.student-attendance-row {
+    transition: background-color 0.25s ease;
+}
+.student-attendance-row:hover {
+    background-color: #d2d2d2;
+    transition: background-color 0.25s ease;
+}
+
+.user-pic {
+    display: none;
+    position: absolute;
+    background-color: rgb(57, 105, 146);
+    background-clip: content-box;
+    background-repeat: no-repeat;
+    background-size: 172px 215px;
+    z-index: 9001;
+}
+
+.selectize-dropdown-content {
+    max-height: 450px;
+}
+
+.sponsoring-wizard-table {
+    min-width: 500px;
+
+    a.button {
+        float: right;
+    }
+}
+
+td.email-col {
+    font-size: 10px;
+}
+
+@media (max-width: 620px) {
+    table.sponsoring-wizard-table {
+        min-width: auto;
+        width: 100%;
+    }
+    div.selectize-control {
+        width: auto;
+    }
+    .email-col {
+        display: none;
+    }
+}
+
+@media print {
+    .selectize,
+    .selectize *,
+    .selectize-control,
+    .selectize-control *,
+    .selectize-control * * {
+        display: inline;
+        border: 0;
+        padding: 0 5px;
+        margin: 0 10px 0 0;
+    }
+    table.take-attendance-roster {
+        position: absolute;
+        left: 25px;
+        max-width: none;
+        //width: 100%;
+        //width: calc(100% - 25px);
+        table-layout: fixed;
+    }
+    .user-col > a {
+        display: inline-block;
+        page-break-inside: avoid;
+        height: auto;
+    }
+    .email-col {
+        width: 250px;
+    }
+    .take-attendance-roster {
+        tbody tr {
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+
+            &,
+            td {
+                border-bottom: 1px solid black;
+                padding-bottom: 5px;
+                height: 25px;
+                /* for 32px height */
+                max-height: 25px;
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            td {
+                border-right: 1px solid black;
+
+                &.user-col,
+                &.sid-col,
+                &.email-col {
+                    padding-left: 5px;
+                }
+
+                &.email-col {
+                    border-right: none;
+                }
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
+
+        thead tr.members-header {
+            &,
+            td {
+                border: 1px solid black;
+                padding-bottom: 5px;
+            }
+
+            th {
+                border-right: 1px solid black;
+
+                &.user-col,
+                &.sid-col,
+                &.email-col {
+                    padding-left: 5px;
+                }
+
+                &.email-col {
+                    border-right: none;
+                }
+
+                &.grade-col {
+                    text-align: center;
+                    padding: 0 8px;
+                }
+
+                &:last-child {
+                    border-right: none;
+                }
+            }
+        }
+
+        .email-col {
+            display: block;
+            border-bottom: 0;
+        }
+
+        .sid-col {
+            display: none;
+        }
+
+        &.no-members {
+            &,
+            tbody,
+            tbody tr,
+            tbody tr td {
+                border: none;
+            }
+        }
+    }
+    .pass-container {
+        display: none;
+
+        &.has-passes {
+            display: block;
+        }
+    }
+}

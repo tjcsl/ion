@@ -1,0 +1,133 @@
+@import "colors";
+
+.board {
+    min-width: 290px;
+    /* for 320x480 screens */
+    max-width: 1000px;
+    margin-bottom: 100px;
+
+    h2 {
+        padding-left: 10px;
+        line-height: 38px;
+
+        &.category {
+            font-size: 18px;
+            font-weight: normal;
+            padding-left: 10px;
+            height: 33px;
+        }
+    }
+}
+
+h4 {
+    font-size: 14px;
+}
+
+.button-container {
+    float: right;
+    margin-top: -38px;
+}
+
+.boardpost {
+    background-color: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(216, 216, 216);
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    overflow-x: auto;
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
+    h3 > a.boardpost-link {
+        cursor: pointer;
+        color: $grey !important;
+    }
+}
+
+.boardposts-icon-wrapper {
+    float: right;
+}
+
+.boardpost-metadata {
+    color: rgb(144, 144, 144);
+    font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 5px;
+}
+
+.boardpost-icon {
+    cursor: pointer;
+
+    &-wrapper {
+        float: right;
+        display: none;
+
+        > a {
+            color: $grey;
+            text-decoration: none !important;
+            padding-left: 2px;
+
+            &:hover {
+                color: rgb(32, 66, 224);
+            }
+        }
+
+        .boardpost:hover & {
+            display: block;
+        }
+    }
+}
+
+.boardpost-comment {
+    position: relative;
+    padding: 3px 5px;
+
+    &-icons {
+        position: absolute;
+        right: 5px;
+    }
+}
+
+.posts-content {
+    float: right;
+    width: calc(100% - 200px);
+}
+
+.left-pane {
+    float: left;
+    width: 200px;
+    @media (max-width: 500px) {
+        width: 100%;
+    }
+
+    &-header {
+        font-size: 14px;
+        text-align: center;
+        display: block;
+        margin-bottom: -20px;
+    }
+}
+
+.board-class {
+    //width: calc(100% - 28px);
+    padding: 4px 8px;
+    margin: 4px;
+    border: 1px solid rgb(216, 216, 216);
+    border-radius: 5px;
+    background: white;
+}
+
+@media (max-width: 800px) {
+    .left-pane {
+        width: 460px;
+    }
+    .posts-content {
+        width: 100%;
+    }
+    .board-classes .board-class {
+        display: inline-block;
+        width: 125px;
+        font-size: 10px;
+    }
+}

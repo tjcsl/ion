@@ -1,0 +1,58 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Schedule - {{ date }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    {% stylesheet 'schedule' %}
+
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script>
+    $(function() {
+        $("#id_date").datepicker();
+    })
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/schedule' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <a href="{% url 'schedule_admin' %}" class="button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <h2>Add Day Comment</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <td><input type="text" name="date" id="id_date" value="{{ date }}"></td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td><input type="text" name="comment" value="{{ comment }}"></td>
+                </tr>
+                <tr><td colspan="2">
+                    <input type="submit" value="Update Comment">
+                </td></tr>
+            </table>
+        </form>
+    </div>
+{% endblock %}

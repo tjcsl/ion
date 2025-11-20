@@ -1,0 +1,172 @@
+{% load dates %}
+{% load static %}
+
+
+<div class="event{% if hide_events and event.id in user_hidden_events %} hidden{% endif %}" data-id="{{ event.id }}">
+    <h3>
+        {% if show_icon or show_date_icon or not event.approved %}
+            <i class="far fa-calendar-alt dashboard-item-icon" title="Event"></i>
+        {% endif %}
+
+        {% if not event.approved %}
+            <span style="color: red">UNAPPROVED:</span>
+        {% endif %}
+
+        <a href="{% url 'event' event.id %}" class="event-link">
+            {{ event.title }}
+        </a>
+
+        <div class="event-icon-wrapper">
+            {% if hide_events %}
+                <a href="#" class="event-toggle">
+                {% if event.id in user_hidden_events %}
+                    <i class="announcement-icon fas fa-expand" title="You have hidden this event. Click to show." data-visible-title="This event is visible. Click to hide." hidden-title="You have hidden this event. Click to show."></i>
+                {% else %}
+                    <i class="announcement-icon fas fa-compress" title="This event is visible. Click to hide." data-visible-title="This event is visible. Click to hide." data-hidden-title="You have hidden this event. Click to show."></i>
+                {% endif %}
+                </a>
+            {% endif %}
+            {% if is_events_admin %}
+                <a href="{% url 'modify_event' event.id %}">
+                    <i class="event-icon fas fa-pencil-alt"></i>
+                </a>
+                <a href="{% url 'delete_event' event.id %}" class="event-delete">
+                    <i class="event-icon far fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </h3>
+
+    <div class="event-metadata">
+        {% if event.user is not None %}
+            by {{ event.user.full_name_nick|escape }} &bull;
+        {% endif %}
+
+        {% if show_date_icon %}
+            {{ event.time|date:"l, F j, Y"}}
+        {% endif %}
+
+        {{ event.time|date:"P" }}
+
+        @
+        {% if event.location == "Thomas Jefferson Science & Technology High School" or event.location == "Thomas Jefferson High School for Science and Technology" %}
+            TJHSST
+        {% else %}
+            {{ event.location }}
+        {% endif %}
+        &bull; for
+
+        {% for group in event.groups.all %}
+            {{ group }}
+            {% if not forloop.last %}
+                ,
+            {% endif %}
+            {% empty %}
+                everyone
+        {% endfor %}
+    </div>
+    <div class="event-toggle-content"{% if hide_events and event.id in user_hidden_events %} style="display:none"{% endif %}>
+        {% if event.scheduled_activity and not announcement %}
+            {% with schact=event.scheduled_activity link_to_scheduled_activity=1 %}
+                {% include "events/scheduled_activity.html" %}
+            {% endwith %}
+        {% endif %}
+
+        {% if event.announcement and not announcement %}
+            {% with announcement=event.announcement link_to_announcement=1 %}
+                {% include "events/events_announcement.html" %}
+            {% endwith %}
+        {% endif %}
+
+        <div class="event-content" style="font-size:14px;">
+            {{ event.description|safe }}
+        </div>
+        {% if not event.happened %}
+            <form action="{% url 'join_event' event.id %}" method="post" data-form-no-attend="{{ event.id }}" name="no-attend-form-{{ event.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="attending" value="false">
+            </form>
+
+            <form action="{% url 'join_event' event.id %}" method="post" data-form-attend="{{ event.id }}" name="attend-form-{{ event.id }}">
+                {% csrf_token %}
+                <input type="hidden" name="attending" value="true">
+            </form>
+        {% endif %}
+        {% if is_events_admin %}
+            {% if not event.approved %}
+                <form action="{% url 'events' %}" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="approve" value="{{ event.id }}">
+                    <input type="submit" value="Approve" class="small-button">
+                </form>
+            {% else %}
+                {% if event.approved_by is not None %}
+                    <span class="approve-reject">Approved by {{ event.approved_by.full_name }}.</span>
+                {% endif %}
+            {% endif %}
+            {% if not event.approved %}
+                <form action="{% url 'events' %}" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="reject" value="{{ event.id }}">
+                    <input type="submit" value="Reject" class="small-button">
+                </form>
+            {% elif event.rejected %}
+                {% if event.rejected_by is not None %}
+                <span class="approve-reject">Rejected by {{ event.rejected_by.full_name }}.</span>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% if event.show_attending and not not_show_attend_form %}
+        <div class="bottom-row show-attend">
+            <span class="signup-status">
+                People
+                {% if event.happened %}
+                    attended:
+                {% else %}
+                    attending:
+                {% endif %}
+                {{ event.attending.count }}
+            </span>
+            {% if request.user in event.attending.all %}
+                <span class="attend-status">
+                    You
+                    {% if event.happened %}
+                        attended
+                    {% else %}
+                        <b style="color: green"> are attending </b>
+                    {% endif %}
+                    this event.
+
+                    {% if not event.happened %}
+                        <a data-form-no-attend="{{ event.id }}" class="button small-button no-attend-button">
+                            <i class="fas fa-times"></i>
+                            Don't Attend
+                        </a>
+                    {% endif %}
+
+                </span>
+            {% else %}
+                <span class="attend-status">
+                    You
+                    {% if event.happened %}
+                        did not attend
+                    {% else %}
+                        <b style="color: red"> are not attending </b>
+                    {% endif %}
+                    this event.
+
+                    {% if not event.happened %}
+                        <a data-form-attend="{{ event.id }}" class="button small-button attend-button">
+                            <i class="fas fa-check"></i>
+                            Attend
+                        </a>
+                    {% endif %}
+
+                </span>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>

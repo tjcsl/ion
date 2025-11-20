@@ -1,0 +1,29 @@
+{% load dates %}
+<div class="item" data-id="{{ item.id }}">
+    <h3>
+        {{ item.title }}
+
+
+        <div class="item-icon-wrapper" style="display: block">
+            <a href="{% url 'founditem_view' item.id %}" title="Permalink">
+                <i class="fas fa-share-square"></i>
+            </a>
+            {% if item.user == request.user or is_admin %}
+                <a href="{% url 'founditem_modify' item.id %}">
+                    <i class="item-icon fas fa-pencil-alt"></i>
+                </a>
+                <a href="{% url 'founditem_delete' item.id %}" class="item-delete">
+                    <i class="item-icon far fa-trash-alt"></i>
+                </a>
+            {% endif %}
+        </div>
+    </h3>
+
+    <div class="item-metadata">
+        by {{ item.user.full_name|escape }} &bull; {{ item.added|fuzzy_date|capfirst }}
+    </div>
+
+    <div class="item-content">
+        {{ item.description|safe }}
+    </div>
+</div>

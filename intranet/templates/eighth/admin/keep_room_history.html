@@ -1,0 +1,52 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(function() {
+        var form = document.forms["edit_form"];
+        $("#change_yes").click(function() {
+            $("form#edit_form").append("<input type='hidden' name='change_room_history' value='yes'>");
+            form.submit();
+        });
+
+        $("#change_no").click(function() {
+            $("form#edit_form").append("<input type='hidden' name='change_room_history' value='no'>");
+            form.submit();
+        })
+    });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block admin_main %}
+    <b>Old Rooms:</b> {{ old_rooms|join:", " }}<br>
+    <b>New Rooms:</b> {{ new_rooms|join:", " }}<br>
+    <br>
+    <p>You attempted to change the default room(s) value for <b>{{ activity }}</b>, but this change would affect <b>{{ sched_acts_count }} activities</b> that have been scheduled before <b>{{ start_date|date:'D, N j, Y' }}</b>.</p>
+
+    <p><b>Would you like the default room change to only affect activities scheduled on or after this date?</b> This will change all of the activities scheduled before the date to have the old room(s).</p>
+
+<form action="" method="post" autocomplete="off" name="edit_form" id="edit_form">
+    <table class="edit-table">
+        {% csrf_token %}
+        <thead style="display: none">
+            {{ form.as_table }}
+        </thead>
+        <tr>
+            <td class="left-buttons" colspan=2>
+                <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel Changes</a>
+                <a class="button" href="javascript:;" id="change_yes">Yes (Save History)</a>
+                <a class="button" href="javascript:;" id="change_no">No (Change Globally)</a>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}

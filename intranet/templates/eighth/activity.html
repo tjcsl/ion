@@ -1,0 +1,232 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Activity: {{ activity }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+    <style>
+    dl dt, dl dd {
+        font-size: 15px;
+    }
+
+    dl dt {
+        float: left;
+        padding-right: 5px;
+    }
+
+    tr.cancelled, tr.cancelled th a {
+        color: red;
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header" style="width: 200px">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+
+
+    <a href="{% url 'eighth_signup' %}" class="button">
+        <i class="fas fa-arrow-left"></i> Sign Up
+    </a>
+
+    {% if request.user.is_eighth_admin %}
+        <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">
+            Edit Activity
+        </a>
+    {% endif %}
+
+    {% if request.user.is_eighth_admin or request.user.is_teacher %}
+        <a class="button" href="{% url 'eighth_statistics' activity.id %}">
+            View Statistics
+        </a>
+    {% endif %}
+
+    {% if is_subscribable %}
+        {% if request.user in activity.subscribers.all %}
+            <a class="button" href="{% url 'unsubscribe_from_club' activity.id %}">
+                <i class="fas fa-rss"></i>
+                Unsubscribe
+            </a>
+        {% else %}
+            <a class="button" href="{% url 'subscribe_to_club' activity.id %}">
+                <i class="fas fa-rss"></i>
+                Subscribe
+            </a>
+        {% endif %}
+    {% endif %}
+
+    {% if request.user.sponsor_obj and request.user.sponsor_obj in activity.sponsors.all or request.user in activity.club_sponsors.all %}
+        <a class="button print-hide" href="{% url 'eighth_activity_settings' activity.id %}">
+            <i class="fa fa-users"></i>
+            Club Announcement Settings
+        </a>
+    {% endif %}
+
+    <h2 style="padding-bottom: 0">Activity: {{ activity }}</h2>
+    {% if activity.special %}
+        <span class="badge green" title="This is a special activity.">Special</span>
+    {% endif %}
+    {% if activity.restricted %}
+        <span class="badge purple" title="This activity is restricted to those on the authorized list.">Restricted</span>
+    {% endif %}
+    {% if activity.sticky %}
+        <span class="badge orange" title="This activity is sticky: if placed in it, you cannot change your selection.">Sticky</span>
+    {% endif %}
+    {% if activity.both_blocks %}
+        <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
+    {% endif %}
+    {% if activity.one_a_day %}
+        <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
+    {% endif %}
+    {% if activity.administrative %}
+        <span class="badge" title="This activity is administrative.">Administrative</span>
+    {% endif %}
+    {% if activity.presign %}
+        <span class="badge yellow" title="You may only sign up for this activity 2 days in advance.">2 day Pre-signup</span>
+    {% endif %}
+
+    {% if not activity.is_active %}
+        <h3 title="This activity isn't scheduled in the next two months."><i class="fas fa-info-circle"></i> This activity isn't active.</h3>
+    {% endif %}
+
+    <dl style="padding-top: 10px">
+        {% if activity.description %}
+            <dt>Description:</dt>
+            <dd style="width: 400px">{{ activity.description }}</dd>
+        {% endif %}
+
+        {% if activity.sponsors.count > 0 %}
+            <dt>Default Sponsors:</dt>
+            <dd>{% for sponsor in activity.sponsors.all %}
+                    {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}</dd>
+        {% endif %}
+
+        {% if activity.rooms.count > 0 %}
+            <dt>Default Rooms:</dt>
+            <dd>{% for room in activity.rooms.all %}
+                    {{ room }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}</dd>
+        {% endif %}
+
+    </dl>
+
+    <section class="user-info-eighth sponsor">
+        <h3>
+            Scheduled on:
+            {% if request.user.is_teacher or request.user.is_eighth_admin %}
+                {% if "show_all" in request.GET %}
+                    &nbsp; <a href="?" class="button small-button">Show Next 2 Months</a>
+                {% else %}
+                    &nbsp; <a href="?show_all=1" class="button small-button">Show All Blocks</a>
+                {% endif %}
+            {% endif %}
+        </h3>
+        <table class="fancy-table">
+        <thead>
+        <tr>
+            <th>Block</th>
+            <th>Name</th>
+            <th>Sponsors</th>
+            <th>Rooms</th>
+            <th></th>
+            {% if request.user.is_student %}
+                <th>Signed up this block?</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for sch in scheduled_activities %}
+            <tr{% if sch.cancelled %} class="cancelled"{% endif %} data-scheduled-id="{{ sch.id }}">
+                <th>
+                    <a href="{% url 'eighth_signup' sch.block.id %}">
+                        {{ sch.block }}
+                    </a>
+                </th>
+                <td>
+                    {{ sch.full_title }}
+                </td>
+                <td>
+                    {% for sponsor in sch.get_true_sponsors %}
+                        {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        None
+                    {% endfor %}
+                </td>
+
+                <td>
+                    {% for room in sch.get_true_rooms %}
+                        {{ room }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        None
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if request.user.is_student %}
+                        <a class="button" href="{% url 'eighth_signup' sch.block.id %}?activity={{ sch.activity.id }}">
+                            {% if sch.cancelled or sch.block.locked %}
+                                View Info/Roster
+                            {% else %}
+                                View Info/Sign Up
+                            {% endif %}
+                        </a>
+                    {% else %}
+                        <a class="button" href="{% url 'eighth_take_attendance' sch.id %}">
+                            View Roster
+                        </a>
+                    {% endif %}
+                </td>
+                {% if request.user.is_student %}
+                    {% if request.user in sch.members.all %}
+                        <td>
+                            Yes
+                        </td>
+                    {% else %}
+                        <td>
+                            No
+                        </td>
+                    {% endif %}
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+            <td colspan="{% if request.user.is_student %}6{% else %}5{% endif %}">
+                There were no instances of this activity found within the next two months.
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+        <br>
+        Not all meetings of this activity are guaranteed to appear on this page.
+        <br>
+        <b>Activity schedules are not fixed, and may change. Check Eighth Period schedules.</b>
+        <br>
+    </section>
+
+
+</div>
+{% endblock %}

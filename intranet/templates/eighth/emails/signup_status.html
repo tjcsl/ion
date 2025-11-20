@@ -1,0 +1,54 @@
+<html><body>
+{% with description="You need to update your Eighth Period signup selections." target=info_link name="View status" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>
+    {{ blocks|length|pluralize:"This is,These are" }} your current signup selection{{ blocks|length|pluralize }} for Eighth Period on {{ block_date }}:
+</p>
+
+
+{% for blk in blocks %}
+    <b>{{ blk.block }}</b>:
+    {% if blk.signup %}
+        {{ blk.signup.scheduled_activity.full_title }}
+    {% else %}
+        No activity selected
+    {% endif %}
+    - <a href="{{ base_url }}{% url 'eighth_signup'  blk.block.id %}">Change Signup</a>
+    <br>
+    {% if blk.signup %}
+        {% if blk.cancelled %}
+        <span style="color: orange">
+            &#x26a0; The activity you selected was cancelled. You need to choose a new activity.
+        </span>
+        {% else %}
+        <span style="color: green">
+            &#x2713; You have selected an activity.
+        </span>
+        {% endif %}
+    {% else %}
+        <span style="color: orange">
+            &#x26a0; You have not selected an activity. You need to choose an activity.
+        </span>
+    {% endif %}
+    <br>
+    <br>
+{% endfor %}
+
+
+{% if issues > 0 %}
+    <p>Please make sure to correct the above issue{{ issues|pluralize }} before
+    {% if block_signup_time %}
+        {{ block_signup_time }} on {{ block_date }}.
+    {% else %}
+        {{ block_date }}.
+    {% endif %}
+    </p>
+{% endif %}
+<p>
+    Have a nice day!
+</p>
+
+{% include "email_footer.html" %}
+</body></html>

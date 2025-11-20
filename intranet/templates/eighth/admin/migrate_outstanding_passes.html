@@ -1,0 +1,23 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block admin_main %}
+    <h4>Select a Block:</h4>
+    <p style="max-width: 500px">When passes are migrated, all of the students who had a pass on the specified block are moved into the activity <b>"Z - 8th Period Pass Not Received."</b></p>
+    <form action="{% url 'eighth_admin_migrate_outstanding_passes' %}" method="post" class="select-form" id="select_form" name="select_form">
+            {% csrf_token %}
+            <select name="block" placeholder="Select or search for a block">
+            <option value="">Select or search for a block</option>
+                {% for block in blocks %}
+                    <option value="{{ block.id }}"{% if block == chosen_block %} selected{% endif %}>{{ block.id }}: {{ block.formatted_date }} ({{ block.block_letter }})</option>
+                {% endfor %}
+            </select>
+            <div class="right-buttons">
+                <input type="submit" value="Migrate Passes" onclick="return confirm('Are you sure you want to migrate ALL currently open passes on this block?')">
+            </div>
+    </form>
+{% endblock %}

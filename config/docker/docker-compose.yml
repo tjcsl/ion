@@ -1,0 +1,89 @@
+version: '3.9'
+
+services:
+  redis:
+    container_name: intranet_redis
+    image: redis:latest
+    networks:
+      - intranet_net
+    expose:
+      - "6379"
+
+  postgres:
+    container_name: intranet_postgres
+    image: postgres:latest
+    networks:
+      - intranet_net
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_DB=ion
+      - POSTGRES_USER=ion
+      - POSTGRES_PASSWORD=pwd
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  django:
+    container_name: intranet_django
+    image: intranet_image
+    networks:
+      - intranet_net
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "git config --global --add safe.directory /ion && \
+         /bin/sh config/docker/entrypoint.sh"
+      ]
+    ports:
+      - 8080:8080
+    build:
+      context: ../../
+      dockerfile: ./config/docker/Dockerfile
+    volumes:
+      - ../../:/ion:z
+    depends_on:
+      - redis
+      - postgres
+
+  celery:
+    container_name: intranet_celery
+    image: intranet_image
+    networks:
+      - intranet_net
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "git config --global --add safe.directory /ion && \
+         celery --app intranet worker -l info --without-gossip --without-mingle --without-heartbeat -Ofair"
+      ]
+    depends_on:
+      - django
+    volumes:
+      - ../../:/ion:z
+
+  celerybeat:
+    container_name: intranet_celerybeat
+    image: intranet_image
+    networks:
+      - intranet_net
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "git config --global --add safe.directory /ion && \
+         celery --app intranet beat -l info"
+      ]
+    depends_on:
+      - django
+    volumes:
+      - ../../:/ion:z
+
+networks:
+  intranet_net:
+    driver: bridge
+
+volumes:
+  pgdata:
+    name: ion-pgdata

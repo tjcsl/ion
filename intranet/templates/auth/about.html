@@ -1,0 +1,109 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - About
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'page_base' %}
+    {% stylesheet 'login' %}
+    {% stylesheet 'about' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/about.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/login' %}
+        {% stylesheet 'dark/about' %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+{% if request.user.is_authenticated %}
+    <ul class="nav dashboard-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fas fa-arrow-left fa-2x"></i>
+                    Dashboard
+            </a>
+        </li>
+    </ul>
+{% else %}
+    <ul class="nav login-link">
+        <li>
+            <a href="{% url 'index' %}">
+                <i class="fas fa-arrow-left fa-2x"></i>
+                    Login
+            </a>
+        </li>
+    </ul>
+{% endif %}
+    <div class="center-wrapper">
+        <div class="simulator-area">
+            <div class="desktop-area">
+                <span>
+                    <img src="{% static 'img/promo/dashboard-student.png' %}" alt="Ion dashboard on desktop" style="width: 600px">
+                </span>
+                <span>
+                    <img src="{% static 'img/promo/eighth-student-list.png' %}" alt="Ion eighth period signup list on desktop">
+                </span>
+                <span>
+                    <img src="{% static 'img/promo/profile.png' %}" alt="Ion profile page on desktop">
+                </span>
+                <span>
+                    <img src="{% static 'img/promo/search-results.png' %}" alt="Ion search results page on desktop" style="width: 400px">
+                </span>
+            </div>
+            <div class="mobile-area">
+                <span>
+                    <img src="{% static 'img/promo/dashboard-student-mobile.png' %}" alt="Ion dashboard on mobile">
+                </span>
+                <span>
+                    <img src="{% static 'img/promo/eighth-student-list-mobile.png' %}" alt="Ion eighth period signup list on mobile">
+                </span>
+                <span>
+                    <img src="{% static 'img/promo/eighth-student-signup-mobile.png' %}" alt="Ion eighth signup dialog on mobile">
+                </span>
+                <span>
+                    <img src="{% static 'img/promo/dashboard-student-menu-mobile.png' %}" alt="Ion navigation menu on mobile">
+                </span>
+            </div>
+        </div>
+        <div class="center-outer">
+        <div class="center" id="about">
+            <div class="logo"></div>
+            <h1>Welcome to the TJ Intranet</h1>
+            <h2>The TJ Intranet allows students, teachers, and staff at Thomas Jefferson High School for Science and Technology (<a href="https://www.tjhsst.edu/">TJHSST</a>) to access student information, manage activity signups, and view information on news and events.</h2>
+            <br>
+            <br>
+
+            <div class="about-text" id="credits">
+                <p>
+                    Intranet is a student-built and student-run project that supports the Eighth Period activity program at TJHSST. Prior to the 1999-2000 school year, several students created a web-based solution for activity signups and management in order to efficiently automate what was previously a manual, pencil-and-paper system. This application soon became a critical part of the school's operations &ndash; giving students and staff access to additional functionality such as news, polls, a student directory, and filecenter &ndash; and in the early 2000s, Intranet2 (Iodine) was developed as an ambitious effort to create a more viable long-term solution. After nearly ten years of use, it was deemed necessary to create a new application: one that could be built for the computers, phones, and tablets available today while also having the foundation necessary to support future changes down the road. Ion is that project.
+                </p>
+
+                <p>
+                    Development on Intranet version 3 began in early 2013 and, after more than two years of work, was first used during the 2015-2016 school year. The application is written using Python and the Django web framework, and on the client side, makes extensive use of responsive elements to allow for the best possible user experience across devices.
+                </p>
+
+                {% include "credits.html" %}
+                <br>
+                Additional thanks goes to <a href="https://web.archive.org/web/20190927134109/https://livedoc.tjhsst.edu/wiki/Iodine#Intranet_Credits">the developers of the first two Intranet applications used at TJHSST</a>.
+                <br>
+                <br>
+                <br>
+                <br>
+
+            </div>
+        </div>
+        </div>
+    </div>
+{% endblock %}

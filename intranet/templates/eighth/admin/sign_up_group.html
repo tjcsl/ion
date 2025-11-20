@@ -1,0 +1,114 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+        $(function() {
+            $("form[name=wizard] select").on("change", function() {
+                document.forms["wizard"].submit();
+            });
+        })
+    </script>
+{% endblock %}
+
+{% block admin_main %}
+    {% if wizard %}
+        <form action="" method="post" name="wizard">{% csrf_token %}
+            {{ wizard.management_form }}
+            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+
+            {% if hybrid %}
+                {% if block_obj %}
+                    <b>Block:</b> {{ block_obj.0 }} ({{ block_obj.1 }})
+                    <br><br>
+                {% endif %}
+            {% else %}
+                {% if block_obj %}
+                    <b>Block:</b> {{ block_obj }}
+                    <br>
+                    {% if block_obj.locked %}
+                    This block is locked. This action would result in an after-deadline signup.
+                    <br>
+                    {% endif %}
+                    <br>
+                {% endif %}
+            {% endif %}
+
+            {{ wizard.form }}
+
+            {% comment %}
+                {% if wizard.steps.prev %}
+                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+                {% endif %}
+                {% if wizard.steps.next %}
+                    <input type="submit" value="Next">
+                {% else %}
+                    <input type="submit" value="Sign Up Group">
+                {% endif %}
+            {% endcomment %}
+        </form>
+    {% else %}
+        <p>Are you sure you want to sign up <b>{{ users_num }} users</b> in group <b>{{ group }}</b> for:<br>
+        {% if hybrid %}
+            <p><b>{{ scheduled_activity_virtual }}</b> (Virtual) and <b>{{ scheduled_activity_person }}</b> (In-Person)</p>
+        {% else %}
+            <p><b>{{ scheduled_activity }}</b></p>
+        {% endif %}
+        <br>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {% if sticky_users_and_activities %}
+            <i class="fas fa-exclamation-triangle" style="color:red"></i>
+            There are {{ sticky_users_and_activities|length }} users signed up for sticky activities in the selected block.
+            <br>
+            Select whether you want to remove them from their sticky activity and sign them up for this activity instead.
+            <br><br>
+            <table class="sticky-check-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Student ID</th>
+                        <th>Email</th>
+                        <th>Grade</ht>
+                        <th>Sticky Activity</th>
+                        <th>
+                            <input type="checkbox" id="select_all_sticky" onclick="$('.sticky-check-table input[type=checkbox]').prop('checked', this.checked);">
+                            Remove From Sticky Activity
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user, sticky_activity in sticky_users_and_activities.items %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'user_profile' user.id %}">{{ user.last_name }}, {{ user.first_name }}</a>
+                        </td>
+                        <td>{{ user.student_id }}</td>
+                        <td>
+                            <a href="mailto:{{ user.tj_email }}">{{ user.tj_email }}</a>
+                        </td>
+                        <td>{{ user.grade_number }}</td>
+                        <td>
+                            <a href="{% url 'eighth_roster' sticky_activity.id %}">
+                                {{ sticky_activity.activity.id }}: {{ sticky_activity.activity.name }}
+                            </a>
+                        </td>
+                        <td><input type="checkbox" name="remove_from_sticky" value="{{ user.username }}"></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            {% endif %}
+
+            <input type="hidden" name="confirm" value="true">
+            <input type="checkbox" name="run_in_background" id="run_in_background" checked>
+            <label for="run_in_background">Run this process in the background and email me when it's done (make sure to check your email address under Preferences)</label><br>
+            <a href="/eighth/admin" class="button">Cancel</a>
+            <input type="submit" value="Register Group">
+        </form>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,88 @@
+
+<a href="{% url 'eighth_profile' profile_user.id %}">
+    <div class="{% if profile_user.is_student %}multiple-pics{% endif %} preferred-user-picture">
+        <img src="/profile/picture/{{ profile_user.id }}" alt="Preferred Picture" title="View Eighth Profile" width="86" height="107.5">
+    </div>
+</a>
+
+
+<div class="user-info">
+    <div class="user-container">
+        <div class="user-info-left">
+
+            <div class="user-title">
+                <h2 title="{{ profile_user.ion_username }} ({{ profile_user.ion_id }})">
+                    {{ profile_user.full_name }}
+                    {% if profile_user.nickname %} ({{ profile_user.nickname }}){% endif %}
+                    {% if profile_user.student_id %} ({{ profile_user.student_id }})
+                    {% endif %}
+                </h2>
+                <h3>
+                {% if profile_user.is_student %}
+                    {% if profile_user.graduation_year %}
+                        {{ profile_user.grade|capfirst }}
+                        (Grade {{ profile_user.grade_number }}: {{ profile_user.graduation_year }})
+                    {% else %}
+                        Student
+                    {% endif %}
+                    {% if profile_user.absence_count > 0 or user.is_eighth_admin %}
+                        - <a href="{% url 'eighth_absences' %}?user={{ profile_user.id }}" style="color: red">
+                            {{ profile_user.absence_count }} absence{{ profile_user.absence_count|pluralize }}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    Staff
+                {% endif %}
+                </h3>
+            </div>
+            <table class="user-info-contact">
+                {% if profile_user.display_name %}
+                    <tr>
+                        <th>Full Name</th>
+                        <td>{{ profile_user.display_name }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <th>Username</th>
+                    <td>{{ profile_user.ion_username }}</td>
+                </tr>
+                {% if profile_user.user_type == "student" and profile_user.counselor %}
+                    <tr>
+                        <th>Counselor</th>
+                        <td> {{ profile_user.counselor.last_name }} </td>
+                    </div>
+                {% endif %}
+                {% if request.user.is_eighth_admin %}
+                    <tr class="comments">
+                        <th>Comments</th>
+                        <td style="width: 400px">
+                            {% if profile_user.admin_comments|length > 2 %}
+                                {{ profile_user.admin_comments|safe|linebreaksbr }}
+                            {% else %}
+                                (None)
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+
+            </table>
+            {% if show_eighth_profile_link %}
+                <a href="{% url 'eighth_profile' profile_user.id %}" class="button">View Profile</a> &nbsp;
+            {% endif %}
+            <a href="/profile/{{ profile_user.id }}?full=1" class="button">
+                View All Info
+            </a> &nbsp;
+            {% if show_view_history_link %}
+                <a href="{% url 'eighth_profile_history' profile_user.id %}" class="button">View History</a> &nbsp;
+            {% endif %}
+            {% if show_view_often_link %}
+                <a href="{% url 'eighth_profile_often' profile_user.id %}" class="button">Frequent Signups</a> &nbsp;
+            {% endif %}
+            {% if request.user.is_eighth_admin %}
+                <a href="{% url 'eighth_edit_profile' profile_user.id %}" class="button small-button">Edit Info</a> &nbsp;
+                <a href="{% url 'privacy_options' %}?user={{ profile_user.id }}" class="button small-button">Edit Privacy</a> &nbsp;
+            {% endif %}
+
+        </div>
+
+    </div>

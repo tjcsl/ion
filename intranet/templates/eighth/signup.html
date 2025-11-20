@@ -1,0 +1,551 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load math %}
+{% load strings %}
+{% load pipeline %}
+{% load tz %}
+
+
+{% comment %}
+    NOTE: Specific UI and template changes made in this file will most likely
+          also need to be changed in:
+              multi_signup.html
+              profile_signup.html
+{% endcomment %}
+
+{% block title %}
+    {{ block.super }} - Eighth Period{% if active_block %} - {{ active_block }}{% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.signup' %}
+    {% if not real_user.is_eighth_admin %}
+        <style>
+        #activity-list:not(.show-administrative) li[data-administrative=true] {
+            display: none;
+        }
+
+        dl.scheduledid {
+            display: none;
+        }
+
+        #activity-list li .activity-ids {
+            display: none;
+        }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/jquery.scrollto.min.js' %}"></script>
+    <script src="{% static 'js/vendor/json2.js' %}"></script>
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/backbone-min.js' %}"></script>
+    <script src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script>
+        window.loadModels = function() {
+            window.activityModels = new eighth.ActivityList();
+            jsonData = $.parseJSON("{% if no_blocks %}[]{% else %}{{ activities_list }}{% endif %}");
+
+            data = _.values(jsonData);
+
+            if(data.length < 1) {
+                console.log("Empty dataset")
+                $(function() {
+                    $("ul.all-activities").append("<p>There are no activities available for signup at this time.</p>");
+                });
+            }
+            activityModels.reset(data);
+            _.each(activityModels.models, function(activity) {
+                activity.attributes.selected = (activity.attributes.id == "{{ active_block_current_signup|escape }}");
+            });
+
+            window.activeBlockLocked = {% if active_block.locked %}true{% else %}false{% endif %};
+        }
+        window.isEighthAdmin = {% if request.user.is_eighth_admin %}true{% else %}false{% endif %};
+        window.waitlistEnabled = {% if waitlist_enabled %}true{% else %}false{% endif %};
+        window.blockIsToday = {% if active_block.is_today %}true{% else %}false{% endif %};
+        window.signupTime = new Date({{ active_block.date|date:'Y,m-1,j' }},{{ active_block.signup_time|time:'G,i' }});
+        window.isSelfSignup = {% if request.user == user %}true{% else %}false{% endif %};
+        window.currentWaitlist = false;
+        var pn = location.pathname.substring(7);
+        window.isDefaultPage = (pn == "" || pn == "/" || pn == "/signup" || pn == "/signup/");
+    </script>
+    <script src="{% static 'js/eighth/responsive.js' %}"></script>
+    <script src="{% static 'js/eighth/signupUI.js' %}"></script>
+    <script src="{% static 'js/eighth/signup.js' %}"></script>
+    <script src="{% static 'js/eighth/signup.search.js' %}"></script>
+    <script src="{% static 'js/features.js' %}"></script>
+
+    <script>
+    {% if request.GET.activity %}
+        $(function() {
+            $("li[data-activity-id='{{ request.GET.activity|escape }}']").click();
+        })
+    {% elif active_block_current_signup %}
+        $(function() {
+            $("li[data-activity-id='{{ active_block_current_signup|escape }}']").click();
+        })
+    {% endif %}
+    {% if not real_user.is_eighth_admin %}
+        $(function() {
+            $("#activity-list:not(.show-administrative) li[data-administrative=true]").remove();
+        })
+    {% endif %}
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/eighth.signup' %}
+        <script>spinnerOptions.color = "#FFF";</script>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <script type="text/template" id="activity-list-row-template">
+        {% verbatim %}
+            <span class="activity-icons">
+                <span class="activity-icon fav <% if (favorited) { %>fav-sel<% } %>"></span>
+                <% if (cancelled) { %>
+                    <span class="activity-icon cancelled"></span>
+                <% } else if (restricted_for_user) { %>
+                    <span class="activity-icon restricted"></span>
+                <% } else if (waitlisted) { %>
+                    <span class="far fa-clock"></span>
+                <% } else { %>
+                    <% var pieNumber = Math.min(Math.floor(roster.count / roster.capacity * 10), 10); %>
+                    <% if(roster.count > 0) { pieNumber = Math.max(pieNumber, 1); } %>
+                    <span class="activity-icon pie-<%= pieNumber %>"></span>
+                <% } %>
+            </span>
+            <% var full_name = name_with_flags_for_user; %>
+            <span class="activity-name" title="<%= full_name %>">
+                <%= name %>
+                <% if (title) { %>
+                    - <%= title %>
+                <% } %>
+            </span>
+
+            <span class="activity-flags">
+
+                <% if (special) { %>
+                    <span class="badge green" title="This is a special activity.">Special</span>
+                <% } %>
+
+                <% if (is_recommended) { %>
+                    <span class="badge green" title="This activity is recommended for you based on previous signups.">Recommended</span>
+                <% } %>
+
+                <% if (cancelled) { %>
+                    <span class="badge darkred" title="This activity was cancelled.">CANCELLED</span>
+                <% } %>
+
+                <% if (restricted_for_user) { %>
+                    <span class="badge purple" title="You are not on the authorized list for this restricted activity.">Restricted</span>
+                <% } else if (restricted) { %>
+                    <span class="badge green" title="You are authorized to sign up for this restricted activity.">Authorized</span>
+                <% } %>
+
+                <% if (sticky && (selected || isEighthAdmin)) { %>
+                    <span class="badge orange" title="You are stuck to this activity.">Sticky</span>
+                <% } %>
+
+                <% if (both_blocks) { %>
+                    <span class="badge blue" title="This activity runs both blocks.">Both Blocks</span>
+                <% } %>
+
+                <% if (one_a_day) { %>
+                    <span class="badge lightblue" title="You may only sign up for this activity once per day.">One a Day</span>
+                <% } %>
+
+                <% if (administrative) { %>
+                    <span class="badge" title="This activity is administrative.">Admin</span>
+                <% } %>
+
+                <% if (presign) { %>
+                    <span class="badge yellow" title="Signups for this activity open on <%= presign_time %>" >2 day</span>
+                <% } %>
+
+            </span>
+            <% var sponsors_all = ""; %>
+            <% _.each(sponsors, function(sp) { sponsors_all += sp+", "; }); %>
+            <% sponsors_all = sponsors_all.substring(0, sponsors_all.length-2); %>
+            <span class="activity-sponsors" title="<%= sponsors_all %>">
+                <%= sponsors_all %>
+                <span class="activity-ids">
+                    <%= aid %>
+                </span>
+            </span>
+
+        {% endverbatim %}
+    </script>
+
+    <script type="text/template" id="activity-details-template">
+        {% verbatim %}
+        <h3 class="activity-detail-header">
+            <a href="/eighth/activity/<%= id %>" class="activity-detail-link">
+                <%= name %><% if (title) { %> - <%= title %><% } %>
+            </a>
+        </h3>
+
+        <% if (cancelled) { %>
+            <span class="badge darkred clickable cancelled-badge" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
+        <% } %>
+
+        <% if (special) { %>
+            <span class="badge green clickable" data-append-search="is:sp" title="This is a special activity.">Special</span>
+        <% } %>
+
+        <% if (is_recommended) { %>
+            <span class="badge green clickable" title="This activity is recommended for you based on previous signups.">Recommended</span>
+        <% } %>
+
+        <% if (restricted_for_user) { %>
+            <span class="badge purple clickable" data-append-search="is:r" title="You are not on the authorized list for this restricted activity.">Restricted</span>
+        <% } else if (restricted) { %>
+            <span class="badge green clickable" data-append-search="is:au" title="You are authorized to sign up for this restricted activity.">Authorized</span>
+        <% } %>
+
+        <% if (user_sticky && (selected || isEighthAdmin)) { %>
+            <span class="badge orange clickable" data-append-search="is:st" title="You are stuck to this activity.">Individual Sticky</span>
+        <% } else if (sticky && (selected || isEighthAdmin)) { %>
+            <span class="badge orange clickable" data-append-search="is:st" title="You are stuck to this activity.">Sticky</span>
+        <% } %>
+
+        <% if (both_blocks) { %>
+            <span class="badge blue clickable" data-append-search="is:b" title="This activity runs both blocks.">Both Blocks</span>
+        <% } %>
+
+        <% if (one_a_day) { %>
+            <span class="badge lightblue clickable" data-append-search="is:one" title="You may only sign up for this activity once per day.">One a Day</span>
+        <% } %>
+
+        <% if (administrative) { %>
+            <span class="badge clickable" data-append-search="is:ad" title="This activity is administrative.">Administrative</span>
+        <% } %>
+
+        <% if (presign) { %>
+            <span class="badge yellow clickable" data-append-search="is:p" title="Signups for this activity open on <%= presign_time %>" >2 day Pre-signup</span>
+        <% } %>
+
+        <% scheduled_activity_id = this.model.attributes.scheduled_activity.id %>
+
+        <dl class="activityid">
+            <dt>Activity ID:</dt>
+            <dd><%= aid %></dd>
+        </dl>
+
+        <dl class="scheduledid">
+            <dt>Scheduled ID:</dt>
+            <dd><%= scheduled_activity_id %></dd>
+        </dl>
+
+        <dl>
+            <% rooms = _.uniq(rooms)%>
+            <dt>Room<% if (rooms.length > 1) { %>s<% } %>:</dt>
+            <dd>
+
+                <% if (rooms.length != 0) {%>
+                        <%_.each(rooms, function(r, i) { if (i + 1 != rooms.length) {%><%= r %>, <%} else { %><%= r %><%} })%>
+                <%} else {%>
+                    None
+                    <br>
+                <%}%>
+            </dd>
+
+            <% sponsors = _.uniq(sponsors) %>
+            <dt>Sponsor<% if (sponsors.length > 1) { %>s<% } %>:</dt>
+            <dd>
+                <% if (sponsors.length != 0) {%>
+                        <%_.each(sponsors, function(s, i) { if (i + 1 != sponsors.length) {%><%= s %>, <%} else { %><%= s %><%} })%>
+                <%} else {%>
+                    None
+                    <br>
+                <%}%>
+            </dd>
+
+            <dt>Signups:</dt>
+            <dd>
+                <%= roster.count %>/<% if (roster.capacity == -1) {%>Unlimited<%} else {%><%= roster.capacity %><%}%>
+            </dd>
+
+            <% if (both_blocks) {%>
+                <div>This activity runs both blocks.</div>
+            <%}%>
+
+            <% if (comments) {%>
+                <br>
+                <dt>Comments:</dt><dd><%= comments %></dd>
+            <%}%>
+
+            <% if (description) {%>
+                <br>
+                <p><%= description.replaceAll("\n", "<br />") %></p>
+            <%}%>
+
+            <div id="signup-section">
+                <% var showingRosterButton = false %>
+                <% if (!cancelled) {%>
+                    <% if (!selected && !waitlisted) {%>
+                        <% showingRosterButton = true %>
+                        <% if (isEighthAdmin) { %>
+                            <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                                View Roster
+                            </a>
+                        <% } %>
+                        <% if (waitlist_count > 0 && waitlistEnabled) { %>
+                            <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
+                                View Waitlist
+                            </a>
+                        <% } %>
+
+                        <% if (isEighthAdmin || !restricted_for_user && roster.count < roster.capacity || both_blocks) { %>
+                        <button id="signup-button">
+                            Sign Up
+                        </button>
+                        <% } else if (waitlistEnabled) { %>
+                        <button id="signup-button">
+                            Get Notifications
+                        </button>
+                        <% } %>
+                        <% if (subscriptions_enabled) { %>
+                            <% if (subscribed_to) { %>
+                                <a class="button" id="unsubscribe-button" href="/eighth/signup/unsubscribe/<%= id %>">
+                                    <i class="fas fa-rss"></i>
+                                    Unsubscribe
+                                </a>
+                            <% } else { %>
+                                <a class="button" id="subscribe-button" href="/eighth/signup/subscribe/<%= id %>">
+                                    <i class="fas fa-rss"></i>
+                                    Subscribe
+                                </a>
+                            <% } %>
+                        <% } %>
+                        <div id="signup-spinner-container">
+                            <div id="signup-spinner"></div>
+                        </div>
+                    <%} else {%>
+
+                        <% if (display_text.length > 0) {%>
+                            <strong><%= display_text %></strong><br><br>
+                        <% }else{ %>
+                            <% if (waitlisted && waitlistEnabled) { %>
+                                <p class="signup-waitlist-text">You are signed up for notifications for this activity</p>
+                                <% if (isEighthAdmin) { %>
+                                    <button id="signup-button">
+                                        Sign Up
+                                    </button>
+                                <% } %>
+                                <button id="leave-waitlist">
+                                    Leave Notifications List
+                                </button>
+                            <% } else { %>
+                                <strong>You are currently signed up for this activity.</strong>
+                            <% } %>
+                        <% } %>
+                    <%}%>
+                <%}%>
+
+                <div class="error-feedback">
+                </div>
+            </div>
+            <% if (!showingRosterButton) { %>
+                <% if(isEighthAdmin) { %>
+                    <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
+                        View Roster
+                    </a>
+                <% } %>
+                <% if (waitlist_count > 0 && waitlistEnabled) { %>
+                    <a class="button" id="roster-waitlist-button" data-endpoint="/eighth/roster/raw/waitlist">
+                        View Waitlist
+                    </a>
+                <% } %>
+                <% if (subscriptions_enabled) { %>
+                    <% if (subscribed_to) { %>
+                        <a class="button" id="unsubscribe-button" href="/eighth/signup/unsubscribe/<%= id %>">
+                            <i class="fas fa-rss"></i>
+                            Unsubscribe
+                        </a>
+                    <% } else { %>
+                        <a class="button" id="subscribe-button" href="/eighth/signup/subscribe/<%= id %>">
+                            <i class="fas fa-rss"></i>
+                            Subscribe
+                        </a>
+                    <% } %>
+                <% } %>
+                <div id="signup-spinner-container">
+                    <div id="signup-spinner"></div>
+                </div>
+            <% } %>
+            <div id="roster-section">
+            </div>
+            <div id="waitlist-section">
+            </div>
+        </dl>
+        {% endverbatim %}
+    </script>
+
+
+
+    <div class="primary-content eighth-signup">
+        <div class="day-picker">
+            <span class="day-picker-buttons">
+                <button class="earlier-days">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <button class="later-days">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </span>
+            <ul class="days-container">
+                {% spaceless %}
+                    {% for day in block_info.schedule %}
+                        <li class="day">
+                            <div class="day-title">
+                                {{ day.date|date:"l, M j" }}
+                            </div>
+                                <div class="blocks{% if day.blocks|length > 2 %} many-blocks{% endif %}">
+                                    {% for b in day.blocks %}
+                                        <a href="{% url 'eighth_signup' b.id %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" data-bid="{{ b.id }}">
+                                            <div class="block{% if active_block.id == b.id %} active-block{% endif %}{% if b.current_signup_cancelled %} cancelled{% endif %}{% if b.current_signup.both_blocks %} both-blocks{% endif %}" title="{{ b.title }}">
+                                                <span class="block-letter{% if b.current_waitlist %} waitlist{% endif %}" style="{% if b.block_letter_width %}width: {{ b.block_letter_width }}px; {% endif %} position: relative;">
+                                                    {{ b.block_letter }}
+                                                    {% if b.within_few_days %}
+                                                        <i class="fas fa-exclamation-circle" style="color: #C22; position: absolute; right: -7px; top: -7px;{% if b.current_signup and not b.current_signup_cancelled %} display: none;{% endif %}"></i>
+                                                    {% endif %}
+                                                </span>
+                                                {% if b.locked %}
+                                                    <i class="fas fa-lock" title="The block is locked."></i>
+                                                {% endif %}
+                                                <span class="selected-activity" title="{% if b.current_signup %}{{ b.current_signup.name_with_flags_no_restricted }}{% endif %}">
+                                                    {% if b.current_signup_cancelled %}
+                                                        <strong>CANCELLED</strong> -
+                                                    {% endif %}
+                                                    {% if b.current_signup %}
+                                                        {{ b.current_signup.name_with_flags_no_restricted }}
+                                                    {% else %}
+                                                        <span class="no-activity-selected">
+                                                            No activity selected
+                                                        </span>
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                        </li>
+                    {% empty %}
+                        <div class="day-title">
+                            There are no eighth period blocks scheduled at this time.
+                        </div>
+                    {% endfor %}
+                {% endspaceless %}
+            </ul>
+        </div>
+
+        <div class="middle-wrapper">
+            <div class="middle">
+                {% include "feature_announcements.html" %}
+                <div class="block-title">
+                    <h2>
+                        {% if active_block.locked %}
+                            <i class="fas fa-lock" title="The block is locked."></i>
+                        {% endif %}
+                        {{ block_info.date|date:"l, F j, Y" }}{% if request.user != user %} - <a href="{% url 'user_profile' user.id %}">{{ user.full_name }} ({{ user.graduation_year }})</a>{% endif %}
+                    </h2>
+                    <h4>
+                        {% if hybrid %}
+                            Block {{ active_block.hybrid_text }}
+                        {% elif block_info.block_letter %}
+                            {% if block_info.block_letter|contains_digit %}
+                                Block {{ block_info.block_letter }}
+                            {% else %}
+                                {{ block_info.block_letter }} Block
+                            {% endif %}
+                        {% endif %}
+                        {% if block_info.comments %}
+                        <span class="block-comments">
+                            <span>&mdash; </span>{{ block_info.comments }}
+                        </span>
+                        {% endif %}
+                    </h4>
+                </div>
+
+                <div class="desktop-info">
+                    <span class="arrow-left">
+                        <i class="fas fa-arrow-down"></i>
+                    </span>
+                    <span class="arrow-right">
+                        <i class="fas fa-arrow-up"></i>
+                    </span>
+                    <p>
+                        Choose an Eighth Period block above,<br>
+                        then select an activity from the list below.
+                    </p>
+                </div>
+
+                <div class="switch">
+                    <i class="fas fa-chevron-up down"></i>
+                    <i class="fas fa-chevron-down up"></i>
+                </div>
+
+                <div class="middle-button-container">
+                    <div class="history-button">
+                        <a href="{% url 'eighth_profile_history' %}" class="button" title="Attendance History">
+                            <i class="fas fa-history"></i><span> History</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="activity-picker" class="{% if request.user != user %}different-user{% endif %}">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <span>
+                    <input type="search" placeholder="Search names, sponsors, rooms..." disabled>
+                </span>
+                <h5 class="search-header">
+                    Search Results<a class="button small-button clear-button">Clear</a>
+                </h5>
+            </div>
+            <div class="backbtn">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div id="activity-list" data-toggle-favorite-endpoint="{% url 'eighth_toggle_favorite' %}">
+                <h5 class="sticky-header favorites-header" data-header="favorites-header">
+                    Favorites
+                </h5>
+                <ul class="favorite-activities" data-header="favorites-header"></ul>
+                <h5 class="sticky-header special-header" data-header="special-header">
+                    Special
+                </h5>
+                <ul class="special-activities" data-header="special-header"></ul>
+                <h5 class="sticky-header recommended-header" data-header="recommended-header">
+                    Recommended Activities
+                </h5>
+                <ul class="recommended-activities" data-header="recommended-header"></ul>
+                <h5 class="sticky-header all-header" data-header="all-header">
+                    All
+                </h5>
+                <ul class="all-activities" data-header="all-header"></ul>
+                <ul class="search-noresults">
+                    <li>
+                        <span class="activity-name">
+                            No results found. Try your search again.
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div id="activity-detail" data-bid="{{ block_info.id }}" data-uid="{{ user.id }}" data-signup-endpoint="{% url 'eighth_signup' %}" data-leave-waitlist-endpoint="{% url 'leave_waitlist' %}">
+                {% include "eighth/empty_state.html" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

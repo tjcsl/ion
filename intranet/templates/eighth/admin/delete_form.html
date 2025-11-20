@@ -1,0 +1,17 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block admin_main %}
+    <h4>Are you sure you want to {% if "perm" in request.GET %}<b style="color: red">permanently delete</b>{% else %}delete{% endif %} this item?</h4>
+    {{ item_name }}
+    <br>
+    <br>
+    {{ help_text|safe }}
+    <br>
+    <br>
+    <form action="" method="post">
+        {% csrf_token %}
+        <a class="button" href="{% url 'eighth_admin_dashboard' %}">Cancel</a>
+        <input type="submit" value="Delete">
+    </form>
+{% endblock %}

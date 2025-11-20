@@ -1,0 +1,596 @@
+import { getSocket } from "./bus-shared.js";
+
+/* globals Messenger */
+var bus = {};
+
+enableBusDriver = false;
+
+$(function() {
+    let base_url = window.location.host;
+
+    bus.sendUpdate = function (data) {
+        //console.log('Sending data:', data);
+        data.time = "afternoon";
+        socket.send(JSON.stringify(data));
+    };
+
+    bus.Route = Backbone.Model.extend({
+        defaults: {
+            'id': '0',
+            'status': 'o',
+            'bus_number': 'No bus number set.',
+            'route_name': 'Empty route'
+        }
+    });
+
+    bus.RouteList = Backbone.Collection.extend({
+        model: bus.Route
+    });
+
+    bus.StatusGroupModel = Backbone.Model.extend();
+
+    bus.PersonalStatusView = Backbone.View.extend({
+        initialize: function() {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#personal-status').html());
+        },
+        render: function() {
+            var container = this.$el,
+                renderedContent = this.template(this.model.toJSON());
+            container.html(renderedContent);
+            return this;
+        }
+    });
+
+    bus.ActionButtonView = Backbone.View.extend({
+        className: 'action-view bordered-element',
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.buttonTemplate = _.template($('#action-button-view').html());
+            this.searchTemplate = _.template($('#search-widget-view').html());
+            this.model = [];
+            this.busDriver = false;
+            if (!window.isAdmin) {
+                this.icon = 'fas fa-search';
+                this.text = '&nbsp;&nbsp;&nbsp;Search for a bus';
+                this.action = 'Search for a bus';
+            } else {
+                this.icon = 'fas fa-check-square';
+                this.text = '&nbsp;&nbsp;&nbsp;Mark a bus as arrived or on time';
+                this.action = 'Mark a bus as arrived or on time';
+            }
+
+            this.clicked = false;
+            this.hlBus = null;
+            this.selected = null;
+
+            Backbone.on('selectEmptySpace', this.handleEmptySpace, this);
+            Backbone.on('selectFilledSpace', this.handleFilledSpace, this);
+            Backbone.on('deselectSpace', this.handleDeselectSpace, this);
+        },
+        events: {
+            'click .back-button': 'handleReturnClick',
+            'click': 'handleAction',
+            'change select': 'handleBusSelect'
+        },
+        render: function () {
+            if (this.clicked) {
+                return this.renderSearchView(this.model, this.action);
+            } else {
+                return this.renderButton();
+            }
+        },
+        renderButton: function () {
+            let data = {
+                'icon': this.icon,
+                'text': this.text
+            };
+            this.$el.html(this.buttonTemplate(data))
+                    .removeClass('search-widget');
+            return this;
+        },
+        renderSearchView: function (routeList, action) {
+            var container = this.$el,
+                renderedContent = this.searchTemplate();
+            container.addClass('search-widget');
+            container.html(renderedContent);
+            let busList = [];
+            if (action === 'Search for a bus') {
+                busList = routeList.filter(bus => bus.attributes.status === 'a')
+                                    .filter(bus => bus.attributes.route_name.includes('JT'))
+                                    .map(bus => bus.attributes);
+            } else if (action === 'Mark a bus as arrived or on time') {
+                busList = routeList.filter(bus => !bus.attributes.route_name.includes('JT'))
+                                    .map(bus => {
+                                        if (bus.attributes.status === 'a') {
+                                            // TODO: less hacky deep copy
+                                            let attr = JSON.parse(JSON.stringify(bus.attributes));
+                                            attr.route_name = `Mark ${bus.attributes.route_name} as on time`;
+                                            return attr;
+                                        } else {
+                                            return bus.attributes;
+                                        }
+                                    });
+            } else if (action === 'Assign a bus to this space') {
+                busList = routeList.filter(bus => bus.attributes.status !== 'a')
+                                    .map(bus => bus.attributes);
+            }
+            let selectField = container.find('select').selectize({
+                'options': busList,
+                'valueField': 'route_name',
+                'labelField': 'route_name',
+                'placeholder': action,
+                'searchField': 'route_name',
+                'sortField': [
+                    {
+                        field: 'route_name',
+                        direction: 'asc'
+                    },
+                    {
+                        field: '$score'
+                    }
+                ]
+            })[0].selectize;
+
+            // Make search input readonly on mobile by default so the keyboard doesn't pop up
+            // if (window.innerWidth < 768) {
+            //     selectField.$control_input.prop('readonly', true);
+            //     $('.selectize-control').one("focus click", function (){
+            //         selectField.$control_input.prop('readonly', false);
+            //         // TODO: Auto-focus the input field again and get the virtual keyboard to show up.
+            //         // There doesn't seem to be an easy way to do this.
+            //     });
+            // }
+
+            selectField.$control_input.prop('pattern', '[0-9]*');
+            selectField.focus();
+
+            return this;
+        },
+        handleBusSelect: function (e) {
+            if (this.clicked === false) {
+                return;
+            }
+            if (!isAdmin && this.busDriver) {
+                return;
+            }
+            if (this.action === 'Search for a bus') {
+                Backbone.trigger('searchForBus', e.target.value);
+                this.hlBus = e.target.value;
+            } else if (this.action === 'Assign a bus to this space') {
+                if (!this.selected) {
+                    return;
+                }
+                let route = this.model.findWhere({route_name: e.target.value}).attributes;
+                route.space = this.selected.id;
+                route.status = 'a';
+                bus.sendUpdate(route);
+            } else if (this.action === 'Mark a bus as arrived or on time') {
+                let route_name = '';
+                let st = '';
+                // TODO: this is also super hacky
+                // Essentially, this checks if the selected route has "Mark"
+                // at the beginning, implying that it's to be marked on time.
+                if (e.target.value.indexOf('Mark') === 0) {
+                    route_name = e.target.value.split(' ')[1];
+                    st = 'o';
+                } else {
+                    route_name = e.target.value;
+                    st = 'a';
+                }
+                let route = this.model.findWhere({route_name: route_name}).attributes;
+                route.status = st;
+                bus.sendUpdate(route);
+            }
+
+            this.handleReturnClick();
+        },
+        handleReturnClick: function (e) {
+            if (e) {
+                e.stopPropagation();
+            }
+            this.clicked = false;
+            this.render();
+        },
+        handleAction: function () {
+            if (this.clicked) {
+                return;
+            }
+            switch (this.action) {
+                case 'Search for a bus':
+                    this.searchBus();
+                    break;
+                case 'Assign a bus to this space':
+                    this.assignBus();
+                    break;
+                case 'Unassign bus from this space':
+                    this.unassignBus();
+                    break;
+                case 'Mark a bus as arrived or on time':
+                    this.arriveBus();
+                    break;
+                case 'vroom':
+                    enableBusDriver = true;
+                    this.vroom();
+                    break;
+                case 'stop-bus':
+                    window.location.reload();
+                default:
+                    break;
+            }
+        },
+        searchBus: function () {
+            this.clicked = true;
+            if (this.hlBus) {
+                Backbone.trigger('deselectBus', this.hlBus);
+                this.hlBus = null;
+            }
+            this.render();
+        },
+        assignBus: function () {
+            this.clicked = true;
+            this.render();
+        },
+        unassignBus: function () {
+            let route = $(this.selected).data('route');
+            route.status = 'o';
+            route.space = '';
+            bus.sendUpdate(route);
+        },
+        arriveBus: function () {
+            this.clicked = true;
+            this.render();
+        },
+        vroom: function () {
+            $('svg').hide();
+            document.getElementById('busgame').contentDocument.location.reload(true);
+            setTimeout(() => {
+                $('iframe').show();
+            }, 100);
+            this.icon = 'fas fa-arrow-left';
+            this.text = 'Run out of gas?';
+            this.action = 'stop-bus';
+            this.render();
+        },
+        handleEmptySpace: function (space) {
+            if (isAdmin) {
+                this.icon = 'fas fa-plus-square';
+                this.text = '&nbsp;&nbsp;&nbsp;Assign a bus to this space';
+                this.selected = space;
+                this.action = 'Assign a bus to this space';
+              return this.render();
+            } else {
+                if (window.innerWidth > 768) { // Disable bus game on mobile
+                    this.icon = 'fas fa-bus';
+                    this.text = 'skrt skrt';
+                    this.action = 'vroom';
+                }
+                this.selected = space;
+                return this.render();
+            }
+        },
+        handleFilledSpace: function (space) {
+            if (isAdmin) {
+                this.icon = 'fas fa-minus-square';
+                this.text = '&nbsp;&nbsp;&nbsp;Unassign bus from this space'
+                this.action = 'Unassign bus from this space';
+            }
+            this.selected = space;
+            this.render();
+        },
+        handleDeselectSpace: function () {
+            if (this.busDriver) {
+                this.icon = 'fas fa-arrow-left';
+                this.text = 'Ran out of gas?';
+                this.action = 'stop-bus';
+                this.render();
+                return;
+            }
+            if (!window.isAdmin) {
+                this.icon = 'fas fa-search';
+                this.text = '&nbsp;&nbsp;&nbsp;Search for a bus';
+                this.action = 'Search for a bus';
+            } else {
+                this.icon = 'fas fa-check-square';
+                this.text = '&nbsp;&nbsp;&nbsp;Mark a bus as arrived or on time';
+                this.action = 'Mark a bus as arrived or on time';
+            }
+            this.render();
+        }
+    });
+
+    bus.MapView = Backbone.View.extend({
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#map-view').html());
+            this.userRoute = null;
+            this.model = [];
+            this.hlRouteNames = [];
+            this.selected = null;
+
+            // vroom vroom
+            this.busDriver = false;
+            this.busDriverBus = null;
+            this.mapbox = null;
+
+            Backbone.on('searchForBus', this.selectBus, this);
+            Backbone.on('deselectBus', this.deselectBus, this);
+            if (enableBusDriver) {
+                Backbone.on('vroom-vroom', this.vroom, this);
+            }
+        },
+
+        events: {
+            'click path': 'selectSpace',
+            'click': 'deselectSpace',
+        },
+
+        render: function () {
+            if (enableBusDriver && this.busDriver) {
+                return this;
+            }
+            var container = this.$el,
+                renderedContent = this.template({}),
+                hlRouteNames = this.hlRouteNames,
+                userRoute = this.userRoute,
+                collection = this.model;
+            container.html(renderedContent);
+            var draw = SVG.adopt(container.find('svg')[0]);
+            collection.forEach(function (route) {
+                if (route.attributes.status === 'a' && route.attributes.space) {
+                    var space = container.find(`#${route.attributes.space}`)[0];
+                    if (space) {
+                        let text = draw.text(route.attributes.route_name);
+                        text.path(space.getAttribute('d'));
+                        text.textPath().attr("path", space.getAttribute('d'));
+                        text.style('pointer-events', 'none');
+                        // Signage displays may not have Helvetica or Arial installed, so we provide some sane
+                        // fallbacks to avoid issues that have appeared in the past with the "sans-serif" default.
+                        text.font("family", "Helvetica, Arial, 'Open Sans', 'Liberation Sans', sans-serif");
+
+                        if(window.isSignage) {
+                            var tspan = $(text.node).find("tspan");
+                            tspan.attr({"x": 0, "dy": 20.5});
+
+                            // If we run this directly, it hasn't rendered yet, so we have to run it after a timeout
+                            setTimeout(function() {
+                                var tbox = tspan.get(0).getBBox();
+                                var sbox = space.getBBox();
+
+                                var offset;
+                                var dimenDiff;
+                                if(tbox.width > tbox.height) {
+                                    dimenDiff = sbox.width - tbox.width;
+                                    offset = tbox.x - sbox.x;
+                                }
+                                else {
+                                    dimenDiff = sbox.height - tbox.height;
+                                    offset = tbox.y - sbox.y;
+                                }
+
+                                if(dimenDiff < offset + 5) {
+                                    text.node.classList.add("small");
+                                    if(route.attributes.route_name.length > 5) {
+                                        text.node.classList.add("extra-small");
+                                    }
+                                }
+                            }, 0);
+                        }
+                        else {
+                            var tspan = $(text.node).find("tspan");
+
+                            setTimeout(function() {
+                                var tbox = tspan.get(0).getBBox();
+                                var sbox = space.getBBox();
+
+                                var offset;
+                                var dimenDiff;
+                                if(tbox.width > tbox.height) {
+                                    dimenDiff = sbox.width - tbox.width;
+                                    offset = tbox.x - sbox.x;
+                                }
+                                else {
+                                    dimenDiff = sbox.height - tbox.height;
+                                    offset = tbox.y - sbox.y;
+                                }
+                                if(dimenDiff < offset + 5 || route.attributes.route_name.length > 5) {
+                                    text.node.classList.add("extra-small");
+                                }
+                            }, 0);
+                        }
+                        space.style.fill = '#FFD800';
+                        $(space).data({
+                            'filled': true,
+                            'route': route.attributes
+                        });
+
+                        if (hlRouteNames.includes(route.attributes.route_name)) {
+                            space.style.fill = '#0048ab';
+                            text.fill('white');
+                        }
+
+                        if (route.attributes.route_name === userRoute && hlRouteNames.length === 0) {
+                            space.style.fill = '#09ff00';
+                            text.fill('black');
+                        }
+                    }
+                }
+            });
+            return this;
+        },
+
+        selectBus: function (routeNumber) {
+            this.hlRouteNames.push(routeNumber);
+            this.render();
+        },
+
+        deselectBus: function (routeNumber) {
+            let i = this.hlRouteNames.indexOf(routeNumber);
+            if (i === -1) {
+                return;
+            }
+            this.hlRouteNames.splice(i, 1);
+            this.render();
+        },
+
+        selectSpace: function (e) {
+            e.stopPropagation();
+            if (this.selected) {
+                this.selected.style.stroke = 'none';
+                if (e.target === this.selected) {
+                    this.deselectSpace(e);
+                    return;
+                }
+            }
+            const space = e.target;
+            if (!$(space).data('filled')) {
+                Backbone.trigger('selectEmptySpace', space);
+            } else {
+                Backbone.trigger('selectFilledSpace', space);
+            }
+            space.style.stroke = 'black';
+            this.selected = space;
+        },
+
+        deselectSpace: function () {
+            if (this.selected) {
+                this.selected.style.stroke = 'none';
+                this.selected = null;
+                Backbone.trigger('deselectSpace');
+            }
+        },
+
+        highlightUserBus: function (bus) {
+            if (!this.userRoute) {
+                this.userRoute = bus.route_name;
+            }
+        },
+    });
+
+    bus.RouteView = Backbone.View.extend({
+        className: 'bus',
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#route-view').html());
+        },
+
+        events: {
+            'change select': 'update'
+        },
+
+        render: function () {
+            this.$el.empty();
+            this.$el.append(this.template(this.model.toJSON()));
+            return this;
+        },
+
+        update: function () {
+            let val = this.$el.children('select').val();
+            bus.sendUpdate({
+                id: this.model.attributes.id,
+                status: val
+            });
+        }
+    });
+
+    bus.StatusGroupView = Backbone.View.extend({
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.template = _.template($('#status-group-view').html());
+        },
+
+        render: function () {
+            var container = this.$el;
+            container.empty();
+            container.append(this.template(this.model.toJSON()));
+            _.each(this.model.attributes.collection, function (route) {
+                container.append(new bus.RouteView({model: route}).render().el);
+            });
+            return this;
+        }
+    });
+
+    bus.AppView = Backbone.View.extend({
+        el: '.primary-content .info',
+
+        initialize: function () {
+            _.bindAll(this, 'render');
+            this.on('wss:receive', this.update, this);
+            this.categories = ['a', 'o', 'd'];
+            this.routeList = new bus.RouteList();
+            this.showingWidget = false;
+
+            this.personalStatusView = new bus.PersonalStatusView();
+            this.mapView = new bus.MapView();
+            this.actionButtonView = new bus.ActionButtonView();
+            // this.render();
+        },
+
+        render: function () {
+            var container = this.$el;
+            container.children().detach();
+            if (!window.isAdmin || window.isStudent) {
+                container.append(this.personalStatusView.render().el);
+            }
+            container.append(this.actionButtonView.render().el);
+            container.append(this.mapView.render().el);
+
+            return this;
+        },
+
+        update: function (data) {
+            if (data.error) {
+                Messenger().error(data.error);
+                return;
+            }
+            if (this.mapView.busDriver) {
+                return;
+            }
+            this.routeList.reset(data.allRoutes);
+            this.actionButtonView.model = this.routeList;
+            this.mapView.model = this.routeList;
+
+            this.user_bus = this.routeList.find((route) => {
+                if (data.userRouteId) {
+                    return route.id === data.userRouteId;
+                } else if (this.user_bus) {
+                    return route.id === this.user_bus.id;
+                }
+            });
+
+            this.user_bus = this.user_bus ? this.user_bus : new bus.Route();
+            this.personalStatusView.model = this.user_bus;
+
+            this.mapView.highlightUserBus(this.user_bus.attributes);
+
+            // FIXME: hacky solution to reset action button.
+            Backbone.trigger('deselectSpace');
+            this.render();
+        }
+    });
+
+    if(isAdmin) {
+        $(".bus-announcement-save").click(function() {
+            bus.sendUpdate({
+                announcement: $(".bus-announcement").text()
+            });
+            $(".bus-announcement-save").text("Saved!").css("color", "green");
+            setTimeout(function() {
+                $(".bus-announcement-save").text("Save").css("color", "");
+            }, 1500);
+        });
+        $(".bus-announcement-clear").click(function() {
+            $(".bus-announcement").text("");
+            bus.sendUpdate({
+                announcement: "",
+            });
+            $(".bus-announcement-clear").text("Cleared!").css("color", "green");
+            setTimeout(function() {
+                $(".bus-announcement-clear").text("Clear").css("color", "");
+            }, 1500);
+        });
+    }
+
+    window.appView = new bus.AppView();
+    let socket = getSocket(base_url, location, document, window, 'afternoon');
+});

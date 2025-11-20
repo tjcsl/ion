@@ -1,0 +1,35 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Schedule - {{ date }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/schedule' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <a href="{% url 'schedule_admin' %}" class="button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <h2>Fill Action</h2>
+        {% for msg in msgs %}
+            <p>{{ msg }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}

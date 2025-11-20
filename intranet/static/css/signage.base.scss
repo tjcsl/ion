@@ -1,0 +1,191 @@
+body.signage {
+    margin: 0;
+    padding: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background-color: #f2f2f4;
+    overflow: hidden;
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+section.signage-section {
+    position: absolute;
+    top: 0;
+    transition: transform 0.4s ease-in-out;
+    transform: translateX(100%);
+
+    text-align: left;
+
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    background-color: #f2f2f4;
+
+    &.server {
+        color: black;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    &.active {
+        transform: translateX(0);
+    }
+
+    &.signage-home {
+        transform: translateX(0);
+        background-size: cover;
+        background-position: center;
+    }
+
+    iframe.signage-iframe {
+        width: 95vw;
+        height: 100vh;
+    }
+}
+
+.signage-section.signage-home {
+    .wrapper {
+        background-color: #f2f2f4;
+        opacity: 0.8;
+
+        width: 20vw;
+        height: 100vh;
+        padding: 20px;
+
+        text-align: center;
+    }
+
+    img.tjlogo {
+        width: 60%;
+        max-width: 200px;
+    }
+
+    .name {
+        color: black;
+        margin: 50px 0;
+        font-weight: 100;
+        font-size: 36px;
+        width: 100%;
+    }
+
+    .time {
+        font-size: 36px;
+        font-weight: bold;
+    }
+
+    .schedule {
+        margin-left: 0;
+        margin-top: 0;
+        font-size: 24px;
+
+        .bellschedule-table.today {
+            position: relative;
+            left: 48%;
+            transform: translateX(-50%);
+            font-size: 18pt;
+
+            tr th {
+                width: 50%;
+            }
+        }
+    }
+}
+
+.signage-message {
+    position: fixed;
+    width: 100vw;
+    display: none;
+
+    &.offline {
+        background-color: red;
+        display: block;
+        margin: 0;
+        padding: 5px 0;
+        color: white;
+        bottom: 0;
+    }
+}
+
+.signage-nav {
+    position: fixed;
+    right: 0;
+    width: 5vw;
+    height: calc(100vh - 20px);
+
+    background-color: #f2f2f4;
+    opacity: 0.8;
+
+    padding: 10px 0;
+    overflow-y: scroll;
+
+    a {
+        color: #484848;
+        padding: 20px 0;
+        display: block;
+
+        * {
+            // otherwise, clicking on buttons sometimes registers as a click on the icon.
+            pointer-events: none;
+        }
+    }
+
+    .signage-home-button {
+        display: none;
+    }
+
+    &.show-back .signage-home-button {
+        display: block;
+    }
+
+    &.lock {
+        display: none;
+    }
+}
+
+.portrait {
+    section.home {
+        .wrapper {
+            width: 100vw;
+            padding: 20px 0;
+        }
+
+        .schedule .bellschedule-table.today tr th {
+            width: 50%;
+        }
+    }
+
+    .signage-nav {
+        width: 100vw;
+        height: 5vh;
+        bottom: 0;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        overflow-x: scroll;
+
+        a {
+            display: inline-block;
+            height: fit-content;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 20px;
+        }
+    }
+
+    section.signage-section iframe.signage-iframe {
+        width: 100%;
+        height: calc(95vh - 20px);
+    }
+
+    .signage-section.signage-home .tjlogo {
+        margin-top: 350px;
+    }
+}

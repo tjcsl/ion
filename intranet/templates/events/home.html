@@ -1,0 +1,166 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Events
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+    <script src="{% static 'js/events.js' %}"></script>
+    {% if not show_all and not classic %}
+    <script>
+        var view = "{{ view }}";
+
+        function setView(view_name){
+            if(view_name == "month") {
+                $("#view-div").html(`{% include "events/month.html" %}`);
+            }
+            else {
+                $("#view-div").html(`{% include "events/week.html"  %}`);
+            }
+
+            toggleTouchEvents(view_name);
+            $("#{{ week_data.today }}").attr("class", "today");
+        }
+
+        $(document).ready(function() {
+            setView(view);
+            $("#{{ week_data.today }}").attr("class", "today");
+
+            $("#month-button").click(function(e){
+                e.preventDefault();
+                setView("month");
+            });
+            $("#week-button").click(function(e){
+                e.preventDefault();
+                setView("week");
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'dashboard' %}
+    {% stylesheet 'events' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/dashboard' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content events">
+        <h2>Events</h2>
+        <div class="button-container">
+            <div class="button-subcontainer">
+
+            {% if not classic %}
+                <a href="?classic=1" class="button">
+                    Classic View
+                </a>
+            {% else %}
+                <a href="{% url 'events' %}" class="button">
+                    <i class="fas fa-times"></i>
+                    Exit Classic View
+                </a>
+            {% endif %}
+
+            {% if not show_all  and is_events_admin %}
+                <a href="?show_all=1" class="button">
+                    Show All
+                </a>
+            {% endif %}
+
+            {% if show_all %}
+                <a href="{% url 'events' %}" class="button">
+                    <i class="fas fa-times"></i>
+                    Close Show All
+                </a>
+            {% endif %}
+
+            {% if is_events_admin %}
+                <a href="{% url 'add_event' %}" class="button">
+                    <i class="fas fa-plus"></i>
+                    Add
+                </a>
+            {% else %}
+                <a href="{% url 'request_event' %}" class="button">
+                    <i class="fas fa-bullhorn"></i>
+                    Request
+                </a>
+            {% endif %}
+
+            </div>
+
+            {% if not show_all and not classic %}
+                <div class="button-subcontainer">
+                    <a id="month-button" class="button" href="#">Month</a>
+                    <a id="week-button" class="button" href="#">Week</a>
+                </div>
+            {% endif %}
+
+        </div>
+        <div class="events-container">
+        {% if show_all or classic %}
+            <div class="events-container">
+                {% for category in events %}
+                    {% if category.events %}
+                        <h2 class="category">{{ category.title }}:</h2>
+                    {% endif %}
+
+                    {% for event in category.events %}
+                        {% with show_date_icon=True %}
+                            {% include "events/event.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% else %}
+            {% for category in events %}
+                {% if category.title == "Awaiting Approval" and category.events %}
+                    <h2 class="category">{{ category.title }}:</h2>
+
+                    {% for event in category.events %}
+
+                        {% with show_date_icon=True %}
+                            {% include "events/event.html" %}
+                        {% endwith %}
+
+                    {% endfor %}
+
+                {% elif category.title == "Week and month" and category.events and category.has_special_event %}
+                    <h2 class="category">Special:</h2>
+
+                    {% for event in category.events %}
+                        {% if event.show_attending or event.scheduled_activity or event.announcement or event.show_on_dashboard %}
+
+                            {% with show_date_icon=True %}
+                                {% include "events/event.html" %}
+                            {% endwith %}
+
+                        {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        </div>
+
+        {% if not show_all and not classic %}
+            <div class="events-container" id="view-div"></div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

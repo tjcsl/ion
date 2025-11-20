@@ -1,0 +1,311 @@
+/* Let form.schedule-activity-grid scroll with the browser;
+ * give all other UI elements a fixed position. -JW, 05/15 */
+
+input[type="checkbox"] {
+    zoom: 1.25;
+    margin-right: -1px;
+}
+
+b.cancelled {
+    color: rgb(255, 72, 72);
+}
+
+tr.scheduled .block-name {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.schedule-activity-page.floating {
+    form.schedule-form {
+        overflow-x: auto;
+        position: absolute; // quick fix to display scrollbar at bottom
+    }
+
+    @media (min-width: 500px) {
+        .primary-content {
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .eighth-header {
+            position: fixed;
+            // keep solid
+            height: 160px;
+            width: 100%;
+            // keep Start Date aligned properly
+            width: calc(100% - 152px);
+            // remove gap between top header and primary-content
+            margin-top: -16px;
+            padding-top: 16px;
+            padding-right: 152px;
+            background-color: #f2f2f4;
+            z-index: 2;
+        }
+        .schedule-activity {
+            &-head {
+                position: fixed;
+                margin-top: 42px;
+                width: 100%;
+                z-index: 2;
+            }
+
+            &-grid {
+                position: static;
+                margin-top: 161px;
+                z-index: -1;
+            }
+        }
+    }
+}
+
+.footer-buttons {
+    margin-bottom: 160px;
+}
+
+table.schedule-activity-grid {
+    border-top: 1px rgb(194, 194, 194) solid;
+
+    thead {
+        background-color: white;
+        z-index: 3 !important; // override sticky header library
+        border-bottom: 1px solid rgb(194, 194, 194);
+
+        th {
+            padding-left: 0;
+
+            &.special {
+                padding-right: 0;
+
+                > span {
+                    width: 25px;
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 500px) {
+    .header,
+    .nav {
+        position: fixed;
+        z-index: 4;
+    }
+}
+
+tr.form-row.hidden {
+    input,
+    textarea,
+    .selectize-input {
+        opacity: 0.7;
+    }
+}
+
+/* keep selectize and non-selectize inputs the same height */
+
+:not(.selectize-input) > input[type="text"] {
+    height: 23px;
+}
+
+.form-row {
+    > td {
+        position: relative;
+    }
+
+    a.propagate {
+        height: 22px;
+        width: 5px;
+        line-height: 22px;
+        opacity: 1;
+        cursor: pointer;
+        z-index: 3;
+        margin-left: -7px;
+    }
+
+    td[data-base-field="capacity"] a.propagate {
+        margin-left: -12px;
+    }
+}
+
+.propagate {
+    &-direction {
+        position: fixed;
+        float: right;
+        right: 20px;
+        top: 100px;
+        width: 220px;
+        line-height: 40px;
+        z-index: 998;
+
+        > b {
+            float: left;
+            margin-right: 5px;
+        }
+
+        select,
+        .selectize-control {
+            width: 80px;
+            display: inline-block;
+            float: right;
+        }
+    }
+
+    &-method {
+        position: fixed;
+        float: right;
+        right: 20px;
+        top: 150px;
+        width: 220px;
+        line-height: 40px;
+        z-index: 998;
+
+        > b {
+            float: left;
+            margin-right: 5px;
+        }
+
+        select,
+        .selectize-control {
+            width: 80px;
+            display: inline-block;
+            float: right;
+        }
+    }
+
+    &-method,
+    &-direction {
+        @media (max-width: 858px) {
+            width: 85px;
+            b {
+                display: none;
+            }
+        }
+        @media (max-width: 720px) {
+            zoom: 0.6;
+        }
+    }
+}
+
+.selectize-control {
+    .loading {
+        .propagate-direction &,
+        .propagate-method & {
+            display: none;
+        }
+    }
+
+    @media (max-width: 1000px) {
+        width: 350px;
+    }
+}
+
+@media (max-width: 720px) {
+    .start-date {
+        display: none;
+    }
+}
+
+td[data-field="capacity"] {
+    white-space: nowrap;
+}
+
+tr.form-row {
+    &.scheduled {
+        .selectize-input,
+        input,
+        textarea {
+            //border-color: green;
+            //background-color: rgba(0, 128, 0, .25);
+            background-color: white;
+        }
+    }
+
+    &.hidden {
+        .selectize-input,
+        input,
+        textarea {
+            background-color: rgba(181, 181, 181, 0.25);
+        }
+    }
+
+    // this NEEDS to be separate
+    ::-webkit-input-placeholder {
+        color: black;
+        font-weight: bold;
+    }
+
+    :-moz-placeholder {
+        color: black;
+        font-weight: bold;
+    }
+
+    ::-moz-placeholder {
+        color: black;
+        font-weight: bold;
+    }
+
+    :-ms-input-placeholder {
+        color: black;
+        font-weight: bold;
+    }
+
+    .capacity {
+        font-size: 15px;
+        font-style: italic;
+        // this NEEDS to be separate
+        &::-webkit-input-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        &:-moz-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        &::-moz-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+
+        &:-ms-input-placeholder {
+            font-size: 12px;
+            font-style: normal;
+        }
+    }
+}
+
+.unschedule-link {
+    font-size: 9px;
+}
+
+.modal {
+    position: absolute;
+    background-color: white;
+    display: block;
+    opacity: 1;
+    cursor: pointer;
+    width: 400px;
+    height: 65px;
+    margin-top: 20px;
+}
+
+#admin_comments_modal {
+    border: 1px solid rgb(102, 102, 102);
+    padding: 5px;
+    border-radius: 3px;
+    white-space: pre-wrap;
+}
+
+#admin_comments_badge {
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+#quick-schedule {
+    .block-display {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid rgb(102, 102, 102);
+    }
+}

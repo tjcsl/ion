@@ -1,0 +1,520 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }}{% if request.user.is_eighth_admin %} - Eighth Admin{% endif %} - {% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {{ block.super }}
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'eighth.attendance' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.timeago.js' %}"></script>
+    <!--[if lt IE 9]><script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.0.8/es5-shim.min.js"></script><![endif]-->
+    <script src="{% static 'js/eighth/attendance.js' %}"></script>
+    <script src="{% static 'js/eighth/ui_init.js' %}"></script>
+    <script src="{% static 'js/eighth/user_link.js' %}"></script>
+    {% if wizard %}
+    <script>
+    $(function() {
+        $('form > select').on('change', function() {
+            this.form.submit();
+        });
+
+        $('#show_all_blocks').click(function() {
+            if ($(this).prop('checked')) {
+                location.href = '?show_all_blocks=1';
+            } else {
+                location.href = '?';
+            }
+        });
+    });
+    </script>
+    {% else %}
+    <script>
+    $(function() {
+        $("form[name='choose-activity'] > select").on('change', function() {
+            var val = $(this).val();
+            if (val.length > 0) {
+                location.href = $('.choose-activity').attr('data-endpoint') + '/' + val;
+            }
+        });
+    });
+    </script>
+    {% endif %}
+    <script>
+        function openBbcuTab() {
+            var student_list = [];
+            var mem_list = $('.bbcu-selector');
+            for (var i = 0; i < mem_list.length; i++) {
+                var name = $(mem_list[i]).find(".user-name-eighth")[0].innerText.split(" ").slice(0, 2).join(" ");
+                var email = $(mem_list[i]).find(".id")[0].innerText + "@fcpsschools.net";
+                student_list.push([name, email]);
+            }
+            var bbcu_script = $("#bbcu_script")[0].value;
+            bbcu_script = bbcu_script.replace("+=+=", JSON.stringify(student_list));
+            var new_window = window.open("", "_blank");
+            new_window.document.write("<p>" + bbcu_script + "</p>");
+        }
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/eighth.attendance' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        {% if hybrid and not request.user.is_eighth_admin %}
+            <strong style="color: red"><i class="fas fa-exclamation-triangle"></i>  Please remember to take attendance for both your In-Person and Virtual sections each block starting in March.</strong>
+            <br><br>
+        {% endif %}
+        <div class="eighth-header">
+            <h2>
+                {% if scheduled_activity %}
+                    {% if scheduled_activity.block.locked %}
+                        <span class="print-hide">Take Attendance:</span>
+                    {% else %}
+                        <span class="print-hide">View Roster:</span>
+                    {% endif %}
+                    <span class="extra-title">{{ scheduled_activity }}</span>
+                {% else %}
+                    Attendance/Roster
+                {% endif %}
+            </h2>
+
+            {% if request.user.is_eighth_admin %}
+                {% include "eighth/admin/start_date.html" %}
+            {% endif %}
+        </div>
+    {% if request.user.is_eighth_admin and not wizard %}
+        <div class="choose-block">
+            <form action="{% url 'eighth_admin_attendance_choose_scheduled_activity' %}?default_activity={{ scheduled_activity.activity.id }}" method="post" name="choose-block">
+                {% csrf_token %}
+                <input type="hidden" name="eighth_attendance_select_scheduled_activity_wizard-current_step" value="block">
+                <b>Block:</b>
+                <select name="block-block" onchange="if(this.value.length > 0) this.form.submit()" id="block-select" autocomplete="off">
+                    {% for blk in blocks %}
+                        <option value="{{ blk.id }}" {% if blk.id == scheduled_activity.block.id %} selected{% endif %}>
+                            {{ blk.id }}: {{ blk }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div class="choose-activity" data-endpoint="/eighth{% if request.user.is_eighth_admin %}/admin{% endif %}/attendance">
+            <form name="choose-activity">
+                <b>Activity:</b>
+                <select name="scheduled-activities" id="activity-select" autocomplete="off">
+                {% for schact in scheduled_activities %}
+                    <option value="{{ schact.id }}" {% if schact.id == scheduled_activity.id %} selected="selected"{% endif %}>
+                        {{ schact.activity.id }}: {{ schact.title_with_flags }}
+                    </option>
+                {% endfor %}
+                </select>
+            </form>
+        </div>
+    {% endif %}
+
+
+        {% if request.GET.ns %}
+            <strong style="color: red"><i class="fas fa-exclamation-triangle"></i>  You are not sponsoring any activities. You are not an eighth period sponsor.</strong>
+            <br>
+        {% endif %}
+
+        {% if no_edit_perm %}
+            {% if edit_perm_cancelled %}
+                <strong style="color: red"><i class="fas fa-exclamation-triangle"></i> This activity was cancelled, so you can only view the roster.</strong>
+                <br>
+            {% else %}
+                <strong style="color: red"><i class="fas fa-exclamation-triangle"></i> You are not a sponsor for this activity, so you can only view the roster.</strong>
+                <br>
+            {% endif %}
+        {% endif %}
+
+        {% if request.GET.no_attendance %}
+            <a href="{% url 'eighth_admin_view_activities_without_attendance' %}?block={{ request.GET.no_attendance|escape }}" class="button">
+                <i class="fas fa-arrow-left"></i>
+                Activities w/o Attendance
+            </a>
+            <br>
+        {% endif %}
+
+        {% if wizard %}
+            <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" name="wizard-form">
+                {% csrf_token %}
+                {{ wizard.management_form }}
+
+                {% if default_activity_not_scheduled %}
+                    <b>The activity you selected was not scheduled on this block. Select a different activity.</b>
+                    <br>
+                {% endif %}
+
+                {% if sponsor_block %}
+                    <br>
+                    {% if sponsored_activities %}
+                        <b>You are sponsoring the following activities on {{ sponsor_block }}:</b><br>
+                        <table class="fancy-table sponsoring-wizard-table">
+                            <tbody>
+                        {% for schact in sponsored_activities %}
+                            <tr>
+                                <th>
+                                    {{ schact.activity.id }}: {{ schact.full_title }}
+                                </th>
+                                <td>
+                                    <a href='{% url "eighth_take_attendance" schact.id %}' class='button'>
+                                        {% if schact.block.attendance_locked and not request.user.is_eighth_admin %}
+                                            View Attendance
+                                        {% elif schact.block.locked %}
+                                            Take Attendance
+                                        {% else %}
+                                            View Roster
+                                        {% endif %}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <b>
+                        {% if sponsor_block.date_in_past %}
+                            You did not sponsor any activities on {{ sponsor_block }}.
+                        {% else %}
+                            You are not sponsoring any activities on {{ sponsor_block }}.
+                        {% endif %}
+                        </b><br>
+                    {% endif %}
+                    <br>
+                    {% if request.user.is_eighth_admin %}
+                        <a href="{% url 'eighth_admin_no_signups_roster' sponsor_block.id %}">
+                            View students who haven't signed up for an activity
+                        </a>
+                        <br>
+                    {% endif %}
+                    <br>
+                {% endif %}
+
+
+                    {{ wizard.form }}
+                    {% if wizard.steps.prev %}
+                        <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Back</button>
+                    {% endif %}
+                    {% if wizard.steps.next or default_activity_not_scheduled %}
+                        <label>
+                            <input type="checkbox" name="show_all_blocks" id="show_all_blocks" {% if show_all_blocks %} checked{% endif %}> Show Past Blocks This Year
+                        </label><br>
+                        <input type="submit" value="Next" />
+                    {% else %}
+                        <input type="submit" value="{% if scheduled_activity.block.locked %}Take Attendance{% else %}View Roster{% endif %}"/>
+                    {% endif %}
+                {% if sponsor_block %}
+                    <br><br>
+                    <p>You can view more information about an activity by searching for its name in the Search box.</p>
+                {% endif %}
+
+
+                {% if redirect_block_id %}
+                    <input type="hidden" name="block-block" value="{{ redirect_block_id }}">
+                    <script>
+                        document.getElementById("id_block-block").remove();
+                        document.forms["wizard-form"].action = '/eighth/{% if request.user.is_eighth_admin %}admin/{% endif %}attendance?show_all_blocks=1';
+                        document.forms["wizard-form"].submit()
+                    </script>
+                {% endif %}
+            </form>
+        {% else %}
+            <div class="attendance-container">
+                <table class="key-value-table activity-attributes">
+                {% if not request.user.is_eighth_admin %}
+                    <tr>
+                        <th>Activity:</th>
+                        <td>{{ scheduled_activity.activity.name_with_flags }} (AID: {{ scheduled_activity.activity.aid }})</td>
+                    </tr>
+                    <tr>
+                        <th>Date:</th>
+                        {% if hybrid %}
+                            <td>{{ scheduled_activity.block.formatted_date }}, {{ scheduled_activity.block.hybrid_text }} Block</td>
+                        {% else %}
+                            <td>{{ scheduled_activity.block.formatted_date }}, {{ scheduled_activity.block.block_letter }} Block</td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+                    <tr>
+                        <th>Rooms:</th>
+                        <td>{{ scheduled_activity.get_true_rooms|join:", "|default:"None" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sponsors:</th>
+                        <td>{{ scheduled_activity.get_true_sponsors|join:", "|default:"None" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Signups:</th>
+                        {% with scheduled_activity.get_true_capacity as capacity %}
+                            <td>{{ members|length }}/{% if capacity == -1%}Unlimited{% else %}{{ capacity }}{% endif %} </td>
+                        {% endwith %}
+                    </tr>
+                </table>
+
+                {% if scheduled_activity.cancelled %}
+                    <span class="badge darkred cancelled-badge" title="This activity was cancelled.">CANCELLED</span><br>
+                {% endif %}
+
+                {% if scheduled_activity.attendance_taken %}
+                    <div class="attendance-taken print-hide">
+                        <i class="fas fa-check"></i> Attendance Taken
+                    </div>
+                {% elif scheduled_activity.block.locked %}
+                    <div class="no-attendance print-hide">
+                        <i class="fas fa-exclamation-triangle"></i> Attendance Not Taken
+                    </div>
+                {% endif %}
+
+                {% if passes and scheduled_activity.block.locked %}
+                    <div class="passes-notice">
+                        <i class="fas fa-exclamation-triangle"></i> Unacknowledged Student Passes
+                    </div>
+                {% endif %}
+
+                <div class="pass-container{% if request.user.is_eighth_admin %} eighth-admin{% endif %}{% if passes and scheduled_activity.block.locked %} has-passes{% endif %}">
+                {% if passes and scheduled_activity.block.locked %}
+                    <h3 class="passes-notice"><i class="fas fa-exclamation-triangle"></i> Student Passes</h3>
+                    <table class="take-passes">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Student ID</th>
+                                <th>Grade</th>
+                                <th>Time</th>
+                                {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
+
+                                {% else %}
+                                    <th>Accept/Reject</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pass in passes %}
+                            <tr class="bbcu-selector">
+                                <td class="user-link" data-user-id="{{ pass.user.id }}">
+                                    <a href="{% url 'user_profile' pass.user.id %}" class="user-name-eighth">
+                                        {{ pass.user.last_name }}, {{ pass.user.first_name }}
+                                    </a>
+                                </td>
+                                <td class="user-link id">
+                                    {% if pass.user.student_id %}
+                                        {{ pass.user.student_id }}
+                                    {% else %}
+                                        (Ion {{ pass.user.id }})
+                                    {% endif %}
+                                </td>
+                                <td style="text-align: center" class="user-link">
+                                    {{ pass.user.grade_number }}
+                                </td>
+                                <td>
+                                    {% if pass.last_modified_time %}
+                                        <time class="timeago" datetime="{{ pass.last_modified_time|date:'c' }}">{{ pass.last_modified_time|fuzzy_date }}</time>
+                                    {% endif %}
+                                </td>
+                                {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
+
+                                {% else %}
+                                <td class="form">
+                                    <form name="pass-form-{{ pass.id }}" action="{% url 'eighth_accept_pass' pass.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="">
+                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="accept"><i class="fas fa-check"></i></a>
+                                         &nbsp;
+
+                                        <a href="#" onclick="return false" class="pass-form-submit-link button" data-form="pass-form-{{ pass.id }}" data-status="reject"><i class="fas fa-times"></i></a>
+                                    </form>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            <tr class="pass-button-row">
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                {% if scheduled_activity.block.attendance_locked and not request.user.is_eighth_admin %}
+
+                                {% else %}
+                                <td>
+                                    <form action="{% url 'eighth_accept_all_passes' scheduled_activity.id %}" method="post" onsubmit="return confirm('Accept passes for and mark {{ passes|length }} student{{ passes|pluralize }} present?')">
+                                        {% csrf_token %}
+                                        <input type="submit" class="button accept-all-passes print-hide" value="Accept All">
+                                    </form>
+                                </td>
+                                {% endif %}
+                            </tr>
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h3>Passes</h3>
+                    <span class="no-passes">
+                        <i class="fas fa-check"></i> There are no passes to accept.
+                    </span>
+                {% endif %}
+                </div>
+
+                <form class="attendance-form" action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <table class="take-attendance-roster{% if not members %} no-members{% endif %}">
+                        <thead>
+                            {% if request.user.is_eighth_admin %}
+                            <tr>
+                                <td colspan="5">
+                                    {% if not scheduled_activity.block.locked %}
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                                    {% elif scheduled_activity.block.attendance_locked %}
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                                    {% else %}
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                            {% if members %}
+                            <tr class="members-header">
+                                {% if show_checkboxes %}
+                                    <th class="cb-col">
+                                        <input type="checkbox" class="print-hide"> Present
+                                    </th>
+                                {% elif show_icons %}
+                                    <th class="cb-col">Present</th>
+                                {% endif %}
+                                <th class="user-col" width="250">Student</th>
+                                <th class="sid-col">Student ID</th>
+                                <th class="grade-col">Grade</th>
+                                <th class="email-col">Email</th>
+                                <th class="extra-col"></th>
+                            </tr>
+                            {% endif %}
+
+                        </thead>
+                        <tbody>
+                            {% for member in members %}
+                                <tr class="student-attendance-row bbcu-selector">
+                                    {% if show_checkboxes %}
+                                        <td class="present-checkbox"><input type="checkbox" name="{{ member.id }}"{% if member.present or member.pass_present %} checked{% endif %}></td>
+                                    {% elif show_icons %}
+                                        <td class="present-checkbox">
+                                            {% if member.present or member.pass_present %}
+                                                <i class="fas fa-check"></i>
+                                            {% else %}
+                                                <i class="fas fa-times"></i>
+                                            {% endif %}
+                                    {% endif %}
+                                    <td class="user-col user-link" data-user-id="{{ member.id }}">
+                                        <a class="user-name-eighth" href="{% url 'user_profile' member.id %}">
+                                            {{ member.name }}
+                                        </a>
+                                    </td>
+                                    <td class="sid-col id">{% if member.student_id %}
+                                        {{ member.student_id }}
+                                    {% else %}
+                                        (Ion {{ member.id }})
+                                    {% endif %}</td>
+                                    <td style="text-align: center">{{ member.grade }}</td>
+                                    <td class="email-col">{{ member.email }}</td>
+                                    <td class="extra-col">{% if member.had_pass %}(Had Pass{% if member.pass_present %}; Accepted{% endif %}){% endif %}</td>
+
+                                    <img class='user-pic' data-user-id="{{ member.id }}" src="/profile/picture/{{ member.id }}" width="172" height="215" style="display:none">
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5">
+                                        <i class="fas fa-info-circle"></i> There are no signups.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="print-hide">
+                            <tr>
+                                <td colspan="5">
+                                    <br>
+                                    <b>Take Attendance with Google Meet CSV Report:</b>
+                                    <input type="file" name="attendance" accept=".csv">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">
+                                {% if no_edit_perm %}
+                                    <br>
+                                {% elif not scheduled_activity.block.locked %}
+                                    <br>
+                                    <br>
+                                    <b>You may not take attendance for this activity - signups are not yet locked.</b>
+                                    <br>
+                                    {% if request.user.is_eighth_admin %}
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                                    {% endif %}
+                                {% elif scheduled_activity.block.attendance_locked %}
+                                    <br>
+                                    <br>
+                                    {% if request.user.is_eighth_admin %}
+                                        <b>The attendance period is locked.</b>
+                                        <br>
+                                        <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                                    {% else %}
+                                        <b>You may not take attendance for this activity - attendance is locked.</b>
+                                        <br>
+                                    {% endif %}
+                                {% else %}
+                                    <input type="submit" class="save-button print-hide" value="{% if scheduled_activity.attendance_taken %}Update{% else %}Take{% endif %} Attendance">
+                                {% endif %}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+
+                <br>
+                {% if not request.user.is_restricted %}
+                <a class="button print-hide" href="{% url 'eighth_admin_export_attendance_csv' scheduled_activity.id %}">Export CSV</a>
+                &nbsp; &nbsp;
+                <a class="button print-hide" href="#" onclick="openBbcuTab()">View in BbCU Format</a>
+                <input type="hidden" id="bbcu_script" value="{{ bbcu_script }}">
+                &nbsp; &nbsp;
+                {% endif %}
+                <button class="print-hide" onclick="window.print()">Print</button>
+                {% if not no_edit_perm or edit_perm_cancelled %}
+                &nbsp; &nbsp;
+                <a class="button print-hide" href="{% url 'eighth_email_students' scheduled_activity.id %}">Email Students</a>
+                {% endif %}
+                {% if request.user.sponsor_obj and request.user.sponsor_obj in scheduled_activity.activity.sponsors.all or request.user in scheduled_activity.activity.club_sponsors.all %}
+                    <br>
+                    <br>
+                    <a class="button print-hide" href="{% url 'eighth_activity_settings' scheduled_activity.activity.id %}">
+                      <i class="fa fa-users"></i>
+                      Club Announcement Settings
+                    </a>
+                {% endif %}
+                {% if user.is_eighth_admin %}
+                    <br>
+                    <br>
+                    <form action="{% if 'no_attendance' in request.GET %}?no_attendance={{ request.GET.no_attendance }}{% endif %}" method="post" onsubmit="return confirm('Are you sure you want to reset attendance on this activity?');" class="print-hide">
+                        {% csrf_token %}
+                        <input type="hidden" name="clear_attendance_bit" value="true">
+                        <input type="submit" value="Clear Attendance Bit" style="font-size: 10px; padding: 3px 5px">
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

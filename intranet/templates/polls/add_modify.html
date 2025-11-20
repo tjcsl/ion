@@ -1,0 +1,142 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Poll
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.csv.min.js' %}"></script>
+    <script src="{% static 'js/polls.js' %}"></script>
+    <script>
+        var poll_questions = $.parseJSON("{{ poll_questions|escapejs }}");
+        var poll_choices = $.parseJSON("{{ poll_choices|escapejs }}");
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    {% stylesheet 'polls' %}
+    {% stylesheet 'polls.form' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/cke' %}
+        {% stylesheet 'dark/polls' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<script type="text/template" id="question-template">
+<div class="question" <% if (pk) { %>data-id="<%= pk %>"<% } %>>
+    <div class="actions"><i class="fas fa-arrow-up"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-times"></i></div>
+    <b>Question</b>
+    <div contenteditable="true" class="text"><%= fields.question %></div>
+    <div class="type-container">
+        <b>Type</b>
+        <select class="type">
+            <option value="STD" <% if (fields.type == "STD") { %>selected<% } %>>Standard</option>
+            <option value="ELC" <% if (fields.type == "ELC") { %>selected<% } %>>Election</option>
+            <option value="RAN" <% if (fields.type == "RAN") { %>selected<% } %>>Rank Choice</option>
+            <option value="APP" <% if (fields.type == "APP") { %>selected<% } %>>Approval</option>
+            <option value="SAP" <% if (fields.type == "SAP") { %>selected<% } %>>Split approval</option>
+            <option value="FRE" <% if (fields.type == "FRE") { %>selected<% } %>>Free response</option>
+            <option value="SRE" <% if (fields.type == "SRE") { %>selected<% } %>>Short response</option>
+            <option value="STO" <% if (fields.type == "STO") { %>selected<% } %>>Standard other</option>
+        </select>
+    </div>
+    <div class="max-container">
+        <div class="max-container-padding">
+            <b>Max Choices</b>
+            <input type="number" class="max" min="1" value="<%- fields.max_choices %>">
+        </div>
+    </div>
+    <div style="clear:both"></div>
+    <b class="choices-header">Choices</b>
+    <div class="rank-choice-info-container" style="display: none">
+        <span class="material-symbols-outlined info-icon-add">info</span>
+        <span class="info-text-add"> Use the pipe symbol, |, to separate candidate names and slogans/information for improved rendering.</span>
+        <p class="info-text-add"> &nbsp; &nbsp; &nbsp; Example: <a href="https://docs.google.com" target="_blank">John Smith | No homework for everyone!</a></p>
+    </div>
+    <div class="choices"></div>
+    <button class="add_choice"><i class="fas fa-plus"></i> Add Choice</button>
+</div>
+</script>
+<script type="text/template" id="choice-template">
+<div class="choice" <% if (pk) { %>data-id="<%= pk %>"<% } %>>
+    <div class="actions"><i class="fas fa-arrow-up"></i> <i class="fas fa-arrow-down"></i> <i class="fas fa-times"></i></div>
+    <b>Choice</b>
+    <div class="info" contenteditable="true"><%= fields.info %></div>
+</div>
+</script>
+<div class="primary-content polls">
+    <h2 style="padding-left:0">
+        {{ action_title }} Poll
+    </h2>
+    <form id="poll-form" method="post">
+    {% csrf_token %}
+    <input type="hidden" id="id_question_data" name="question_data">
+    <table>
+    <tr>
+        <td colspan="2">
+        {% if action == "add" %}
+            <p>
+                {% if is_polls_admin %}
+                    You can create a poll on Intranet using this form.
+                {% else %}
+                    You may submit an poll to be shown on Intranet using this form. Please note that it will have to be approved by an administrator.
+                {% endif %}
+            </p>
+            <br>
+        {% endif %}
+        </td>
+    </tr>
+    {{ form.as_table }}
+    <tr>
+        <td>Questions:</td>
+        <td id="question_wrapper">
+            <div id="questions">
+            </div>
+            <button id="add_question"><i class="fas fa-plus"></i> Add Question</button>
+        </td>
+    </tr>
+    <tr id="csv_wrapper">
+        <td>From CSV:</td>
+        <td>
+            <button id="import_from_csv">
+                <i class="fas fa-plus"></i>
+                Load from CSV
+            </button>
+            <a id="csv_error"></a>
+        </td>
+        <input id="csv_input" type="file"/>
+    </tr>
+    <tr><td>&nbsp;</td><td>
+        <input type="submit" style="width:200px">
+        {% if poll.id %}
+            <a href="{% url 'delete_poll' poll.id %}" class="button delete-button">Delete</a>
+        {% endif %}
+    </td></tr>
+    </table>
+    </form>
+</div>
+<script>
+    // name of <textarea> is content
+    CKEDITOR.replace("id_description", {
+        width: "600px"
+    });
+</script>
+{% endblock %}

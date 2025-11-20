@@ -1,0 +1,60 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {% if action == "modify" %} Modify {% elif action == "add" %} Add {% endif %} Group
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'groups' %}
+
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script>
+    $(function() {
+        var sel = false;
+        $("select#id_permissions").after(
+            $("<button>Select All</button>")
+            .click(function() {
+                $("select#id_permissions option").prop('selected', sel=!sel);
+            })
+        );
+    });
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/select' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content">
+    <h2>
+        {% if action == "modify" %} Modify {% elif action == "add" %} Add {% endif %} Group
+    </h2>
+    <form action="" method="post">
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+            <tr><td><input type="submit"></td></tr>
+        </table>
+    </form>
+
+
+    <form action="" method="post">
+        <h3>Add users to this group:</h3>
+        {% csrf_token %}
+
+        <input type="submit">
+    </form>
+</div>
+{% endblock %}

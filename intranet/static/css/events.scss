@@ -1,0 +1,381 @@
+@import "colors";
+
+.primary-content {
+    position: relative;
+}
+
+.events {
+    min-width: 290px; // for 320x480 screens
+    max-width: 1000px;
+
+    h2 {
+        line-height: 38px;
+
+        &.category {
+            font-size: 18px;
+            font-weight: normal;
+            height: 33px;
+        }
+    }
+}
+
+.button-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.button-subcontainer {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+@media (max-width: 570px) {
+    .events {
+        max-width: none;
+    }
+    .button-container {
+        position: static;
+    }
+}
+
+@media (max-width: 1225px) {
+    .arrow-container {
+        margin-bottom: -20px !important;
+    }
+
+    .week-only {
+        position: relative;
+        right: 0;
+
+        & > tbody > tr > td {
+            display: block;
+            border-bottom: 1px solid lightgrey;
+            padding: 20px 0 !important;
+            width: 100%;
+
+            &:first-child {
+                border-top: 1px solid lightgrey;
+            }
+        }
+    }
+
+    .week-table {
+        min-width: auto !important;
+        width: 100% !important;
+        border-spacing: 30px !important;
+    }
+
+    .month-table {
+        min-width: 1680px !important;
+    }
+
+    td.cell-filler {
+        width: 0 !important;
+    }
+
+    .schedule {
+        overflow-x: auto;
+    }
+}
+
+.event {
+    background-color: white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(216, 216, 216);
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    overflow-x: auto;
+    behavior: url("/static/js/vendor/PIE/PIE.htc");
+
+    h3 {
+        cursor: pointer;
+
+        > a.event-link {
+            cursor: pointer;
+            color: $grey !important;
+        }
+
+        &:hover .event-icon-wrapper .event-toggle,
+        .event-icon-wrapper .event-toggle:hover,
+        .event-icon-wrapper:hover .event-toggle:hover {
+            color: rgb(32, 66, 224);
+        }
+
+        .event-icon-wrapper:hover .event-toggle {
+            color: $grey;
+        }
+    }
+
+    &-metadata {
+        color: rgb(99, 99, 99);
+        font-size: 12px;
+        line-height: 12px;
+        margin-bottom: 5px;
+    }
+
+    &-icon {
+        cursor: pointer;
+
+        &-wrapper {
+            float: right;
+            display: none;
+
+            .event:hover & {
+                display: block;
+            }
+
+            > a {
+                color: $grey;
+                text-decoration: none !important;
+                padding-left: 2px;
+
+                &:hover {
+                    color: rgb(32, 66, 224);
+                }
+            }
+        }
+    }
+
+    /* these values are mostly arbitrary but were collected manually and do work */
+    @media (max-width: 710px), (min-width: 960px) and (max-width: 1000px), (min-width: 800px) and (max-width: 880px) {
+        .bottom-row {
+            margin-bottom: 15px;
+
+            .attend-status {
+                left: 0;
+                bottom: -15px;
+            }
+        }
+    }
+
+    &-approve-table {
+        color: grey;
+        margin-bottom: 4px;
+    }
+}
+
+.events-icon-wrapper {
+    float: right;
+}
+
+.bottom-row {
+    position: relative;
+}
+
+.attend-status {
+    color: gray;
+    position: absolute;
+    right: 0px;
+    max-width: 280px;
+    white-space: nowrap;
+
+    .bottom-row.show-attend & {
+        width: 280px;
+    }
+}
+
+.signup-status {
+    color: gray;
+
+    > a.button {
+        margin-top: -2px;
+        position: absolute;
+        left: 140px;
+    }
+}
+
+a.button {
+    &.attend-button {
+        color: green;
+        margin-top: -3px;
+        float: right;
+    }
+
+    &.no-attend-button {
+        color: red;
+        margin-top: -3px;
+        float: right;
+    }
+}
+span.approve-reject {
+    color: #909090;
+    font-size: 12px;
+}
+
+.arrow-container {
+    text-align:center;
+}
+
+.week-month-title {
+    font-size: 16px;
+    position: relative;
+    top: 3px;
+}
+/*
+ * on announcement page, switch to separate rows more quickly
+ */
+
+@media (max-width: 1060px) {
+    .announcements.primary-content .announcement .event .bottom-row {
+        margin-bottom: 23px;
+
+        .attend-status {
+            left: 0;
+            bottom: -23px;
+        }
+    }
+}
+
+.bellschedule-table {
+    margin: 0;
+    width: 100%;
+
+    tr {
+        th {
+            text-align: right;
+            padding-right: 14px;
+        }
+
+        td {
+            text-align: left;
+            width: 100px;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+    }
+}
+
+.schedule {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+.week-table {
+    border-collapse: separate;
+    border-spacing: 15px;
+    margin: 0;
+    table-layout: fixed;
+    width: 145%;
+    min-width: 1140px;
+
+    th {
+        width: 50%;
+    }
+
+    td {
+        text-align: left;
+        width: 19%;
+        padding: 0 !important;
+
+        h2 {
+            font-weight: normal;
+            text-align: center;
+
+            &.schedule-date, &.day-name {
+                padding-bottom: 5px;
+            }
+        }
+
+        .no-events {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        &.today {
+            h2 {
+                font-weight: bold;
+            }
+        }
+
+        &.chevron {
+            width: 2.5%;
+        }
+
+        &.date-nav {
+            text-align: center;
+        }
+    }
+
+    > tbody > tr > td {
+        padding-bottom: 10px;
+    }
+}
+
+.month-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+    table-layout: fixed;
+    width: 145%;
+    min-width: 1140px;
+
+    th {
+        width: 50%;
+    }
+
+    td {
+        text-align: left;
+        width: 19%;
+        padding: 10px !important;
+        border: 1px solid lightgrey;
+        vertical-align: top;
+
+        h2 {
+            font-weight: normal;
+            text-align: center;
+
+            &.schedule-date, &.day-name {
+                padding-bottom: 5px;
+            }
+        }
+
+        .no-events {
+            font-weight: bold;
+            text-align: center;
+        }
+
+        &.today {
+            h2 {
+                font-weight: bold;
+            }
+        }
+
+        &.chevron {
+            width: 2.5%;
+        }
+    }
+
+    > tbody > tr > td {
+        padding-bottom: 10px;
+    }
+}
+
+.button-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 107px;
+    height: 35px;
+    margin-left: -53.5px;
+    margin-top: -12.5px;
+}
+
+.month-container {
+    text-align: center;
+    vertical-align: center;
+    width: 100%;
+
+    & .month-name {
+        font-size: 25px;
+        font-weight: bold;
+        padding: 5%;
+    }
+
+    .far, .fas, .fab {
+        color: black;
+    }
+}

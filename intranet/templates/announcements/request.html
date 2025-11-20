@@ -1,0 +1,79 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Announcement
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'js/vendor/chrono.min.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script src="{% static 'js/announcement.form.js' %}"></script>
+    <script src="{% static 'js/announcement.request.js' %}"></script>
+    <script>
+        $(function() {
+            $("#id_author").attr("placeholder", "{{ user.full_name|escape }}");
+            {% if request.user.is_teacher %}
+                $("#id_teachers_requested")[0].selectize.setValue({{ request.user.id }});
+            {% endif %}
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'announcements.form' %}
+    {% stylesheet 'announcements.request' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/cke' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="announcements primary-content" style="padding: 0">
+    <h2>
+        {% if action != "add" %}{{ action|title }} {% endif %}Announcement Request
+    </h2>
+    <p>
+    Do you want to post an informational news article or announcement on Intranet? This page allows you to easily submit news for approval.
+    </p>
+    {% if not request.user.is_restricted %}
+    <p>Want to make an announcement for a specific event or activity? <b><a href="{% url 'request_event' %}">Submit an event for approval instead!</a></b></p>
+
+    {% if request.user.is_club_officer or request.user.is_club_sponsor %}
+    <p>Want to post an announcement for your club's members? <b><a href="{% url 'add_club_announcement' %}">Submit a club announcement instead!</a></b></p>
+    {% endif %}
+    <br />
+    {% endif %}
+    <strong>Guidelines for News Posts:</strong><br>
+    <ol>
+        <li>Use correct English grammar, punctuation, and spelling.</li>
+        <li>Use formal language and tone; avoid slang, all caps, texting-style abbreviations, excessive use of bolding, underlining, emojis, etc.</li>
+        <li>Keep posts short and concise. Viewable dashboard space is limited on Ion; be considerate of other announcements. Avoid unnecessary linebreaks or whitespace.</li>
+        <li>Do not submit repeat announcements; if an announcement about your topic has already been posted, do not request another.</li>
+        <li>See detailed guidelines <a target="_blank" href="https://guides.tjhsst.edu/ion/ion-announcement-guidelines">here</a>.</li>
+    </ol>
+    <br>
+    Intranet Administrators may modify requests at their discretion.
+    <br><br>
+    <form action="" method="post" id="announcement_form">
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+            <tr><td><button type="submit" id="submit_announcement">Submit</button></td></tr>
+        </table>
+    </form>
+</div>
+{% endblock %}

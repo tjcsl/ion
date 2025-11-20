@@ -1,0 +1,24 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/eighth.maintenance.css' %}">
+{% endblock %}
+
+{% block admin_main %}
+
+<h3 style="margin-top:15px">Clear Student Admin Comments</h3>
+<p>Delete the Admin Comments field of all of the students in the database.</p>
+<a class="button" href="{% url 'eighth_admin_maintenance_clear_comments' %}">Clear Admin Comments</a>
+
+<h3 style="margin-top:15px">Start of Year Operations</h3>
+<p>Run start of year operations to clean up eighth periods, user information, announcements, etc.</p>
+<a class="button" href="{% url 'eighth_admin_maintenance_start_of_year' %}">Run Start of Year Scripts</a>
+
+{% endblock %}

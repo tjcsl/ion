@@ -1,0 +1,45 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Delete {{ type|title }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="lostitem primary-content">
+    <a href="{% url 'itemreg' %}" class="button">
+        <i class="fas fa-arrow-left"></i> Item Registration
+    </a>
+    <h2>
+        Delete {{ type|title }}
+    </h2>
+    <br>
+
+    <b>Are you sure you want to delete {{ obj }}?</b>
+    <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="confirm" value="1">
+        <a href="{% url 'itemreg' %}" class="button">Cancel</a> &nbsp;
+        <input type="submit" value="Delete">
+    </form>
+
+    </form>
+</div>
+{% endblock %}

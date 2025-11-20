@@ -1,0 +1,28 @@
+{% extends "oauth2_provider/base.html" %}
+
+{% load i18n %}
+{% block content %}
+{% if request.user.oauth_and_api_access %}
+<a href="/oauth/applications/{{ application.id }}" class="back-button button">
+    <i class="fas fa-arrow-left"></i> Cancel
+</a>
+<div class="block-center">
+    <h3 class="block-center-heading">{% trans "Delete Application" %}</h3>
+    <hr noshade>
+    <form method="post" action="{% url 'oauth2_provider:delete' application.pk %}">
+        {% csrf_token %}
+        <center style="font-size: 11pt">
+            {% trans "Are you sure you want to delete" %} <b>{{ application.name }}</b>?
+        </center>
+        <br>
+        <div class="control-group" style="text-align: center">
+            <div class="controls">
+                <button type="submit" style="color: red" name="allow" value="Delete"><i class="far fa-trash-alt"></i> {% trans "Delete" %}</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% else %}
+    <h3 class="block-center-heading">You are not authorized to access this page.</h3>
+{% endif %}
+{% endblock content %}

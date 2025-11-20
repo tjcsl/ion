@@ -1,0 +1,93 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - {{ action|title }} Enrichment Activity
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+        $(function() {
+            $("#id_time").datetimepicker({
+                lazyInit: true,
+                format: "Y-m-d H:i:s"
+            });
+
+            $("#id_links").selectize({
+                placeholder: "Links",
+                create: true
+            })
+
+            $("#id_groups_allowed").selectize({
+                create: false
+            })
+
+            $("#id_groups_blacklisted").selectize({
+                create: false
+            });
+
+            // name of <textarea> is description
+            var editor = CKEDITOR.replace("id_description", {
+                width: "600px"
+            });
+
+            $("form#event_form").bind("submit", function(e) {
+                if($("#id_title").val().match(/\bION\b/) || editor.getData().match(/\bION\b/)) {
+                    // People frequently write "ION" instead of the correct spelling, "Ion." See https://github.com/tjcsl/ion/issues/805
+                    Messenger().error('We have detected the use of "ION" in all caps in your event. Please correct it to use "Ion", <a href="/docs/terminology" target="_blank" style="color:#7F7FFF">the official name</a>.');
+                    e.preventDefault();
+                    return;
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'announcements.form' %}
+    {% stylesheet 'enrichment' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+        {% stylesheet 'dark/cke' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="events enrichment announcements primary-content">
+    <h2>
+        {{ action_title }} Enrichment Activity
+    </h2>
+    {% if enrichment.happened %}
+        <p class="happened">
+            <i class="fas fa-info-circle"></i>
+            Note: The start time of this enrichment activity has passed.
+        </p>
+    {% endif %}
+    <form method="post" id="event_form">
+    <table>
+    {% csrf_token %}
+    {{ form.as_table }}
+    <tr><td>&nbsp;</td><td>
+        <input type="submit" style="width: 200px" value="{{ action|title }} Enrichment Activity">
+        {% if enrichment.id %}
+            <a href="{% url 'delete_enrichment' enrichment.id %}" class="button delete-button">Delete</a>
+        {% endif %}
+    </td></tr>
+    </table>
+    </form>
+</div>
+{% endblock %}

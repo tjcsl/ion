@@ -1,0 +1,24 @@
+{% with description="Announcement needs approval" target=info_link name="View announcement" %}
+    {% include "email_metadata.html" %}
+{% endwith %}
+
+<p>{{ user.full_name }} ({{ user }}) submitted an Intranet announcement, and has asked for you to approve its posting. All Intranet announcements must first be approved by a teacher or faculty sponsor before they can be posted. The details of this announcement are:</p>
+<b>Title:</b> {{ formdata.title }}<br>
+<b>Content (that will be posted):</b><br>
+{% autoescape off %}
+    {{ formdata.content }}
+{% endautoescape %}
+<br>
+<b>Notes (for you and the Intranet administrators):</b><br>
+{{ formdata.notes|linebreaks }}
+<br>
+<b>Teachers Requested for Approval:</b> {% for teacher in teachers %}
+    {{ teacher.full_name }}{% if not forloop.last %}, {% endif %}
+{% empty %}
+NONE
+{% endfor %}
+<br>
+<br>
+To approve or reject this posting, <a href="{{ info_link }}">click on this link</a>. If you do nothing, the post will not be approved and will not be posted.
+<br>
+{% with no_unsubscribe=1 %}{% include "email_footer.html" %}{% endwith %}

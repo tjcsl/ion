@@ -1,0 +1,177 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Activity Statistics: {{ activity }}{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.admin' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'eighth.profile' %}
+    <style>
+    #members-table td:nth-child(3)
+    {
+        text-align:right;
+    }
+    .sparkline
+    {
+        padding:5px;
+        background-color:rgba(100,100,200,0.5);
+    }
+    @media print
+    {
+        a.button, .sparkline
+        {
+            display:none;
+        }
+        #members-table
+        {
+            font-size:10px;
+        }
+        #members-table td
+        {
+            padding:3px 5px;
+        }
+    }
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/moment.js' %}"></script>
+    <script src="{% static 'js/vendor/Chart.min.js' %}"></script>
+    <script src="{% static 'js/eighth/statistics.js' %}"></script>
+    <script>
+        var rawData = $.parseJSON("{{ chart_data }}");
+        var capacity = {{ capacity }};
+
+        $(document).ready(function() {
+            $("#year").change(function() {
+                window.location.href = location.protocol + "//" + location.host + location.pathname + "?year=" + encodeURIComponent($("#year").val());
+            });
+            $("#future").change(function () {
+                params = location.search;
+                params = params.slice(1).trim('&')
+                               .replace(/^&+/g, '')
+                               .replace(/&+$/g, '');
+                params = params.replace(/future=(True|False)/g, '');
+                parray = params.split('&');
+                if ($("#future").is(':checked')) {
+                    parray.push("future=True");
+                }
+                params = parray.join("&")
+
+                window.location.href = location.protocol + "//" + location.host + location.pathname + "?" + params;
+            })
+        });
+    </script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/select' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+    {% if request.user.is_eighth_admin %}
+        <div class="eighth-header" style="width: 200px">
+            {% include "eighth/admin/start_date.html" %}
+        </div>
+    {% endif %}
+
+
+    <a href="{% url 'eighth_signup' %}" class="button">
+        <i class="fas fa-arrow-left"></i> Sign Up
+    </a>
+
+    {% if request.user.is_eighth_admin %}
+        <a class="button" href="{% url 'eighth_admin_edit_activity' activity.id %}">
+            Edit Activity
+        </a>
+    {% endif %}
+
+    <a class="button" href="{% url 'eighth_activity' activity.id %}">
+        View Activity
+    </a>
+
+    <h2 style="padding-bottom: 0">Activity Statistics: {{ activity }}</h2>
+
+    <a href="{% url 'eighth_statistics' activity.id %}?print=true{% if year %}&year={{ year }}{% endif %}">
+        Printer friendly version
+    </a>
+    <br>
+    <select id="year">
+        {% for y in years %}
+        <option value="{{ y }}"{% if y == year %}selected{% endif %}>{{ y|add:"-1" }} - {{ y }}</option>
+        {% endfor %}
+    </select>
+    <label for=future>Future: </label>
+    <input type="checkbox" name="future" id="future"{% if future %} checked{% endif %}>
+
+    <h3>Activity Information</h3>
+    {% if activity.sponsors.count > 0 %}
+        <b>Default Sponsors:</b>
+        {% for sponsor in activity.sponsors.all %}
+            {{ sponsor.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}<br>
+    {% endif %}
+
+    {% if activity.rooms.count > 0 %}
+        <b>Default Rooms:</b>
+        {% for room in activity.rooms.all %}
+            {{ room }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}<br>
+    {% endif %}
+
+    {% if activity.sponsors.count > 0 or activity.rooms.count > 0 %}
+        <br>
+    {% endif %}
+
+    <b>Total blocks:</b> {{ total_blocks }}<br>
+    <b style="margin-left: 15px">Scheduled blocks:</b> {{ scheduled_blocks }}<br>
+    <b style="margin-left: 15px">Empty blocks:</b> {{ empty_blocks }}<br>
+    <b style="margin-left: 15px">Cancelled blocks:</b> {{ cancelled_blocks }}<br>
+    <b>Total signups:</b> {{ total_signups }}<br>
+    <b>Unique students:</b> {{ students }}<br>
+    <b>Average signups per block:</b> {{ average_signups }}<br>
+    <b>Average signups per student:</b> {{ average_user_signups }}<br>
+    <b>Capacity:</b> {{ capacity }}<br>
+
+    <br>
+
+    <div id="blocks-chart-container">
+        <h3>Block Signups</h3>
+
+        <div style="max-width:500px"><canvas id="blocks-chart" width="500" height="300"></canvas></div>
+    </div>
+
+    <table id="members-table" class="fancy-table">
+        <thead>
+            <tr><th>Name</th><th>Student ID</th><th>Signups</th></tr>
+        </thead>
+        <tbody>
+            {% for user, signups in members %}
+            <tr><td>{{ user.full_name }}</td><td><a href="{% url 'eighth_profile' user.id %}">{{ user.username }}</a></td><td>{{ signups }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3">There are no signups for this activity.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    {% if year %}
+        <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} not in the {{ year|add:"-1" }}-{{ year }} school year and {{ old_blocks|pluralize:"is,are" }} not included on this page.
+    {% else %}
+        <b>{{ past_start_date }}</b> block{% if past_start_date != 1 %}s{% endif %} past the start date {{ past_start_date|pluralize:"is,are" }} not included on this page.<br>
+        <b>{{ old_blocks }}</b> block{{ old_blocks|pluralize }} from previous years {{ old_blocks|pluralize:"is,are" }} not included on this page.<br>
+    {% endif %}
+    <br>
+</div>
+{% endblock %}

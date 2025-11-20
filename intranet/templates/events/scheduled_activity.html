@@ -1,0 +1,20 @@
+<div class="announcement scheduled-activity">
+    <h3>
+        {% if link_to_scheduled_activity %}
+            <a href="{% url 'eighth_signup' schact.block.id %}?activity={{ schact.activity.id }}" class="announcement-link">
+                {{ schact.full_title }}
+            </a>
+        {% else %}
+            {{ schact.full_title }}
+        {% endif %}
+    </h3>
+    <div class="announcement-metadata">
+        on {{ schact.block }} &bull; {{ schact.members.count }}/{{ schact.get_true_capacity }} signup{{ schact.members.count|pluralize }}
+    </div>
+    <a href="{% url 'eighth_signup' schact.block.id %}?activity={{ schact.activity.id }}" class="button small-button">
+        Sign Up
+    </a> &nbsp;
+    <a href="{% url 'eighth_roster' schact.id %}" class="button small-button">
+        View Roster
+    </a>
+</div>

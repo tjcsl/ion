@@ -1,0 +1,85 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - All Classes
+{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
+    {% stylesheet 'eighth.common' %}
+    {% stylesheet 'profile' %}
+    {% stylesheet 'courses' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/sorttable.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content class-info">
+        <h2>All Sections for {{ course.name }}</h2>
+        <table class="sortable fancy-table zebra" data-sortable>
+            <thead>
+                <th>Period</th>
+                <th>Name</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Semester</th>
+            </thead>
+            {% for class in course.sections.all|dictsort:"period" %}
+                <tr>
+                    <td><a href="{% url 'period_courses' class.period %}">{{ class.period }}</a></td>
+                    <td>
+                        <a href="{% url 'section_info' class.section_id %}">
+                            {{ class.course.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if class.teacher %}
+                        <a href="{% url 'user_profile' class.teacher.id %}">
+                            {{ class.teacher.last_name }}
+                        </a>
+                        {% else %}
+                        Unknown
+                        {% endif %}
+                    </td>
+                    <td>
+                      {% if class.room %}
+                        <a href="{% url 'room_sections' class.room %}">{{ class.room }}</a>
+                      {% else %}
+                        Unknown
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if class.sem == "YR" %}
+                        Full Year
+                      {% elif class.sem == "S1" %}
+                          First Semester
+                      {% elif class.sem == "S2" %}
+                          Second Semester
+                      {% else %}
+                          Unknown
+                      {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No sections were found.</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

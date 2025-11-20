@@ -1,0 +1,17 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+{% load pipeline %}
+
+{% block admin_main %}
+    <form action="" method="post" autocomplete="off">
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+            <tr>
+                <td class="right-buttons" colspan=2>
+                    <a class="button" href="{{ request.GET.next_page }}">Cancel</a>
+                    <input type="submit" value="Save">
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock %}

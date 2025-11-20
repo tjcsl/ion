@@ -1,0 +1,234 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load grades %}
+{% load users %}
+{% load pipeline %}
+
+
+{% block title %}
+    {{ block.super }} - Search{% if search_query %} - {{ search_query }}{% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'search' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content">
+
+{% if query_error %}
+    <span style="color: red; font-size: 14px">
+        <b>There was an error performing this query.</b>
+    </span> Ensure that the search string does not contain invalid characters.
+    <br><br>
+{% endif %}
+
+{% if "tips" in request.GET or query_error or not search_query %}
+    {% include "search/tips.html" %}
+{% else %}
+    <h2>Search Results</h2>
+    <!--
+    <form class="search" action="{% url 'search' %}" method="get" autocomplete="off">
+            <input type="text" name="q" value="{{ search_query }}">
+            <button type="submit">
+               <i class="fas fa-search"></i>
+            </button>
+    </form>
+    -->
+    <br>
+    {% if search_results %}
+        <h3>Users</h3>
+        {{ search_results|length }} result{{ search_results|pluralize }}
+        <table class="list-table users-table">
+            {% for user in search_results %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'user_profile' user.id %}">
+                            {% if is_admin or request.GET.last_first %}
+                                {{ user.last_name }}, {{ user.first_name }}
+                            {% else %}
+                                {% if user.full_name %}
+                                    {{ user.full_name }}
+                                {% else %}
+                                    {{ user.firstname }} {{ user.lastname }}
+                                {% endif %}
+                            {% endif %}
+                            {% if user.nickname %}({{ user.nickname }}){% endif %}
+                        </a>
+                    </td>
+
+                    {% if is_admin %}
+                        <td>
+                            {% firstof user.username|user_attr:"student_id" "" %}
+                        </td>
+                    {% endif %}
+                    <td>
+                        {% if user.grade and not user.is_teacher %}
+                            {% if user.grade_number >= 13 %}
+                                Graduate
+                            {% else %}
+                                Grade {{ user.grade_number }}
+                            {% endif %}
+                        {% else %}
+                            Staff
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% elif search_query %}
+        <h3>Users</h3>
+        <b>No results.</b>
+    {% endif %}
+    {% if query_error %}
+        <br>
+        There was an error in your query syntax.
+        <br>
+        <br>
+    {% endif %}
+
+    {% if search_query %}
+        <br><br>
+        <h3>Eighth Period Activities</h3>
+        {% if activities %}
+        {{ activities|length }} result{{ activities|pluralize }}
+        <table class="list-table activities-table">
+            {% for a in activities %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'eighth_activity' a.id %}">
+                            {{ a.name }}
+                        </a>
+                        {% if a.description %}
+                            <br>
+                            &nbsp; &nbsp; {{ a.description|truncatechars_html:"100"|striptags }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
+    {% if search_query %}
+        <br><br>
+        <h3>Announcements</h3>
+        {% if announcements %}
+        {{ announcements|length }} result{{ announcements|pluralize }}
+        <table class="list-table announcements-table">
+            {% for a in announcements %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'view_announcement' a.id %}">
+                            {{ a.title|safe }}
+                        </a><br>
+                        &nbsp; &nbsp; {{ a.content|truncatechars_html:"50"|striptags }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+
+        <br><br>
+        <h3>Club Announcements</h3>
+        {% if club_announcements %}
+            {{ club_announcements|length }} result{{ club_announcements|pluralize }}
+            <table class="list-table announcements-table">
+                {% for a in club_announcements %}
+                    <tr>
+                        <td class="list-item">
+                            <a href="{% url 'view_announcement' a.id %}">
+                                {{ a.title|safe }}
+                            </a><br>
+                            &nbsp; &nbsp; {{ a.content|truncatechars_html:"50"|striptags }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+
+    {% endif %}
+
+    {% if search_query and DJANGO_SETTINGS.ENABLE_ENRICHMENT_APP %}
+        <br><br>
+        <h3>Enrichment Activities</h3>
+        {% if enrichments %}
+        {{ enrichments|length }} result{{ enrichments|pluralize }}
+        <table class="list-table events-table">
+            {% for a in enrichments %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'enrichment' a.id %}">
+                            {{ a.title|safe }}
+                        </a><br>
+                        &nbsp; &nbsp; {{ a.description|truncatechars_html:"50"|striptags }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
+    {% if search_query %}
+        <br><br>
+        <h3>Events</h3>
+        {% if events %}
+        {{ events|length }} result{{ events|pluralize }}
+        <table class="list-table events-table">
+            {% for a in events %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'event' a.id %}">
+                            {{ a.title|safe }}
+                        </a><br>
+                        &nbsp; &nbsp; {{ a.description|truncatechars_html:"50"|striptags }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+
+    {% if search_query %}
+        <br><br>
+        <h3>Classes</h3>
+        {% if classes %}
+        {{ classes|length }} result{{ classes|pluralize }}
+        <table class="list-table events-table">
+            {% for class in classes %}
+                <tr>
+                    <td class="list-item">
+                        <a href="{% url 'course_sections' class.course_id %}">
+                            {{ class }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+            <b>No results.</b>
+        {% endif %}
+    {% endif %}
+        <br><br>
+        <a href="{% url 'search' %}?tips">Advanced Search Tips</a>
+{% endif %}
+</div>
+{% endblock %}

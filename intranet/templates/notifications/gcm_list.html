@@ -1,0 +1,68 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - GCM Notifications
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content">
+        <h2>Sent GCM Messages</h2>
+        <a class="button" href="{% url 'notif_gcm_post' %}">Post Message</a>
+        <table class="pretty-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Data</th>
+                    <th>Sent To</th>
+                    <th>Author</th>
+                    <th>Success</th>
+                    <th>Failure</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.gcm.time }}</td>
+                <td>
+                    Title: {{ post.data.title }}<br>
+                    Text: {{ post.data.text }}<br>
+                    URL: {% if post.data.url %}{{ post.data.url }}{% else %}None{% endif %}<br>
+                    {% if post.data.sound %}Sound{% endif %} {% if post.data.wakeup %}Wakeup{% endif %} {% if post.data.vibrate %}Vibrate{% endif %}
+                </td>
+                <td>
+                    {% for u in post.gcm.sent_to.all %}
+                        {{ u }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ post.gcm.user }}
+                </td>
+                <td>
+                    {{ post.gcm.num_success }}
+                </td>
+                <td>
+                    {{ post.gcm.num_failure }}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

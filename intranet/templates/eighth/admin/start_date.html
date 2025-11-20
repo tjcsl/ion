@@ -1,0 +1,18 @@
+{% load static %}
+<script>
+var toggle_waitlist_endpoint = "{% url 'toggle_waitlist' %}";
+</script>
+<script src="{% static 'js/eighth/waitlist.toggle.js' %}"></script>
+<div class="start-date print-hide">
+    <div>
+        Start Date: {{ admin_start_date|date:'D, N j, Y' }}
+    </div>
+    <div>
+        <a href="{% url 'eighth_admin_edit_start_date' %}?next_page={{ request.get_full_path|urlencode }}">Change Start Date</a>
+    </div>
+    {% if waitlist_enabled %}
+    <div>
+    <a id="toggle-waitlist" href="#" title="{% if request.session.disable_waitlist_transactions %}En{% else %}Dis{% endif %}able Waitlist">{% if request.session.disable_waitlist_transactions %}En{% else %}Dis{% endif %}able Waitlist</a>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,166 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}
+    TJ Intranet - Login
+{% endblock %}
+
+{% block meta %}
+  {{ block.super }}
+  {% if should_not_index_page %}
+    <meta name="robots" content="noindex">
+  {% endif %}
+{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'login' %}
+    {% stylesheet 'events' %}
+    {% if login_warning %}
+        {% stylesheet 'emerg' %}
+    {% endif %}
+    {% if bg_pattern %}
+        <style>
+        body {
+            background-image: url('{{ bg_pattern }}');
+        }
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/schedule.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+    <script src="{% static 'js/vendor/spin.min.js' %}"></script>
+    <script src="{% static 'js/features.js' %}"></script>
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/login' %}
+        {% stylesheet 'dark/schedule' %}
+        {% stylesheet 'dark/events' %}
+        <script>spinnerOptions.color = "#FFF";</script>
+    {% endif %}
+{% endblock %}
+
+{% block bodyclass %} login-page{% if login_warning %} has-login-warning{% endif %}{% endblock %}
+
+{% block body %}
+{% if show_homecoming %}
+    {% include "special/hoco_scores.html" %}
+{% endif %}
+{% if show_tjstar %}
+    {% include "special/tjstar_ribbon.html" %}
+{% endif %}
+    {% if login_warning %}
+        <div class="warning-announcement">{{ login_warning|safe|linebreaks }}</div>
+    {% endif %}
+    <div class="center-wrapper{% if request.GET.next %} wrapper-message{% endif %}{% if sports_events|length > 0 or school_events|length > 0 %} has-events{% endif %}">
+        {% comment %}
+        <div class="login-warning">
+            {% include "board/login_text.html" %}
+        </div>
+        {% endcomment %}
+
+        <div class="center">
+            <div class="login">
+                    <div class="title">
+                        <div class="logo">
+                        </div>
+                        <h1>TJ Intranet</h1>
+                    </div>
+                {% include "feature_announcements.html" %}
+                {% if request.GET.next %}
+                    <div class="message message-next">
+                    {% if not user.is_anonymous %}
+                        You cannot access this page.<br>
+                    {% endif %}
+                        Log in to access this page.
+                    </div>
+                {% endif %}
+                {% if auth_message %}
+                    <div class="message">
+                    {{ auth_message }}
+                    </div>
+                {% endif %}
+                <form autocomplete="off" action="/login" method="post" name="auth_form">
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next|escape }}">
+                {% elif request.POST.next %}
+                    <input type="hidden" name="next" value="{{ request.POST.next|escape }}">
+                {% endif %}
+                    {% csrf_token %}
+                    {% for field in auth_form %}
+                    {% if field.name != "trust_device" %}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="tooltip" style="display: inline">
+                                <i class="fas fa-question-circle"></i>
+                                <span class="tooltiptext">{{ field.help_text }}</span>
+                            </div>
+                            {% comment %} <span class="help-text" style="font-size: 10px; color: grey;">{{ field.help_text }}</span> {% endcomment %}
+                        {% endif %}
+                        <br>
+                    {% endif %}
+                    {% endfor %}
+                    <div id="username-warning"></div>
+                    <input type="submit" value="Login">
+                    <div class='spinner-container'></div>
+                    {% for field in auth_form %}
+                    {% if field.name == "trust_device" %}
+                        {{ field }}{{ field.label_tag }}<br>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="reset-password-container">
+                        <a href="https://password.tjhsst.edu">Reset password</a>
+                        &bull;
+                        <a href="https://2fa.tjhsst.edu">Manage 2FA</a>
+                    </div>
+                    {% if auth_form.errors %}
+                        <div class="account-docs-link-container">
+                            <a href="{% url 'docs_accounts' %}">CSL Account Documentation</a>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            <div class="schedule-outer{% if sports_events|length > 0 or school_events|length > 0 %} has-events{% endif %}">
+            {% include "schedule/view.html" %}
+            </div>
+        </div>
+    </div>
+    <span class="sidebar-trigger{% if sports_events|length > 0 or school_events|length > 0 %} has-events{% endif %}"><i class="far fa-calendar-alt fa-fw"></i></span>
+    <div class="sidebar{% if sports_events|length > 0 or school_events|length > 0 %} has-events{% endif %}">
+        <h1>Events</h1>
+        <div class="events-outer">
+            <h2>In-School Events</h2>
+            {% for event in school_events %}
+                {% include "events/public_event.html" %}
+            {% empty %}
+            <p>There are no in-school events in the next week.</p>
+            {% endfor %}
+            <h2>Sporting Events</h2>
+            {% for event in sports_events %}
+                {% include "events/public_event.html" %}
+            {% empty %}
+            <p>There are no sporting events in the next week.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="git-version" title="{{ git_info.commit_info|escape }}" data-github-url="{{ git_info.commit_github_url }}">
+            <span id="revision">revision {{ git_info.commit_short_hash }}</span> &nbsp;<span id="git-oss">open source software &nbsp;</span><span id="git-logo"><i class="fas fa-flask git-flask"></i><i class="fab fa-github git-github"></i></span>
+        </div>
+        <div class="links">
+            <a href="{% url 'about' %}">About/Credits</a> &nbsp; - &nbsp;
+            <a href="https://www.tjhsst.edu">TJHSST</a> &nbsp; - &nbsp;
+            <a href="https://webmail.tjhsst.edu">Webmail</a> &nbsp; - &nbsp;
+            <a href="{% url 'docs_accounts' %}">CSL Account Documentation</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+{% load pipeline %}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <link href="{% static 'vendor/fontawesome-free-5.11.2/css/all.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:100italic,400italic,700italic,100,400,700">
+
+    {% stylesheet 'base' %}
+
+    {% stylesheet 'schedule' %}
+    {% stylesheet 'login' %}
+
+    <style>
+    body {
+        background: transparent;
+    }
+    {% if signage %}
+    body {
+        zoom: 3;
+    }
+    {% endif %}
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+        crossorigin="anonymous">
+    </script>
+    <script src="{% static 'js/vendor/jquery.cookie.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+    <script src="{% static 'js/schedule.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+</head>
+
+<body>
+
+      {% include "schedule/week.html" %}
+
+</body>
+</html>

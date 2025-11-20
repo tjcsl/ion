@@ -1,0 +1,390 @@
+<style scoped>
+
+.ap-schedule-container {
+    width: 100%;
+    transition: margin-left 0.2s ease-in-out;
+    overflow: hidden;
+}
+
+.ap-schedule-day {
+    width: 450px;
+    margin-left: 75px;
+    float: left;
+    display: none;
+}
+
+.warning-announcement .ap-schedule-day {
+    margin-left: 0px;
+}
+
+.ap-schedule-day .dbl {
+    display: none;
+}
+
+.ap-schedule td {
+    vertical-align: middle;
+}
+
+.login-warning, .warning-announcement {
+    overflow-x: hidden;
+}
+
+.aps {
+    text-align: center;
+}
+
+.aps em {
+    padding-left: 30px;
+    font-style: normal;
+}
+
+.aps b {
+    font-weight: bold;
+}
+
+.aps i {
+    font-style: italic;
+}
+
+.aps ul {
+    font-style: italic;
+    list-style: none;
+}
+
+.ap-right-arrow.button {
+    display: none;
+    position: absolute;
+    /*right: -1px;*/
+    left: calc(100% - 32px);
+    width: 10px;
+    height: calc(100% - 14px);
+    top: -3px;
+    z-index: 10;
+    border-radius: 0 3px 3px 0;
+    transition: left 0.2s ease-in-out;
+}
+
+.ap-right-arrow span {
+    vertical-align: middle;
+    top: 50%;
+    position: absolute;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -5px;
+}
+
+.ap-right-arrow .left {
+    display: none;
+}
+
+.ap-right-arrow.left {
+    left: 0;
+
+}
+
+.ap-right-arrow.left .left {
+    display: block;
+    margin-left: 0;
+}
+
+.ap-right-arrow.left .right {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .ap-schedule-container {
+        width: 1500px;
+    }
+
+    .login-warning .ap-schedule-container {
+        height: 130px;
+        overflow-y: scroll;
+    }
+
+    .ap-schedule-day {
+        margin: 0;
+        width: 550px;
+    }
+
+    .ap-schedule-day h2 {
+        width: 300px;
+        float: left;
+    }
+
+    .ap-schedule-day .dbl {
+        width: 200px;
+        display: inline-block;
+    }
+
+    .ap-schedule-day .dty {
+        display: none;
+    }
+
+    td.spacer {
+        width: 50px;
+    }
+
+    .ap-right-arrow.button {
+        display: block;
+    }
+}
+
+@media (min-width: 600px) {
+    .login-warning .ap-schedule-container {
+        margin-left: 0 !important;
+    }
+}
+
+.ap-schedule-day.day-{{ day }} {
+    display: table;
+}
+
+</style>
+<script>
+$(function() {
+    apDate = function(date) {
+        var d = parseInt(date.split("-")[2]);
+        var e = $(".ap-schedule-day.day-"+d);
+        if(e.length > 0) {
+            $(".ap-schedule-day").hide();
+            e.show();
+        }
+    }
+    oscheduleBind = scheduleBind;
+    scheduleBind = function() {
+        apDate($(".schedule-outer .schedule").attr("data-date"));
+        oscheduleBind();
+    }
+    {% if date %}
+    apDate("{{ date|escape }}");
+    {% endif %}
+    $(".ap-right-arrow").click(function(e) {
+        e.stopPropagation();
+        var l = $(this).hasClass("left");
+        if(l) {
+            $(".ap-schedule-container").css('margin-left', 0);
+            $(this).removeClass("left");
+        } else {
+            $(".ap-schedule-container").css('margin-left', '-240px');
+            $(this).addClass("left");
+        }
+    })
+});
+</script>
+<div class="ap-schedule-container">
+<table class="ap-schedule-day day-6">
+<tr>
+    <td colspan=3>
+        <h2>Monday, May 6<span class="dty"> - Blue Day</span></h2>
+        <h2 class="dbl">Blue Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> United States Government</span>
+        <br>
+        <span><b>Afternoon:</b> Chinese</span>
+        <br>
+        <span><b>Afternoon:</b> Environmental Science</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+</tr>
+
+</table>
+<table class="ap-schedule-day day-7">
+<tr>
+    <td colspan=3>
+        <h2>Tuesday, May 7<span class="dty"> - Red Day</span></h2>
+        <h2 class="dbl">Red Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> Spanish</span>
+        <br>
+        <span><b>Afternoon:</b> Japanese</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+<table class="ap-schedule-day day-8">
+<tr>
+    <td colspan=3>
+        <h2>Wednesday, May 8<span class="dty"> - Blue Day</span></h2>
+        <h2 class="dbl">Blue Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> English Literature and Composition</span>
+        <br>
+        <span><b>Afternoon:</b> French</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+<table class="ap-schedule-day day-9">
+<tr>
+    <td colspan=3>
+        <h2>Thursday, May 9<span class="dty"> - Red Day</span></h2>
+        <h2 class="dbl">Red Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> Chemistry</span>
+        <br>
+        <span><b>Morning:</b> Spanish</span>
+        <br>
+        <span><b>Afternoon:</b> German</span>
+        <br>
+        <span><b>Afternoon:</b> Psychology</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+<table class="ap-schedule-day day-10">
+<tr>
+    <td colspan=3>
+        <h2>Friday, May 10<span class="dty"> - Blue Day</span></h2>
+        <h2 class="dbl">Blue Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> US History</span>
+        <br>
+        <span><b>Afternoon:</b> CS Principles</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+
+<table class="ap-schedule-day day-13">
+<tr>
+    <td colspan=3>
+        <h2>Monday, May 13<span class="dty"> - Red Day</span></h2>
+        <h2 class="dbl">Red Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> Biology</span>
+        <br>
+        <span><b>Afternoon:</b> Physics C</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+
+<table class="ap-schedule-day day-14">
+<tr>
+    <td colspan=3>
+        <h2>Tuesday, May 14<span class="dty"> - Blue Day</span></h2>
+        <h2 class="dbl">Blue Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> Calculus AB</span>
+        <br>
+        <span><b>Morning:</b> Calculus BC</span>
+        <br>
+        <span><b>Afternoon:</b> Art History</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+
+<table class="ap-schedule-day day-15">
+<tr>
+    <td colspan=3>
+        <h2>Wednesday, May 15<span class="dty"> - Red Day</span></h2>
+        <h2 class="dbl">Red Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> English Lang</span>
+        <br>
+        <span><b>Afternoon:</b> Macroeconomics</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+
+<table class="ap-schedule-day day-16">
+<tr>
+    <td colspan=3>
+        <h2>Thursday, May 16<span class="dty"> - Blue Day</span></h2>
+        <h2 class="dbl">Blue Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> World History</span>
+        <br>
+        <span><b>Afternoon:</b> Statistics</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+
+<table class="ap-schedule-day day-17">
+<tr>
+    <td colspan=3>
+        <h2>Friday, May 17<span class="dty"> - Red Day</span></h2>
+        <h2 class="dbl">Red Day</h2>
+    </td>
+</tr>
+<tr>
+    <td class="aps">
+        <span><b>Morning:</b> Microeconomics</span>
+        <br>
+        <span><b>Morning:</b> Music Theory</span>
+        <br>
+        <span><b>Afternoon:</b> Latin</span>
+        <br>
+        <span><b>Afternoon:</b> Computer Science A</span>
+        <br>
+        <span><i>Please check your AP Testing Schedule for your testing room and start time.</i></span>
+    </td>
+    <td class="spacer">
+    </td>
+</tr>
+</table>
+</div>
+
+<a class="ap-right-arrow button">
+    <span class='right'>
+        <i class="fas fa-arrow-right"></i>
+    </span>
+    <span class='left'>
+        <i class="fas fa-arrow-left"></i>
+    </span>
+</a>

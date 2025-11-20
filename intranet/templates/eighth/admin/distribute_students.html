@@ -1,0 +1,18 @@
+{% extends "eighth/admin/eighth_admin_page_base.html" %}
+
+{% block admin_main %}
+    <form action="" method="post">{% csrf_token %}
+        {{ wizard.management_form }}
+        <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+        <br>
+        {{ wizard.form }}
+        {% if wizard.steps.prev %}
+            <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>
+        {% endif %}
+        {% if wizard.steps.next %}
+            <input type="submit" value="Next">
+        {% else %}
+            <input type="submit" value="Sign Up Group">
+        {% endif %}
+    </form>
+{% endblock %}

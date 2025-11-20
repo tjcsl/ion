@@ -1,0 +1,216 @@
+from __future__ import annotations
+
+import logging
+
+from django import forms, http
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+
+from ...models import EighthActivity, EighthBlock, EighthScheduledActivity
+
+logger = logging.getLogger(__name__)
+
+
+class ActivityDisplayField(forms.ModelChoiceField):
+    cancelled_acts: list[EighthActivity] | None = None
+
+    def __init__(self, *args, **kwargs):
+        if "block" in kwargs:
+            block = kwargs.pop("block")
+            self.cancelled_acts = [s.activity for s in EighthScheduledActivity.objects.filter(block=block, cancelled=True)]
+
+        super().__init__(*args, **kwargs)
+
+    def label_from_instance(self, obj):
+        if self.cancelled_acts and obj in self.cancelled_acts:
+            return f"{obj.aid}: {obj.name} (CANCELLED)"
+
+        return f"{obj.aid}: {obj.name}"
+
+
+class ActivityMultiDisplayField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.aid}: {obj.name}"
+
+
+class ActivitySelectionForm(forms.Form):
+    def __init__(self, *args, label="Activity", block=None, sponsor=None, include_cancelled=False, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if block is None:
+            if sponsor is not None:
+                queryset = EighthActivity.undeleted_objects.filter(sponsors=sponsor).order_by("name")
+            else:
+                queryset = EighthActivity.undeleted_objects.all().order_by("name")
+
+            self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
+        else:
+            if sponsor is not None:
+                sponsoring_filter = Q(sponsors=sponsor) | (Q(sponsors=None) & Q(activity__sponsors=sponsor))
+                activity_ids = EighthScheduledActivity.objects.filter(block=block).filter(sponsoring_filter).values_list("activity__id", flat=True)
+            else:
+                activity_ids = (
+                    EighthScheduledActivity.objects.exclude(activity__deleted=True).filter(block=block).values_list("activity__id", flat=True)
+                )
+                if not include_cancelled:
+                    activity_ids = activity_ids.exclude(cancelled=True)
+
+            queryset = EighthActivity.objects.filter(id__in=activity_ids).order_by("name")
+
+            self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity", block=block)
+
+
+class HybridActivitySelectionForm(forms.Form):
+    def __init__(self, *args, label="Activity", block, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        block_set = EighthBlock.objects.filter(date=block[2:12], block_letter__contains=block[16])
+
+        if len(block_set) != 2:
+            raise http.Http404
+
+        activity_ids_1 = (
+            EighthScheduledActivity.objects.exclude(Q(activity__deleted=True) | Q(cancelled=True))
+            .filter(block=block_set[0])
+            .values_list("activity__id", flat=True)
+        )
+        activity_ids_2 = (
+            EighthScheduledActivity.objects.exclude(Q(activity__deleted=True) | Q(cancelled=True))
+            .filter(block=block_set[1])
+            .values_list("activity__id", flat=True)
+        )
+        activity_ids = activity_ids_1.intersection(activity_ids_2)
+        queryset = EighthActivity.objects.filter(id__in=activity_ids).order_by("name")
+
+        self.fields["activity"] = ActivityDisplayField(queryset=queryset, label=label, empty_label="Select an activity")
+
+
+class QuickActivityForm(forms.ModelForm):
+    class Meta:
+        model = EighthActivity
+        fields = ["name"]
+
+
+class ActivityMultiSelectForm(forms.Form):
+    activities = ActivityMultiDisplayField(queryset=None)
+
+    def __init__(self, *args, label="Activities", **kwargs):  # pylint: disable=unused-argument
+        super().__init__(*args, **kwargs)
+        self.fields["activities"].queryset = EighthActivity.objects.exclude(deleted=True).all()
+
+
+class ScheduledActivityMultiSelectForm(forms.Form):
+    activities = ActivityMultiDisplayField(queryset=None)
+
+    def __init__(self, *args, label="Activities", block=None, **kwargs):  # pylint: disable=unused-argument
+        super().__init__(*args, **kwargs)
+        if block is not None:
+            activity_ids = (
+                EighthScheduledActivity.objects.exclude(activity__deleted=True)
+                # .exclude(cancelled=True)
+                .filter(block=block)
+                .values_list("activity__id", flat=True)
+            )
+            queryset = EighthActivity.objects.filter(id__in=activity_ids).order_by("name")
+        else:
+            queryset = EighthActivity.undeleted_objects.all().order_by("name")
+
+        self.fields["activities"].queryset = queryset
+
+
+class ActivityForm(forms.ModelForm):
+    def __init__(self, *args, sponsors=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for fieldname in ["sponsors", "rooms", "users_allowed", "groups_allowed", "users_blacklisted"]:
+            self.fields[fieldname].help_text = None
+
+        # Simple way to filter out teachers without hitting LDAP. This
+        # shouldn't be a problem unless the username scheme changes and
+        # the consequences of error are not significant.
+
+        # FIXME: TODO: What we would like to do here (from users.forms):
+        # self.fields["users_allowed"] = SortedUserMultipleChoiceField(queryset=get_user_model().objects.get_students())
+        # HOWEVER: this will result in LDAP information being queried for *all 1800 users.*
+        # We need a better way to accomplish this. The solution below works because it only prints
+        # the username field which doesn't require an LDAP query to access.
+        student_objects = get_user_model().objects.get_students()
+        self.fields["users_allowed"].queryset = student_objects
+        self.fields["users_blacklisted"].queryset = student_objects
+        self.fields["officers"].queryset = student_objects
+        self.fields["club_sponsors"].queryset = get_user_model().objects.filter(user_type__in=["teacher", "counselor"])
+
+        self.fields["presign"].label = "2 day pre-signup"
+        self.fields["default_capacity"].help_text = "Overrides the sum of each room's capacity above, if set."
+        self.fields["subscriptions_enabled"].label = "Enable club announcements"
+        self.fields["subscriptions_enabled"].help_text = "Allow students to subscribe to receive announcements for this activity through Ion."
+        self.fields["officers"].help_text = "Student officers can send club announcements to subscribers."
+
+        sponsors_list = "; ".join([str(sponsor) for sponsor in sponsors]) if sponsors else "no sponsors"
+
+        self.fields["club_sponsors"].help_text = (
+            f"Teacher moderators can post and manage this club's announcements. "
+            f"These are in addition to the activity's eighth period sponsors ({sponsors_list})."
+        )
+
+        self.fields["club_sponsors"].label = "Teacher moderators"
+        self.fields["subscribers"].help_text = "Students who subscribe to this activity will receive club announcements."
+
+        # These fields are rendered on the right of the page on the edit activity page.
+        self.right_fields = {
+            "restricted",
+            "users_allowed",
+            "groups_allowed",
+            "users_blacklisted",
+            "freshmen_allowed",
+            "sophomores_allowed",
+            "juniors_allowed",
+            "seniors_allowed",
+        }
+
+        self.club_announcements_fields = {
+            "subscriptions_enabled",
+            "club_sponsors",
+            "officers",
+            "subscribers",
+        }
+
+    class Meta:
+        model = EighthActivity
+        fields = [
+            "name",
+            "description",
+            "sponsors",
+            "rooms",
+            "default_capacity",
+            "id",
+            "presign",
+            "one_a_day",
+            "both_blocks",
+            "sticky",
+            "special",
+            "administrative",
+            "finance",
+            "restricted",
+            "users_allowed",
+            "groups_allowed",
+            "users_blacklisted",
+            "freshmen_allowed",
+            "sophomores_allowed",
+            "juniors_allowed",
+            "seniors_allowed",
+            "wed_a",
+            "wed_b",
+            "fri_a",
+            "fri_b",
+            "admin_comments",
+            "subscriptions_enabled",
+            "club_sponsors",
+            "officers",
+            "subscribers",
+        ]
+        widgets = {
+            "description": forms.Textarea(attrs={"rows": 9, "cols": 46}),
+            "name": forms.TextInput(attrs={"style": "width: 292px"}),
+            "admin_comments": forms.Textarea(attrs={"rows": 5, "cols": 46}),
+        }
