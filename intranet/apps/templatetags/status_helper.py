@@ -16,7 +16,7 @@ def get_cache(key):
 
 class GetCSLStatusNode(template.Node):
     def render(self, context):
-        context["csl_status"] = get_csl_status()[0]
+        context["csl_status"] = get_csl_status()
         return ""
 
 
