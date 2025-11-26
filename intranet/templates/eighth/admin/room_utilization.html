@@ -112,7 +112,7 @@
             {% endif %}
 
         {% if not scheduled_activities and wizard %}
-            $("form > select").on("change", function() {
+            $("form select").on("change", function() {
                 var val = $(this).val();
                 if(val) {
                     this.form.submit();
@@ -161,16 +161,10 @@ i.i {
 {% if not scheduled_activities and wizard %}
         <form action="" method="post">{% csrf_token %}
             {{ wizard.management_form }}
-            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p><br>
             {{ wizard.form }}
             {% if wizard.steps.prev %}
                 {% comment %}<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">Previous Step</button>{% endcomment %}
                 <a href="{% url 'eighth_admin_room_utilization' %}" class="button">Previous Step</a>
-            {% endif %}
-            {% if wizard.steps.next %}
-                <input type="submit" value="Next">
-            {% else %}
-                <input type="submit" value="Show Room Utilization">
             {% endif %}
         </form>
         {% if wizard.steps.step1 == 1 %}
