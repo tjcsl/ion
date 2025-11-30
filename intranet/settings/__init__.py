@@ -408,15 +408,56 @@ for name in LIST_OF_INDEPENDENT_CSS:
     PIPELINE["STYLESHEETS"].update(helpers.single_css_map(name))
 
 AUTHENTICATION_BACKENDS = [
+    "intranet.apps.auth.backends.TJHSSTLDAPBackend",
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
-    "intranet.apps.auth.backends.PamAuthenticationBackend",
     "oauth2_provider.backends.OAuth2Backend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-# The Alpine dev env doesn't work well with PAM
-if not PRODUCTION:
-    AUTHENTICATION_BACKENDS.remove("intranet.apps.auth.backends.PamAuthenticationBackend")
+# LDAP Configuration
+import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
+
+# Primary server with fallback
+AUTH_LDAP_SERVER_URI = "ldaps://ipa1.tjhsst.edu:636 ldaps://ipa2.tjhsst.edu:636"
+AUTH_LDAP_START_TLS = False
+AUTH_LDAP_BIND_DN = ""  # Anonymous bind
+AUTH_LDAP_BIND_PASSWORD = ""
+
+# Connection options for failover
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_REFERRALS: 0,
+    ldap.OPT_NETWORK_TIMEOUT: 10,  # 10 second timeout
+}
+
+# User search configuration
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    "dc=tjhsst,dc=edu",
+    ldap.SCOPE_SUBTREE,
+    "(uid=%(user)s)"
+)
+
+# Group search configuration  
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    "cn=groups,cn=accounts,dc=tjhsst,dc=edu",
+    ldap.SCOPE_SUBTREE,
+    "(objectClass=groupOfNames)"
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType(name_attr="cn")
+
+# Require group membership
+AUTH_LDAP_REQUIRE_GROUP = "cn=people,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+
+# User attribute mapping
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn", 
+    "email": "mail",
+}
+
+# Cache groups to avoid repeated LDAP queries
+AUTH_LDAP_CACHE_GROUPS = True
+AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600  # 1 hour
 
 # Default to Argon2, see https://docs.djangoproject.com/en/dev/topics/auth/passwords/#argon2-usage
 PASSWORD_HASHERS = [
