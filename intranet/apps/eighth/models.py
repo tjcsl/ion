@@ -1,6 +1,7 @@
 # pylint: disable=too-many-lines; Allow more than 1000 lines
 import datetime
 import logging
+import secrets
 import string
 from collections.abc import Collection, Iterable, Sequence
 from typing import Optional
@@ -794,6 +795,10 @@ class EighthScheduledActivityManager(Manager):
         return sched_acts
 
 
+def random_code():
+    return "".join(secrets.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+
+
 class EighthScheduledActivity(AbstractBaseEighthModel):
     r"""Represents the relationship between an activity and a block in which it has been scheduled.
     Attributes:
@@ -822,6 +827,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         attendance_taken
             Whether the :class:`EighthSponsor` for the scheduled
             :class:`EighthActivity` has taken attendance yet
+        attendance_code
+            Random 6-character code of digits and uppercase letters to check attendance
+            Distinct for each 8th activity-block
+        code_mode
+            Whether the activity is automatically enabling/disabling the attendance code based on the daily schedule
+            Is an integer:
+            0 = Automatic; 1 = Open; 2 = Closed
+            default = 0
         special
             Whether this scheduled instance of the activity is special. If
             not set, falls back on the EighthActivity's special setting.
@@ -841,6 +854,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         related_name="sticky_scheduledactivity_set",
         blank=True,
     )
+
+    attendance_code = models.CharField(max_length=6, default=random_code)
+    mode_choices = [
+        (0, "Auto"),
+        (1, "Open"),
+        (2, "Closed"),
+    ]
+    code_mode = models.IntegerField(choices=mode_choices, default=0)
 
     admin_comments = models.CharField(max_length=1000, blank=True)
     title = models.CharField(max_length=1000, blank=True)
@@ -1194,6 +1215,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
                 emails=unstickied_students,
                 bcc=True,
             )
+
+    def set_code_mode(self, mode):
+        self.code_mode = mode
+        self.save(update_fields=["code_mode"])
 
     @transaction.atomic  # This MUST be run in a transaction. Do NOT remove this decorator.
     def add_user(
@@ -1703,6 +1728,8 @@ class EighthSignup(AbstractBaseEighthModel):
             Whether the pass was accepted
         was_absent
             Whether the student was absent.
+        attendance_marked
+            Whether the student has been marked / filled out attendance.
         absence_acknowledged
             Whether the student has dismissed the absence notification.
         absence_emailed
@@ -1725,6 +1752,7 @@ class EighthSignup(AbstractBaseEighthModel):
 
     pass_accepted = models.BooleanField(default=False, blank=True)
     was_absent = models.BooleanField(default=False, blank=True)
+    attendance_marked = models.BooleanField(default=False, blank=True)
     absence_acknowledged = models.BooleanField(default=False, blank=True)
     absence_emailed = models.BooleanField(default=False, blank=True)
 
@@ -1814,7 +1842,8 @@ class EighthSignup(AbstractBaseEighthModel):
         """Accepts an eighth period pass for the EighthSignup object."""
         self.was_absent = False
         self.pass_accepted = True
-        self.save(update_fields=["was_absent", "pass_accepted"])
+        self.attendance_marked = True
+        self.save(update_fields=["was_absent", "pass_accepted", "attendance_marked"])
 
     def reject_pass(self):
         """Rejects an eighth period pass for the EighthSignup object."""

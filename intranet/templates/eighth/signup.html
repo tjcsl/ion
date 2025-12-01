@@ -346,14 +346,22 @@
                                 </button>
                             <% } else { %>
                                 <strong>You are currently signed up for this activity.</strong>
+                                <br>
+                                <% if (attendance_open) { %>
+                                    <button class="button" onclick="window.location.href = '<%= attendance_url %>'">
+                                        Enter Attendance Code
+                                    </button>
+                                <% } %>
                             <% } %>
                         <% } %>
                     <%}%>
                 <%}%>
-
+                <br>
+                {% endverbatim %}
                 <div class="error-feedback">
                 </div>
             </div>
+            {% verbatim %}
             <% if (!showingRosterButton) { %>
                 <% if(isEighthAdmin) { %>
                     <a class="button" id="roster-button" data-endpoint="/eighth/roster/raw" href="/eighth/roster/<%= scheduled_activity_id %>">
