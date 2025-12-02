@@ -39,12 +39,17 @@
 {% endblock %}
 
 {% block head %}
-    {% if dark_mode_enabled %}
+    {% if theme_choice == 'dark' or theme_choice == 'twilight' %}
         {% stylesheet 'dark/base' %}
         {% stylesheet 'dark/login' %}
         {% stylesheet 'dark/schedule' %}
         {% stylesheet 'dark/events' %}
         <script>spinnerOptions.color = "#FFF";</script>
+    {% endif %}
+    {% if theme_choice == 'twilight' %}
+        {% stylesheet 'twilight/base' %}
+        {% stylesheet 'twilight/login' %}
+        {% stylesheet 'twilight/events' %}
     {% endif %}
 {% endblock %}
 

@@ -24,11 +24,16 @@
             crossorigin="anonymous">
         </script>
     {% endblock %}
-    {% if dark_mode_enabled %}
+    {% if theme_choice == 'dark' or theme_choice == 'twilight' %}
         {% stylesheet 'dark/base' %}
         {% stylesheet 'dark/login' %}
         {% stylesheet 'dark/about' %}
         {% stylesheet 'dark/oauth' %}
+    {% endif %}
+    {% if theme_choice == 'twilight' %}
+        {% stylesheet 'twilight/base' %}
+        {% stylesheet 'twilight/login' %}
+        {% stylesheet 'twilight/about' %}
     {% endif %}
 </head>
 <body class="notransition">
