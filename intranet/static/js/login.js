@@ -10,7 +10,7 @@ $(function() {
         $username.focus();
     }
 
-    $('.login-warning').click(function (e) {
+    $('.warning-announcement').click(function (e) {
         $(this).toggleClass('collapsed');
     });
 
