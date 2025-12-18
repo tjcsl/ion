@@ -2,10 +2,17 @@
 $(function() {
     searchDebug = false;
 
+    function normalizeApostrophes(str) {
+        if (!str) return str;
+        str = str.replace(/&#39;/g, "'").replace(/&apos;/g, "'");
+        return str.replace(/['''‚‛‹›`]/g, "'");
+    }
+
     function eighthSearch(q) {
         var _st = +new Date();
 
         var searchStr = $(this).val().toLowerCase();
+        searchStr = normalizeApostrophes(searchStr);
         searchStr = $.trim(searchStr);
 
         var searchSplit = [];
@@ -81,23 +88,23 @@ $(function() {
                     show = true;
                 }
                 // name + comments
-                if (activity.name_with_flags_for_user.toLowerCase().indexOf(search) !== -1) {
+                if (normalizeApostrophes(activity.name_with_flags_for_user.toLowerCase()).indexOf(search) !== -1) {
                     show = true;
                 }
                 // sponsors
                 for (var sp in activity.sponsors) {
-                    if (activity.sponsors[sp].toLowerCase().indexOf(search) !== -1) {
+                    if (normalizeApostrophes(activity.sponsors[sp].toLowerCase()).indexOf(search) !== -1) {
                         show = true;
                     }
                 }
                 // rooms
                 for (var rm in activity.rooms) {
-                    if (activity.rooms[rm].toLowerCase().indexOf(search) !== -1) {
+                    if (normalizeApostrophes(activity.rooms[rm].toLowerCase()).indexOf(search) !== -1) {
                         show = true;
                     }
                 }
                 // description
-                if (activity.description.toLowerCase().indexOf(search) !== -1) {
+                if (normalizeApostrophes(activity.description.toLowerCase()).indexOf(search) !== -1) {
                     show = true;
                 }
 
