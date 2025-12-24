@@ -12,7 +12,7 @@ from intranet.apps.cslapps.models import App
 from intranet.apps.notifications.models import NotificationConfig
 from intranet.apps.oauth.models import CSLApplication
 
-from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_name, get_warning_html
+from ..utils.helpers import get_theme, get_theme_name, get_warning_html
 from .announcements.models import WarningAnnouncement
 from .schedule.models import Day
 
@@ -178,11 +178,12 @@ def show_bus_button(request):
         return {"show_bus_nav": is_bus_admin and settings.ENABLE_BUS_APP}
 
 
-def enable_dark_mode(request):
-    """
-    Export whether dark mode is enabled.
-    """
-    return {"dark_mode_enabled": dark_mode_enabled(request)}
+def user_theme_choice(request):
+    if request.user.is_authenticated:
+        choice = request.user.theme_properties.theme_choice
+    else:
+        choice = request.COOKIES.get("theme_choice", "light")
+    return {"theme_choice": choice}
 
 
 def oauth_toolkit(request):
