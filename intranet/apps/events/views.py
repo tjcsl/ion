@@ -149,6 +149,7 @@ def events_view(request):
                 event.save()
                 messages.success(request, f"Approved event {event}")
                 logger.info("Admin %s approved event: %s (%s)", request.user, event, event.id)
+                return redirect(request.META.get("HTTP_REFERER", "events"))
             else:
                 raise http.Http404
 
@@ -162,6 +163,7 @@ def events_view(request):
                 event.save()
                 messages.success(request, f"Rejected event {event}")
                 logger.info("Admin %s rejected event: %s (%s)", request.user, event, event.id)
+                return redirect(request.META.get("HTTP_REFERER", "events"))
             else:
                 raise http.Http404
 
