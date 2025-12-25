@@ -225,11 +225,12 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         # Find all scheduled activities that don't correspond to deleted activities.
         # Also move administrative activities to the end of the list. It appears that it is not possible to sort on "activity__administrative OR
         # administrative", so we just sort by each in turn. The exact order of administrative activities does not matter *too* much.
-        scheduled_activities = (
-            block.eighthscheduledactivity_set.exclude(activity__deleted=True)
-            .select_related("activity")
-            .order_by("activity__administrative", "administrative", "activity__name")
-        )
+        scheduled_activities = block.eighthscheduledactivity_set.exclude(activity__deleted=True).select_related("activity")
+
+        if user is None or not user.is_authenticated or not user.is_eighth_admin:
+            scheduled_activities = scheduled_activities.exclude(activity__administrative=True).exclude(administrative=True)
+
+        scheduled_activities = scheduled_activities.order_by("activity__administrative", "administrative", "activity__name")
 
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.
