@@ -201,9 +201,12 @@ def get_search_results(q, admin=False):
     return False, users
 
 
-def do_activities_search(q):
+def do_activities_search(q, admin=False):
     filter_query = get_query(q, ["name", "description"])
-    entries = EighthActivity.objects.filter(filter_query).order_by("name")
+    entries = EighthActivity.objects.filter(filter_query)
+    if not admin:
+        entries = entries.exclude(administrative=True)
+    entries = entries.order_by("name")
     final_entries = []
     for e in entries:
         if e.is_active:
@@ -260,7 +263,7 @@ def do_enrichment_search(q):
 @deny_restricted
 def search_view(request):
     q = request.GET.get("q", "").strip()
-    is_admin = not request.user.is_student and request.user.is_eighthoffice
+    is_admin = request.user.is_eighth_admin
 
     if q:
         """User search."""
@@ -270,14 +273,14 @@ def search_view(request):
             if u is not None:
                 return profile_view(request, user_id=u.id)
 
-        query_error, users = get_search_results(q, request.user.is_eighthoffice)
+        query_error, users = get_search_results(q, is_admin)
         if query_error:
             users = []
 
         if is_admin:
             users = sorted(users, key=lambda u: (u.last_name, u.first_name))
 
-        activities = do_activities_search(q)
+        activities = do_activities_search(q, is_admin)
         announcements, club_announcements = do_announcements_search(q, request.user)
         events = do_events_search(q)
         enrichments = do_enrichment_search(q) if settings.ENABLE_ENRICHMENT_APP else []

@@ -34,11 +34,12 @@ class ProfileDetail(generics.RetrieveAPIView):
         else:
             user = request.user
 
-        if not request.user.oauth_and_api_access and user != request.user:
-            return Response({"detail": "You do not have permission to perform this action."}, status=403)
+        if request.user.is_authenticated:
+            if not request.user.oauth_and_api_access and user != request.user:
+                return Response({"detail": "You do not have permission to perform this action."}, status=403)
 
-        if request.user.is_restricted and user != request.user:
-            raise get_user_model().DoesNotExist
+            if request.user.is_restricted and user != request.user:
+                raise get_user_model().DoesNotExist
 
         # Remove sensitive information
         data = self.get_serializer(user).data
@@ -51,7 +52,7 @@ class ProfileDetail(generics.RetrieveAPIView):
             "websites",
             "is_announcements_admin",
         ]
-        if not (request.user.is_teacher or request.user.is_eighth_admin):
+        if request.user.is_authenticated and not (request.user.is_teacher or request.user.is_eighth_admin):
             fields_to_remove.append("student_id")
 
         for field in fields_to_remove:
