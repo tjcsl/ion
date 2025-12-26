@@ -90,7 +90,7 @@ class NotificationOptionsForm(forms.Form):
         if user.emails.all().count() == 0:
             label = "You can set a primary email after adding emails below."
         self.fields["primary_email"] = forms.ModelChoiceField(
-            queryset=Email.objects.filter(user=user), required=False, label=label, disabled=(user.emails.all().count() == 0)
+            queryset=Email.objects.filter(user=user, verified=True), required=False, label=label, disabled=(user.emails.all().count() == 0)
         )
 
 
