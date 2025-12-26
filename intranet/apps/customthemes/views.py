@@ -3,19 +3,19 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from ...utils.helpers import get_theme_name
+from ...utils.helpers import get_theme_names
 
 
 @login_required
 def chat_view(request):
-    if get_theme_name() != "april_fools" or not request.user.enable_april_fools:
+    if "april_fools" not in get_theme_names() or not request.user.enable_april_fools:
         return redirect(reverse("index"))
     return render(request, "themes/april_fools/chat.html")
 
 
 @login_required
 def intranet4(request):
-    if get_theme_name() != "april_fools":
+    if "april_fools" not in get_theme_names():
         return redirect(reverse("index"))
     request.user.enable_april_fools = not request.user.enable_april_fools
     request.user.seen_april_fools = True
@@ -32,7 +32,7 @@ def intranet4(request):
 
 @login_required
 def intranet3(request):
-    if get_theme_name() != "april_fools":
+    if "april_fools" not in get_theme_names():
         return redirect(reverse("index"))
     request.user.enable_april_fools = False
     request.user.seen_april_fools = True
