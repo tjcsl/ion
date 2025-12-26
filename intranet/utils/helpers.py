@@ -3,7 +3,7 @@ import ipaddress
 import logging
 import string
 import subprocess
-from typing import Collection, Dict, Set  # noqa
+from typing import Collection, Set  # noqa
 from urllib import parse
 
 from django.conf import settings
@@ -220,41 +220,63 @@ def get_warning_html(warnings, dashboard=False, login=False):
 
 
 GLOBAL_THEMES = {
-    "snow": {"js": "themes/snow/snow.js", "css": "themes/snow/snow.css"},
-    "piday": {"js": "themes/piday/piday.js", "css": "themes/piday/piday.css"},
-    "halloween": {"js": "themes/halloween/halloween.js", "css": "themes/halloween/halloween.css"},
-    "april_fools": {"js": "themes/april_fools/april_fools.js", "css": "themes/april_fools/april_fools.css"},
+    "snow": {"js": ["themes/snow/snow.js"], "css": "themes/snow/snow.css"},
+    "piday": {"js": ["themes/piday/piday.js"], "css": "themes/piday/piday.css"},
+    "halloween": {"js": ["themes/halloween/halloween.js"], "css": "themes/halloween/halloween.css"},
+    "april_fools": {"js": ["themes/april_fools/april_fools.js"], "css": "themes/april_fools/april_fools.css"},
+    "new_years": {"js": ["js/vendor/fireworks.min.js", "themes/new_years/new_years.js"], "css": "themes/new_years/new_years.css"},
 }
 
 
-def get_theme_name() -> str:
-    """Get the name of the currently active special event theme."""
+def get_theme_names() -> list[str]:
+    """Get the names of all currently active special event themes."""
     today = timezone.localdate()
+    active_themes = []
+
+    # Check for new_years (Jan 1-7)
+    if today.month == 12 and 1 <= today.day <= 29:
+        active_themes.append("new_years")
+
+    # Check for snow (first Monday of December to first Monday of January + 7 days)
     if today.month in (12, 1):
         first_monday_of_month = (8 - datetime.date(today.year, today.month, 1).weekday()) % 7
         if (today.month == 12 and today.day >= first_monday_of_month) or (today.month == 1 and today.day < first_monday_of_month + 7):
-            return "snow"
-    elif today.month == 3 and (14 <= today.day <= 16):
-        return "piday"
-    elif (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
-        return "halloween"
-    # Enable when a new idea for April Fools 2024 comes around
-    elif (today.month == 3 and (30 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 7)):
-        return "april_fools"
+            active_themes.append("snow")
 
-    return None
+    # Check for piday (Mar 14-16)
+    if today.month == 3 and (14 <= today.day <= 16):
+        active_themes.append("piday")
+
+    # Check for halloween (Oct 27-31, Nov 1)
+    if (today.month == 10 and 27 <= today.day <= 31) or (today.month == 11 and today.day == 1):
+        active_themes.append("halloween")
+
+    # Check for april_fools (Mar 30-31, Apr 1-7)
+    if (today.month == 3 and (30 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 7)):
+        active_themes.append("april_fools")
+
+    return active_themes
 
 
-def get_theme() -> Dict[str, Dict[str, str]]:
-    """Return JS and CSS for the currently active special event theme."""
-    return GLOBAL_THEMES.get(get_theme_name(), {})
+def get_theme() -> dict[str, dict[str, str]]:
+    """Return JS and CSS for all currently active special event themes."""
+    active_themes = get_theme_names()
+    result = {}
+    for theme_name in active_themes:
+        theme = GLOBAL_THEMES.get(theme_name, {})
+        if theme:
+            if "js" in theme:
+                result.setdefault("js", []).extend(theme["js"])
+            if "css" in theme:
+                result.setdefault("css", []).append(theme["css"])
+    return result
 
 
 def dark_mode_enabled(request):
     if request.GET.get("dark", None):
         return request.GET["dark"] in ["1", "True"]
 
-    if get_theme_name() == "halloween" and request.COOKIES.get("disable-halloween", None) != "1":
+    if "halloween" in get_theme_names() and request.COOKIES.get("disable-halloween", None) != "1":
         return True
 
     if request.user.is_authenticated:
