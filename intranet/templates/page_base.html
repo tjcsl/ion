@@ -30,7 +30,9 @@
     {% endblock %}
         {% stylesheet 'theme.blue' %}
         {% if theme.css %}
-            <link rel="stylesheet" href="{% static theme.css %}">
+            {% for theme_css in theme.css %}
+                <link rel="stylesheet" href="{% static theme_css %}">
+            {% endfor %}
         {% endif %}
 
     {% block js %}
@@ -52,7 +54,9 @@
             });
         </script>
         {% if theme.js %}
-            <script src="{% static theme.js %}"></script>
+            {% for theme_js in theme.js %}
+                <script src="{% static theme_js %}"></script>
+            {% endfor %}
         {% endif %}
     {% endblock %}
 

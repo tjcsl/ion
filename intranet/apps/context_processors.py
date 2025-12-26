@@ -12,7 +12,7 @@ from intranet.apps.cslapps.models import App
 from intranet.apps.notifications.models import NotificationConfig
 from intranet.apps.oauth.models import CSLApplication
 
-from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_name, get_warning_html
+from ..utils.helpers import dark_mode_enabled, get_theme, get_theme_names, get_warning_html
 from .announcements.models import WarningAnnouncement
 from .schedule.models import Day
 
@@ -108,21 +108,27 @@ def csl_apps(request):
     return {"csl_apps": App.objects.visible_to_user(request.user)}
 
 
-def global_custom_theme(request):
+def global_custom_theme(request) -> dict[str, dict[str, dict[str, str]] | list[str]]:
     """
     Add custom theme javascript and css.
     """
-    today = timezone.localdate()
+
     theme = get_theme()
+    theme_names = get_theme_names()
 
-    if get_theme_name() == "halloween" and request.COOKIES.get("disable-halloween", None) == "1":
-        # Allow option to re-enable halloween theme
-        theme = {"js": "themes/halloween/halloween-cookie.js", "css": "themes/halloween/halloween-button.css"}
+    # Handle halloween cookie to disable that specific theme
+    if "halloween" in theme_names and request.COOKIES.get("disable-halloween", None) == "1":
+        # Remove halloween from the theme files but add the re-enable button
+        if "js" in theme and "themes/halloween/halloween.js" in theme["js"]:
+            theme["js"].remove("themes/halloween/halloween.js")
+        if "css" in theme and "themes/halloween/halloween.css" in theme["css"]:
+            theme["css"].remove("themes/halloween/halloween.css")
 
-    if today.month == 3 and (14 <= today.day <= 16):
-        theme = {"css": "themes/piday/piday.css"}
+        # Add the cookie button
+        theme.setdefault("js", []).append("themes/halloween/halloween-cookie.js")
+        theme.setdefault("css", []).append("themes/halloween/halloween-button.css")
 
-    return {"theme": theme}
+    return {"theme": theme, "theme_names": theme_names}
 
 
 def show_homecoming(request):
