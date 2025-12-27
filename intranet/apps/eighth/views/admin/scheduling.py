@@ -85,6 +85,7 @@ def schedule_activity_view(request):
                         "both_blocks",
                         "comments",
                         "admin_comments",
+                        "hidden_until",
                     ]
                     if "rooms" in form.cleaned_data:
                         for o in form.cleaned_data["rooms"]:
@@ -234,6 +235,7 @@ def schedule_activity_view(request):
                         "scheduled": not sched_act.cancelled,
                         "cancelled": sched_act.cancelled,
                         "sticky_students": sched_act.sticky_students.all(),
+                        "hidden_until": sched_act.hidden_until,
                     }
                 )
             except KeyError:

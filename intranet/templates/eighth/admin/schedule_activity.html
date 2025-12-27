@@ -10,6 +10,7 @@
     <script src="{% static 'js/vendor/underscore-min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery.stickytableheaders.min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery.are-you-sure.js' %}"></script>
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
     <script>
         window.all_sponsors = _.values($.parseJSON("{{ sponsors_json }}"));
         window.all_rooms_lookup = $.parseJSON("{{ rooms_json }}");
@@ -79,10 +80,18 @@
     </script>
 
     <script src="{% static 'js/eighth/schedule.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $(".datetimepicker").datetimepicker({
+                format: 'Y-m-d H:i:s'
+            });
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
     {% stylesheet 'eighth.schedule' %}
 {% endblock %}
 
@@ -230,6 +239,9 @@
                     <th class="both_blocks" colspan="2">
                         <span>A &amp; B</span>
                     </th>
+                    <th class="hidden-until" colspan="2">
+                        <span>Hidden Until</span>
+                    </th>
                     <th>Comments</th><th></th>
                     <th>Admin Comments</th><th></th>
                     <th>Sticky Students</th><th></th>
@@ -307,12 +319,16 @@
                                     </div>
                                 {% elif field.name == "scheduled" %}
                                     {% render_field field class='scheduled' %}
+                                {% elif field.name == "hidden_until" %}
+                                    <div style="text-align: center">
+                                        {% render_field field class='datetimepicker' autocomplete='off' %}
+                                    </div>
                                 {% else %}
                                     {{ field }}
                                 {% endif %}
                                 </td>
 
-                                {% if field.name in "rooms capacity sponsors title special administrative restricted sticky both_blocks comments admin_comments sticky_students " %}
+                                {% if field.name in "rooms capacity sponsors title special administrative restricted sticky both_blocks comments admin_comments sticky_students hidden_until" %}
                                 <td class="propagate" data-base-field="{{ field.name }}">
                                     <a class="propagate {{ field.name }} button" title="Propagate" data-block="{{ form.block.value }}" data-field="{{ field.name }}" data-input="{{ field.id_for_label }}">
                                         <i class="fas fa-arrows-alt-v"></i>

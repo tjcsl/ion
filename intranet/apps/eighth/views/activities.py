@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils import timezone
@@ -34,6 +34,9 @@ logger = logging.getLogger(__name__)
 def activity_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
     scheduled_activities = EighthScheduledActivity.objects.filter(activity=activity)
+
+    if request.user.is_student and activity.is_hidden:
+        scheduled_activities = scheduled_activities.filter(Q(hidden_until__isnull=True) | Q(hidden_until__lte=timezone.now()))
 
     show_all = "show_all" in request.GET
     if not show_all:
