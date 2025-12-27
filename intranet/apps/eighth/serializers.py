@@ -6,6 +6,7 @@ import logging
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models import Count
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -151,6 +152,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "sponsors": [],
             "restricted": scheduled_activity.get_restricted(),
             "restricted_for_user": restricted_for_user,
+            "hidden": scheduled_activity.is_hidden,
+            "hidden_until": scheduled_activity.hidden_until,
             "both_blocks": scheduled_activity.is_both_blocks(),
             "one_a_day": activity.one_a_day,
             "special": scheduled_activity.get_special(),
@@ -230,6 +233,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             .select_related("activity")
             .order_by("activity__administrative", "administrative", "activity__name")
         )
+
+        if user is None or not user.is_eighth_admin:
+            scheduled_activities = scheduled_activities.exclude(hidden_until__isnull=False, hidden_until__gt=timezone.now())
 
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.

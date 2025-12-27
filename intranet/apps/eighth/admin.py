@@ -36,9 +36,9 @@ class EighthBlockAdmin(SimpleHistoryAdmin):
 
 @admin.register(EighthScheduledActivity)
 class EighthScheduledActivityAdmin(SimpleHistoryAdmin):
-    list_display = ("activity", "block", "comments", "admin_comments", "cancelled", "attendance_taken")
-    list_filter = ("attendance_taken", "cancelled", "block")
-    ordering = ("-block", "activity__name")
+    list_display = ("activity", "block", "hidden_until", "comments", "admin_comments", "cancelled", "attendance_taken")
+    list_filter = ("attendance_taken", "cancelled", "block", "hidden_until")
+    ordering = ("-block", "hidden_until", "activity__name")
     search_fields = ("activity__name",)
 
 
