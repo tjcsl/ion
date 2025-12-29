@@ -20,6 +20,7 @@ urlpatterns = [
     path("/absences", attendance.eighth_absences_view, name="eighth_absences"),
     path("/absences/<int:user_id>", attendance.eighth_absences_view, name="eighth_absences"),
     path("/glance", signup.eighth_location, name="eighth_location"),
+    re_path(r"^/student_attendance/(?P<sch_act_id>\d+)(?:/(?P<code>[A-Za-z0-9]+))?$", attendance.student_attendance_view, name="student_attendance"),
     # Teachers
     path("/attendance", attendance.teacher_choose_scheduled_activity_view, name="eighth_attendance_choose_scheduled_activity"),
     path("/attendance/<int:scheduled_activity_id>", attendance.take_attendance_view, name="eighth_take_attendance"),

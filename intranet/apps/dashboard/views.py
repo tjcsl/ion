@@ -94,6 +94,16 @@ def gen_schedule(user, num_blocks: int = 6, surrounding_blocks: Iterable[EighthB
             # don't duplicate this info; already caught
             current_signup = current_signup.replace(" (Cancelled)", "")
 
+        # check if attendance open, if so, will display attendance button
+        attendance_open = False
+        if current_sched_act:
+            from ..eighth.views.attendance import check_attendance_open  # noqa: PLC0415
+
+            attendance_open = check_attendance_open(current_sched_act) is None
+        sch_act_id = None
+        if attendance_open:
+            sch_act_id = current_sched_act.id
+
         info = {
             "id": b.id,
             "block": b,
@@ -108,6 +118,8 @@ def gen_schedule(user, num_blocks: int = 6, surrounding_blocks: Iterable[EighthB
             "signup_time": b.signup_time,
             "signup_time_future": b.signup_time_future(),
             "rooms": rooms,
+            "attendance_open": attendance_open,
+            "sch_act_id": sch_act_id,
         }
         schedule.append(info)
 

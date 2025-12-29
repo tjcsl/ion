@@ -1,0 +1,96 @@
+{% extends "page_with_nav.html" %}
+{% load phone_numbers %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Submit Attendance{% endblock %}
+
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'eighth.schedule' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<div class="primary-content" id="quick-schedule">
+    <h2 style="font-size: 2rem;">Submit attendance for <a href="{% url 'eighth_activity' sch_act.activity.id %}">{{ sch_act.full_title }}</a> on {{ date_string }}, 8{{ sch_act.block.block_letter }}</h2>
+    <br>
+    {% if show_form %}
+    <form id="attendance-code-form" method="post">
+        {% csrf_token %}
+        <h2><strong>Attendance Code: </strong></h2>
+        <br>
+        <div id="code-inputs" style="display: flex; gap: 5px;">
+        {% for i in "123456" %}
+            <input
+            type="text"
+            maxlength="1"
+            class="code-char"
+            required
+            style="width: 5rem;
+                    height: 5rem;
+                    font-size: 4.5rem;
+                    line-height: 5rem;
+                    text-align: center;
+                    padding: 0;
+                    box-sizing: border-box;
+                    border: 2px solid #ccc;"
+            pattern="[A-Za-z0-9]"
+            />
+        {% endfor %}
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        const charInputs = document.querySelectorAll('.code-char');
+        const fullCodeInput = document.getElementById('attendance-code');
+        const form = document.getElementById('attendance-code-form')
+        charInputs.forEach((input, idx) => {
+            input.addEventListener('input', () => {
+            if (input.value.length === 1 && idx < charInputs.length - 1) {
+                charInputs[idx + 1].focus();
+            }
+            });
+            input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && input.value === '' && idx > 0) {
+                charInputs[idx - 1].focus();
+            }
+            });
+        });
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            let code = "";
+            charInputs.forEach((input) => {
+                code += input.value;
+            });
+            const sch_activity_id = "{{ sch_act.id }}"
+            form.action = `/eighth/student_attendance/${sch_activity_id}/${code}`;
+            form.submit();
+        });
+    </script>
+    {% endif %}
+    <div style="font-size: 1.4rem;">
+        {{ result_html|safe }}
+    </div>
+    <br><br>
+    <a class="button" href="{% url 'index' %}">Return to Dashboard</a>
+</div>
+<script>
+    const cleanUrl = `/eighth/student_attendance/{{ sch_act.id }}`;
+
+    if (window.location.pathname !== cleanUrl) {
+        window.history.replaceState(null, '', cleanUrl);
+    }
+</script>
+{% endblock %}
