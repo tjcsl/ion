@@ -11,12 +11,19 @@
     {% stylesheet 'eighth.admin' %}
     {% stylesheet 'profile' %}
     {% stylesheet 'eighth.profile' %}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
     <script src="{% static 'js/eighth/admin.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+        $(function() {
+            $("#id_counselor").selectize();
+        });
+    </script>
     <style>
     #cke_1_contents {
         height: 100px !important;

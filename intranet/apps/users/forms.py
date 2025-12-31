@@ -4,6 +4,14 @@ from django.contrib.auth import get_user_model
 from .models import Address
 
 
+class UserChoiceField(forms.ModelChoiceField):
+    """A ModelChoiceField that returns a user's full name instead of their TJ username (which is the
+    default string representation)."""
+
+    def label_from_instance(self, obj):
+        return obj.full_name
+
+
 class ProfileEditForm(forms.ModelForm):
     """A form containing editable fields in the User model."""
 
@@ -17,19 +25,27 @@ class ProfileEditForm(forms.ModelForm):
     nickname = forms.CharField(label="Nickname", required=False)
     graduation_year = forms.IntegerField(label="Graduation Year", required=False)
     gender = forms.ChoiceField(choices=GENDERS, label="Sex (Male, Female, or Non-Binary)")
-    counselor_id = forms.IntegerField(label="Counselor ID", required=False)
+    counselor = UserChoiceField(
+        queryset=get_user_model().objects.filter(user_type="counselor").order_by("last_name", "first_name"),
+        label="Counselor",
+        required=False,
+        empty_label="No Counselor",
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ["admin_comments", "student_id", "first_name", "middle_name", "last_name", "title", "nickname", "graduation_year", "gender"]
-
-
-class UserChoiceField(forms.ModelChoiceField):
-    """A ModelChoiceField that returns a user's full name instead of their TJ username (which is the
-    default string representation)."""
-
-    def label_from_instance(self, obj):
-        return obj.full_name
+        fields = [
+            "admin_comments",
+            "student_id",
+            "first_name",
+            "middle_name",
+            "last_name",
+            "title",
+            "nickname",
+            "graduation_year",
+            "gender",
+            "counselor",
+        ]
 
 
 class SortedUserChoiceField(forms.ModelChoiceField):
