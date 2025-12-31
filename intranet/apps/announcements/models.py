@@ -26,6 +26,9 @@ class AnnouncementManager(Manager):
 
         """
 
+        if not user.is_authenticated:
+            return Announcement.objects.filter(Q(groups__isnull=True) & Q(activity__isnull=True) | Q(public=True) & Q(activity__restricted=False))
+
         if user.is_restricted:  # Restricted users are not authorized to view announcements
             return Announcement.objects.none()
 
