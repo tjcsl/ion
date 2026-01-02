@@ -28,11 +28,14 @@ def morning(request, on_home=False):
         raise Http404("Bus app not enabled.")
     is_bus_admin = request.user.has_admin_permission("bus")
     routes = Route.objects.all()
+    bus_delays_queryset = Route.objects.filter(status="d")
+    bus_delays = {delay.route_name: {"reason": delay.reason, "estimated_time_delay": delay.estimated_time_delay} for delay in bus_delays_queryset}
     ctx = {
         "admin": is_bus_admin,
         "enable_bus_driver": False,
         "bus_list": routes,
         "changeover_time": settings.BUS_PAGE_CHANGEOVER_HOUR,
+        "bus_delays": bus_delays,
         "on_home": on_home,
     }
     return render(request, "bus/morning.html", context=ctx)
@@ -45,19 +48,21 @@ def afternoon(request, on_home=False):
         raise Http404("Bus app not enabled.")
     is_bus_admin = request.user.has_admin_permission("bus")
 
-    now = timezone.localtime()
+    current_time = timezone.localtime()
     day = Day.objects.today()
     if day is not None and day.end_time is not None:
-        end_of_day = day.end_time.date_obj(now.date())
+        end_of_day = day.end_time.date_obj(current_time.date())
     else:
-        end_of_day = datetime.datetime(now.year, now.month, now.day, settings.SCHOOL_END_HOUR, settings.SCHOOL_END_MINUTE)
-
+        end_of_day = datetime.datetime(current_time.year, current_time.month, current_time.day, settings.SCHOOL_END_HOUR, settings.SCHOOL_END_MINUTE)
+    bus_delays_queryset = Route.objects.filter(status="d")
+    bus_delays = {delay.route_name: {"reason": delay.reason, "estimated_time_delay": delay.estimated_time_delay} for delay in bus_delays_queryset}
     ctx = {
         "admin": is_bus_admin,
         "enable_bus_driver": True,
         "changeover_time": settings.BUS_PAGE_CHANGEOVER_HOUR,
         "school_end_hour": end_of_day.hour,
         "school_end_time": end_of_day.minute,
+        "bus_delays": bus_delays,
         "on_home": on_home,
     }
     return render(request, "bus/home.html", context=ctx)
