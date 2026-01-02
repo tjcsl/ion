@@ -49,6 +49,7 @@ class ScheduledActivityForm(forms.ModelForm):
             "restricted",
             "sticky",
             "both_blocks",
+            "hidden_until",
             "comments",
             "admin_comments",
         ]
@@ -57,6 +58,7 @@ class ScheduledActivityForm(forms.ModelForm):
             "title": forms.TextInput(attrs={"size": 30}),
             "comments": forms.Textarea(attrs={"rows": 2, "cols": 30}),
             "admin_comments": forms.Textarea(attrs={"rows": 2, "cols": 30}),
+            "hidden_until": forms.DateTimeInput(attrs={"class": "datetimepicker"}),
         }
 
     def clean(self):

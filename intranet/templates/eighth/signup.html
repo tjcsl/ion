@@ -113,6 +113,8 @@
                 <span class="activity-icon fav <% if (favorited) { %>fav-sel<% } %>"></span>
                 <% if (cancelled) { %>
                     <span class="activity-icon cancelled"></span>
+                <% } else if (hidden) { %>
+                    <span class="activity-icon hidden"></span>
                 <% } else if (restricted_for_user) { %>
                     <span class="activity-icon restricted"></span>
                 <% } else if (waitlisted) { %>
@@ -143,6 +145,10 @@
 
                 <% if (cancelled) { %>
                     <span class="badge darkred" title="This activity was cancelled.">CANCELLED</span>
+                <% } %>
+
+                <% if (hidden) { %>
+                    <span class="badge grey" title="This activity is hidden until <%= new Date(hidden_until).toLocaleString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) %>">Hidden</span>
                 <% } %>
 
                 <% if (restricted_for_user) { %>
@@ -195,6 +201,10 @@
 
         <% if (cancelled) { %>
             <span class="badge darkred clickable cancelled-badge" data-append-search="is:c" title="This activity was cancelled.">CANCELLED</span>
+        <% } %>
+
+        <% if (hidden) { %>
+            <span class="badge grey" title="This activity is hidden until <%= new Date(hidden_until).toLocaleString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) %>">Hidden</span>
         <% } %>
 
         <% if (special) { %>

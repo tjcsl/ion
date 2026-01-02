@@ -386,6 +386,14 @@ class EighthActivity(AbstractBaseEighthModel):
         return EighthScheduledActivity.objects.filter(activity=self, block__date__gte=date_start, block__date__lte=date_end)
 
     @property
+    def is_hidden(self) -> bool:
+        """Returns whether the activity is hidden.
+        Returns:
+            Whether the activity is hidden.
+        """
+        return self.get_active_schedulings().filter(hidden_until__isnull=False, hidden_until__gt=timezone.now()).exists()
+
+    @property
     def is_active(self) -> bool:
         """Returns whether an activity is "active."
         An activity is considered to be active if it has been scheduled at all this year.
@@ -891,7 +899,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             The full title for the scheduled activity, with flags.
         """
         cancelled_str = " (Cancelled)" if self.cancelled else ""
-        name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str  # pylint: disable=protected-access
+        hidden_str = " (Hidden)" if self.is_hidden else ""
+        name_with_flags = self.activity._name_with_flags(True, self.title) + cancelled_str + hidden_str  # pylint: disable=protected-access
         if self.special and not self.activity.special:
             name_with_flags = "Special: " + name_with_flags
         return name_with_flags
@@ -913,6 +922,14 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             In 99.9% of cases, you should use :meth:`is_user_stickied` instead.
         """
         return self.sticky or self.activity.sticky
+
+    @property
+    def is_hidden(self) -> bool:
+        """Returns whether the scheduled activity is hidden.
+        Returns:
+            Whether this scheduled activity is hidden.
+        """
+        return self.hidden_until is not None and timezone.now() < self.hidden_until
 
     def get_true_sponsors(self) -> QuerySet | Collection[EighthSponsor]:  # pylint: disable=unsubscriptable-object
         """Retrieves the sponsors for the scheduled activity, taking into account activity defaults and
@@ -1221,6 +1238,10 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
             add_to_waitlist = (add_to_waitlist or ("add_to_waitlist" in request.GET)) and request.user.is_eighth_admin
 
         exception = eighth_exceptions.SignupException()
+
+        if self.is_hidden:
+            if request is None or not request.user.is_eighth_admin:
+                exception.ActivityHidden = True
 
         if user.grade and user.grade.number > 12:
             exception.SignupForbidden = True
@@ -1636,6 +1657,8 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         cancelled_str = " (Cancelled)" if self.cancelled else ""
         suff = f" - {self.title}" if self.title else ""
         return f"{self.activity}{suff} on {self.block}{cancelled_str}"
+
+    hidden_until = models.DateTimeField(null=True, blank=True)
 
 
 class EighthSignupManager(Manager):
