@@ -234,7 +234,7 @@ def get_theme_names() -> list[str]:
     active_themes = []
 
     # Check for new_years (Jan 1-7)
-    if today.month == 12 and 1 <= today.day <= 29:
+    if today.month == 1 and 1 <= today.day <= 7:
         active_themes.append("new_years")
 
     # Check for snow (first Monday of December to first Monday of January + 7 days)
