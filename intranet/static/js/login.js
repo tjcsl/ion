@@ -10,6 +10,14 @@ $(function() {
         $username.focus();
     }
 
+    // Only gate submit buttons on pages that actually render the Turnstile widget.
+    if ($(".cf-turnstile").length > 0) {
+        var $btn = $("input[type=submit]");
+        $btn.data("orig-val", $btn.val()); // "Login"
+        $btn.val("Validating CAPTCHA...");
+        $("input[type=submit]").attr("disabled", "disabled");
+    }
+
     $(".warning-announcement, .login-warning").on("click", function(e) {
         $(this).toggleClass('collapsed');
     });
@@ -107,6 +115,18 @@ $(function() {
     });
 
     function doneTyping () {
+        // stop warnings from showing if the username is empty
+
+        // already populated
+        if ($("#username-warning").text().indexOf("CAPTCHA") === -1) {
+            return;
+        }
+
+        if (!$("#id_username").val()) {
+            $("#username-warning").text("");
+            return;
+        }
+
         let re = /^(\d{4})?[a-zA-Z]+\d?$/;
         if (re.exec($("#id_username").val()) == null) {
             $("#username-warning").text("Username must be in the format 2016jwoglom for students or jbwoglom for staff.");
@@ -125,3 +145,31 @@ $(function() {
     $(".warning-toggle-icon").removeClass("fa-chevron-up").addClass("fa-chevron-down");
 
 });
+
+function onSuccess(_) {
+    var $btn = $("input[type=submit]");
+    $btn.removeAttr("disabled").val($btn.data("orig-val"));
+    // reset text and clear warning to allow for other warnings to show
+    $("#username-warning").text("");
+}
+
+function onExpired() {
+    $("input[type=submit]")
+        .attr("disabled", "disabled")
+        .val("Expired - Reload Page");
+    $("#username-warning").text("CAPTCHA expired. Please reload the page.");
+}
+
+function onError() {
+    $("input[type=submit]")
+        .attr("disabled", "disabled")
+        .val("Error - Reload Page");
+    $("#username-warning").text("CAPTCHA failed. Please check your connection or disable adblockers.");
+}
+
+function onUnsupported() {
+    $("input[type=submit]")
+        .attr("disabled", "disabled")
+        .val("Unsupported - Reload Page");
+    $("#username-warning").text("Browser does not support CAPTCHA. Please check your connection or disable adblockers.");
+}

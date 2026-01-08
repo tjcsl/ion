@@ -1010,6 +1010,15 @@ EIGHTH_COORDINATOR_NAME = "Laura Slonina"
 # Script provided to assist in importing users to BbCU
 BBCU_SCRIPT = None
 
+# environments (key required), but CI mocks the requests/keys
+# requires keys to be set before enabling
+# 2x = fail, 1x = pass. both keys below are visible captchas, but prod uses managed (usually invisible) CAPTCHAs.
+TURNSTILE_SITE_KEY = "1x00000000000000000000AA"  # this *testing key* always passes validation (visible)
+TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA"  # this *testing key* always passes validation
+#TURNSTILE_SITE_KEY = "2x00000000000000000000AB"  # this *testing key* always fails validation (visible)
+#TURNSTILE_SITE_KEY = "1x00000000000000000000BB"  # this *testing key* always passes validation (invisible)
+TURNSTILE_ENABLED = True  # development/testing environments always pass (except in ci tests)
+TURNSTILE_EXPECTED_HOSTNAME = None if not PRODUCTION else "ion.tjhsst.edu"
 
 # How often the signage JS sends a heartbeat
 SIGNAGE_HEARTBEAT_INTERVAL = 60
