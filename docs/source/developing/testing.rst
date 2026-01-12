@@ -11,10 +11,46 @@ For most modules, the unit tests go in ``intranet/apps/<module>/tests.py``. Curr
 
 .. _running-tests:
 
-Running Tests
-=============
+Running Tests Locally
+=====================
 
-To actually execute tests, run ``pytest`` inside your dev environment. If you want to only test a specific app, you can run ``pytest <apps_name>``. Do note that this deletes and re-creates the db from scratch each time, so you may want to pass the ``-k`` option when developing tests as it significantly reduces run-time.
+Tests should be run inside the Docker development environment. Make sure your Docker containers are running first:
+
+.. code-block:: bash
+
+    cd config/docker
+    docker compose up -d
+
+Running Tests with Django's Test Runner (Recommended)
+-----------------------------------------------------
+
+The recommended way to run tests is using Django's built-in test runner, which is what CI uses:
+
+.. code-block:: bash
+
+    # Run all tests (this may take some time!)
+    docker exec intranet_django python ./manage.py test --noinput
+
+    # Run tests for a specific app (in this case, polls)
+    docker exec intranet_django python ./manage.py test intranet.apps.polls --noinput
+
+    # Run a specific test file (in this case, auth)
+    docker exec intranet_django python ./manage.py test intranet.apps.auth.tests.TurnstileFieldTest --noinput
+
+    # Run with verbose output, useful for debugging
+    docker exec intranet_django python ./manage.py test intranet.apps.polls --noinput -v 2
+
+Interactive Testing Shell
+-------------------------
+
+If you want to run multiple test commands, you can open an interactive shell with Docker:
+
+.. code-block:: bash
+
+    docker exec -it intranet_django sh
+
+    # then inside the container, run tests:
+    ./manage.py test intranet.apps.polls --noinput
 
 Coverage
 ========
@@ -42,8 +78,8 @@ The first is calling methods directly; the second is making a GET or POST reques
 The best tests utilize both. After you do either/both of these to call the code, you should use assertions to see if the code behaved as expected.
 A list of assertion options can be found `here <https://docs.python.org/3/library/unittest.html#assert-methods>`_.
 A useful tool for making requests to the view is ``self.client``. More documentation on that can be found
-`here <https://docs.djangoproject.com/en/3.2/topics/testing/tools/>`_. Alternatively, just search through Ion's
-testing files for examples of using `self.client`.
+`here <https://docs.djangoproject.com/en/stable/topics/testing/tools/>`_. Alternatively, just search through Ion's
+testing files for examples of using ``self.client``.
 
 Good Testing Examples
 =====================
@@ -57,8 +93,8 @@ Ion has lots of tests; the following are examples of very well-written ones. Not
 References
 ==========
 
-- `Django Testing Guide <https://docs.djangoproject.com/en/3.2/topics/testing>`_.
-- `Python unittest documentation <https://docs.python.org/3/library/unittest.html>`_.
-- `Code Coverage <https://coveralls.io/github/tjcsl/ion>`_.
-- `Python Unit Testing Frameworkgood <https://docs.python.org/3/library/unittest.html#assert-methods>`_.
-- `Testing Exceptions <https://docs.djangoproject.com/en/3.2/topics/testing/tools/#exceptions>`_.
+- `Django Testing Guide <https://docs.djangoproject.com/en/stable/topics/testing/>`_
+- `Python unittest documentation <https://docs.python.org/3/library/unittest.html>`_
+- `Code Coverage <https://coveralls.io/github/tjcsl/ion>`_
+- `Python Unit Testing Assert Methods <https://docs.python.org/3/library/unittest.html#assert-methods>`_
+- `Testing Exceptions <https://docs.djangoproject.com/en/stable/topics/testing/tools/#exceptions>`_
