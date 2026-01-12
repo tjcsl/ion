@@ -665,6 +665,10 @@ OAUTH2_PROVIDER = {
     # "REQUEST_APPROVAL_PROMPT": "auto",
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "oauth2_provider.AccessToken"
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth2_provider.RefreshToken"
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth2_provider.IDToken"
+OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
 
 
 INSTALLED_APPS = [
@@ -842,7 +846,6 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.templates.TemplatesPanel", False),
         ("debug_toolbar.panels.cache.CachePanel", False),
         ("debug_toolbar.panels.signals.SignalsPanel", False),
-        ("debug_toolbar.panels.logging.LoggingPanel", True),
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
         ("debug_toolbar.panels.profiling.ProfilingPanel", False),
     ]
