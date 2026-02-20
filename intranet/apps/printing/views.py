@@ -20,6 +20,8 @@ from django.utils.text import slugify
 from sentry_sdk import add_breadcrumb, capture_exception
 from xhtml2pdf import pisa
 
+from ...utils.helpers import get_warning_html
+from ..announcements.models import WarningAnnouncement
 from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
 from .forms import PrintJobForm
@@ -548,7 +550,7 @@ def print_view(request):
         start_time = datetime.datetime.now() - datetime.timedelta(seconds=elapsed_seconds)
         context["updated_time"] = start_time.strftime("%-I:%M:%S %p")
 
-    if (printing_warning_objs := WarningAnnouncement.objects.filter(type="printing", active=True)):
+    if printing_warning_objs := WarningAnnouncement.objects.filter(type="printing", active=True):
         context["printing_warning"] = get_warning_html(printing_warning_objs)
 
     return render(request, "printing/print.html", context)
