@@ -315,6 +315,7 @@ class WarningAnnouncement(models.Model):
             ("login", "Login Warning (displays on login page)"),
             ("dashboard_login", "Dashboard and Login Warning (displays on dashboard and login pages)"),
             ("global", "Global Warning (displays on all pages)"),
+            ("printing", "Printing Warning (displays on printing page)"),
         ],
         default="dashboard",
     )
