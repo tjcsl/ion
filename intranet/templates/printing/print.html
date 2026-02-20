@@ -10,14 +10,45 @@
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
     {% stylesheet 'printing' %}
+    {% if printing_warning %}
+        {% stylesheet 'emerg' %}
+    {% endif %}
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
+    {{ printers|json_script:"printers" }}
+    {{ alerts|json_script:"alerts" }}
     <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script>
     $(function() {
-        $("#id_printer").selectize();
+        const printers = JSON.parse(document.getElementById("printers").textContent);
+        const alerts = JSON.parse(document.getElementById("alerts").textContent);
+
+        $("#id_printer").selectize({
+                render: {
+                    option: function (item, escape) {
+                        let div = document.createElement("div");
+                        let header = document.createElement("div");
+                        let name = document.createElement("span");
+                        let desc = document.createElement("p");
+                        let status = document.createElement("span");
+                        div.appendChild(header);
+                        div.appendChild(desc);
+                        header.appendChild(status);
+                        header.appendChild(name);
+
+                        name.textContent = escape(item.text);
+                        desc.textContent = `${escape(printers[item.text][0])} (${alerts[item.text][0]})`;
+                        desc.classList.add("selectize-desc");
+                        status.classList.add("status", escape(alerts[item.text][1]));
+                        header.classList.add("selectize-header-box");
+
+                        return div;
+                    },
+                },
+            }
+        );
     });
     </script>
 {% endblock %}
@@ -36,10 +67,6 @@
     <h2>Printing</h2>
     <br>
     {% include "printing/print_form.html" %}
-
-    <div class="print-status-container">
-        {% include "printing/print_status.html" %}
-    </div>
 
     </div>
 {% endblock %}
