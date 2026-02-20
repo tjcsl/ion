@@ -6,6 +6,7 @@ import re
 import subprocess
 import tempfile
 from io import BytesIO
+from typing import Literal
 
 import magic
 from django.conf import settings
@@ -62,7 +63,15 @@ def set_user_ratelimit_status(username: str) -> None:
         cache.incr(cache_key)
 
 
-def parse_alerts(alerts: str) -> tuple[str, str]:
+def parse_alerts(alerts: list[str]) -> tuple[str, Literal["working", "error", "broken"]]:
+    """
+    Parse known alerts into readable text
+    Args:
+        alerts: A list  of known alerts from :func:`~intranet.apps.printing.views.get_printers`
+    Returns:
+        A tuple where the first element is the parsed string and the 2nd element is a css class
+
+    """
     known_alerts = {
         "paused": "unavailable",
         "media-empty-error": "out of paper",
@@ -75,8 +84,8 @@ def parse_alerts(alerts: str) -> tuple[str, str]:
         "door-open-report": "door open",
         "none": "working",
     }
-    alerts = alerts.split()
     alerts_text = ", ".join(known_alerts.get(alert, "error") for alert in alerts)
+
     error_alerts = ["paused"]
     broken_alerts = ["media-empty-error", "media-empty-warning", "media-jam-error", "media-jam-warning", "toner-empty-warning", "toner-empty-error"]
     printer_class = "working"
@@ -89,7 +98,7 @@ def parse_alerts(alerts: str) -> tuple[str, str]:
     return alerts_text, printer_class
 
 
-def get_printers() -> dict[str, list[str]]:
+def get_printers() -> dict[str, tuple[str, list[str]]]:
     """Returns a dictionary mapping name:description for available printers.
 
     This requires that a CUPS client be configured on the server.
@@ -108,16 +117,16 @@ def get_printers() -> dict[str, list[str]]:
             output = subprocess.check_output(["lpstat", "-l", "-p"], universal_newlines=True, timeout=10)
         # Don't die if cups isn't installed.
         except FileNotFoundError:
-            return []
+            return {}
         # Don't die if lpstat fails
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-            return []
+            return {}
 
         PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)", re.ASCII)
         DESCRIPTION_LINE_RE = re.compile(r"^\s+Description:\s+(.*)\s*$", re.ASCII)
         ALERTS_LINE_RE = re.compile(r"^\s+Alerts:\s+(.*)\s*$", re.ASCII)
 
-        printers = {}
+        printers: dict[str, tuple[str, list[str]]] = {}
         last_name = None
         for line in output.splitlines():
             match = PRINTER_LINE_RE.match(line)
@@ -126,25 +135,25 @@ def get_printers() -> dict[str, list[str]]:
                 name = match.group(1)
                 if name != "Please_Select_a_Printer":
                     # By default, use the name of the printer instead of the description
-                    printers[name] = [name]
+                    printers[name] = (name, [])
                     # Record the name of the printer so when we parse the rest of the
                     # extended description we know which printer it's referring to.
                     last_name = name
             elif last_name is not None:
                 if line.strip() == "The printer is not responding.":
-                    printers[last_name].append("not-responding")
+                    printers[last_name][1].append("not-responding")
                 description_match = DESCRIPTION_LINE_RE.match(line)
                 if description_match is not None:
                     # Pull out the description
                     description = description_match.group(1)
                     # And make sure we don't set an empty description
                     if description:
-                        printers[last_name][0] = description
+                        printers[last_name] = (description, printers.get("last_name", []))
                 alerts_match = ALERTS_LINE_RE.match(line)
                 if alerts_match is not None:
                     alerts = alerts_match.group(1)
                     if len(printers[last_name]) == 1:  # If already marked as not responding, ignore alerts
-                        printers[last_name].append(alerts)
+                        printers[last_name][1] += alerts.split()
                     last_name = None
 
         cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
@@ -497,11 +506,12 @@ def print_job(obj: PrintJob, do_print: bool = True):
 @login_required
 @deny_restricted
 def print_view(request):
-    if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
+    if _get_current_ip(request) not in settings.TJ_IPS and not request.user.is_printing_admin:
         messages.error(request, "You don't have printer access outside of the TJ network.")
         return redirect("index")
 
     if request.method == "GET" and "refresh" in request.GET and request.user.is_printing_admin:
+        messages.success(request, "Refreshing printer status cache")
         cache.delete("printing:printers")
 
     printers = get_printers()
@@ -525,19 +535,20 @@ def print_view(request):
                     "Your file was submitted to the printer. "
                     "Do not re-print this job if it does not come out of the printer - "
                     "in nearly all cases, the job has been received and re-printing "
-                    "will cause multiple copies to be printed. "
-                    "Ask for help instead by contacting the "
-                    "Student Systems Administrators by filling out the feedback form.",
+                    "will cause multiple copies to be printed.",
                 )
     else:
         form = PrintJobForm(printers=printers)
-    alerts = {}
-    for printer in printers:
-        alerts[printer] = parse_alerts(printers[printer][1])
+
+    alerts = {printer: parse_alerts(printers[printer][1]) for printer in printers}
+    context = {"form": form, "alerts": alerts, "printers": printers}
+
     if hasattr(cache, "ttl"):
         elapsed_seconds = settings.CACHE_AGE["printers_list"] - cache.ttl("printing:printers")
         start_time = datetime.datetime.now() - datetime.timedelta(seconds=elapsed_seconds)
-        context = {"form": form, "alerts": alerts, "updated_time": start_time.strftime("%-I:%M:%S %p")}
-    else:
-        context = {"form": form, "alerts": alerts}
+        context["updated_time"] = start_time.strftime("%-I:%M:%S %p")
+
+    if (printing_warning_objs := WarningAnnouncement.objects.filter(type="printing", active=True)):
+        context["printing_warning"] = get_warning_html(printing_warning_objs)
+
     return render(request, "printing/print.html", context)
