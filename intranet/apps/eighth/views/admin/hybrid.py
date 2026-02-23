@@ -172,6 +172,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 eighth_admin_signup_group_hybrid_view = eighth_admin_required(EighthAdminSignUpGroupWizard.as_view(EighthAdminSignUpGroupWizard.FORMS))
 
 
+@eighth_admin_required
 def eighth_admin_signup_group_action_hybrid(request, group_id, schact_virtual_id, schact_person_id):
     scheduled_activity_virtual = get_object_or_404(EighthScheduledActivity, id=schact_virtual_id)
     scheduled_activity_person = get_object_or_404(EighthScheduledActivity, id=schact_person_id)
