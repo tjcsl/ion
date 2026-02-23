@@ -434,6 +434,7 @@ class EighthAdminSignUpGroupWizard(SessionWizardView):
 eighth_admin_signup_group = eighth_admin_required(EighthAdminSignUpGroupWizard.as_view(EighthAdminSignUpGroupWizard.FORMS))
 
 
+@eighth_admin_required
 def eighth_admin_signup_group_action(request, group_id, schact_id):
     scheduled_activity = get_object_or_404(EighthScheduledActivity, id=schact_id)
     group = get_object_or_404(Group, id=group_id)
