@@ -133,7 +133,7 @@ $(function() {
                         show = true;
                     }
                     // favorite
-                    if (cmd[1].substring(0, 1) === "fa" && activity.favorited === fl) {
+                    if (cmd[1].substring(0, 2) === "fa" && activity.favorited === fl) {
                         show = true;
                     }
                     // special
