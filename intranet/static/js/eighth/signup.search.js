@@ -42,7 +42,7 @@ $(function() {
             $("#activity-picker").removeClass("has-search-header");
         } else {
             $("#activity-picker").addClass("has-search-header");
-            $(".clear-button").click(function() {
+            $(".clear-button").on("click", function() {
                 $("#activity-picker .search-wrapper input").val("").keyup();
             });
         }
@@ -250,9 +250,9 @@ $(function() {
             var hideUl = (cat !== "all-header");
             var sticky = $(".sticky-header." + cat);
             var hideHeader = !sticky.hasClass("no-activities");
-            console.log(vis.size(), cat);
+            console.log(vis.length, cat);
 
-            if (vis.size() === 0) {
+            if (vis.length === 0) {
                 if (hideUl) $(this).hide();
                 if (hideHeader) sticky.hide();
             } else {
@@ -281,12 +281,12 @@ $(function() {
     };
 
     $(".search-wrapper input")
-        .removeAttr("disabled")
-        .keyup(eighthSearch)
+        .prop("disabled", false)
+        .on("keyup", eighthSearch)
         .on("search", eighthSearch);
 
     function badgeClickUpdate() {
-        $(".badge[data-append-search]").click(function() {
+        $(".badge[data-append-search]").on("click", function() {
             var app = $(this).attr("data-append-search");
             var inp = $(".search-wrapper input");
             var v = inp.val();

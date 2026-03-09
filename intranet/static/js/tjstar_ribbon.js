@@ -64,13 +64,13 @@ $(function() {
         $(".tjstar-countdown").fadeTo(500, 1);
     }, 1000);
 
-    $(".tjstar-ribbon-collapse").click(function() {
+    $(".tjstar-ribbon-collapse").on("click", function() {
         $(".tjstar-ribbon-content").slideUp();
         $(".tjstar-ribbon-toggle").slideDown();
         Cookies.set("collapse_tjstar_ribbon", "1", { expires: 21 });
     });
 
-    $(".tjstar-ribbon-toggle").click(function() {
+    $(".tjstar-ribbon-toggle").on("click", function() {
         $(".tjstar-ribbon-content").slideDown();
         $(".tjstar-ribbon-toggle").slideUp();
         Cookies.set("collapse_tjstar_ribbon", "0", { expires: 21 });

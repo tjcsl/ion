@@ -35,7 +35,7 @@
     {% if profile_user.is_student %}
         <script>
             $(document).ready(function() {
-                $('.preferred-user-picture img, .preferred-user-picture span').click(function() {
+                $('.preferred-user-picture img, .preferred-user-picture span').on("click", function() {
                     $(".user-pictures img").each(function() {
                         var src = $(this).attr("src");
                         var datasrc = $(this).attr("data-src");
@@ -46,7 +46,7 @@
                     })
                     $('.user-pictures').slideToggle();
                 });
-                $('.user-pictures').click(function() {
+                $('.user-pictures').on("click", function() {
                     $('.user-pictures').slideToggle();
                 });
             });
@@ -55,7 +55,7 @@
     {% if request.user.is_eighth_admin %}
         <script>
         $(document).ready(function() {
-            $("#user-groups form").submit(function(e) {
+            $("#user-groups form").on("submit", function(e) {
                 if (!confirm("Are you sure you want to remove " + $.trim($(".user-title h2").text()) + " from the group " + $.trim($(this).closest(".group").find("a").text()) + "?")) {
                     e.preventDefault();
                 }

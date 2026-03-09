@@ -63,7 +63,7 @@ var resetPage = function () {
         try {
             $(this).contents().find('a').each(function() {
                 this.href = "javascript:void(0)";
-                $(this).click(function (e) {
+                $(this).on("click", function (e) {
                     e.preventDefault();
                 });
             });

@@ -10,7 +10,7 @@ from django.utils import timezone
 
 from ...utils.html import safe_html
 from ..auth.decorators import deny_restricted
-from .forms import EnrichmentActivityForm
+from .forms import EnrichmentActivityBulkForm, EnrichmentActivityForm
 from .models import EnrichmentActivity
 
 logger = logging.getLogger(__name__)
@@ -307,6 +307,44 @@ def add_enrichment_view(request):
         form = EnrichmentActivityForm()
     context = {"form": form, "action": "add", "action_title": "Add", "is_enrichment_admin": is_enrichment_admin}
     return render(request, "enrichment/add_modify.html", context)
+
+
+@login_required
+@deny_restricted
+def enrichment_bulk_create_view(request):
+    """
+    get requests will render bulk-create form with Mon-Fri checkboxes
+    post requests create one EnrichmentActivity for each checked day and then redirect
+    """
+    is_enrichment_admin = request.user.has_admin_permission("enrichment")
+    if not is_enrichment_admin:
+        raise http.Http404
+
+    if request.method == "POST":
+        form = EnrichmentActivityBulkForm(data=request.POST)
+        if form.is_valid():
+            created = []
+            for dt in form.get_selected_dates():
+                activity = form.save(commit=False)
+                activity.pk = None
+                activity.time = dt
+                activity.save()
+                form.save_m2m()
+                created.append(dt.strftime("%A, %b %-d"))
+
+            messages.success(
+                request,
+                f"Created {len(created)} enrichment activities: " + ", ".join(created),
+            )
+            return redirect("enrichment")
+    else:
+        form = EnrichmentActivityBulkForm()
+
+    return render(
+        request,
+        "enrichment/bulk_create.html",
+        {"form": form},
+    )
 
 
 @login_required

@@ -33,7 +33,7 @@ end_school_year = start_school_year + 1
 Update this section annually after summer school ends and before school starts.
 School year last updated:  2025-08-18
 Hoco last updated:         2025-09-06
-tjSTAR last updated:       2024-05-03
+tjSTAR last updated:       2026-05-20
 """
 
 # When school is scheduled to start and end
@@ -54,7 +54,7 @@ HOCO_END_DATE = datetime.date(start_school_year,
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 21  # UPDATE THIS! Value when last updated: May 21, 2025         # noqa: E128
+    5, 20  # UPDATE THIS! Value when last updated: May 20, 2026         # noqa: E128
 )                                                                       # noqa: E124
 
 # When to start showing the tjSTAR banner
@@ -665,6 +665,10 @@ OAUTH2_PROVIDER = {
     # "REQUEST_APPROVAL_PROMPT": "auto",
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "oauth2_provider.AccessToken"
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth2_provider.RefreshToken"
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth2_provider.IDToken"
+OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
 
 
 INSTALLED_APPS = [
@@ -842,7 +846,6 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.templates.TemplatesPanel", False),
         ("debug_toolbar.panels.cache.CachePanel", False),
         ("debug_toolbar.panels.signals.SignalsPanel", False),
-        ("debug_toolbar.panels.logging.LoggingPanel", True),
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
         ("debug_toolbar.panels.profiling.ProfilingPanel", False),
     ]

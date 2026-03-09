@@ -1,6 +1,6 @@
 /* global $ */
 $(function() {
-    $.extend($.expr[":"], {
+    $.extend($.expr.pseudos, {
         horizontallyscrollable(element) {
             var e = $(element);
             return (e.css("overflow") === "scroll" || e.css("overflowX") === "scroll" || e.css("overflow") === "auto" || e.css("overflowX") === "auto");

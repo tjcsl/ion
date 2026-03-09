@@ -58,7 +58,7 @@ $(function() {
 
         signupClickHandler: function(e) {
             var target = e.target;
-            $(target).attr("disabled", true);
+            $(target).prop("disabled", true);
             var spinnerEl = document.getElementById("signup-spinner");
             var spinner = new Spinner(spinnerOptions).spin(spinnerEl);
             var aid = $(this.el).data("aid"),
@@ -66,30 +66,30 @@ $(function() {
                 uid = $(this.el).data("uid");
 
             eighth.signUp(uid, bid, aid, function() {
-                $(target).removeAttr("disabled");
+                $(target).prop("disabled", false);
                 spinner.spin(false);
             });
         },
 
         waitlistClickHandler: function(e) {
             var target = e.target;
-            $(target).attr("disabled", true);
+            $(target).prop("disabled", true);
             var aid = aid = $(this.el).data("aid"),
                 bid = $(this.el).data("bid"),
                 uid = $(this.el).data("uid");
             eighth.waitlistAdd(uid, bid, aid, function() {
-                $(target).removeAttr("disabled");
+                $(target).prop("disabled", false);
             });
         },
 
         leaveWaitlistClickHandler: function(e) {
             var target = e.target;
-            $(target).attr("disabled", true);
+            $(target).prop("disabled", true);
             var aid = aid = $(this.el).data("aid"),
                 bid = $(this.el).data("bid"),
                 uid = $(this.el).data("uid");
             eighth.leaveWaitlist(uid, bid, aid, function() {
-                $(target).removeAttr("disabled");
+                $(target).prop("disabled", false);
             });
         },
 
@@ -377,7 +377,7 @@ $(function() {
                         a.attributes.waitlisted = false;
                         a.attributes.waitlist_count -= 1;
                     });
-                    $(".current-day .block.active-block .block-letter").toggleClass("waitlist", true);
+                    $(".current-day .block.active-block .block-letter").addClass("waitlist");
                     window.currentWaitlist = activity.attributes.name;
                     activity.attributes.waitlist_count += 1;
                     activity.attributes.waitlist_position = activity.attributes.waitlist_count;
@@ -445,7 +445,7 @@ $(function() {
                     a.attributes.waitlisted = false;
                     a.attributes.waitlist_count -= 1;
                 });
-                $(".current-day .block.active-block .block-letter").toggleClass("waitlist", true);
+                $(".current-day .block.active-block .block-letter").addClass("waitlist");
                 window.currentWaitlist = activity.attributes.name;
                 activity.attributes.waitlist_count += 1;
                 activity.attributes.waitlist_position = activity.attributes.waitlist_count;
@@ -501,7 +501,7 @@ $(function() {
                 activity.attributes.waitlisted = false;
                 activity.attributes.waitlist_count -= 1;
                 activity.attributes.waitlist_position = 0;
-                $(".current-day .block.active-block .block-letter").toggleClass("waitlist", false);
+                $(".current-day .block.active-block .block-letter").removeClass("waitlist");
                 window.currentWaitlist = false;
 
                 activityDetailView.render();
@@ -608,7 +608,7 @@ $(function() {
             if (!$("#activity-picker").hasClass("different-user")) {
                 var view = this;
 
-                $(".activity-icon.fav").click(function(event) {
+                $(".activity-icon.fav").on("click", function(event) {
                     var $icon = $(this);
                     var aid = $(this).parent().parent().data("activity-id");
                     var model = view.activities.get(aid);
@@ -653,7 +653,7 @@ $(function() {
     window.activityListView = new eighth.ActivityListView();
     activityListView.render();
 
-    $("button#unsignup-button").click(function() {
+    $("button#unsignup-button").on("click", function() {
         var uid = $(this).attr("data-uid"),
             bid = $(this).attr("data-bid");
         var force = $(this).attr("force");
