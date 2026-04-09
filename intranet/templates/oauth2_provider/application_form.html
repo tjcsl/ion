@@ -64,7 +64,7 @@
                 });
 
                 {# if client_type is public, remove the client_credentials option for authorization_grant_type #}
-                $("#id_client_type").change(function() {
+                $("#id_client_type").on("change", function() {
                     if ($("#id_client_type").val() == "public") {
                         $("#id_authorization_grant_type")[0].selectize.setValue("authorization-code");
                         $("#id_authorization_grant_type")[0].selectize.removeOption("client-credentials");
@@ -78,7 +78,7 @@
                 });
 
                 {# if authorization_grant_type is authorization_code, show redirect_uris #}
-                $("#id_authorization_grant_type").change(function() {
+                $("#id_authorization_grant_type").on("change", function() {
                     if ($("#id_authorization_grant_type").val() == "authorization-code") {
                         $("#id_oidc_enabled").parent().show();
                         $("#id_redirect_uris").attr("required", "required").parent().parent().slideDown();
@@ -90,7 +90,7 @@
                     }
                 });
 
-                $("form").submit(function(e) {
+                $("form").on("submit", function(e) {
                     {# Clear redirect_uris if authorization_grant_type is client_credentials #}
                     if (!$("#id_redirect_uris").attr("required")) {
                         $("#id_redirect_uris").val("");

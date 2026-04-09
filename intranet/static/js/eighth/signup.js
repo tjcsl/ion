@@ -377,7 +377,7 @@ $(function() {
                         a.attributes.waitlisted = false;
                         a.attributes.waitlist_count -= 1;
                     });
-                    $(".current-day .block.active-block .block-letter").toggleClass("waitlist", true);
+                    $(".current-day .block.active-block .block-letter").addClass("waitlist");
                     window.currentWaitlist = activity.attributes.name;
                     activity.attributes.waitlist_count += 1;
                     activity.attributes.waitlist_position = activity.attributes.waitlist_count;
@@ -445,7 +445,7 @@ $(function() {
                     a.attributes.waitlisted = false;
                     a.attributes.waitlist_count -= 1;
                 });
-                $(".current-day .block.active-block .block-letter").toggleClass("waitlist", true);
+                $(".current-day .block.active-block .block-letter").addClass("waitlist");
                 window.currentWaitlist = activity.attributes.name;
                 activity.attributes.waitlist_count += 1;
                 activity.attributes.waitlist_position = activity.attributes.waitlist_count;
@@ -501,7 +501,7 @@ $(function() {
                 activity.attributes.waitlisted = false;
                 activity.attributes.waitlist_count -= 1;
                 activity.attributes.waitlist_position = 0;
-                $(".current-day .block.active-block .block-letter").toggleClass("waitlist", false);
+                $(".current-day .block.active-block .block-letter").removeClass("waitlist");
                 window.currentWaitlist = false;
 
                 activityDetailView.render();

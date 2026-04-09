@@ -24,7 +24,7 @@ $(function() {
         $(this.children[0]).text(!expanded ? "Expand All" : "Collapse All");
     });
 
-    $(".question-clear-action").change(function() {
+    $(".question-clear-action").on("change", function() {
         let chk = $(this).prop("checked");
         let ul = $(this).parent().parent();
 
