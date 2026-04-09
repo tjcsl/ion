@@ -18,7 +18,7 @@ $(function() {
     $(".pagination a").on("click", function () {
         goToPage($(this).attr("data-page"));
     });
-    $(".pagination form").submit(function (e) {
+    $(".pagination form").on("submit", function (e) {
         e.preventDefault();
         goToPage($(this).find("input").val());
     });

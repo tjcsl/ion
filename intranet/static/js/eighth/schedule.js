@@ -34,7 +34,7 @@ $(function() {
         });
     });
 
-    $("select.remote-rooms").change(function(e) {
+    $("select.remote-rooms").on("change", function(e) {
         var $select = $(e.target);
 
         var capacitySum = 0;

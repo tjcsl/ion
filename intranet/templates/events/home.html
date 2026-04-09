@@ -13,6 +13,7 @@
     {% if not show_all and not classic %}
     <script>
         var view = "{{ view }}";
+        var todayId = "{{ week_data.today|default:''|escapejs }}";
 
         function setView(view_name){
             if(view_name == "month") {
@@ -23,12 +24,16 @@
             }
 
             toggleTouchEvents(view_name);
-            $("#{{ week_data.today }}").attr("class", "today");
+            if (todayId) {
+                $("#" + todayId).attr("class", "today");
+            }
         }
 
         $(document).ready(function() {
             setView(view);
-            $("#{{ week_data.today }}").attr("class", "today");
+            if (todayId) {
+                $("#" + todayId).attr("class", "today");
+            }
 
             $("#month-button").on("click", function(e){
                 e.preventDefault();

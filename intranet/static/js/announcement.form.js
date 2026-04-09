@@ -143,11 +143,11 @@ $(function() {
         exp.val(dateFormat(new Date($(this).data("date"))));
     });
 
-    $("#date-reset-btn").click(function () {
+    $("#date-reset-btn").on("click", function () {
         dateReset(exp);
     });
 
-    $("#no-expire-btn").click(function () {
+    $("#no-expire-btn").on("click", function () {
         date3000(exp);
     });
 });

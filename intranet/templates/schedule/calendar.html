@@ -13,12 +13,15 @@
     <script src="{% static 'js/login.js' %}"></script>
     <script>
         var view = "{{ view }}";
+        var todayId = "{{ day.sched_ctx.date|default:''|escapejs }}";
         function setView(view_name){
             if(view_name == "month") $("#view-div").html(`{% include "schedule/month.html" %}`);
             else                     $("#view-div").html(`{% include "schedule/week.html" %}`);
 
             toggleTouchEvents(view_name);
-            $("#{{ day.sched_ctx.date }}").attr("class", "today");
+            if (todayId) {
+                $("#" + todayId).attr("class", "today");
+            }
         }
         $(document).ready(function() {
             setView(view);

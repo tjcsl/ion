@@ -29,7 +29,7 @@ $(function() {
         }
     });
 
-    $(window).resize(function() {
+    $(window).on("resize", function() {
         if($(".sidebar").hasClass("has-events")){
             if($(this).width() > 800) {
                 $(".center-wrapper").removeClass("disable-interaction");

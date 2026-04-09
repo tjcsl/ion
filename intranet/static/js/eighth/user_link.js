@@ -2,7 +2,7 @@
 $(function() {
     window.userHide = {};
 
-    $(".student-attendance-row").hover(function() {
+    $(".student-attendance-row").on("mouseenter", function() {
         var uid = $(this).children(".user-link[data-user-id]").attr("data-user-id");
 
         if (window.userHide.hasOwnProperty(uid)) {
@@ -19,14 +19,14 @@ $(function() {
         img.addClass("active");
         img.fadeIn(25);
 
-    }, function() {
+    }).on("mouseleave", function() {
         var uid = $(this).children(".user-link[data-user-id]").attr("data-user-id");
         window.userHide[uid] = setTimeout(function() {
             $(".user-pic[data-user-id='" + uid + "']").fadeOut(50).removeClass("active");
         }, 50);
     });
 
-    $(document).mousemove(function(e) {
+    $(document).on("mousemove", function(e) {
         var posx = window.mouseX = e.pageX,
             posy = window.mouseY = e.pageY;
         posx += 150;

@@ -126,7 +126,7 @@ $(function() {
         file_reader.readAsText(file);
     });
 
-    $("#poll-form").submit(function() {
+    $("#poll-form").on("submit", function() {
         var out = [];
         $("#questions .question").each(function() {
             var q = {
