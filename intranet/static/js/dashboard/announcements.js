@@ -42,17 +42,16 @@ $(document).ready(function() {
         }
     });
 
-    $(".subscribed-filter").click(function () {
+    $(".subscribed-filter").on("click", function () {
         $(".unsubscribed-filter").removeClass("active");
         $("#non-subscriptions-pagination").hide();
-
         $("#subscriptions-pagination").show();
         $(this).addClass("active");
 
         filterClubAnnouncements();
     });
 
-    $(".unsubscribed-filter").click(function () {
+    $(".unsubscribed-filter").on("click", function () {
         $(".subscribed-filter").removeClass("active");
         $("#subscriptions-pagination").hide();
 
@@ -64,7 +63,7 @@ $(document).ready(function() {
 
     const params = new URLSearchParams(window.location.search);
     if (params.get("flip_to") == "unsubscribed") {
-      $(".unsubscribed-filter").click();
+        $(".unsubscribed-filter").trigger("click");
     }
 });
 
@@ -84,7 +83,7 @@ function updatePartiallyHidden() {
         var content = $(this).find(".announcement-content");
         if (content.height() > 200) {
             $(this).addClass("partially-hidden");
-            content.click(function () {
+            content.on("click", function () {
                 announcementToggle.call($(this).closest(".announcement"));
             });
         }
