@@ -29,7 +29,7 @@ $(function() {
 
         if (!checked) toggleRow($(this));
 
-        $(cb).click(function() {
+        $(cb).on("click", function() {
             toggleRow($(this).parent().parent());
         });
     });
@@ -77,7 +77,7 @@ $(function() {
         window.propagate_method = opt;
     }
 
-    $(".propagate").click(function() {
+    $(".propagate").on("click", function() {
         var field = $(this).attr("data-field"),
             input = $(this).attr("data-input");
         var el = $("#" + input);
@@ -163,7 +163,7 @@ $(function() {
             });
         }
     });
-    $(".schedule-form input[type='submit']").click(function(e) {
+    $(".schedule-form input[type='submit']").on("click", function(e) {
         var activities = "";
         $("tr.form-row:not(.hidden)").each(function(i, el) {
             var inputWrapper = $("td[data-field='sponsors'] .selectize-input", el);
