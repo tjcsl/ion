@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core import exceptions
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 
 from ...utils.helpers import get_id
@@ -149,6 +150,9 @@ def events_view(request):
                 event.save()
                 messages.success(request, f"Approved event {event}")
                 logger.info("Admin %s approved event: %s (%s)", request.user, event, event.id)
+                query_string = request.GET.urlencode()
+                url = f"{reverse('events')}?{query_string}" if query_string else reverse("events")
+                return redirect(url)
             else:
                 raise http.Http404
 
@@ -162,6 +166,9 @@ def events_view(request):
                 event.save()
                 messages.success(request, f"Rejected event {event}")
                 logger.info("Admin %s rejected event: %s (%s)", request.user, event, event.id)
+                query_string = request.GET.urlencode()
+                url = f"{reverse('events')}?{query_string}" if query_string else reverse("events")
+                return redirect(url)
             else:
                 raise http.Http404
 
