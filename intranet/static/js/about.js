@@ -1,6 +1,6 @@
 /* global $ */
 $(function() {
-    $(".logo").click(function() {
+    $(".logo").on("click", function() {
         location.href = '/';
     });
 

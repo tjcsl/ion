@@ -4,7 +4,7 @@ $(document).ready(function() {
 
     filterClubAnnouncements();
 
-    $(".club-announcements-header").click(function () {
+    $(".club-announcements-header").on("click", function () {
         let content = $(".club-announcements-content");
         if (!content.is(":visible")) {  // Avoid FOUC
             content.show();
@@ -15,24 +15,24 @@ $(document).ready(function() {
         $(".club-announcements-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
     });
 
-    $(".announcement[data-id] h3").click(function (e) {
+    $(".announcement[data-id] h3").on("click", function (e) {
         if (e.target !== this) return;
         var btn = $(".announcement-toggle", $(this));
         announcementToggle.call(btn);
     });
 
-    $(".announcement[data-id] h3 .announcement-toggle").click(function (e) {
+    $(".announcement[data-id] h3 .announcement-toggle").on("click", function (e) {
         e.preventDefault();
         announcementToggle.call($(this));
     });
 
-    $(".announcement[data-id] h3 .dashboard-item-icon").click(function (e) {
+    $(".announcement[data-id] h3 .dashboard-item-icon").on("click", function (e) {
         e.preventDefault();
         var btn = $(".announcement-toggle", $(this).parent());
         announcementToggle.call(btn);
     });
 
-    $(window).resize(function () { setTimeout(updatePartiallyHidden, 0); });
+    $(window).on("resize", function () { setTimeout(updatePartiallyHidden, 0); });
 
     $("div[data-placeholder]").on("keydown keypress input", function () {
         if (this.textContent) {
@@ -42,17 +42,16 @@ $(document).ready(function() {
         }
     });
 
-    $(".subscribed-filter").click(function () {
+    $(".subscribed-filter").on("click", function () {
         $(".unsubscribed-filter").removeClass("active");
         $("#non-subscriptions-pagination").hide();
-
         $("#subscriptions-pagination").show();
         $(this).addClass("active");
 
         filterClubAnnouncements();
     });
 
-    $(".unsubscribed-filter").click(function () {
+    $(".unsubscribed-filter").on("click", function () {
         $(".subscribed-filter").removeClass("active");
         $("#subscriptions-pagination").hide();
 
@@ -64,7 +63,7 @@ $(document).ready(function() {
 
     const params = new URLSearchParams(window.location.search);
     if (params.get("flip_to") == "unsubscribed") {
-      $(".unsubscribed-filter").click();
+        $(".unsubscribed-filter").trigger("click");
     }
 });
 
@@ -84,7 +83,7 @@ function updatePartiallyHidden() {
         var content = $(this).find(".announcement-content");
         if (content.height() > 200) {
             $(this).addClass("partially-hidden");
-            content.click(function () {
+            content.on("click", function () {
                 announcementToggle.call($(this).closest(".announcement"));
             });
         }

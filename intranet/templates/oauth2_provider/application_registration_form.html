@@ -86,7 +86,7 @@
                 }
 
                 {# If client_type is public, hide client_secret and remove the client_credentials option for authorization_grant_type #}
-                $("#id_client_type").change(function() {
+                $("#id_client_type").on("change", function() {
                     if ($("#id_client_type").val() == "public") {
                         $("#id_client_secret").parent().parent().slideUp();
                         $("#id_authorization_grant_type")[0].selectize.setValue("authorization-code");
@@ -101,7 +101,7 @@
                     }
                 });
 
-                $("span.copy-click").click(function() {
+                $("span.copy-click").on("click", function() {
                     $(this).parent().parent().next().find("input").select();
                     document.execCommand("copy");
 
@@ -115,7 +115,7 @@
                 });
 
                 {# If authorization_grant_type is authorization_code, show redirect_uris #}
-                $("#id_authorization_grant_type").change(function() {
+                $("#id_authorization_grant_type").on("change", function() {
                     if ($("#id_authorization_grant_type").val() == "authorization-code") {
                         $("#id_oidc_enabled").parent().show();
                         $("#id_redirect_uris").attr("required", "required").parent().parent().slideDown();
@@ -123,11 +123,11 @@
                     else {
                         $("#id_oidc_enabled").parent().hide();
                         $("#id_oidc_enabled").prop("checked", false);
-                        $("#id_redirect_uris").removeAttr("required").parent().parent().slideUp();
+                        $("#id_redirect_uris").prop("required", false).parent().parent().slideUp();
                     }
                 });
 
-                $("form").submit(function(e) {
+                $("form").on("submit", function(e) {
                     {# Check for AUP confirmation #}
                     if (!$("#accept-aup").is(":checked")) {
                         alert("You must agree to the Ion API and OAuth Acceptable Use Policy to create an OAuth application.");
