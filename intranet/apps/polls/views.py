@@ -667,7 +667,15 @@ def add_poll_view(request):
     else:
         form = PollForm()
 
-    context = {"action": "add", "action_title": "Add", "poll_questions": "[]", "poll_choices": "[]", "form": form, "is_polls_admin": True}
+    context = {
+        "action": "add",
+        "action_title": "Add",
+        "poll_questions": "[]",
+        "poll_choices": "[]",
+        "submitted_question_data": request.POST.get("question_data", "[]"),
+        "form": form,
+        "is_polls_admin": True,
+    }
 
     return render(request, "polls/add_modify.html", context)
 
@@ -707,6 +715,7 @@ def modify_poll_view(request, poll_id):
         "poll": poll,
         "poll_questions": serialize("json", poll.question_set.all()),
         "poll_choices": serialize("json", Choice.objects.filter(question__in=poll.question_set.all())),
+        "submitted_question_data": request.POST.get("question_data", "[]"),
         "form": form,
         "is_polls_admin": True,
     }

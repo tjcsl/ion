@@ -58,6 +58,32 @@ $(function() {
         addInline(v);
     });
 
+    // If the form was re-rendered after a validation error, restore the questions the user
+    // had entered by rebuilding the editor from the previously submitted question_data.
+    if (submitted_question_data.length > 0) {
+        $("#questions").empty();
+        $.each(submitted_question_data, function(k, q) {
+            var q_data = {
+                pk: q.pk || null,
+                fields: {
+                    question: q.question || "",
+                    type: q.type || "STD",
+                    max_choices: q.max_choices || 1
+                }
+            };
+            var q_elem = $(questionTemplate(q_data));
+            q_elem.appendTo("#questions");
+            $.each(q.choices || [], function(j, c) {
+                var c_data = {pk: c.pk || null, fields: {info: c.info || ""}};
+                q_elem.find(".choices").append(choiceTemplate(c_data));
+            });
+        });
+        $("#questions .type").selectize();
+        $("#questions [contenteditable='true']").each(function(k, v) {
+            addInline(v);
+        });
+    }
+
     $("#import_from_csv").on("click", async function (e) {
         e.preventDefault();
         $("#csv_input").trigger("click");

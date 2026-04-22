@@ -454,3 +454,70 @@ class ApiTest(IonTestCase):
         self.assertEqual(answer_set.count(), 1)
         self.assertEqual(answer_set[0].answer, "different test content")
         self.assertEqual(answer_set[0].clear_vote, False)
+
+    def test_add_poll_preserves_questions_on_form_error(self):
+        """Regression test: question data must survive a form validation error on add_poll."""
+        self.make_admin()
+
+        question_data = json.dumps(
+            [{"question": "Favourite colour?", "type": "STD", "max_choices": "1", "choices": [{"info": "Red"}, {"info": "Blue"}]}]
+        )
+
+        # Submit without end_time to trigger a validation error.
+        response = self.client.post(
+            reverse("add_poll"),
+            data={
+                "title": "Poll with error",
+                "description": "test",
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                # end_time omitted on purpose — causes form validation failure
+                "visible": True,
+                "question_data": question_data,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("submitted_question_data", response.context)
+        import json as _json
+
+        restored = _json.loads(response.context["submitted_question_data"])
+        self.assertEqual(len(restored), 1)
+        self.assertEqual(restored[0]["question"], "Favourite colour?")
+        self.assertEqual(len(restored[0]["choices"]), 2)
+
+    def test_modify_poll_preserves_questions_on_form_error(self):
+        """Regression test: question data must survive a form validation error on modify_poll."""
+        self.make_admin()
+
+        poll = Poll.objects.create(
+            title="Original Poll",
+            description="desc",
+            start_time=timezone.now() - datetime.timedelta(days=1),
+            end_time=timezone.now() + datetime.timedelta(days=1),
+            visible=True,
+        )
+
+        question_data = json.dumps(
+            [{"question": "Updated question?", "type": "STD", "max_choices": "1", "choices": [{"info": "Yes"}, {"info": "No"}]}]
+        )
+
+        # Submit without end_time to trigger a validation error.
+        response = self.client.post(
+            reverse("modify_poll", kwargs={"poll_id": poll.id}),
+            data={
+                "title": "Updated Poll",
+                "description": "updated",
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                # end_time omitted on purpose — causes form validation failure
+                "visible": True,
+                "question_data": question_data,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("submitted_question_data", response.context)
+        import json as _json
+
+        restored = _json.loads(response.context["submitted_question_data"])
+        self.assertEqual(len(restored), 1)
+        self.assertEqual(restored[0]["question"], "Updated question?")
