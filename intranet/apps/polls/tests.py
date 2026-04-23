@@ -478,9 +478,8 @@ class ApiTest(IonTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("submitted_question_data", response.context)
-        import json as _json
 
-        restored = _json.loads(response.context["submitted_question_data"])
+        restored = json.loads(response.context["submitted_question_data"])
         self.assertEqual(len(restored), 1)
         self.assertEqual(restored[0]["question"], "Favourite colour?")
         self.assertEqual(len(restored[0]["choices"]), 2)
@@ -516,8 +515,7 @@ class ApiTest(IonTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("submitted_question_data", response.context)
-        import json as _json
 
-        restored = _json.loads(response.context["submitted_question_data"])
+        restored = json.loads(response.context["submitted_question_data"])
         self.assertEqual(len(restored), 1)
         self.assertEqual(restored[0]["question"], "Updated question?")
