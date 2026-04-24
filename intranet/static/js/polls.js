@@ -1,3 +1,5 @@
+/* global CKEDITOR, _, poll_questions, poll_choices, submitted_question_data */
+
 var default_question = {
     "pk": null,
     "fields": {
