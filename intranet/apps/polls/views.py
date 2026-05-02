@@ -141,7 +141,8 @@ def ranked_choice_results(request, poll_id):
 @deny_restricted
 def poll_vote_view(request, poll_id):
     poll = get_object_or_404(Poll, id=poll_id)
-
+    had_error = False
+    qs_that_had_err = []
     user = request.user
     is_polls_admin = user.has_admin_permission("polls")
     if is_polls_admin and "user" in request.GET:
@@ -155,6 +156,7 @@ def poll_vote_view(request, poll_id):
         entries = request.POST
         for name in entries:
             if name.startswith("question-"):
+                question_had_error = False
                 question_num = name.split("-", 3)[1]
                 try:
                     question_obj = questions.get(num=question_num)
@@ -225,8 +227,12 @@ def poll_vote_view(request, poll_id):
                                 Answer.objects.create(user=user, question=question_obj, clear_vote=True)
                                 messages.success(request, f"Clear Vote for {question_obj}")
                         elif "CLEAR" in updated_choices:
+                            question_had_error = True
+                            had_error = True
                             messages.error(request, "Cannot select other options with Clear Vote.")
                         elif len(updated_choices) > question_obj.max_choices:
+                            question_had_error = True
+                            had_error = True
                             messages.error(request, f"You have voted on too many options for {question_obj}")
                         else:
                             with transaction.atomic():
@@ -251,8 +257,12 @@ def poll_vote_view(request, poll_id):
                     Answer.objects.update_or_create(user=user, question=question_obj, defaults={"answer": choice_num})
                     messages.success(request, f"Answer saved for {question_obj}")
 
+                if question_had_error:
+                    qs_that_had_err.append(int(question_num))
+
         messages.success(request, "Thank you for voting!")
     if poll.can_vote(user):
+        use_submitted = request.method == "POST" and had_error
         questions = []
         for q in poll.question_set.all():
             current_votes = Answer.objects.filter(user=user, question=q)
@@ -275,6 +285,31 @@ def poll_vote_view(request, poll_id):
             else:
                 choices_and_values = []
 
+            current_vote = current_votes[0] if current_votes else None
+            current_choices = [v.choice for v in current_votes]
+            current_vote_none = len(current_votes) < 1
+            current_vote_clear = len(current_votes) == 1 and current_votes[0].clear_vote
+            current_vote_other = len(current_votes) == 1 and current_votes[0].other_vote
+
+            if use_submitted:
+                submitted_name = f"question-{q.num}"
+                submitted_values = request.POST.getlist(submitted_name)
+
+                if q.is_many_choice():
+                    current_vote_clear = "CLEAR" in submitted_values
+                    current_vote_other = False
+                    if current_vote_clear:
+                        current_choices = []
+                    else:
+                        selected_nums = []
+                        for value in submitted_values:
+                            try:
+                                selected_nums.append(int(value))
+                            except (TypeError, ValueError):
+                                continue
+                        current_choices = [c for c in choices if c.num in selected_nums]
+                    current_vote_none = len(submitted_values) < 1
+
             question = {
                 "num": q.num,
                 "type": q.type,
@@ -287,22 +322,24 @@ def poll_vote_view(request, poll_id):
                 "max_choices": q.max_choices,
                 "num_choices": len(choices),
                 "current_votes": current_votes,
-                "current_vote": current_votes[0] if current_votes else None,
-                "current_choices": [v.choice for v in current_votes],
-                "current_vote_none": (len(current_votes) < 1),
-                "current_vote_clear": (len(current_votes) == 1 and current_votes[0].clear_vote),
-                "current_vote_other": (len(current_votes) == 1 and current_votes[0].other_vote),
+                "current_vote": current_vote,
+                "current_choices": current_choices,
+                "current_vote_none": current_vote_none,
+                "current_vote_clear": current_vote_clear,
+                "current_vote_other": current_vote_other,
                 "choices_and_values": choices_and_values,
             }
             questions.append(question)
 
         can_vote = poll.can_vote(user)
+        print("DEBUG::: " + str(qs_that_had_err))
         context = {
             "poll": poll,
             "can_vote": can_vote,
             "user": user,
             "questions": questions,
             "question_types": Question.get_question_types(),
+            "qs_had_error": qs_that_had_err,
         }
         return render(request, "polls/vote.html", context)
 

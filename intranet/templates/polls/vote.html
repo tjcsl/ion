@@ -173,6 +173,12 @@
                         {% if poll.is_election %}<i class="fas fa-angle-down"></i>{% endif %}
                     </div>
                     <div class="question" {% if poll.is_election %}style="display: none"{% endif %}>
+                    {% if q.num in qs_had_error %}
+                        <div class="q-issue-div">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong class="q-issue-text">Please fix the issue here.</strong>
+                        </div>
+                    {% endif %}
 
                     {% if q.is_single_choice %}
                         <br>
