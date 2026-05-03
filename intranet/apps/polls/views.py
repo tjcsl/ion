@@ -332,7 +332,7 @@ def poll_vote_view(request, poll_id):
             questions.append(question)
 
         can_vote = poll.can_vote(user)
-        print("DEBUG::: " + str(qs_that_had_err))
+
         context = {
             "poll": poll,
             "can_vote": can_vote,
