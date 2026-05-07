@@ -19,7 +19,7 @@ class YearCleanupTest(IonTestCase):
         out = StringIO()
         year = timezone.now().year
         turnover_date = datetime(year, 7, 1)
-        call_command("year_cleanup", stdout=out, senior_grad_year=year + 1)
+        call_command("year_cleanup", stdout=out, senior_grad_year=year + 1, delete_users=True)
         output = [
             "In pretend mode.",
             "Turnover date set to: {}".format(turnover_date.strftime("%c")),
@@ -52,7 +52,7 @@ class YearCleanupTest(IonTestCase):
             "intranet.apps.dataimport.management.commands.year_cleanup.timezone.now",
             return_value=datetime(2020, 6, 20, tzinfo=pytz.timezone("America/New_York")),
         ) as m:
-            call_command("year_cleanup", senior_grad_year=2021, run=True, confirm=True)
+            call_command("year_cleanup", senior_grad_year=2021, run=True, confirm=True, delete_users=True)
 
         m.assert_called()
 
