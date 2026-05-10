@@ -86,7 +86,7 @@ $(function () {
             e.preventDefault();
             showFireworks();
         }
-    })
+    });
 
     $(".intranet-title-text").html(`Ion <img id="fireworks-btn" src="${path}new_years_party_popper.png" />`);
 });
