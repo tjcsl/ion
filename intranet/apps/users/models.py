@@ -842,6 +842,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return not self.username.startswith("INVALID_USER") and not self.user_locked
 
+    @classmethod
+    def archive_users(cls, queryset, *, update_admin_comments: bool = False) -> tuple[int, int]:
+        to_archive = queryset.filter(user_locked=False)
+        already_archived_count = queryset.filter(user_locked=True).count()
+
+        if update_admin_comments:
+            current_year = timezone.localdate().year
+            previous_year = current_year - 1
+            archived_count = 0
+            for user in to_archive:
+                user.user_locked = True
+                if user.admin_comments:
+                    user.admin_comments = f"\n=== {previous_year}-{current_year} comments ===\n{user.admin_comments}"
+                user.save(update_fields=["user_locked", "admin_comments"])
+                archived_count += 1
+        else:
+            archived_count = to_archive.update(user_locked=True)
+
+        return archived_count, already_archived_count
+
     @property
     def is_restricted(self) -> bool:
         """Checks if user needs the restricted view of Ion
