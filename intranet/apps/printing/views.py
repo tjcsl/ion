@@ -150,12 +150,12 @@ def get_printers() -> dict[str, tuple[str, list[str]]]:
                     description = description_match.group(1)
                     # And make sure we don't set an empty description
                     if description:
-                        printers[last_name] = (description, printers.get("last_name", []))
+                        printers[last_name] = (description, printers.get(last_name)[1] if last_name in printers else [])
                 alerts_match = ALERTS_LINE_RE.match(line)
                 if alerts_match is not None:
                     alerts = alerts_match.group(1)
-                    if len(printers[last_name]) == 1:  # If already marked as not responding, ignore alerts
-                        printers[last_name][1] += alerts.split()
+                    if "not-responding" not in printers[last_name][1]:  # If already marked as not responding, ignore alerts
+                        printers[last_name] = (printers[last_name][0], printers[last_name][1] + alerts.split())
                     last_name = None
 
         cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
