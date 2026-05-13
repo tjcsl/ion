@@ -1535,6 +1535,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">io</span><span class="w"> </span><span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">magic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
@@ -1548,6 +1549,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">sentry_sdk</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_breadcrumb</span><span class="p">,</span> <span class="n">capture_exception</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">xhtml2pdf</span><span class="w"> </span><span class="kn">import</span> <span class="n">pisa</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">...utils.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_warning_html</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..announcements.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">WarningAnnouncement</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..auth.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">deny_restricted</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..context_processors</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_current_ip</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.forms</span><span class="w"> </span><span class="kn">import</span> <span class="n">PrintJobForm</span>
@@ -1599,7 +1602,15 @@
 
 <div class="viewcode-block" id="parse_alerts">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.printing.views.html#intranet.apps.printing.views.parse_alerts">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_alerts</span><span class="p">(</span><span class="n">alerts</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_alerts</span><span class="p">(</span><span class="n">alerts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;working&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;broken&quot;</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse known alerts into readable text</span>
+<span class="sd">    Args:</span>
+<span class="sd">        alerts: A list  of known alerts from :func:`~intranet.apps.printing.views.get_printers`</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple where the first element is the parsed string and the 2nd element is a css class</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">known_alerts</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;paused&quot;</span><span class="p">:</span> <span class="s2">&quot;unavailable&quot;</span><span class="p">,</span>
         <span class="s2">&quot;media-empty-error&quot;</span><span class="p">:</span> <span class="s2">&quot;out of paper&quot;</span><span class="p">,</span>
@@ -1612,8 +1623,8 @@
         <span class="s2">&quot;door-open-report&quot;</span><span class="p">:</span> <span class="s2">&quot;door open&quot;</span><span class="p">,</span>
         <span class="s2">&quot;none&quot;</span><span class="p">:</span> <span class="s2">&quot;working&quot;</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
     <span class="n">alerts_text</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">known_alerts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">)</span>
+
     <span class="n">error_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;paused&quot;</span><span class="p">]</span>
     <span class="n">broken_alerts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;media-empty-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-empty-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-error&quot;</span><span class="p">,</span> <span class="s2">&quot;media-jam-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;toner-empty-warning&quot;</span><span class="p">,</span> <span class="s2">&quot;toner-empty-error&quot;</span><span class="p">]</span>
     <span class="n">printer_class</span> <span class="o">=</span> <span class="s2">&quot;working&quot;</span>
@@ -1629,7 +1640,7 @@
 
 <div class="viewcode-block" id="get_printers">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.printing.views.html#intranet.apps.printing.views.get_printers">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_printers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_printers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dictionary mapping name:description for available printers.</span>
 
 <span class="sd">    This requires that a CUPS client be configured on the server.</span>
@@ -1648,16 +1659,16 @@
             <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;lpstat&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">],</span> <span class="n">universal_newlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
         <span class="c1"># Don&#39;t die if cups isn&#39;t installed.</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="p">{}</span>
         <span class="c1"># Don&#39;t die if lpstat fails</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">,</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">):</span>
-            <span class="k">return</span> <span class="p">[]</span>
+            <span class="k">return</span> <span class="p">{}</span>
 
         <span class="n">PRINTER_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^printer\s+(\w+)&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
         <span class="n">DESCRIPTION_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s+Description:\s+(.*)\s*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
         <span class="n">ALERTS_LINE_RE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^\s+Alerts:\s+(.*)\s*$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">ASCII</span><span class="p">)</span>
 
-        <span class="n">printers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">printers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
             <span class="n">match</span> <span class="o">=</span> <span class="n">PRINTER_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
@@ -1666,25 +1677,25 @@
                 <span class="n">name</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">&quot;Please_Select_a_Printer&quot;</span><span class="p">:</span>
                     <span class="c1"># By default, use the name of the printer instead of the description</span>
-                    <span class="n">printers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
+                    <span class="n">printers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[])</span>
                     <span class="c1"># Record the name of the printer so when we parse the rest of the</span>
                     <span class="c1"># extended description we know which printer it&#39;s referring to.</span>
                     <span class="n">last_name</span> <span class="o">=</span> <span class="n">name</span>
             <span class="k">elif</span> <span class="n">last_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;The printer is not responding.&quot;</span><span class="p">:</span>
-                    <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;not-responding&quot;</span><span class="p">)</span>
+                    <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;not-responding&quot;</span><span class="p">)</span>
                 <span class="n">description_match</span> <span class="o">=</span> <span class="n">DESCRIPTION_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">description_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># Pull out the description</span>
                     <span class="n">description</span> <span class="o">=</span> <span class="n">description_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                     <span class="c1"># And make sure we don&#39;t set an empty description</span>
                     <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
-                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">printers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="p">[]))</span>
                 <span class="n">alerts_match</span> <span class="o">=</span> <span class="n">ALERTS_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">alerts_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># If already marked as not responding, ignore alerts</span>
-                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">alerts</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
                     <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">printers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">])</span>
@@ -2062,11 +2073,12 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">_get_current_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJ_IPS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;printing&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">_get_current_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJ_IPS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_printing_admin</span><span class="p">:</span>
         <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You don&#39;t have printer access outside of the TJ network.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span> <span class="ow">and</span> <span class="s2">&quot;refresh&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_printing_admin</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Refreshing printer status cache&quot;</span><span class="p">)</span>
         <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;printing:printers&quot;</span><span class="p">)</span>
 
     <span class="n">printers</span> <span class="o">=</span> <span class="n">get_printers</span><span class="p">()</span>
@@ -2090,21 +2102,22 @@
                     <span class="s2">&quot;Your file was submitted to the printer. &quot;</span>
                     <span class="s2">&quot;Do not re-print this job if it does not come out of the printer - &quot;</span>
                     <span class="s2">&quot;in nearly all cases, the job has been received and re-printing &quot;</span>
-                    <span class="s2">&quot;will cause multiple copies to be printed. &quot;</span>
-                    <span class="s2">&quot;Ask for help instead by contacting the &quot;</span>
-                    <span class="s2">&quot;Student Systems Administrators by filling out the feedback form.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;will cause multiple copies to be printed.&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">PrintJobForm</span><span class="p">(</span><span class="n">printers</span><span class="o">=</span><span class="n">printers</span><span class="p">)</span>
-    <span class="n">alerts</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">printer</span> <span class="ow">in</span> <span class="n">printers</span><span class="p">:</span>
-        <span class="n">alerts</span><span class="p">[</span><span class="n">printer</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_alerts</span><span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">printer</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">alerts</span> <span class="o">=</span> <span class="p">{</span><span class="n">printer</span><span class="p">:</span> <span class="n">parse_alerts</span><span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">printer</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">printer</span> <span class="ow">in</span> <span class="n">printers</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;alerts&quot;</span><span class="p">:</span> <span class="n">alerts</span><span class="p">,</span> <span class="s2">&quot;printers&quot;</span><span class="p">:</span> <span class="n">printers</span><span class="p">}</span>
+
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cache</span><span class="p">,</span> <span class="s2">&quot;ttl&quot;</span><span class="p">):</span>
         <span class="n">elapsed_seconds</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">cache</span><span class="o">.</span><span class="n">ttl</span><span class="p">(</span><span class="s2">&quot;printing:printers&quot;</span><span class="p">)</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">elapsed_seconds</span><span class="p">)</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;alerts&quot;</span><span class="p">:</span> <span class="n">alerts</span><span class="p">,</span> <span class="s2">&quot;updated_time&quot;</span><span class="p">:</span> <span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%-I:%M:%S %p&quot;</span><span class="p">)}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;alerts&quot;</span><span class="p">:</span> <span class="n">alerts</span><span class="p">}</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;updated_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%-I:%M:%S %p&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">printing_warning_objs</span> <span class="o">:=</span> <span class="n">WarningAnnouncement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;printing&quot;</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;printing_warning&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_warning_html</span><span class="p">(</span><span class="n">printing_warning_objs</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;printing/print.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 </pre></div>
         </article>
@@ -2137,7 +2150,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=398ec6f2"></script>
+</div><script src="../../../../_static/documentation_options.js?v=c7d32e27"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
