@@ -68,7 +68,7 @@ def activities_without_attendance_view(request):
             cancelled = scheduled_activities.filter(cancelled=True)
             signups = EighthSignup.objects.filter(scheduled_activity__in=cancelled)
             cancelled_str = "\n".join(str(a) for a in cancelled)
-            logger.debug(f"Cancelled activites: {cancelled_str}")
+            logger.debug(f"Cancelled activities: {cancelled_str}")
             signup_str = "\n".join(str(a) for a in signups)
             logger.debug(f"Marking students absent: {signup_str}")
             signups.update(was_absent=True)
