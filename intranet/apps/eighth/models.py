@@ -1332,7 +1332,6 @@ class EighthScheduledActivity(AbstractBaseEighthModel):
         if exception.errors:
             print(exception)
             logger.debug(exception)
-            logger.debug("test")
             raise exception
 
         # Everything's good to go - complete the signup. If we've gotten to
