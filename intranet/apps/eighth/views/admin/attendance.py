@@ -282,7 +282,7 @@ def activities_without_attendance_view(request):
             zero_students = scheduled_activities.filter(members=None)
             signups = EighthSignup.objects.filter(scheduled_activity__in=zero_students)
             empty_str = "\n".join(str(a) for a in zero_students)
-            logger.debug(f"Empty activites: {empty_str}")
+            logger.debug(f"Empty activities: {empty_str}")
             if signups.count() == 0:
                 zero_students.update(attendance_taken=True)
                 messages.success(request, f"Took attendance for {zero_students.count()} empty activities.")
