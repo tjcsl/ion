@@ -1690,12 +1690,12 @@
                     <span class="n">description</span> <span class="o">=</span> <span class="n">description_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
                     <span class="c1"># And make sure we don&#39;t set an empty description</span>
                     <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
-                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">printers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">description</span><span class="p">,</span> <span class="n">printers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">last_name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">last_name</span> <span class="ow">in</span> <span class="n">printers</span> <span class="k">else</span> <span class="p">[])</span>
                 <span class="n">alerts_match</span> <span class="o">=</span> <span class="n">ALERTS_LINE_RE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">alerts_match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">alerts</span> <span class="o">=</span> <span class="n">alerts_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># If already marked as not responding, ignore alerts</span>
-                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">alerts</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="s2">&quot;not-responding&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>  <span class="c1"># If already marked as not responding, ignore alerts</span>
+                        <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">printers</span><span class="p">[</span><span class="n">last_name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alerts</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
                     <span class="n">last_name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">printers</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">CACHE_AGE</span><span class="p">[</span><span class="s2">&quot;printers_list&quot;</span><span class="p">])</span>
@@ -2150,7 +2150,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=c7d32e27"></script>
+</div><script src="../../../../_static/documentation_options.js?v=799631b3"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
