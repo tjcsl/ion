@@ -43,6 +43,7 @@ urlpatterns = [
     path("parking", include("intranet.apps.parking.urls")),
     path("sessions", include("intranet.apps.sessionmgmt.urls")),
     path("themes", include("intranet.apps.customthemes.urls")),
+    path("wrapped", include("intranet.apps.wrapped.urls")),
     path("logs", include("intranet.apps.logs.urls")),
     path("djangoadmin/doc/", include("django.contrib.admindocs.urls")),
     # FIXME: update when admin supports django 1.10+ properly

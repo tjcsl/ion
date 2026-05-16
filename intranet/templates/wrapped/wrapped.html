@@ -1,0 +1,135 @@
+{% extends "page_base.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}Ion Wrapped{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    {% stylesheet 'wrapped' %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'js/vendor/html2canvas.min.js' %}"></script>
+    <script src="{% static 'js/wrapped.js' %}"></script>
+{% endblock %}
+
+{% block bodyclass %} wrapped-body{% endblock %}
+
+{% block body %}
+<main class="wrapped-shell" data-card-count="{{ cards|length }}">
+    <div class="wrapped-progress" aria-hidden="true">
+        {% for card in cards %}
+            <span class="wrapped-progress__item"></span>
+        {% endfor %}
+        <span class="wrapped-progress__item wrapped-progress__item--share"></span>
+    </div>
+
+    <a class="wrapped-close" href="{% url 'index' %}" aria-label="Back to dashboard">
+        <i class="fas fa-times"></i>
+    </a>
+
+    <section class="wrapped-stage" aria-live="polite">
+        {% for card in cards %}
+            <article class="wrapped-card wrapped-card--{{ card.variant }}{% if forloop.first %} is-active{% endif %}" data-card-index="{{ forloop.counter0 }}">
+                <div class="wrapped-card__orb wrapped-card__orb--one"></div>
+                <div class="wrapped-card__orb wrapped-card__orb--two"></div>
+                <div class="wrapped-card__content">
+                    <p class="wrapped-card__eyebrow">{{ card.eyebrow }}</p>
+                    <h1>{{ card.title }}</h1>
+
+                    {% if card.stat %}
+                        <div class="wrapped-card__stat">
+                            <span data-count-to="{{ card.stat }}">{{ card.stat }}</span>
+                            {% if card.unit %}<small>{{ card.unit }}</small>{% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if card.list %}
+                        <ol class="wrapped-list">
+                            {% for item in card.list %}
+                                <li>
+                                    <span>{{ item.name }}</span>
+                                    <strong>{{ item.count }}</strong>
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                    {% if card.stats %}
+                        <div class="wrapped-stat-grid">
+                            {% for item in card.stats %}
+                                <div>
+                                    <strong data-count-to="{{ item.value }}">{{ item.value }}</strong>
+                                    <span>{{ item.label }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if card.columns %}
+                        <div class="wrapped-columns">
+                            {% for column in card.columns %}
+                                <div>
+                                    <h2>{{ column.title }}</h2>
+                                    <ol class="wrapped-list wrapped-list--compact">
+                                        {% for item in column.items %}
+                                            <li>
+                                                <span>{{ item.name }}</span>
+                                                <strong>{{ item.count }}</strong>
+                                            </li>
+                                        {% empty %}
+                                            <li><span>No data yet</span><strong>0</strong></li>
+                                        {% endfor %}
+                                    </ol>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <p class="wrapped-card__body">{{ card.body }}</p>
+                </div>
+            </article>
+        {% endfor %}
+
+        <article class="wrapped-card wrapped-card--share" data-card-index="{{ cards|length }}">
+            <div class="wrapped-card__content wrapped-share-wrap">
+                <div class="wrapped-share-intro">
+                    <p class="wrapped-card__eyebrow">Thanks for visiting!</p>
+                    <h1>Share your Ion Wrapped</h1>
+                </div>
+                <div class="wrapped-share-card" id="wrapped-share-card">
+                    <div class="wrapped-share-card__top">
+                        <span>Ion Wrapped</span>
+                        <strong>{{ share_card.year }}</strong>
+                    </div>
+                    <h2>{{ share_card.name }}'s year on Ion</h2>
+                    <div class="wrapped-share-card__stats">
+                        <div><strong>{{ share_card.signups }}</strong><span><i class="fas fa-calendar-check" aria-hidden="true"></i> 8th signups</span></div>
+                        <div><strong>{{ share_card.visits }}</strong><span><i class="fas fa-mouse-pointer" aria-hidden="true"></i> Ion visits</span></div>
+                        <div><strong>{{ share_card.unique_activities }}</strong><span><i class="fas fa-shapes" aria-hidden="true"></i> activities tried</span></div>
+                        <div><strong>{{ share_card.last_minute }}</strong><span><i class="fas fa-clock" aria-hidden="true"></i> last-minute signups</span></div>
+                    </div>
+                    <p>Top activity: <strong>{{ share_card.top_activity }}</strong></p>
+                    <p>Top page visited: <strong>{{ share_card.top_area }}</strong></p>
+                    <p>Absences: <strong>{{ share_card.absences }}</strong></p>
+                    <p class="wrapped-share-card__rank">{{ share_card.rank }}</p>
+                </div>
+                <p class="wrapped-attribution">Made with ❤️ by your friendly neighborhood Sysadmins</p>
+                <button class="wrapped-export-button" type="button" id="wrapped-export">
+                    <i class="fas fa-download"></i>
+                    Export card
+                </button>
+            </div>
+        </article>
+    </section>
+
+    <button class="wrapped-nav wrapped-nav--prev" type="button" aria-label="Previous card">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="wrapped-nav wrapped-nav--next" type="button" aria-label="Next card">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+</main>
+{% endblock %}
