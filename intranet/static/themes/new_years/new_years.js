@@ -44,9 +44,9 @@ $(function () {
                 enabled: true,
                 volume: { min: 2, max: 4 },
                 files: [
-                    path+"explosion0.mp3",
-                    path+"explosion1.mp3",
-                    path+"explosion2.mp3"
+                    path + "explosion0.mp3",
+                    path + "explosion1.mp3",
+                    path + "explosion2.mp3"
                 ],
             }
         });
@@ -79,14 +79,10 @@ $(function () {
         }
     });
 
-    $(".logo").before(`<img id="new-years-overlay" src="${path}new_years_overlay.png" />`);
-
     $(".intranet-title").on("click", (e) => {
-        if (e.target.id==="fireworks-btn") {
+        if (e.target.classList.contains("logo")) {
             e.preventDefault();
             showFireworks();
         }
     });
-
-    $(".intranet-title-text").html(`Ion <img id="fireworks-btn" src="${path}new_years_party_popper.png" />`);
 });
