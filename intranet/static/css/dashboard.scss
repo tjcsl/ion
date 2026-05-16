@@ -404,3 +404,109 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     padding-right: 432px;
   }
 }
+
+.ion-wrapped-banner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+  margin: 0 0 16px;
+  padding: 16px 22px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 4% 0%, rgba(255, 255, 255, 0.26), transparent 34%),
+    linear-gradient(110deg, #0048ab 0%, #003262 58%, #015ede 100%);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(0, 72, 171, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    text-decoration: none;
+    background:
+      radial-gradient(circle at 4% 0%, rgba(255, 255, 255, 0.32), transparent 34%),
+      linear-gradient(110deg, #0055c8 0%, #003b75 58%, #1c70e8 100%);
+
+    .ion-wrapped-banner__action {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.ion-wrapped-banner__eyebrow,
+.ion-wrapped-banner__action {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ion-wrapped-banner__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.ion-wrapped-banner__copy {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 0;
+}
+
+.ion-wrapped-banner__title {
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.ion-wrapped-banner__meta {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.ion-wrapped-banner__action {
+  justify-self: end;
+  color: #fff;
+  font-size: 22px;
+  transition: transform 0.16s ease;
+}
+
+@media (max-width: 700px) {
+  .ion-wrapped-banner {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    justify-items: center;
+    padding: 18px 20px;
+    text-align: center;
+  }
+
+  .ion-wrapped-banner__eyebrow {
+    grid-column: 1 / -1;
+    justify-content: center;
+    width: min(100%, 360px);
+    box-sizing: border-box;
+  }
+
+  .ion-wrapped-banner__copy {
+    display: block;
+  }
+
+  .ion-wrapped-banner__meta {
+    display: block;
+    margin-top: 4px;
+  }
+
+  .ion-wrapped-banner__action {
+    display: none;
+  }
+}

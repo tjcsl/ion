@@ -17,7 +17,7 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 from typing_extensions import TypedDict
 
-from ...utils.date import get_senior_graduation_date, get_senior_graduation_year
+from ...utils.date import get_school_year_label, get_senior_graduation_date, get_senior_graduation_year
 from ...utils.helpers import get_ap_week_warning, get_fcps_emerg, get_warning_html
 from ..announcements.models import Announcement, AnnouncementRequest, WarningAnnouncement
 from ..eighth.models import EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
@@ -660,6 +660,8 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
             "is_student": is_student,
             "is_teacher": is_teacher,
             "is_senior": is_senior,
+            "show_ion_wrapped_banner": settings.ENABLE_ION_WRAPPED and is_student,
+            "ion_wrapped_year": get_school_year_label(),
             "show_admin_widget": show_admin_widget,
             "eighth_sponsor": eighth_sponsor,
             "num_senior_destinations": num_senior_destinations,

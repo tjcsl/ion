@@ -121,6 +121,8 @@ ENABLE_HYBRID_EIGHTH = None  # Enable hybrid eighth period code
 ENABLE_ENRICHMENT_APP = True
 
 ENABLE_SENIOR_DESTINATIONS = False  # Disabled per school policy, October 2023
+
+ENABLE_ION_WRAPPED = False # Should be enabled close to EOY and through summer
 # End toggles
 
 NOTIFY_ADMIN_EMAILS = None
@@ -349,6 +351,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "printing",
     "polls",
     "groups",
+    "wrapped",
     "board",
     "announcements.form",
     "announcements.request",
