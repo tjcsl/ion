@@ -36,21 +36,50 @@ $(function() {
         format: "Y-m-d H:i:s"
     });
 
-    poll_questions.sort(function(a, b) {
-        return a.fields.num - b.fields.num;
-    });
+    var actual_question = poll_questions.length && !poll_questions[0].fields; // for if it's the actual django question or the json fielded question in the poll
 
-    poll_choices.sort(function(a, b) {
-        return a.fields.num - b.fields.num;
-    });
+    if (actual_question) {
+        $.each(poll_questions, function(index, question) {
+            var fixed_question = {
+                "pk": question.pk || null,
+                "fields": {
+                    "num": index + 1,
+                    "question": question.question || "",
+                    "type": question.type || "STD",
+                    "max_choices": question.max_choices || 1
+                }
+            };
+            var question_element = $(questionTemplate(fixed_question));
+            $("#questions").append(question_element);
 
-    $.each(poll_questions, function(k, v) {
-        $("#questions").append(questionTemplate(v));
-    });
+            $.each(question.choices || [], function(choiceIndex, choice) {
+                var fixed_choice = {
+                    "pk": choice.pk || null,
+                    "fields": {
+                        "num": choiceIndex + 1,
+                        "info": choice.info || ""
+                    }
+                };
+                question_element.find(".choices").append(choiceTemplate(fixed_choice));
+            });
+        });
+    } else {
+        poll_questions.sort(function(a, b) {
+            return a.fields.num - b.fields.num;
+        });
 
-    $.each(poll_choices, function(k, v) {
-        $("#questions .question[data-id='" + v.fields.question + "']").find(".choices").append(choiceTemplate(v));
-    });
+        poll_choices.sort(function(a, b) {
+            return a.fields.num - b.fields.num;
+        });
+
+        $.each(poll_questions, function(k, v) {
+            $("#questions").append(questionTemplate(v));
+        });
+
+        $.each(poll_choices, function(k, v) {
+            $("#questions .question[data-id='" + v.fields.question + "']").find(".choices").append(choiceTemplate(v));
+        });
+    }
 
     $("#questions .type").selectize();
 
