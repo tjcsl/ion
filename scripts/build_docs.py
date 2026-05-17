@@ -73,7 +73,7 @@ def write_apps():
         path = APPS_REF_INDEX / f"{appname}.rst"
         path.write_text(s)
 
-        print(f'Generated {path.with_suffix("").name}/')
+        print(f'{path.with_suffix("").name}/')
 
 def write_middleware():
     s = get_base_format_middleware("Middleware")
@@ -83,7 +83,7 @@ def write_middleware():
             continue
         s += f"{INDENT}~{path.relative_to(MIDDLEWARE).with_suffix('')}\n"
 
-        print(f"Processed {appname}")
+        print(appname)
 
     MIDDLEWARE_REF.write_text(s)
 
