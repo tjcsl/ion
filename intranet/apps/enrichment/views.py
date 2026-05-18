@@ -5,12 +5,13 @@ from dateutil.relativedelta import relativedelta
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from ...utils.html import safe_html
 from ..auth.decorators import deny_restricted
-from .forms import EnrichmentActivityForm
+from .forms import EnrichmentActivityBulkForm, EnrichmentActivityForm
 from .models import EnrichmentActivity
 
 logger = logging.getLogger(__name__)
@@ -311,11 +312,60 @@ def add_enrichment_view(request):
 
 @login_required
 @deny_restricted
+def enrichment_bulk_create_view(request):
+    """View for creating multiple enrichments.
+
+    Get requests will render bulk-create form with Mon-Fri checkboxes.
+    Post requests create one EnrichmentActivity for each checked day and then redirect.
+    """
+    is_enrichment_admin = request.user.has_admin_permission("enrichment")
+    if not is_enrichment_admin:
+        raise http.Http404
+
+    if request.method == "POST":
+        form = EnrichmentActivityBulkForm(data=request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    created = []
+
+                    for dt in form.get_selected_dates():
+                        activity = form.save(commit=False)
+                        activity.pk = None
+                        activity.user = request.user
+                        activity.time = dt
+                        activity.description = safe_html(activity.description)  # sanitize the html to prevent injection
+                        activity.save()
+                        form.save_m2m()
+                        created.append(dt.strftime("%A, %b %-d"))
+
+                messages.success(
+                    request,
+                    f"Created {len(created)} enrichment activities: " + ", ".join(created),
+                )
+                return redirect("enrichment")
+            except IntegrityError:
+                form.add_error(None, "Encountered an error in adding activities, maybe one of the dates already has one scheduled?")
+
+    else:
+        form = EnrichmentActivityBulkForm()
+
+    return render(
+        request,
+        "enrichment/bulk_create.html",
+        {"form": form},
+    )
+
+
+@login_required
+@deny_restricted
 def modify_enrichment_view(request, enrichment_id):
-    """Modify enrichment activity page.
+    """
+    Modify enrichment activity page.
 
     Args:
-        enrichment_id (int): enrichment activity id
+        request (HttpRequest): The HTTP request object.
+        enrichment_id (int): The unique identifier of the enrichment activity.
     """
 
     enrichment = get_object_or_404(EnrichmentActivity, id=enrichment_id)
