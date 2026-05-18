@@ -1,5 +1,9 @@
 /* Common JS */
+<<<<<<< HEAD
 /* global $, Cookies */
+=======
+/* global $ */
+>>>>>>> 5b991f720 (refactor: update to jquery 3.7.1)
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -47,7 +51,11 @@ $(function() {
     $("table[data-sortable] thead th[data-auto-sort]").trigger("click");
 
 
+<<<<<<< HEAD
     let collapseWarning = Cookies.get("collapseWarning") === "true";
+=======
+    let collapseWarning = $.cookie("collapseWarning") === "true";
+>>>>>>> 5b991f720 (refactor: update to jquery 3.7.1)
     $(".warning-title").on("click", function() {
         $(".warning-content").slideToggle();
         $(".warning-toggle-icon").toggleClass("fa-chevron-down fa-chevron-up");
