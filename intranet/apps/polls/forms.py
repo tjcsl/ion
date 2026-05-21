@@ -19,5 +19,5 @@ class PollForm(forms.ModelForm):
         help_texts = {
             "is_secret": "This will prevent Ion administrators from viewing individual users' votes.",
             "is_election": "Enable election formatting and results features.",
-            "is_randomized": "Enable randomizing the order of choices."
+            "is_randomized": "Enable randomizing the order of choices.",
         }
