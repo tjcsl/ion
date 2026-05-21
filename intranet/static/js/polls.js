@@ -217,4 +217,10 @@ $(function() {
             }
         });
     });
+
+    $("#id_is_election").on("change", function(e) {
+        if (e.target.checked) {
+            $("#id_is_randomized").prop("checked", true);
+        }
+    })
 });
