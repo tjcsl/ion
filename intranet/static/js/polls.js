@@ -222,5 +222,5 @@ $(function() {
         if (e.target.checked) {
             $("#id_is_randomized").prop("checked", true);
         }
-    })
+    });
 });

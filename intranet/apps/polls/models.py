@@ -54,7 +54,7 @@ class Poll(models.Model):
         is_election
             Whether the poll is an election.
         is_randomized
-            Whether the order of choices is randomized. 
+            Whether the order of choices is randomized.
         groups
             The Groups that can view and vote in the poll. Like Announcements,
             if there are none set, then it is public to all.
