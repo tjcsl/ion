@@ -1,0 +1,138 @@
+{% extends "page_with_header.html" %}
+{% load static %}
+{% load pipeline %}
+
+{% block title %}{{ block.super }} - Path Stats{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
+    {% stylesheet 'logs' %}
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/logs' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
+    <script src="{% static 'js/vendor/Chart.min.js' %}"></script>
+    <script>
+        $(function() {
+            $("input.datetimepicker").datetimepicker({format: 'Y-m-d H:i:s'});
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="primary-content logs">
+    <h2>Path Stats</h2>
+    <p>NOTICE: Access logs are confidential and may contain sensitive information. Disclosure to unauthorized parties is prohibited.</p>
+    <a href="{% url 'logs' %}"><button class="button small-button">Back to Logs</button></a>
+    <a href="?" style="float: right"><button class="button small-button">Reset Filters</button></a>
+    <br><br>
+
+    <form method="GET">
+        <table class="query-table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="method">
+                        <select name="method">
+                            <option value="">Any</option>
+                            {% for m in all_methods %}
+                                <option value="{{ m }}" {% if m == selected_method %}selected{% endif %}>{{ m }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td class="time">
+                        <input type="text" name="from" class="datetimepicker" placeholder="All Time" value="{{ selected_from }}">
+                    </td>
+                    <td class="time">
+                        <input type="text" name="to" class="datetimepicker" placeholder="All Time" value="{{ selected_to }}">
+                    </td>
+                    <td class="submit">
+                        <input type="submit" value="Filter">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <br>
+
+    <h3>Top 20 Paths by Hit Count</h3>
+    <canvas id="path-chart" width="800" height="350"></canvas>
+    {{ chart_labels|json_script:"chart-labels" }}
+    {{ chart_data|json_script:"chart-data" }}
+    <script>
+        (function() {
+            var labels = JSON.parse(document.getElementById("chart-labels").textContent);
+            var data = JSON.parse(document.getElementById("chart-data").textContent);
+            var ctx = document.getElementById("path-chart").getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Hits",
+                        data: data,
+                        backgroundColor: "rgba(54, 162, 235, 0.6)",
+                        borderColor: "rgba(54, 162, 235, 1)",
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                maxRotation: 45,
+                                callback: function(label) {
+                                    return label.length > 30 ? label.substring(0, 30) + "..." : label;
+                                }
+                            }
+                        }],
+                        yAxes: [{ ticks: { beginAtZero: true } }]
+                    }
+                }
+            });
+        })();
+    </script>
+
+    <br>
+    <h3>All Paths &mdash; {{ total_paths }} unique</h3>
+    <table class="logs-table">
+        <thead>
+            <tr>
+                <th class="sticky">Rank</th>
+                <th class="sticky">Path</th>
+                <th class="sticky">Hits</th>
+                <th class="sticky">View Requests</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in path_counts %}
+            <tr class="shade">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ entry.path|truncatechars:100 }}</td>
+                <td>{{ entry.count }}</td>
+                <td>
+                    <a href="{% url 'logs' %}?path-type=equals&path={{ entry.path|urlencode }}" target="_blank">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
