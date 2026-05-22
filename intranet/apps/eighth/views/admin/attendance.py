@@ -6,7 +6,6 @@ from cacheops import invalidate_obj
 from django import http
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -118,22 +117,11 @@ def delinquent_students_view(request):
             return include
 
         delinquents = list(filter(filter_by_grade, delinquents))
-        sort = request.GET.get("sort", "absences")
-        if sort == "last_name":
-            delinquents = sorted(delinquents, key=lambda x: x["user"].last_name)
-        elif sort == "grade":
-            delinquents = sorted(delinquents, key=lambda x: x["user"].grade.number)
-        else:
-            delinquents = sorted(delinquents, key=lambda x: (-1 * x["absences"], x["user"].last_name))
-        if request.resolver_match.url_name == "eighth_admin_view_delinquent_students":
-            paginator = Paginator(delinquents, 25)
-            page_number = request.GET.get("page", 1)
-            delinquents = paginator.get_page(page_number)
+        delinquents = sorted(delinquents, key=lambda x: (-1 * x["absences"], x["user"].last_name))
     else:
         delinquents = None
 
     context["delinquents"] = delinquents
-    context["sort"] = request.GET.get("sort", "absences")
 
     if request.resolver_match.url_name == "eighth_admin_view_delinquent_students":
         context["admin_page_title"] = "Delinquent Students"
