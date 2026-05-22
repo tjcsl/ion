@@ -204,12 +204,13 @@ def request_view(request, request_id):
 
     return render(request, "logs/request.html", {"rq": rq})
 
+
 @login_required
 @reauthentication_required
 def path_stats_view(request):
     if not request.user.is_global_admin:
         raise Http404
-    
+
     queries = {}
     selected_from = request.GET.get("from", "")
     selected_to = request.GET.get("to", "")
@@ -220,17 +221,17 @@ def path_stats_view(request):
             queries["timestamp__gte"] = make_aware(datetime.datetime.strptime(selected_from, "%Y-%m-%d %H:%M:%S"))
         except ValueError:
             messages.error(request, "Invalid from time.")
-    
+
     if selected_to:
         try:
             queries["timestamp__lte"] = make_aware(datetime.datetime.strptime(selected_to, "%Y-%m-%d %H:%M:%S"))
         except ValueError:
             messages.error(request, "Invalid to time.")
-    
+
     if selected_method:
         queries["method"] = selected_method
-    
-    path_counts = (Request.objects.filter(**queries).values("path").annotate(count=Count("id")).order_by("-count"))
+
+    path_counts = Request.objects.filter(**queries).values("path").annotate(count=Count("id")).order_by("-count")
     top_paths = list(path_counts[:20])
     chart_labels = [entry["path"] for entry in top_paths]
     chart_data = [entry["count"] for entry in top_paths]
