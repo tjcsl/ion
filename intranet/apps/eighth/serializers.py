@@ -9,7 +9,7 @@ from django.db.models import Count
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor
+from .models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthSponsor, EighthWaitlist
 
 logger = logging.getLogger(__name__)
 
@@ -251,6 +251,26 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for activity_id, user_count in activities_with_signups:
             activity_list[activity_id]["roster"]["count"] = user_count
+
+        if user and getattr(user, "id", None) and activity_list:
+            user_waitlist = EighthWaitlist.objects.filter(user_id=user.id, block_id=block.id).select_related("scheduled_activity__activity").first()
+            if user_waitlist:
+                user_waitlist_activity_id = user_waitlist.scheduled_activity.activity_id
+                if user_waitlist_activity_id in activity_list:
+                    activity_list[user_waitlist_activity_id]["waitlisted"] = True
+                    activity_list[user_waitlist_activity_id]["waitlist_position"] = EighthWaitlist.objects.position_in_waitlist(
+                        user_waitlist.scheduled_activity_id, user.id
+                    )
+
+        waitlist_counts = (
+            EighthWaitlist.objects.filter(scheduled_activity__block=block)
+            .exclude(scheduled_activity__activity__deleted=True)
+            .values_list("scheduled_activity__activity_id")
+            .annotate(waitlist_user_count=Count("id"))
+        )
+        for activity_id, waitlist_user_count in waitlist_counts:
+            if activity_id in activity_list:
+                activity_list[activity_id]["waitlist_count"] = waitlist_user_count
 
         sponsors_dict = EighthSponsor.objects.values_list("id", "user_id", "first_name", "last_name", "show_full_name")
 

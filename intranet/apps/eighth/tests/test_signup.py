@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
 from django.utils import timezone
@@ -9,7 +10,7 @@ from intranet.utils.date import get_senior_graduation_year
 
 from ...schedule.models import Block, Day, DayType, Time
 from ..exceptions import SignupException
-from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup, EighthWaitlist
 from .eighth_test import EighthAbstractTest
 
 
@@ -294,6 +295,43 @@ class EighthSignupTest(EighthAbstractTest):
         response = self.client.get(reverse("eighth_signup"), data={"block": block1.id, "user": user.id})
         self.assertEqual(302, response.status_code)
         self.assertEqual(reverse("eighth_signup", kwargs={"block_id": block1.id}) + f"?user={user.id}", response.url)
+
+    @override_settings(ENABLE_WAITLIST=True)
+    def test_eighth_signup_view_includes_waitlist_metadata(self):
+        get_user_model().objects.all().delete()
+        user = self.login("2021awilliam")
+        user.user_type = "student"
+        user.graduation_year = get_senior_graduation_year()
+        user.save()
+
+        today = timezone.localtime().date()
+        block = EighthBlock.objects.get_or_create(date=today, block_letter="A")[0]
+
+        activity_waitlisted = EighthActivity.objects.get_or_create(name="Waitlisted Activity", default_capacity=1)[0]
+        scheduled_waitlisted = EighthScheduledActivity.objects.get_or_create(block=block, activity=activity_waitlisted, capacity=1)[0]
+
+        activity_other = EighthActivity.objects.get_or_create(name="Other Activity", default_capacity=1)[0]
+        scheduled_other = EighthScheduledActivity.objects.get_or_create(block=block, activity=activity_other, capacity=1)[0]
+
+        other_user = get_user_model().objects.create(username="someone_else", graduation_year=get_senior_graduation_year())
+        EighthWaitlist.objects.create(user=user, block=block, scheduled_activity=scheduled_waitlisted)
+        EighthWaitlist.objects.create(user=other_user, block=block, scheduled_activity=scheduled_waitlisted)
+        EighthWaitlist.objects.create(user=other_user, block=block, scheduled_activity=scheduled_other)
+
+        response = self.client.get(reverse("eighth_signup", kwargs={"block_id": block.id}))
+        self.assertEqual(200, response.status_code)
+
+        act_list = json.loads(str(response.context["activities_list"]).encode().decode("unicode-escape"))
+        waitlisted_info = act_list[str(activity_waitlisted.id)]
+        other_info = act_list[str(activity_other.id)]
+
+        self.assertTrue(waitlisted_info["waitlisted"])
+        self.assertEqual(1, waitlisted_info["waitlist_position"])
+        self.assertEqual(2, waitlisted_info["waitlist_count"])
+
+        self.assertFalse(other_info["waitlisted"])
+        self.assertEqual(0, other_info["waitlist_position"])
+        self.assertEqual(1, other_info["waitlist_count"])
 
     def test_eighth_multi_signup_view(self):
         """Tests :func:`~intranet.apps.eighth.views.signup.eighth_multi_signup_view`."""
