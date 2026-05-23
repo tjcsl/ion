@@ -54,10 +54,10 @@ class Command(BaseCommand):
                             u2_id = u2_info["eighthsignup_set__user"]
                             user2 = all_users.get(u2_id)
                             act2_distribution[user2.grade_number - 9] += 1
-                        ratios = list(map(lambda n: n / (len(freq2_users) or 1), act2_distribution))
+                        ratios = [n / (len(freq2_users) or 1) for n in act2_distribution]
                         act2_ratios_map[act_id] = ratios
                     update_sim_activity(act, act2, 1)
-            grade_ratios = list(map(lambda n: n / (len(freq_users) or 1), grade_distribution))
+            grade_ratios = [n / (len(freq_users) or 1) for n in grade_distribution]
             for act2_id, eighth_ratios in act2_ratios_map.items():
                 if abs(max(eighth_ratios) - max(grade_ratios)) <= 0.1:
                     act2 = EighthActivity.undeleted_objects.get(id=act2_id)
