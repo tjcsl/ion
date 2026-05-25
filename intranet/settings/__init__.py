@@ -726,6 +726,7 @@ INSTALLED_APPS = [
     "intranet.apps.features",
     "intranet.apps.oauth",
     "intranet.apps.logs",
+    "intranet.apps.wrapped",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit
