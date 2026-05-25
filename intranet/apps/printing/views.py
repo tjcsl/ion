@@ -5,6 +5,7 @@ import os
 import re
 import subprocess
 import tempfile
+from datetime import timedelta
 from io import BytesIO
 
 import magic
@@ -12,17 +13,20 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.text import slugify
 from sentry_sdk import add_breadcrumb, capture_exception
 from xhtml2pdf import pisa
 
+from intranet.apps.users.models import User
+
 from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
-from .forms import PrintJobForm
-from .models import PrintJob
+from .forms import InfractionForm, ManualBanForm, PrintJobForm
+from .models import PrintingBan, PrintingInfraction, PrintJob, get_active_ban
+from .tasks import auto_ban
 
 logger = logging.getLogger(__name__)
 
@@ -497,6 +501,10 @@ def print_job(obj: PrintJob, do_print: bool = True):
 @login_required
 @deny_restricted
 def print_view(request):
+    active_ban = get_active_ban(request.user)
+    if active_ban:
+        return redirect("printing_banned")
+
     if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
         messages.error(request, "You don't have printer access outside of the TJ network.")
         return redirect("index")
@@ -505,39 +513,135 @@ def print_view(request):
         cache.delete("printing:printers")
 
     printers = get_printers()
+    form = PrintJobForm(printers=printers)
+    infraction_form = InfractionForm(prefix="inf")
+    ban_form = ManualBanForm(prefix="ban")
+    target_user = None
+
     if request.method == "POST":
-        form = PrintJobForm(request.POST, request.FILES, printers=printers)
-        if form.is_valid():
-            obj = form.save(commit=True)
-            obj.user = request.user
-            obj.save()
-            try:
-                print_job(obj)
-            except InvalidInputPrintingError as e:
-                messages.error(request, str(e))
-            except Exception as e:
-                messages.error(request, str(e))
-                logging.error("Printing failed: %s", e)
-                capture_exception(e)
-            else:
-                messages.success(
-                    request,
-                    "Your file was submitted to the printer. "
-                    "Do not re-print this job if it does not come out of the printer - "
-                    "in nearly all cases, the job has been received and re-printing "
-                    "will cause multiple copies to be printed. "
-                    "Ask for help instead by contacting the "
-                    "Student Systems Administrators by filling out the feedback form.",
-                )
-    else:
-        form = PrintJobForm(printers=printers)
+        action = request.POST.get("action", "print")
+
+        if action == "print":
+            form = PrintJobForm(request.POST, request.FILES, printers=printers)
+            if form.is_valid():
+                obj = form.save(commit=True)
+                obj.user = request.user
+                obj.save()
+                try:
+                    print_job(obj)
+                except InvalidInputPrintingError as e:
+                    messages.error(request, str(e))
+                except Exception as e:
+                    messages.error(request, str(e))
+                    logging.error("Printing failed: %s", e)
+                    capture_exception(e)
+                else:
+                    messages.success(
+                        request,
+                        "Your file was submitted to the printer. "
+                        "Do not re-print this job if it does not come out of the printer - "
+                        "in nearly all cases, the job has been received and re-printing "
+                        "will cause multiple copies to be printed. "
+                        "Ask for help instead by contacting the "
+                        "Student Systems Administrators by filling out the feedback form.",
+                    )
+
+        elif action == "warn" and request.user.is_printing_admin:
+            target_user = get_object_or_404(User, pk=request.POST.get("target_user_id"))
+            infraction_form = InfractionForm(request.POST, prefix="inf")
+            if infraction_form.is_valid():
+                infraction = infraction_form.save(commit=False)
+                infraction.user = target_user
+                infraction.active_until = timezone.now() + timedelta(days=30)
+                infraction.save()
+                auto_ban.delay(target_user.pk)
+                messages.success(request, f"Warning issued to {target_user.username}.")
+                return redirect("printing")
+
+        elif action == "ban" and request.user.is_printing_admin:
+            target_user = get_object_or_404(User, pk=request.POST.get("target_user_id"))
+            ban_form = ManualBanForm(request.POST, prefix="ban")
+            if ban_form.is_valid():
+                ban = ban_form.save(commit=False)
+                ban.user = target_user
+                ban.ban_reason_type = PrintingBan.BAN_REASON_MANUAL
+                ban.is_active = True
+                ban.save()
+                messages.success(request, f"Ban issued to {target_user.username}.")
+                return redirect("printing")
+
+        elif action == "lift_ban" and request.user.is_printing_admin:
+            ban = get_object_or_404(PrintingBan, pk=request.POST.get("ban_id"))
+            ban.is_active = False
+            ban.save()
+            messages.success(request, f"Ban for {ban.user.username} lifted.")
+            return redirect("printing")
+
+        elif action == "remove_infraction" and request.user.is_printing_admin:
+            infraction = get_object_or_404(PrintingInfraction, pk=request.POST.get("infraction_id"))
+            username = infraction.user.username
+            infraction.delete()
+            messages.success(request, f"Warning for {username} removed.")
+            return redirect("printing")
+
+    all_infractions = PrintingInfraction.objects.filter(user=request.user)
+    active_infractions = [i for i in all_infractions if i.is_active()]
+    inactive_infractions = [i for i in all_infractions if not i.is_active()]
+    all_bans = PrintingBan.objects.filter(user=request.user).order_by("-date_issued")
+
     alerts = {}
     for printer in printers:
         alerts[printer] = parse_alerts(printers[printer][1])
+
+    context = {
+        "form": form,
+        "alerts": alerts,
+        "active_infractions": active_infractions,
+        "inactive_infractions": inactive_infractions,
+        "all_bans": all_bans,
+        "infraction_form": infraction_form,
+        "ban_form": ban_form,
+    }
+
     if hasattr(cache, "ttl"):
         elapsed_seconds = settings.CACHE_AGE["printers_list"] - cache.ttl("printing:printers")
         start_time = datetime.datetime.now() - datetime.timedelta(seconds=elapsed_seconds)
-        context = {"form": form, "alerts": alerts, "updated_time": start_time.strftime("%-I:%M:%S %p")}
-    else:
-        context = {"form": form, "alerts": alerts}
+        context["updated_time"] = start_time.strftime("%-I:%M:%S %p")
+
+    if request.user.is_printing_admin:
+        search_query = request.GET.get("q", "")
+        target_user_id = request.GET.get("user_id")
+        if target_user is None and target_user_id:
+            try:
+                target_user = User.objects.get(pk=target_user_id)
+            except User.DoesNotExist:
+                pass
+
+        context["search_query"] = search_query
+        context["search_results"] = User.objects.filter(username__icontains=search_query)[:20] if search_query else []
+        context["target_user"] = target_user
+
+        if target_user:
+            target_user_infractions = list(PrintingInfraction.objects.filter(user=target_user).order_by("-date_issued"))
+            context["target_user_infractions"] = target_user_infractions
+            context["target_user_active_count"] = sum(1 for i in target_user_infractions if i.is_active())
+            context["target_user_bans_count"] = PrintingBan.objects.filter(user=target_user).count()
+
     return render(request, "printing/print.html", context)
+
+
+@login_required
+def printing_banned(request):
+    active_ban = get_active_ban(request.user)
+    if not active_ban:
+        return redirect("printing")
+    all_infractions = PrintingInfraction.objects.filter(user=request.user)
+    return render(
+        request,
+        "printing/banned.html",
+        {
+            "ban": active_ban,
+            "active_infractions": [i for i in all_infractions if i.is_active()],
+            "inactive_infractions": [i for i in all_infractions if not i.is_active()],
+        },
+    )

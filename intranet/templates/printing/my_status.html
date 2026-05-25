@@ -1,0 +1,61 @@
+<h3 id="my-status">My Printing Status</h3>
+
+<p>You are not banned from printing.</p>
+
+{% if active_infractions %}
+<br>
+<h4>Active Warnings ({{ active_infractions|length }})</h4>
+<p class="text-muted">These warnings count toward automatic bans.</p>
+<table class="table table-condensed">
+    <thead><tr><th>Issued</th><th>Expires</th><th>Reason</th></tr></thead>
+    <tbody>
+    {% for inf in active_infractions %}
+    <tr class="warning">
+        <td>{{ inf.date_issued|date:"N j, Y" }}</td>
+        <td>{{ inf.active_until|date:"N j, Y" }}</td>
+        <td>{{ inf.reason }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if inactive_infractions %}
+<br>
+<h4>Past Warnings ({{ inactive_infractions|length }})</h4>
+<p class="text-muted">These warnings are expired and do not count toward bans.</p>
+<table class="table table-condensed">
+    <thead><tr><th>Issued</th><th>Expired</th><th>Reason</th></tr></thead>
+    <tbody>
+    {% for inf in inactive_infractions %}
+    <tr class="text-muted">
+        <td>{{ inf.date_issued|date:"N j, Y" }}</td>
+        <td>{{ inf.active_until|date:"N j, Y" }}</td>
+        <td>{{ inf.reason }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if not active_infractions and not inactive_infractions %}
+<p class="text-muted">You have no printing warnings.</p>
+{% endif %}
+
+{% if all_bans %}
+<br>
+<h4>Ban History</h4>
+<table class="table table-condensed">
+    <thead><tr><th>Issued</th><th>Expires</th><th>Type</th><th>Reason</th></tr></thead>
+    <tbody>
+    {% for ban in all_bans %}
+    <tr {% if ban.is_currently_active %}class="danger"{% endif %}>
+        <td>{{ ban.date_issued|date:"N j, Y" }}</td>
+        <td>{% if ban.is_permanent %}Permanent{% else %}{{ ban.expires_at|date:"N j, Y" }}{% endif %}</td>
+        <td>{{ ban.get_ban_reason_type_display }}</td>
+        <td>{{ ban.reason }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}

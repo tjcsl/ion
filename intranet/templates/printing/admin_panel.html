@@ -1,0 +1,102 @@
+<h3 id="admin">Printing Administration</h3>
+
+<h4 id="admin-create">Issue Warning / Ban</h4>
+
+<form method="get">
+    <div class="input-group" style="max-width: 400px;">
+        <input type="text" name="q" class="form-control" placeholder="Search by username" value="{{ search_query }}">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">Search</button>
+        </span>
+    </div>
+</form>
+
+{% if search_results %}
+<table class="table table-hover" style="margin-top: 1em; max-width: 400px;">
+    <thead><tr><th>Username</th><th>Name</th><th></th></tr></thead>
+    <tbody>
+    {% for u in search_results %}
+    <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.full_name }}</td>
+        <td><a href="?user_id={{ u.pk }}#admin-create" class="btn btn-xs btn-primary">Select</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% elif search_query %}
+<p class="text-muted" style="margin-top: 1em;">No users found for "{{ search_query }}".</p>
+{% endif %}
+
+{% if not target_user %}
+<p class="text-muted" style="margin-top: 1em;">Search for a user and click "Select" to issue a warning or ban.</p>
+{% endif %}
+
+{% if target_user %}
+<div style="margin-top: 1em;">
+    <h5>
+        Acting on: <strong>{{ target_user.username }}</strong> ({{ target_user.full_name }})
+        &nbsp;<a href="?#admin-create" class="btn btn-xs btn-default">Clear</a>
+    </h5>
+    <p>
+        Active warnings: <strong>{{ target_user_active_count }}</strong>
+        &nbsp;|&nbsp; Total warnings: <strong>{{ target_user_infractions|length }}</strong>
+        &nbsp;|&nbsp; Total bans: <strong>{{ target_user_bans_count }}</strong>
+    </p>
+
+    <div class="panel panel-warning">
+        <div class="panel-heading"><h5>Issue a Warning</h5></div>
+        <div class="panel-body">
+            <p class="text-muted">Warnings are active for 30 days. 3+ active warnings trigger an automatic ban. The duration of the ban uses the formula e^0.5x, where x is the number of active warnings. 12+ active warnings trigger a permanent ban.</p>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="warn">
+                <input type="hidden" name="target_user_id" value="{{ target_user.pk }}">
+                {% for field in infraction_form %}
+                <div class="form-group {% if field.errors %}has-error{% endif %}">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-warning btn-block">Issue Warning</button>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-danger">
+        <div class="panel-heading"><h5>Issue a Manual Ban</h5></div>
+        <div class="panel-body">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="ban">
+                <input type="hidden" name="target_user_id" value="{{ target_user.pk }}">
+                {% for field in ban_form %}
+                <div class="form-group {% if field.errors %}has-error{% endif %}">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-danger btn-block">Issue Ban</button>
+            </form>
+        </div>
+    </div>
+
+    {% if target_user_infractions %}
+    <h5>Warning History for {{ target_user.username }}</h5>
+    <table class="table table-condensed">
+        <thead><tr><th>Issued</th><th>Expires</th><th>Active</th><th>Reason</th></tr></thead>
+        <tbody>
+        {% for inf in target_user_infractions %}
+        <tr {% if inf.is_active %}class="warning"{% endif %}>
+            <td>{{ inf.date_issued|date:"N j, Y" }}</td>
+            <td>{{ inf.active_until|date:"N j, Y" }}</td>
+            <td>{% if inf.is_active %}Yes{% else %}No{% endif %}</td>
+            <td>{{ inf.reason }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endif %}

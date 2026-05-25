@@ -1,9 +1,11 @@
 import logging
+from datetime import timedelta
 
 from django import forms
 from django.conf import settings
+from django.utils import timezone
 
-from .models import PrintJob
+from .models import PrintingBan, PrintingInfraction, PrintJob
 
 logger = logging.getLogger(__name__)
 
@@ -124,3 +126,31 @@ class PrintJobForm(forms.ModelForm):
     class Meta:
         model = PrintJob
         fields = ["file", "printer", "page_range", "duplex", "fit"]
+
+
+class InfractionForm(forms.ModelForm):
+    class Meta:
+        model = PrintingInfraction
+        fields = ["reason"]
+        widgets = {"reason": forms.Textarea(attrs={"rows": 3})}
+
+
+class ManualBanForm(forms.ModelForm):
+    permanent = forms.BooleanField(required=False, label="Permanent ban")
+    duration_days = forms.IntegerField(min_value=1, required=False, label="Duration (days, leave blank if permanent)")
+
+    class Meta:
+        model = PrintingBan
+        fields = ["reason"]
+        widgets = {"reason": forms.Textarea(attrs={"rows": 3})}
+
+    def save(self, commit=True):
+        ban = super().save(commit=False)
+        if self.cleaned_data.get("permanent"):
+            ban.expires_at = None
+        else:
+            days = self.cleaned_data.get("duration_days") or 7
+            ban.expires_at = timezone.now() + timedelta(days=days)
+        if commit:
+            ban.save()
+        return ban

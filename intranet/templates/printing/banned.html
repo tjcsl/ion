@@ -1,0 +1,73 @@
+{% extends "page_with_nav.html" %}
+{% block title %}Printing Banned{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">Printing Ban</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    You are banned from printing
+                    {% if ban.is_permanent %}
+                    <strong>permanently</strong>.
+                    {% else %}
+                    until <strong>{{ ban.expires_at|date:"N j, Y g:i A" }}</strong>.
+                    {% endif %}
+                </p>
+                <br>
+
+                <p><strong>Reason:</strong> {{ ban.reason }}</p>
+                <br>
+
+                {% if not ban.is_permanent %}
+                <p>Your printing access will be automatically restored after the ban expires.</p>
+                {% endif %}
+                <br>
+
+                <p>If you believe this is an error, please contact a sysadmin (intranet@tjhsst.edu).</p>
+                <br>
+            </div>
+        </div>
+
+        {% if active_infractions %}
+        <h4>Active Warnings ({{ active_infractions|length }})</h4>
+        <p class="text-muted">These warnings count toward automatic bans.</p>
+        <table class="table table-condensed">
+            <thead><tr><th>Issued</th><th>Expires</th><th>Reason</th></tr></thead>
+            <tbody>
+            {% for inf in active_infractions %}
+            <tr class="warning">
+                <td>{{ inf.date_issued|date:"N j, Y" }}</td>
+                <td>{{ inf.active_until|date:"N j, Y" }}</td>
+                <td>{{ inf.reason }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if inactive_infractions %}
+        <h4>Past Warnings ({{ inactive_infractions|length }})</h4>
+        <p class="text-muted">These warnings are expired and do not count toward bans.</p>
+        <table class="table table-condensed">
+            <thead><tr><th>Issued</th><th>Expired</th><th>Reason</th></tr></thead>
+            <tbody>
+            {% for inf in inactive_infractions %}
+            <tr class="text-muted">
+                <td>{{ inf.date_issued|date:"N j, Y" }}</td>
+                <td>{{ inf.active_until|date:"N j, Y" }}</td>
+                <td>{{ inf.reason }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        {% if not active_infractions and not inactive_infractions %}
+        <p class="text-muted">You have no printing warnings.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
