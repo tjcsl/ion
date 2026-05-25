@@ -122,7 +122,7 @@ ENABLE_ENRICHMENT_APP = True
 
 ENABLE_SENIOR_DESTINATIONS = False  # Disabled per school policy, October 2023
 
-ENABLE_ION_WRAPPED = False # Should be enabled close to EOY and through summer
+ENABLE_ION_WRAPPED = True # Should be enabled close to EOY and through summer
 # End toggles
 
 NOTIFY_ADMIN_EMAILS = None
