@@ -1497,6 +1497,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.wrapped.apps.WrappedConfig.html">WrappedConfig</a></li>
 </ul>
 </li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.wrapped.management.commands.warm_wrapped_cache.html">warm_wrapped_cache</a><input aria-label="Toggle navigation of warm_wrapped_cache" class="toctree-checkbox" id="toctree-checkbox-241" name="toctree-checkbox-241" role="switch" type="checkbox"/><label for="toctree-checkbox-241"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.wrapped.management.commands.warm_wrapped_cache.Command.html">Command</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.wrapped.stats.html">stats</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.wrapped.urls.html">urls</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.wrapped.views.html">views</a></li>
@@ -1544,7 +1548,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.conf</span><span class="w"> </span><span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.contrib.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.core.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span><span class="p">,</span> <span class="n">Q</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.db.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Count</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">...utils.date</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_date_range_this_year</span><span class="p">,</span> <span class="n">get_school_year_label</span>
@@ -1555,7 +1559,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">..polls.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Answer</span><span class="p">,</span> <span class="n">Poll</span>
 
 <span class="n">LAST_MINUTE_WINDOW</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">COHORT_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span>
+<span class="n">COHORT_CACHE_TIMEOUT</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">RANK_BUCKETS</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
 
 
@@ -1595,15 +1599,92 @@
 
 
 
-<div class="viewcode-block" id="cached_cohort_counts">
-<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.cached_cohort_counts">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cached_cohort_counts</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">compute_counts</span><span class="p">):</span>
-    <span class="n">cache_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;wrapped:cohort:v1:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">counts</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">counts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">counts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">compute_counts</span><span class="p">())</span>
-        <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">COHORT_CACHE_TIMEOUT</span><span class="p">)</span>
+<div class="viewcode-block" id="cohort_cache_key">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.cohort_cache_key">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cohort_cache_key</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;wrapped:cohort:v1:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="get_cached_cohort_counts">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.get_cached_cohort_counts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cached_cohort_counts</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cohort_cache_key</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="set_cached_cohort_counts">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.set_cached_cohort_counts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_cached_cohort_counts</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">counts</span><span class="p">):</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+    <span class="n">cache</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cohort_cache_key</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">),</span> <span class="n">counts</span><span class="p">,</span> <span class="n">COHORT_CACHE_TIMEOUT</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">counts</span></div>
+
+
+
+<div class="viewcode-block" id="student_ids_for_cohort">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.student_ids_for_cohort">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">student_ids_for_cohort</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="compute_signup_counts">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.compute_signup_counts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_signup_counts</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">):</span>
+    <span class="n">student_ids</span> <span class="o">=</span> <span class="n">student_ids_for_cohort</span><span class="p">()</span>
+    <span class="n">counts_by_user</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">user_id__in</span><span class="o">=</span><span class="n">student_ids</span><span class="p">,</span>
+            <span class="n">scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span>
+            <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+            <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped_count&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">counts_by_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="compute_unique_activity_counts">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.compute_unique_activity_counts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_unique_activity_counts</span><span class="p">(</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">):</span>
+    <span class="n">student_ids</span> <span class="o">=</span> <span class="n">student_ids_for_cohort</span><span class="p">()</span>
+    <span class="n">counts_by_user</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">user_id__in</span><span class="o">=</span><span class="n">student_ids</span><span class="p">,</span>
+            <span class="n">scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span>
+            <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+            <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span>
+                <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">,</span>
+                <span class="n">distinct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped_count&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">counts_by_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="compute_visit_counts">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.compute_visit_counts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_visit_counts</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="n">student_ids</span> <span class="o">=</span> <span class="n">student_ids_for_cohort</span><span class="p">()</span>
+    <span class="n">counts_by_user</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id__in</span><span class="o">=</span><span class="n">student_ids</span><span class="p">,</span> <span class="n">timestamp__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp__lte</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">&quot;/wrapped&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">&quot;/api&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped_count&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">counts_by_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">]</span></div>
 
 
 
@@ -1739,30 +1820,8 @@
         <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">sponsors</span><span class="p">:</span>
             <span class="n">sponsor_counts</span><span class="p">[</span><span class="n">sponsor</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="n">students</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span>
-    <span class="n">signup_counts</span> <span class="o">=</span> <span class="n">cached_cohort_counts</span><span class="p">(</span>
-        <span class="s2">&quot;signup-counts&quot;</span><span class="p">,</span>
-        <span class="n">start_date</span><span class="p">,</span>
-        <span class="n">end_date</span><span class="p">,</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">students</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
-            <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span>
-                <span class="s2">&quot;eighthsignup&quot;</span><span class="p">,</span>
-                <span class="nb">filter</span><span class="o">=</span><span class="n">Q</span><span class="p">(</span><span class="n">eighthsignup__scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">eighthsignup__scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">),</span>
-            <span class="p">)</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;wrapped_count&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">unique_counts</span> <span class="o">=</span> <span class="n">cached_cohort_counts</span><span class="p">(</span>
-        <span class="s2">&quot;unique-activity-counts&quot;</span><span class="p">,</span>
-        <span class="n">start_date</span><span class="p">,</span>
-        <span class="n">end_date</span><span class="p">,</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">students</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
-            <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span>
-                <span class="s2">&quot;eighthsignup__scheduled_activity__activity&quot;</span><span class="p">,</span>
-                <span class="nb">filter</span><span class="o">=</span><span class="n">Q</span><span class="p">(</span><span class="n">eighthsignup__scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">eighthsignup__scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">),</span>
-                <span class="n">distinct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;wrapped_count&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-    <span class="p">)</span>
+    <span class="n">signup_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">&quot;signup-counts&quot;</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+    <span class="n">unique_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">&quot;unique-activity-counts&quot;</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
@@ -1808,20 +1867,7 @@
         <span class="n">month_counts</span><span class="p">[</span><span class="n">local_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">hour_counts</span><span class="p">[</span><span class="n">local_time</span><span class="o">.</span><span class="n">hour</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="n">visit_filter</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">Q</span><span class="p">(</span><span class="n">request__timestamp__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">request__timestamp__lte</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">request__method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
-        <span class="o">&amp;</span> <span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="n">request__path__startswith</span><span class="o">=</span><span class="s2">&quot;/wrapped&quot;</span><span class="p">)</span>
-        <span class="o">&amp;</span> <span class="o">~</span><span class="n">Q</span><span class="p">(</span><span class="n">request__path__startswith</span><span class="o">=</span><span class="s2">&quot;/api&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">visit_counts</span> <span class="o">=</span> <span class="n">cached_cohort_counts</span><span class="p">(</span>
-        <span class="s2">&quot;visit-counts&quot;</span><span class="p">,</span>
-        <span class="n">start</span><span class="p">,</span>
-        <span class="n">end</span><span class="p">,</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">get_user_model</span><span class="p">()</span>
-        <span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span>
-        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;request&quot;</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">visit_filter</span><span class="p">))</span>
-        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;wrapped_count&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-    <span class="p">)</span>
+    <span class="n">visit_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">&quot;visit-counts&quot;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
     <span class="n">busiest_hour</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">hour_counts</span><span class="p">:</span>
@@ -2059,7 +2105,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=9d5b556c"></script>
+</div><script src="../../../../_static/documentation_options.js?v=45899c9f"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
