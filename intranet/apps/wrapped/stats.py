@@ -5,7 +5,7 @@ from urllib.parse import urlsplit
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.utils import timezone
 
 from ...utils.date import get_date_range_this_year, get_school_year_label
@@ -16,7 +16,7 @@ from ..logs.models import Request
 from ..polls.models import Answer, Poll
 
 LAST_MINUTE_WINDOW = datetime.timedelta(minutes=10)
-COHORT_CACHE_TIMEOUT = 60 * 60
+COHORT_CACHE_TIMEOUT = None
 RANK_BUCKETS = (0.01, 0.1, 1, 5, 20, 50)
 
 
@@ -47,13 +47,72 @@ def rank_label(top_percent):
     return None
 
 
-def cached_cohort_counts(name, start, end, compute_counts):
-    cache_key = f"wrapped:cohort:v1:{name}:{start.isoformat()}:{end.isoformat()}"
-    counts = cache.get(cache_key)
-    if counts is None:
-        counts = list(compute_counts())
-        cache.set(cache_key, counts, COHORT_CACHE_TIMEOUT)
+def cohort_cache_key(name, start, end):
+    return f"wrapped:cohort:v1:{name}:{start.isoformat()}:{end.isoformat()}"
+
+
+def get_cached_cohort_counts(name, start, end):
+    return cache.get(cohort_cache_key(name, start, end))
+
+
+def set_cached_cohort_counts(name, start, end, counts):
+    counts = list(counts)
+    cache.set(cohort_cache_key(name, start, end), counts, COHORT_CACHE_TIMEOUT)
     return counts
+
+
+def student_ids_for_cohort():
+    return list(get_user_model().objects.get_students().values_list("id", flat=True))
+
+
+def compute_signup_counts(start_date, end_date):
+    student_ids = student_ids_for_cohort()
+    counts_by_user = dict(
+        EighthSignup.objects.filter(
+            user_id__in=student_ids,
+            scheduled_activity__block__date__gte=start_date,
+            scheduled_activity__block__date__lte=end_date,
+        )
+        .values("user_id")
+        .annotate(
+            wrapped_count=Count("id"),
+        )
+        .values_list("user_id", "wrapped_count")
+    )
+    return [counts_by_user.get(student_id, 0) for student_id in student_ids]
+
+
+def compute_unique_activity_counts(start_date, end_date):
+    student_ids = student_ids_for_cohort()
+    counts_by_user = dict(
+        EighthSignup.objects.filter(
+            user_id__in=student_ids,
+            scheduled_activity__block__date__gte=start_date,
+            scheduled_activity__block__date__lte=end_date,
+        )
+        .values("user_id")
+        .annotate(
+            wrapped_count=Count(
+                "scheduled_activity__activity",
+                distinct=True,
+            )
+        )
+        .values_list("user_id", "wrapped_count")
+    )
+    return [counts_by_user.get(student_id, 0) for student_id in student_ids]
+
+
+def compute_visit_counts(start, end):
+    student_ids = student_ids_for_cohort()
+    counts_by_user = dict(
+        Request.objects.filter(user_id__in=student_ids, timestamp__gte=start, timestamp__lte=end, method="GET")
+        .exclude(path__startswith="/wrapped")
+        .exclude(path__startswith="/api")
+        .values("user_id")
+        .annotate(wrapped_count=Count("id"))
+        .values_list("user_id", "wrapped_count")
+    )
+    return [counts_by_user.get(student_id, 0) for student_id in student_ids]
 
 
 def path_area(path):
@@ -177,30 +236,8 @@ def build_eighth_stats(user, start_date, end_date):
         for sponsor in sponsors:
             sponsor_counts[sponsor.name] += 1
 
-    students = get_user_model().objects.get_students()
-    signup_counts = cached_cohort_counts(
-        "signup-counts",
-        start_date,
-        end_date,
-        lambda: students.annotate(
-            wrapped_count=Count(
-                "eighthsignup",
-                filter=Q(eighthsignup__scheduled_activity__block__date__gte=start_date, eighthsignup__scheduled_activity__block__date__lte=end_date),
-            )
-        ).values_list("wrapped_count", flat=True),
-    )
-    unique_counts = cached_cohort_counts(
-        "unique-activity-counts",
-        start_date,
-        end_date,
-        lambda: students.annotate(
-            wrapped_count=Count(
-                "eighthsignup__scheduled_activity__activity",
-                filter=Q(eighthsignup__scheduled_activity__block__date__gte=start_date, eighthsignup__scheduled_activity__block__date__lte=end_date),
-                distinct=True,
-            )
-        ).values_list("wrapped_count", flat=True),
-    )
+    signup_counts = get_cached_cohort_counts("signup-counts", start_date, end_date)
+    unique_counts = get_cached_cohort_counts("unique-activity-counts", start_date, end_date)
 
     return {
         "total": total,
@@ -243,20 +280,7 @@ def build_usage_stats(user, start, end):
         month_counts[local_time.strftime("%B")] += 1
         hour_counts[local_time.hour] += 1
 
-    visit_filter = (
-        Q(request__timestamp__gte=start, request__timestamp__lte=end, request__method="GET")
-        & ~Q(request__path__startswith="/wrapped")
-        & ~Q(request__path__startswith="/api")
-    )
-    visit_counts = cached_cohort_counts(
-        "visit-counts",
-        start,
-        end,
-        lambda: get_user_model()
-        .objects.get_students()
-        .annotate(wrapped_count=Count("request", filter=visit_filter))
-        .values_list("wrapped_count", flat=True),
-    )
+    visit_counts = get_cached_cohort_counts("visit-counts", start, end)
 
     busiest_hour = None
     if hour_counts:
