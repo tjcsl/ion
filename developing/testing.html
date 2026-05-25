@@ -1493,6 +1493,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../reference/intranet.apps.welcome.views.html">views</a></li>
 </ul>
 </li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../reference_index/apps/wrapped.html">wrapped</a><input aria-label="Toggle navigation of wrapped" class="toctree-checkbox" id="toctree-checkbox-239" name="toctree-checkbox-239" role="switch" type="checkbox"/><label for="toctree-checkbox-239"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../reference/intranet.apps.wrapped.apps.html">apps</a><input aria-label="Toggle navigation of apps" class="toctree-checkbox" id="toctree-checkbox-240" name="toctree-checkbox-240" role="switch" type="checkbox"/><label for="toctree-checkbox-240"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/intranet.apps.wrapped.apps.WrappedConfig.html">WrappedConfig</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/intranet.apps.wrapped.stats.html">stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/intranet.apps.wrapped.urls.html">urls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/intranet.apps.wrapped.views.html">views</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1544,9 +1554,40 @@
 <h2>Unit Tests<a class="headerlink" href="#unit-tests" title="Link to this heading">¶</a></h2>
 <p>For most modules, the unit tests go in <code class="docutils literal notranslate"><span class="pre">intranet/apps/&lt;module&gt;/tests.py</span></code>. Currently, the sole exception is <code class="docutils literal notranslate"><span class="pre">eighth</span></code>, where tests are broken out into several different files under <code class="docutils literal notranslate"><span class="pre">intranet/apps/eighth/tests/</span></code>. Testing functionality that is useful for multiple tests can be found in <code class="docutils literal notranslate"><span class="pre">intranet/test</span></code>.</p>
 </section>
-<section id="running-tests">
-<span id="id1"></span><h2>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading">¶</a></h2>
-<p>To actually execute tests, run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> inside your dev environment. If you want to only test a specific app, you can run <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">&lt;apps_name&gt;</span></code>. Do note that this deletes and re-creates the db from scratch each time, so you may want to pass the <code class="docutils literal notranslate"><span class="pre">-k</span></code> option when developing tests as it significantly reduces run-time.</p>
+<section id="running-tests-locally">
+<span id="running-tests"></span><h2>Running Tests Locally<a class="headerlink" href="#running-tests-locally" title="Link to this heading">¶</a></h2>
+<p>Tests should be run inside the Docker development environment. Make sure your Docker containers are running first:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>config/docker
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+<section id="running-tests-with-django-s-test-runner-recommended">
+<h3>Running Tests with Django’s Test Runner (Recommended)<a class="headerlink" href="#running-tests-with-django-s-test-runner-recommended" title="Link to this heading">¶</a></h3>
+<p>The recommended way to run tests is using Django’s built-in test runner, which is what CI uses:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all tests (this may take some time!)</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>intranet_django<span class="w"> </span>python<span class="w"> </span>./manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--noinput
+
+<span class="c1"># Run tests for a specific app (in this case, polls)</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>intranet_django<span class="w"> </span>python<span class="w"> </span>./manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>intranet.apps.polls<span class="w"> </span>--noinput
+
+<span class="c1"># Run a specific test file (in this case, auth)</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>intranet_django<span class="w"> </span>python<span class="w"> </span>./manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>intranet.apps.auth.tests.TurnstileFieldTest<span class="w"> </span>--noinput
+
+<span class="c1"># Run with verbose output, useful for debugging</span>
+docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>intranet_django<span class="w"> </span>python<span class="w"> </span>./manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>intranet.apps.polls<span class="w"> </span>--noinput<span class="w"> </span>-v<span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+</section>
+<section id="interactive-testing-shell">
+<h3>Interactive Testing Shell<a class="headerlink" href="#interactive-testing-shell" title="Link to this heading">¶</a></h3>
+<p>If you want to run multiple test commands, you can open an interactive shell with Docker:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>intranet_django<span class="w"> </span>sh
+
+<span class="c1"># then inside the container, run tests:</span>
+./manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>intranet.apps.polls<span class="w"> </span>--noinput
+</pre></div>
+</div>
+</section>
 </section>
 <section id="coverage">
 <h2>Coverage<a class="headerlink" href="#coverage" title="Link to this heading">¶</a></h2>
@@ -1569,8 +1610,8 @@ The first is calling methods directly; the second is making a GET or POST reques
 The best tests utilize both. After you do either/both of these to call the code, you should use assertions to see if the code behaved as expected.
 A list of assertion options can be found <a class="reference external" href="https://docs.python.org/3/library/unittest.html#assert-methods">here</a>.
 A useful tool for making requests to the view is <code class="docutils literal notranslate"><span class="pre">self.client</span></code>. More documentation on that can be found
-<a class="reference external" href="https://docs.djangoproject.com/en/3.2/topics/testing/tools/">here</a>. Alternatively, just search through Ion’s
-testing files for examples of using <cite>self.client</cite>.</p>
+<a class="reference external" href="https://docs.djangoproject.com/en/stable/topics/testing/tools/">here</a>. Alternatively, just search through Ion’s
+testing files for examples of using <code class="docutils literal notranslate"><span class="pre">self.client</span></code>.</p>
 </section>
 <section id="good-testing-examples">
 <h2>Good Testing Examples<a class="headerlink" href="#good-testing-examples" title="Link to this heading">¶</a></h2>
@@ -1584,11 +1625,11 @@ testing files for examples of using <cite>self.client</cite>.</p>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://docs.djangoproject.com/en/3.2/topics/testing">Django Testing Guide</a>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html">Python unittest documentation</a>.</p></li>
-<li><p><a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Code Coverage</a>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html#assert-methods">Python Unit Testing Frameworkgood</a>.</p></li>
-<li><p><a class="reference external" href="https://docs.djangoproject.com/en/3.2/topics/testing/tools/#exceptions">Testing Exceptions</a>.</p></li>
+<li><p><a class="reference external" href="https://docs.djangoproject.com/en/stable/topics/testing/">Django Testing Guide</a></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html">Python unittest documentation</a></p></li>
+<li><p><a class="reference external" href="https://coveralls.io/github/tjcsl/ion">Code Coverage</a></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/unittest.html#assert-methods">Python Unit Testing Assert Methods</a></p></li>
+<li><p><a class="reference external" href="https://docs.djangoproject.com/en/stable/topics/testing/tools/#exceptions">Testing Exceptions</a></p></li>
 </ul>
 </section>
 </section>
@@ -1649,7 +1690,11 @@ testing files for examples of using <cite>self.client</cite>.</p>
             <ul>
 <li><a class="reference internal" href="#">Testing Ion</a><ul>
 <li><a class="reference internal" href="#unit-tests">Unit Tests</a></li>
-<li><a class="reference internal" href="#running-tests">Running Tests</a></li>
+<li><a class="reference internal" href="#running-tests-locally">Running Tests Locally</a><ul>
+<li><a class="reference internal" href="#running-tests-with-django-s-test-runner-recommended">Running Tests with Django’s Test Runner (Recommended)</a></li>
+<li><a class="reference internal" href="#interactive-testing-shell">Interactive Testing Shell</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#coverage">Coverage</a></li>
 <li><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
 <li><a class="reference internal" href="#good-testing-examples">Good Testing Examples</a></li>
@@ -1665,7 +1710,7 @@ testing files for examples of using <cite>self.client</cite>.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=ed5d4c77"></script>
+</div><script src="../_static/documentation_options.js?v=9d5b556c"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
