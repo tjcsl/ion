@@ -345,7 +345,7 @@ def add_watermark(pdf_path: str, obj) -> str:
     reader = PdfReader(pdf_path)
     writer = PdfWriter()
 
-    out_fd, out_path = tempfile.mkstemp(suffix="_wm.pdf")
+    out_path = tempfile.mkstemp(suffix="_wm.pdf")
     i = 0
 
     for page in reader.pages:
