@@ -697,7 +697,7 @@ def eighth_admin_distribute_action(request):
             "users_type": users_type,
             "group": group if users_type == "group" else None,
             "eighthblock": block if users_type == "unsigned" else None,
-            "schacts": list(zip(schacts, remaining_capacities)),
+            "schacts": list(zip(schacts, remaining_capacities, strict=True)),
             "users": users,
             "show_selection": True,
             "sticky_users_and_activities": sticky_users_and_activities,
