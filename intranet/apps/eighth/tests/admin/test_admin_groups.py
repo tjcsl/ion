@@ -2,9 +2,9 @@ import csv
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
-from django.test import override_settings
 
 from intranet.apps.groups.models import Group
 from intranet.utils.date import get_senior_graduation_year
@@ -254,8 +254,8 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         # Verify signups
         for user in [user1, user2, user3]:
             self.assertEqual(1, EighthSignup.objects.filter(user=user, scheduled_activity=scheduled).count())
-    
-    @override_settings(ALLOWED_HOSTS=['testserver', 'localhost', '127.0.0.1'])
+
+    @override_settings(ALLOWED_HOSTS=["testserver", "localhost", "127.0.0.1"])
     def test_eighth_admin_distribute_group(self):
         """Tests :func:`~intranet.apps.eighth.views.admin.groups.eighth_admin_distribute_group` - the wizard only."""
 
