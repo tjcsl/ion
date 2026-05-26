@@ -15,8 +15,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
-from django.utils import timezone
 from django.utils.text import slugify
+from pypdf import PdfReader, PdfWriter
+from reportlab.pdfgen import canvas
 from sentry_sdk import add_breadcrumb, capture_exception
 from xhtml2pdf import pisa
 
@@ -340,6 +341,41 @@ def html_to_pdf(template_src, filename, context=None):
     return None
 
 
+def add_watermark(pdf_path: str, obj) -> str:
+    reader = PdfReader(pdf_path)
+    writer = PdfWriter()
+
+    out_fd, out_path = tempfile.mkstemp(suffix="_wm.pdf")
+    i = 0
+
+    for page in reader.pages:
+        if i == 0:  # Checks if page is the first page to be printed
+            packet = BytesIO()
+            c = canvas.Canvas(packet)
+
+            text = f"{obj.user.username} , {obj.id}"
+
+            c.setFont("Helvetica", 6)
+            c.setFillGray(0.2)
+
+            page_width = float(page.mediabox.width)
+            c.drawString(page_width - 150, 12, text)
+
+            c.save()
+            packet.seek(0)
+
+            overlay = PdfReader(packet).pages[0]
+            page.merge_page(overlay)  # Overlays the watermark on the first page
+            i += 1
+
+        writer.add_page(page)
+
+    with open(out_path, "wb") as f:
+        writer.write(f)
+
+    return out_path
+
+
 def print_job(obj: PrintJob, do_print: bool = True):
     printer = obj.printer
     all_printers = get_printers()
@@ -369,6 +405,12 @@ def print_job(obj: PrintJob, do_print: bool = True):
                 dest.write(chunk)
 
         final_filename = convert_file(tmpfile_name, filebase)
+
+        if not final_filename:
+            raise Exception("Error converting file to PDF for printing")
+
+        final_filename = add_watermark(final_filename, obj)
+        delete_filenames.add(final_filename)
         if final_filename is not None:
             delete_filenames.add(final_filename)
 
@@ -474,21 +516,7 @@ def print_job(obj: PrintJob, do_print: bool = True):
             if obj.fit:
                 args.extend(["-o", "fit-to-page"])
 
-            title_page = html_to_pdf(
-                "printing/title_page.html",
-                final_filename,
-                {
-                    "obj": obj,
-                    "filename": filebase,
-                    "time": timezone.now(),
-                    "pages": num_pages,
-                },
-            )
-
-            delete_filenames.add(title_page)
-
             try:
-                subprocess.check_output(["lpr", "-P", printer, title_page], stderr=subprocess.STDOUT, universal_newlines=True)
                 subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
             except subprocess.CalledProcessError as e:
                 if "is not accepting jobs" in e.output:
