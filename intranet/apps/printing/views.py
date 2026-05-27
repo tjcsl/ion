@@ -16,7 +16,6 @@ from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.utils.text import slugify
-from django.utils import timezone
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from sentry_sdk import add_breadcrumb, capture_exception
