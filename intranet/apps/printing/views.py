@@ -16,6 +16,7 @@ from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.utils.text import slugify
+from django.utils import timezone
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from sentry_sdk import add_breadcrumb, capture_exception
@@ -353,13 +354,13 @@ def add_watermark(pdf_path: str, obj) -> str:
             packet = BytesIO()
             c = canvas.Canvas(packet)
 
-            text = f"{obj.user.username} , {obj.id}"
+            text = f"{obj.user.username}, ID: {obj.id}, {obj.num_pages} pages, {obj.time}"
 
             c.setFont("Helvetica", 6)
             c.setFillGray(0.2)
 
             page_width = float(page.mediabox.width)
-            c.drawString(page_width - 150, 12, text)
+            c.drawString(page_width - 175, 12, text)
 
             c.save()
             packet.seek(0)
