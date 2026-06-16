@@ -948,7 +948,7 @@ if TJSTAR_MAP is None:
 SIMILAR_THRESHOLD = 5
 
 # Time that the bus page should change from morning to afternoon display
-BUS_PAGE_CHANGEOVER_HOUR = 12
+BUS_PAGE_CHANGEOVER_HOUR = 10
 
 # Age (in days) of a lost and found entry until it is hidden
 LOSTFOUND_EXPIRATION = 180
