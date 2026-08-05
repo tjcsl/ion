@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
-from django.urls import include, re_path
+from django.urls import include, path, re_path
 from django.views.generic.base import RedirectView, TemplateView
 
 from intranet.apps.error.views import handle_404_view, handle_500_view, handle_503_view
 from intranet.apps.oauth.views import ApplicationDeleteView, ApplicationRegistrationView, ApplicationUpdateView
+from intranet.apps.users.views import subschools_view
 
 admin.autodiscover()
 
@@ -62,6 +62,7 @@ urlpatterns = [
         "docs/api-oauth-aup", TemplateView.as_view(template_name="docs/api-oauth-aup.html", content_type="text/html"), name="docs_api_oauth_aup"
     ),
     path("docs/terminology", TemplateView.as_view(template_name="docs/terminology.html", content_type="text/html"), name="docs_terminology"),
+    path("subschools", subschools_view, name="subschools"),
     path("docs/privacy", TemplateView.as_view(template_name="docs/privacy.html", content_type="text/html"), name="docs_privacy"),
     path(
         "docs/add-to-home-screen-android",

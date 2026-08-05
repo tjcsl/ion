@@ -193,6 +193,12 @@
                                 <td> {{ profile_user.counselor.last_name }} </td>
                             </div>
                         {% endif %}
+                        {% if request.user.is_teacher or request.user.is_eighth_admin %}
+                            <tr>
+                                <th>Administrator</th>
+                                <td> {{ profile_user.administrator.last_name }} </td>
+                            </tr>
+                        {% endif %}
 
                         {% comment "Removing for privacy reasons" %}
                         {% if profile_user.emails.exists %}

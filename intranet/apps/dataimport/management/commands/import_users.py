@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
@@ -12,7 +13,7 @@ class Command(BaseCommand):
         # Positional arguments
         parser.add_argument("data_fname")
 
-    def handle(self, *args, **kwargs):
+    def handle(self, *args: str, **kwargs: Any) -> None:
         try:
             with open(kwargs["data_fname"], encoding="utf-8") as f_obj:
                 data = json.load(f_obj)
@@ -59,6 +60,8 @@ class Command(BaseCommand):
                     first_name=first_name,
                     username=username,
                     counselor=counselor,
+                    # Students are assigned administrators through their counselor
+                    administrator=counselor.administrator,
                     gender=(gender == "M"),
                     graduation_year=graduation_year,
                     middle_name=middle_name,

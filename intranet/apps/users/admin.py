@@ -33,6 +33,8 @@ class UserAdmin(admin.ModelAdmin):
         "receive_schedule_notifications",
         "bus_route",
         "counselor",
+        # List only administrators actually assigned, not every user
+        ("administrator", admin.RelatedOnlyFieldListFilter),
     )
     search_fields = (
         "username",
