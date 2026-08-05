@@ -613,6 +613,121 @@ class ProfileTest(IonTestCase):
                 self.assertTrue(response.context["nominations_active"])
                 self.assertEqual(response.context["nomination_position"], settings.NOMINATION_POSITION)
 
+    def test_subschools_view(self) -> None:
+        """Addresses come from each username's account, or from an address given outright."""
+        self.login()
+
+        subschools = [
+            {
+                "name": "Subschool 1",
+                "administrator": {"name": "Mr. Explicit", "username": "sexplicit"},
+                "administrative_assistant": {"name": "Ms. NoAccount", "email": "no.account@fcps.edu"},
+                "counselors": [
+                    {"name": "Ms. Guessed", "username": "sguessed"},
+                    {"name": "Dr. Nobody", "username": "snobody"},
+                ],
+            }
+        ]
+
+        explicit = get_user_model().objects.get_or_create(username="sexplicit", user_type="teacher")[0]
+        Email.objects.get_or_create(user=explicit, address="chosen.address@fcps.edu")
+        get_user_model().objects.get_or_create(username="sguessed", user_type="counselor")
+        # "snobody" deliberately has no account, and Ms. NoAccount has no username at all
+
+        with self.settings(SUBSCHOOLS=subschools):
+            response = self.client.get(reverse("subschools"))
+
+        self.assertEqual(200, response.status_code)
+        content = response.content.decode()
+
+        # An address on the account wins over the guessed one
+        self.assertIn("mailto:chosen.address@fcps.edu", content)
+        # Otherwise tj_email guesses from the username
+        self.assertIn("mailto:sguessed@fcps.edu", content)
+        # An address configured outright is used as-is, for staff with no Ion account
+        self.assertIn("mailto:no.account@fcps.edu", content)
+        # A username with no account is named but not linked
+        self.assertIn("Dr. Nobody", content)
+        self.assertNotIn("mailto:snobody", content)
+
+        # Settings are not mutated by the lookup
+        self.assertNotIn("email", subschools[0]["administrator"])
+
+    def test_subschools_view_username_must_match_exactly(self) -> None:
+        """A username whose case differs from the account is not matched, and is logged."""
+        self.login()
+
+        subschools = [
+            {
+                "name": "Subschool 1",
+                "administrator": {"name": "Ms. Exact", "username": "SExact1"},
+                "administrative_assistant": {"name": "Mr. Wrongcase", "username": "SWrongcase1"},
+                "counselors": [],
+            }
+        ]
+
+        exact = get_user_model().objects.get_or_create(username="SExact1", user_type="teacher")[0]
+        Email.objects.get_or_create(user=exact, address="exact.spelling@fcps.edu")
+        # Stored lowercase while settings uses mixed case, so it must not resolve
+        get_user_model().objects.get_or_create(username="swrongcase1", user_type="teacher")
+
+        with self.settings(SUBSCHOOLS=subschools):
+            with self.assertLogs("intranet.apps.users.views", level="WARNING") as logs:
+                response = self.client.get(reverse("subschools"))
+
+        content = response.content.decode()
+        self.assertIn("mailto:exact.spelling@fcps.edu", content)
+        self.assertNotIn("mailto:swrongcase1", content)
+        self.assertIn("Mr. Wrongcase", content)
+        self.assertTrue(any("SWrongcase1" in line for line in logs.output))
+
+    def test_subschools_view_last_updated(self) -> None:
+        """The configured last updated date is shown at the bottom of the page."""
+        self.login()
+
+        with self.settings(SUBSCHOOLS_LAST_UPDATED=datetime.date(1999, 3, 4)):
+            response = self.client.get(reverse("subschools"))
+
+        self.assertContains(response, "Last updated March 4, 1999.")
+
+        with self.settings(SUBSCHOOLS_LAST_UPDATED=None):
+            response = self.client.get(reverse("subschools"))
+
+        self.assertNotContains(response, "Last updated")
+
+    def test_subschools_view_requires_login(self) -> None:
+        response = self.client.get(reverse("subschools"))
+        self.assertEqual(302, response.status_code)
+        self.assertIn("/login", response["Location"])
+
+    def test_profile_view_administrator_row(self) -> None:
+        """The Administrator row always shows for staff viewers, blank when the user has none."""
+        admin_user = self.make_admin()
+        administrator = get_user_model().objects.get_or_create(username="anadmin", last_name="Dawson", user_type="teacher")[0]
+        counselor = get_user_model().objects.get_or_create(
+            username="acounselor", last_name="Kim", user_type="counselor", administrator=administrator
+        )[0]
+
+        # A student with a counselor who has an administrator, but no administrator of their own
+        student = get_user_model().objects.get_or_create(username="2021astudent", user_type="student", counselor=counselor)[0]
+
+        response = self.client.get(reverse("user_profile", kwargs={"user_id": student.id}))
+        self.assertEqual(200, response.status_code)
+        # The row is present even though the field is unset...
+        self.assertContains(response, "<th>Administrator</th>")
+        # ...and it must not fall back to the counselor's administrator
+        self.assertNotContains(response, administrator.last_name)
+
+        # Once assigned, the student's own administrator shows
+        student.administrator = administrator
+        student.save(update_fields=["administrator"])
+        response = self.client.get(reverse("user_profile", kwargs={"user_id": student.id}))
+        self.assertContains(response, administrator.last_name)
+
+        # The row also shows on a staff profile, where there is no counselor at all
+        response = self.client.get(reverse("user_profile", kwargs={"user_id": admin_user.id}))
+        self.assertContains(response, "<th>Administrator</th>")
+
     def test_privacy_options(self):
         self.assertEqual(set(PERMISSIONS_NAMES.keys()), {"self", "parent"})
         for k in ["self", "parent"]:

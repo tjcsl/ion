@@ -228,6 +228,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_type = models.CharField(max_length=30, choices=USER_TYPES, default="student")
     admin_comments = models.TextField(blank=True, null=True)
     counselor = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="students", null=True, blank=True)
+    administrator = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="administered_students", null=True, blank=True)
     graduation_year = models.IntegerField(null=True, blank=True)
     title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
     first_name = models.CharField(max_length=35, null=True)

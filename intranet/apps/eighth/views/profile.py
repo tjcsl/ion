@@ -25,7 +25,7 @@ def date_fmt(date):
 
 @eighth_admin_required
 @deny_restricted
-def edit_profile_view(request, user_id=None):
+def edit_profile_view(request: http.HttpRequest, user_id: int | None = None) -> http.HttpResponse:
     user = get_object_or_404(get_user_model(), id=user_id)
     # Disable address form temporarily -- okulkarni, 08/30/2018
     address_form = None
@@ -34,10 +34,6 @@ def edit_profile_view(request, user_id=None):
         # address_form = AddressForm(request.POST, instance=user.properties.address)
         if user_form.is_valid():
             user = user_form.save()
-            counselor_id = user_form.cleaned_data["counselor_id"]
-            if counselor_id:
-                counselor = get_user_model().objects.get(id=counselor_id)
-                user.counselor = counselor
             # user.properties.address = address_form.save()
             # user.properties.save()
             user.save()
@@ -45,7 +41,7 @@ def edit_profile_view(request, user_id=None):
         else:
             messages.error(request, "An error occurred updating user profile.")
     else:
-        user_form = ProfileEditForm(initial={"counselor_id": "" if not user.counselor else user.counselor.id}, instance=user)
+        user_form = ProfileEditForm(instance=user)
         # address_form = AddressForm(instance=user.properties.address)
 
     context = {"profile_user": user, "user_form": user_form, "address_form": address_form}

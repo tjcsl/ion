@@ -1,8 +1,10 @@
 import csv
 import sys
+from typing import Any
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from django.db.models import Q
 
 from ....users.models import Email
@@ -79,7 +81,7 @@ class Command(BaseCommand):
 
         return new_username
 
-    def handle(self, *args, **options):
+    def handle(self, *args: str, **options: Any) -> None:
         # Read the data file
         with open(options["filename"], encoding="utf-8") as csvfile:
             data = list(csv.DictReader(csvfile))
@@ -112,46 +114,62 @@ class Command(BaseCommand):
         # Used to store actual usernames (after they have been deduplicated) to output to that file
         actual_username_list = []
 
-        # Loop through our new users
-        for new_user in data:
-            # Prevent duplication of users
-            if new_user["Student ID"] not in existing_student_ids:
-                # Check to see if username already taken
-                if new_user["TJHSST_username"] in existing_usernames:
-                    new_user["TJHSST_username"] = self.find_next_available_username(new_user["TJHSST_username"], existing_usernames)
+        # An unresolvable row rolls the whole import back, rather than leaving a half-imported class
+        try:
+            with transaction.atomic():
+                # Loop through our new users
+                for new_user in data:
+                    # Prevent duplication of users
+                    if new_user["Student ID"] not in existing_student_ids:
+                        # Check to see if username already taken
+                        if new_user["TJHSST_username"] in existing_usernames:
+                            new_user["TJHSST_username"] = self.find_next_available_username(new_user["TJHSST_username"], existing_usernames)
 
-                # Append username to list
-                actual_username_list.append(new_user["TJHSST_username"])
+                        # Append username to list
+                        actual_username_list.append(new_user["TJHSST_username"])
 
-                # Now we can safely add this user
-                if do_run:
-                    counselor = get_user_model().objects.get(username=new_user["Counselor"].strip()) if "Counselor" in new_user.keys() else None
-                    nickname = new_user["Nick Name"].strip() if "Nick Name" in new_user.keys() else ""
-                    gender = (
-                        new_user["Gender"].strip() == "M" if "Gender" in new_user.keys() else None
-                    )  # TODO: is it "M" or "Male" or something else?
-                    new_user_obj = get_user_model().objects.create(
-                        username=new_user["TJHSST_username"],
-                        student_id=new_user["Student ID"].strip(),
-                        last_name=new_user["Last Name"].strip(),
-                        first_name=new_user["First Name"].strip(),
-                        middle_name=new_user["Middle Name"].strip(),
-                        counselor=counselor,
-                        nickname=nickname,
-                        graduation_year=int(options["grad_year"]),
-                        gender=gender,
-                        receive_news_emails=True,
-                        receive_eighth_emails=True,
-                    )
-                    # We must add their TJ email
-                    Email.objects.create(address=f"{new_user['TJHSST_username']}@tjhsst.edu", user=new_user_obj)
+                        # Now we can safely add this user
+                        if do_run:
+                            counselor = (
+                                get_user_model().objects.get(username=new_user["Counselor"].strip()) if "Counselor" in new_user.keys() else None
+                            )
+                            # Fall back to the counselor's administrator when the CSV does not name one
+                            administrator = (
+                                get_user_model().objects.get(username=new_user["Administrator"].strip())
+                                if (new_user.get("Administrator") or "").strip()
+                                else (counselor.administrator if counselor else None)
+                            )
+                            nickname = new_user["Nick Name"].strip() if "Nick Name" in new_user.keys() else ""
+                            gender = (
+                                new_user["Gender"].strip() == "M" if "Gender" in new_user.keys() else None
+                            )  # TODO: is it "M" or "Male" or something else?
+                            new_user_obj = get_user_model().objects.create(
+                                username=new_user["TJHSST_username"],
+                                student_id=new_user["Student ID"].strip(),
+                                last_name=new_user["Last Name"].strip(),
+                                first_name=new_user["First Name"].strip(),
+                                middle_name=new_user["Middle Name"].strip(),
+                                counselor=counselor,
+                                administrator=administrator,
+                                nickname=nickname,
+                                graduation_year=int(options["grad_year"]),
+                                gender=gender,
+                                receive_news_emails=True,
+                                receive_eighth_emails=True,
+                            )
+                            # We must add their TJ email
+                            Email.objects.create(address=f"{new_user['TJHSST_username']}@tjhsst.edu", user=new_user_obj)
 
-                self.stdout.write(self.style.SUCCESS(f"Created user {new_user['TJHSST_username']}."))
+                        self.stdout.write(self.style.SUCCESS(f"Created user {new_user['TJHSST_username']}."))
 
-                existing_usernames.add(new_user["TJHSST_username"])
+                        existing_usernames.add(new_user["TJHSST_username"])
 
-            else:
-                self.stdout.write(self.style.ERROR(f"User with SID {new_user['Student ID']} already exists."))
+                    else:
+                        self.stdout.write(self.style.ERROR(f"User with SID {new_user['Student ID']} already exists."))
+        except Exception:
+            # The "Created user ..." lines above were rolled back too
+            self.stdout.write(self.style.ERROR("Rolled back: no users were created. Fix the row below and re-run."))
+            raise
 
         if options["username_file"] is not None:
             with open(options["username_file"], "w", encoding="utf-8") as file:

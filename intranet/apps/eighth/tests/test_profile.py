@@ -205,3 +205,56 @@ class EighthProfileTest(EighthAbstractTest):
         self.assertIsNotNone("A", user2.nickname)
         self.assertIsNotNone(get_senior_graduation_year(), Grade.year_from_grade(user2.grade.number))
         self.assertIsNotNone("female", user2.gender)
+
+    def test_edit_profile_view_counselor_and_administrator(self) -> None:
+        """Tests setting the counselor and administrator via ``edit_profile_view``."""
+        get_user_model().objects.all().delete()
+
+        self.make_admin()
+        counselor = get_user_model().objects.get_or_create(username="acounselor", user_type="counselor")[0]
+        administrator = get_user_model().objects.get_or_create(username="anadmin", user_type="teacher")[0]
+        user2 = get_user_model().objects.get_or_create(username="2021awilliam", user_type="student")[0]
+
+        base_data = {
+            "first_name": "Angela",
+            "last_name": "William",
+            "gender": "female",
+        }
+
+        # Both selections should be saved onto the user
+        response = self.client.post(
+            reverse("eighth_edit_profile", kwargs={"user_id": user2.id}),
+            data={**base_data, "counselor": counselor.id, "administrator": administrator.id},
+            follow=True,
+        )
+        self.assertEqual(200, response.status_code)
+        user2 = get_user_model().objects.get(id=user2.id)
+        self.assertEqual(counselor, user2.counselor)
+        self.assertEqual(administrator, user2.administrator)
+
+        # Administrators are teachers, so a student, a counselor or an unused ID is a form error
+        missing_id = get_user_model().objects.order_by("-id").first().id + 100
+        for bad_value in (missing_id, user2.id, counselor.id):
+            response = self.client.post(
+                reverse("eighth_edit_profile", kwargs={"user_id": user2.id}),
+                data={**base_data, "counselor": counselor.id, "administrator": bad_value},
+                follow=True,
+            )
+            self.assertEqual(200, response.status_code)
+            self.assertFalse(response.context["user_form"].is_valid())
+
+            # ...and nothing is changed by the rejected submission
+            user2 = get_user_model().objects.get(id=user2.id)
+            self.assertEqual(administrator, user2.administrator)
+            self.assertEqual(counselor, user2.counselor)
+
+        # An empty selection unassigns, since these are dropdowns rather than ID boxes
+        response = self.client.post(
+            reverse("eighth_edit_profile", kwargs={"user_id": user2.id}),
+            data={**base_data, "counselor": "", "administrator": ""},
+            follow=True,
+        )
+        self.assertEqual(200, response.status_code)
+        user2 = get_user_model().objects.get(id=user2.id)
+        self.assertIsNone(user2.counselor)
+        self.assertIsNone(user2.administrator)

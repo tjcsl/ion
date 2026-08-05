@@ -1,4 +1,5 @@
 # pylint: disable=consider-using-with
+import copy
 import io
 import logging
 import os
@@ -7,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import MultipleObjectsReturned
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -107,6 +108,30 @@ def profile_view(request, user_id=None):
         "has_been_nominated": has_been_nominated,
     }
     return render(request, "users/profile.html", context)
+
+
+@login_required
+def subschools_view(request: HttpRequest) -> HttpResponse:
+    """Displays the subschool staff listed in ``settings.SUBSCHOOLS``."""
+    # A configured username has its tj_email looked up, keeping the address out of the repository.
+    # An address configured outright is kept as-is, for staff with no Ion account. Anyone who cannot
+    # be resolved is listed without a mailto link.
+    subschools = copy.deepcopy(settings.SUBSCHOOLS)
+    staff = [
+        person for subschool in subschools for person in (subschool["administrator"], subschool["administrative_assistant"], *subschool["counselors"])
+    ]
+
+    # Usernames must be configured with the same case as the account. tj_email filters each user's
+    # addresses, so it costs a query per person; that is fine for a list this small.
+    lookups = [person for person in staff if not person.get("email") and person.get("username")]
+    users = get_user_model().objects.filter(username__in=[person["username"] for person in lookups])
+    emails = {user.username: user.tj_email for user in users}
+    for person in lookups:
+        person["email"] = emails.get(person["username"])
+        if person["email"] is None:
+            logger.warning("SUBSCHOOLS lists username %r, which matches no account", person["username"])
+
+    return render(request, "subschools.html", {"subschools": subschools, "last_updated": settings.SUBSCHOOLS_LAST_UPDATED})
 
 
 @login_required

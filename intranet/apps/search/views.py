@@ -47,6 +47,7 @@ def query(q, admin=False):
             "id": ("id",),
             "username": ("username",),
             "counselor": ("counselor__last_name",),
+            "administrator": ("administrator__last_name",),
             "type": ("user_type",),
         }
 

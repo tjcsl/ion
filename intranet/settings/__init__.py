@@ -106,6 +106,52 @@ PARKING_MAX_ABSENCES = 5
 NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
 
+# Subschool staff, listed at /subschools. Override these in production.
+# Give each person a "username", spelled exactly as the account is, and their tj_email is looked up
+# so that no addresses are committed here. Only use "email" for someone with no Ion account. A
+# username matching no account is logged and shown without a mailto link.
+SUBSCHOOLS = [
+    {
+        "name": "Subschool 1",
+        "administrator": {"name": "Mr. Alpha", "username": "2027admin"},
+        "administrative_assistant": {"name": "Ms. Bravo", "username": "2027admin1"},
+        "counselors": [
+            {"name": "Ms. Charlie", "username": "2027student"},
+            {"name": "Mr. Delta", "username": "2027student1"},
+        ],
+    },
+    {
+        "name": "Subschool 2",
+        "administrator": {"name": "Ms. Echo", "username": "2028admin"},
+        "administrative_assistant": {"name": "Ms. Foxtrot", "username": "2028admin1"},
+        "counselors": [
+            {"name": "Ms. Golf", "username": "2028student"},
+            {"name": "Ms. Hotel", "username": "2028student1"},
+        ],
+    },
+    {
+        "name": "Subschool 3",
+        "administrator": {"name": "Ms. India", "username": "2029admin"},
+        "administrative_assistant": {"name": "Ms. Juliett", "username": "2029admin1"},
+        "counselors": [
+            {"name": "Ms. Kilo", "username": "2029student"},
+            {"name": "Ms. Lima", "username": "2029student1"},
+        ],
+    },
+    {
+        "name": "Subschool 4",
+        # Nobody to look up, so the address is given directly
+        "administrator": {"name": "Mr. Mike", "email": "mmike@fcps.edu"},
+        "administrative_assistant": {"name": "Ms. November", "username": "2030admin1"},
+        "counselors": [
+            {"name": "Ms. Oscar", "username": "2030student"},
+            {"name": "Dr. Papa", "username": "2030student1"},
+        ],
+    },
+]
+
+SUBSCHOOLS_LAST_UPDATED = datetime.date(2026, 8, 7)
+
 # App and functionality availability toggles
 ENABLE_WAITLIST = False  # Eighth waitlist. WARNING: Enabling the waitlist causes severe performance issues
 
