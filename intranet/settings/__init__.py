@@ -31,17 +31,17 @@ end_school_year = start_school_year + 1
 # fmt: off
 """ !! -------- UPDATE ANNUALLY -------- !!
 Update this section annually after summer school ends and before school starts.
-School year last updated:  2025-08-18
+School year last updated:  2026-08-12
 Hoco last updated:         2025-09-06
 tjSTAR last updated:       2026-05-20
 """
 
 # When school is scheduled to start and end
 SCHOOL_START_DATE = datetime.date(start_school_year,
-    8, 18  # UPDATE THIS! Value when last updated: August 18, 2025      # noqa: E128
+    8, 24  # UPDATE THIS! Value when last updated: August 12, 2026      # noqa: E128
 )                                                                       # noqa: E124
 SCHOOL_END_DATE = datetime.date(end_school_year,
-    6, 17  # UPDATE THIS! Value when last updated: June 17, 2026        # noqa: E128
+    6, 16  # UPDATE THIS! Value when last updated: August 12, 2026      # noqa: E128
 )                                                                       # noqa: E124
 
 # Dates when hoco starts and ends
@@ -64,7 +64,7 @@ TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
 ENABLE_SENIOR_DESTS_BANNER = False
 SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue form is out! Please submit your " \
     "senior destinations, quotes, and superlatives to the form attached below by May 2"
-SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
+SENIOR_DESTS_BANNER_LINK = "https://example.com/tjseniors2025"
 
 """  -------- END UPDATE ANNUALLY --------  """
 # fmt: on
@@ -168,7 +168,7 @@ ENABLE_ENRICHMENT_APP = True
 
 ENABLE_SENIOR_DESTINATIONS = False  # Disabled per school policy, October 2023
 
-ENABLE_ION_WRAPPED = True # Should be enabled close to EOY and through summer
+ENABLE_ION_WRAPPED = False # Should be enabled close to EOY and through summer
 # End toggles
 
 NOTIFY_ADMIN_EMAILS = None
