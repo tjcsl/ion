@@ -1558,36 +1558,36 @@
 <div class="viewcode-block" id="Command">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.dataimport.management.commands.import_eighth.Command.html#intranet.apps.dataimport.management.commands.import_eighth.Command">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Import Eighth Period Activities For Testing&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">"Import Eighth Period Activities For Testing"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
         <span class="c1"># Positional arguments</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;data_fname&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"data_fname"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;data_fname&quot;</span><span class="p">],</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_obj</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"data_fname"</span><span class="p">],</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_obj</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f_obj</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ex</span>
 
-        <span class="k">for</span> <span class="n">activity</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">description</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Description&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="n">sponsors</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Sponsor&quot;</span><span class="p">]</span>
-            <span class="n">room_num</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Room Number&quot;</span><span class="p">]</span>
-            <span class="n">capacity</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Capacity&quot;</span><span class="p">]</span>
-            <span class="n">wed_a</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Wed A&quot;</span><span class="p">]</span>
-            <span class="n">wed_b</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Wed B&quot;</span><span class="p">]</span>
-            <span class="n">fri_a</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Fri A&quot;</span><span class="p">]</span>
-            <span class="n">fri_b</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Fri B&quot;</span><span class="p">]</span>
-            <span class="n">one_a_day</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;One A-day&quot;</span><span class="p">]</span>
-            <span class="n">both_blocks</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Both Blocks&quot;</span><span class="p">]</span>
-            <span class="n">presign</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Presign&quot;</span><span class="p">]</span>
-            <span class="n">special</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Special&quot;</span><span class="p">]</span>
-            <span class="n">sticky</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Sticky&quot;</span><span class="p">]</span>
-            <span class="n">administrative</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Administrative&quot;</span><span class="p">]</span>
-            <span class="n">restricted</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">&quot;Restricted&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">activity</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">"activities"</span><span class="p">]:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Name"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Description"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">sponsors</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Sponsor"</span><span class="p">]</span>
+            <span class="n">room_num</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Room Number"</span><span class="p">]</span>
+            <span class="n">capacity</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Capacity"</span><span class="p">]</span>
+            <span class="n">wed_a</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Wed A"</span><span class="p">]</span>
+            <span class="n">wed_b</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Wed B"</span><span class="p">]</span>
+            <span class="n">fri_a</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Fri A"</span><span class="p">]</span>
+            <span class="n">fri_b</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Fri B"</span><span class="p">]</span>
+            <span class="n">one_a_day</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"One A-day"</span><span class="p">]</span>
+            <span class="n">both_blocks</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Both Blocks"</span><span class="p">]</span>
+            <span class="n">presign</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Presign"</span><span class="p">]</span>
+            <span class="n">special</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Special"</span><span class="p">]</span>
+            <span class="n">sticky</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Sticky"</span><span class="p">]</span>
+            <span class="n">administrative</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Administrative"</span><span class="p">]</span>
+            <span class="n">restricted</span> <span class="o">=</span> <span class="n">activity</span><span class="p">[</span><span class="s2">"Restricted"</span><span class="p">]</span>
 
             <span class="n">room</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">room_num</span><span class="p">,</span> <span class="n">capacity</span><span class="o">=</span><span class="n">capacity</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
@@ -1614,8 +1614,8 @@
                         <span class="n">username</span><span class="o">=</span><span class="n">sponsor_username</span><span class="p">,</span>
                         <span class="n">first_name</span><span class="o">=</span><span class="n">sponsor_first_name</span><span class="p">,</span>
                         <span class="n">last_name</span><span class="o">=</span><span class="n">sponsor_last_name</span><span class="p">,</span>
-                        <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">,</span>
-                        <span class="n">gender</span><span class="o">=</span><span class="p">(</span><span class="n">sponsor_gender</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span><span class="p">),</span>
+                        <span class="n">user_type</span><span class="o">=</span><span class="s2">"teacher"</span><span class="p">,</span>
+                        <span class="n">gender</span><span class="o">=</span><span class="p">(</span><span class="n">sponsor_gender</span> <span class="o">==</span> <span class="s2">"M"</span><span class="p">),</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">sponsor_object</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">sponsor_username</span><span class="p">)</span>
@@ -1658,7 +1658,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

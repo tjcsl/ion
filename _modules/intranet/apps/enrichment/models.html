@@ -1564,11 +1564,11 @@
 <div class="viewcode-block" id="EnrichmentActivityQuerySet.this_year">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.models.EnrichmentActivityQuerySet.html#intranet.apps.enrichment.models.EnrichmentActivityQuerySet.this_year">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get enrichment activities created during this school year.</span>
+<span class="w">        </span><span class="sd">"""Get enrichment activities created during this school year.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Enrichment activities created during this school year.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">added__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">added__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span></div>
 </div>
@@ -1584,10 +1584,10 @@
 <div class="viewcode-block" id="EnrichmentActivityManager.visible_to_user">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.models.EnrichmentActivityManager.html#intranet.apps.enrichment.models.EnrichmentActivityManager.visible_to_user">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># , user):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of visible enrichment activities for a given user (usually request.user).</span>
+<span class="w">        </span><span class="sd">"""Get a list of visible enrichment activities for a given user (usually request.user).</span>
 
 <span class="sd">        TODO: implement this method. Add group restrictions.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="n">EnrichmentActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span></div>
 </div>
@@ -1597,7 +1597,7 @@
 <div class="viewcode-block" id="EnrichmentActivity">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.models.EnrichmentActivity.html#intranet.apps.enrichment.models.EnrichmentActivity">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EnrichmentActivity</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An enrichment activity available to the TJ community.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""An enrichment activity available to the TJ community."""</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">EnrichmentActivityManager</span><span class="p">()</span>
 
@@ -1610,27 +1610,27 @@
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
 
     <span class="n">capacity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SmallIntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
-    <span class="n">attending</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;enrichments_attending&quot;</span><span class="p">)</span>
+    <span class="n">attending</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"enrichments_attending"</span><span class="p">)</span>
 
-    <span class="n">attended</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;enrichments_attended&quot;</span><span class="p">)</span>
+    <span class="n">attended</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"enrichments_attended"</span><span class="p">)</span>
     <span class="n">attendance_taken</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">presign</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">groups_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;allowed_enrichments_set&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">groups_blacklisted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;blacklisted_enrichments_set&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">groups_allowed</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"allowed_enrichments_set"</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">groups_blacklisted</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"blacklisted_enrichments_set"</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EnrichmentActivity.user_can_signup">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.models.EnrichmentActivity.html#intranet.apps.enrichment.models.EnrichmentActivity.user_can_signup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">user_can_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether a user can sign up for an enrichment activity.</span>
+<span class="w">        </span><span class="sd">"""Return whether a user can sign up for an enrichment activity.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            user: The user to check.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether the user can sign up for the enrichment activity.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_allowed</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_allowed</span><span class="o">.</span><span class="n">all</span><span class="p">()))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
             <span class="n">group</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups_blacklisted</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="p">)</span></div>
@@ -1641,12 +1641,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the enrichment activity was created after the start of the school year.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return whether the enrichment activity was created after the start of the school year."""</span>
         <span class="k">return</span> <span class="n">is_current_year</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">happened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether an enrichment activity has happened.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return whether an enrichment activity has happened."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
     <span class="nd">@property</span>
@@ -1655,14 +1655,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_too_early_to_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns whether it is too early to sign up for the activity</span>
+<span class="w">        </span><span class="sd">"""Returns whether it is too early to sign up for the activity</span>
 <span class="sd">        if it is a presign.</span>
 <span class="sd">        This contains the 2 day presign logic.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether it is too early to sign up for this scheduled activity</span>
 <span class="sd">            and when the activity opens for signups.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
         <span class="c1"># Midnight of the day of the activity</span>
@@ -1674,11 +1674,11 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">now</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">activity_date</span> <span class="o">-</span> <span class="n">presign_period</span><span class="p">),</span> <span class="n">activity_date</span> <span class="o">-</span> <span class="n">presign_period</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
-        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">&quot;enrichment activities&quot;</span></div>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">]</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="s2">"enrichment activities"</span></div>
 
 </pre></div>
         </article>
@@ -1711,7 +1711,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

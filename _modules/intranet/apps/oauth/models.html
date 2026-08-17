@@ -1555,45 +1555,45 @@
 <div class="viewcode-block" id="CSLApplication">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.models.CSLApplication.html#intranet.apps.oauth.models.CSLApplication">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CSLApplication</span><span class="p">(</span><span class="n">AbstractApplication</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extends the default OAuth Application model to add CSL-specific information about an OAuth application.</span>
+<span class="w">    </span><span class="sd">"""Extends the default OAuth Application model to add CSL-specific information about an OAuth application.</span>
 <span class="sd">    Disables the implicit, password, and OIDC implicit grant types.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        sanctioned (bool): Whether the application is sanctioned by the tjCSL.</span>
 <span class="sd">        sanctioned_but_do_not_skip_authorization (bool): Whether to not skip the authorization page for this application even if it is sanctioned.</span>
 <span class="sd">        user_has_oauth_and_api_access (bool): Whether the user associated with the CSLApplication has OAuth and API access.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">CLIENT_CONFIDENTIAL</span> <span class="o">=</span> <span class="s2">&quot;confidential&quot;</span>
-    <span class="n">CLIENT_PUBLIC</span> <span class="o">=</span> <span class="s2">&quot;public&quot;</span>
+    <span class="n">CLIENT_CONFIDENTIAL</span> <span class="o">=</span> <span class="s2">"confidential"</span>
+    <span class="n">CLIENT_PUBLIC</span> <span class="o">=</span> <span class="s2">"public"</span>
     <span class="n">CLIENT_TYPES</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">CLIENT_CONFIDENTIAL</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Confidential&quot;</span><span class="p">)),</span>
-        <span class="p">(</span><span class="n">CLIENT_PUBLIC</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Public&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">CLIENT_CONFIDENTIAL</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Confidential"</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">CLIENT_PUBLIC</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Public"</span><span class="p">)),</span>
     <span class="p">)</span>
 
-    <span class="n">GRANT_AUTHORIZATION_CODE</span> <span class="o">=</span> <span class="s2">&quot;authorization-code&quot;</span>
-    <span class="n">GRANT_IMPLICIT</span> <span class="o">=</span> <span class="s2">&quot;implicit&quot;</span>
-    <span class="n">GRANT_PASSWORD</span> <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
-    <span class="n">GRANT_CLIENT_CREDENTIALS</span> <span class="o">=</span> <span class="s2">&quot;client-credentials&quot;</span>
-    <span class="n">GRANT_OPENID_HYBRID</span> <span class="o">=</span> <span class="s2">&quot;openid-hybrid&quot;</span>
+    <span class="n">GRANT_AUTHORIZATION_CODE</span> <span class="o">=</span> <span class="s2">"authorization-code"</span>
+    <span class="n">GRANT_IMPLICIT</span> <span class="o">=</span> <span class="s2">"implicit"</span>
+    <span class="n">GRANT_PASSWORD</span> <span class="o">=</span> <span class="s2">"password"</span>
+    <span class="n">GRANT_CLIENT_CREDENTIALS</span> <span class="o">=</span> <span class="s2">"client-credentials"</span>
+    <span class="n">GRANT_OPENID_HYBRID</span> <span class="o">=</span> <span class="s2">"openid-hybrid"</span>
     <span class="n">GRANT_TYPES</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">GRANT_AUTHORIZATION_CODE</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Authorization code&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">GRANT_AUTHORIZATION_CODE</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Authorization code"</span><span class="p">)),</span>
         <span class="c1"># Disabled for security reasons</span>
-        <span class="c1"># (GRANT_IMPLICIT, _(&quot;Implicit&quot;)),</span>
-        <span class="c1"># (GRANT_PASSWORD, _(&quot;Resource owner password-based&quot;)),</span>
-        <span class="p">(</span><span class="n">GRANT_CLIENT_CREDENTIALS</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Client credentials&quot;</span><span class="p">)),</span>
-        <span class="c1"># Disabled because we don&#39;t support OIDC with implicit</span>
-        <span class="c1"># (GRANT_OPENID_HYBRID, _(&quot;OpenID connect hybrid&quot;)),</span>
+        <span class="c1"># (GRANT_IMPLICIT, _("Implicit")),</span>
+        <span class="c1"># (GRANT_PASSWORD, _("Resource owner password-based")),</span>
+        <span class="p">(</span><span class="n">GRANT_CLIENT_CREDENTIALS</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"Client credentials"</span><span class="p">)),</span>
+        <span class="c1"># Disabled because we don't support OIDC with implicit</span>
+        <span class="c1"># (GRANT_OPENID_HYBRID, _("OpenID connect hybrid")),</span>
     <span class="p">)</span>
 
-    <span class="n">NO_ALGORITHM</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="n">RS256_ALGORITHM</span> <span class="o">=</span> <span class="s2">&quot;RS256&quot;</span>
-    <span class="n">HS256_ALGORITHM</span> <span class="o">=</span> <span class="s2">&quot;HS256&quot;</span>
+    <span class="n">NO_ALGORITHM</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="n">RS256_ALGORITHM</span> <span class="o">=</span> <span class="s2">"RS256"</span>
+    <span class="n">HS256_ALGORITHM</span> <span class="o">=</span> <span class="s2">"HS256"</span>
     <span class="n">ALGORITHM_TYPES</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">NO_ALGORITHM</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No OIDC support&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">NO_ALGORITHM</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"No OIDC support"</span><span class="p">)),</span>
         <span class="c1"># For OIDC authorization code grant types</span>
-        <span class="p">(</span><span class="n">RS256_ALGORITHM</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;RSA with SHA-2 256&quot;</span><span class="p">)),</span>
-        <span class="c1"># (HS256_ALGORITHM, _(&quot;HMAC with SHA-2 256&quot;)),</span>
+        <span class="p">(</span><span class="n">RS256_ALGORITHM</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">"RSA with SHA-2 256"</span><span class="p">)),</span>
+        <span class="c1"># (HS256_ALGORITHM, _("HMAC with SHA-2 256")),</span>
     <span class="p">)</span>
 
     <span class="n">oidc_enabled</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1601,19 +1601,19 @@
     <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># make name required</span>
     <span class="n">authorization_grant_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">GRANT_TYPES</span><span class="p">)</span>
     <span class="n">algorithm</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ALGORITHM_TYPES</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NO_ALGORITHM</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sanctioned</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="s2">&quot;Whether this application is sanctioned by the tjCSL.&quot;</span><span class="p">)</span>
+    <span class="n">sanctioned</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="s2">"Whether this application is sanctioned by the tjCSL."</span><span class="p">)</span>
     <span class="n">skip_authorization</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help_text</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Skip the authorization page for this application. This will automatically be set to true upon save &quot;</span>
-            <span class="s2">&quot;if this application is marked as sanctioned by the CSL.&quot;</span>
+            <span class="s2">"Skip the authorization page for this application. This will automatically be set to true upon save "</span>
+            <span class="s2">"if this application is marked as sanctioned by the CSL."</span>
         <span class="p">),</span>
     <span class="p">)</span>
     <span class="n">sanctioned_but_do_not_skip_authorization</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help_text</span><span class="o">=</span><span class="p">(</span>
-            <span class="s2">&quot;Set to true if this application is sanctioned but you do NOT want to skip the authorization page for this application. &quot;</span>
-            <span class="s2">&quot;Overrides automatically skipping authorization for sanctioned applications.&quot;</span>
+            <span class="s2">"Set to true if this application is sanctioned but you do NOT want to skip the authorization page for this application. "</span>
+            <span class="s2">"Overrides automatically skipping authorization for sanctioned applications."</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -1628,7 +1628,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">skip_authorization</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">oidc_enabled</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">authorization_grant_type</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GRANT_AUTHORIZATION_CODE</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;OIDC-enabled applications must use the Authorization Code grant type.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">"OIDC-enabled applications must use the Authorization Code grant type."</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">RS256_ALGORITHM</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1651,7 +1651,7 @@
 <div class="viewcode-block" id="BlankModel">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.models.BlankModel.html#intranet.apps.oauth.models.BlankModel">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BlankModel</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A blank model to use for modelform_factory for unauthorized users.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A blank model to use for modelform_factory for unauthorized users."""</span>
 
     <span class="n">_meta</span> <span class="o">=</span> <span class="n">BlankModel2</span></div>
 
@@ -1686,7 +1686,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

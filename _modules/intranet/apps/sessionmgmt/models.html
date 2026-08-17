@@ -1558,7 +1558,7 @@
 <div class="viewcode-block" id="TrustedSession">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.sessionmgmt.models.TrustedSession.html#intranet.apps.sessionmgmt.models.TrustedSession">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TrustedSession</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">DEVICE_TYPES</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;mobile&quot;</span><span class="p">,</span> <span class="s2">&quot;Mobile&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;tablet&quot;</span><span class="p">,</span> <span class="s2">&quot;Tablet&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;computer&quot;</span><span class="p">,</span> <span class="s2">&quot;Computer&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;unknown&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown type&quot;</span><span class="p">))</span>
+    <span class="n">DEVICE_TYPES</span> <span class="o">=</span> <span class="p">((</span><span class="s2">"mobile"</span><span class="p">,</span> <span class="s2">"Mobile"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"tablet"</span><span class="p">,</span> <span class="s2">"Tablet"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"computer"</span><span class="p">,</span> <span class="s2">"Computer"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"unknown"</span><span class="p">,</span> <span class="s2">"Unknown type"</span><span class="p">))</span>
 
     <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
     <span class="n">device_type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">DEVICE_TYPES</span><span class="p">)</span>
@@ -1572,12 +1572,12 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.sessionmgmt.models.TrustedSession.html#intranet.apps.sessionmgmt.models.TrustedSession.delete_expired_sessions">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">delete_expired_sessions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes all expired trusted sessions for the given user. If ``user`` is ``None`` or not given, deletes all expired trusted sessions.</span>
+<span class="w">        </span><span class="sd">"""Deletes all expired trusted sessions for the given user. If ``user`` is ``None`` or not given, deletes all expired trusted sessions.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            user: The user to delete all expired trusted sessions for, or ``None`` to delete all expired trusted sessions</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">trusted_sessions</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">trusted_sessions</span> <span class="o">=</span> <span class="n">trusted_sessions</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
@@ -1588,10 +1588,10 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">first_trusted_date</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">first_trusted_date</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;session_key&quot;</span><span class="p">),)</span></div>
+        <span class="n">unique_together</span> <span class="o">=</span> <span class="p">((</span><span class="s2">"user"</span><span class="p">,</span> <span class="s2">"session_key"</span><span class="p">),)</span></div>
 
 </pre></div>
         </article>
@@ -1624,7 +1624,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

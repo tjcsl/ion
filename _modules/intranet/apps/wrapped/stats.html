@@ -1572,7 +1572,7 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.format_rank_bucket">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_rank_bucket</span><span class="p">(</span><span class="n">bucket</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">bucket</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bucket</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">bucket</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bucket</span><span class="p">))</span></div>
 
 
@@ -1599,7 +1599,7 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">for</span> <span class="n">bucket</span> <span class="ow">in</span> <span class="n">RANK_BUCKETS</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">top_percent</span> <span class="o">&lt;=</span> <span class="n">bucket</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;top </span><span class="si">{</span><span class="n">format_rank_bucket</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span><span class="si">}</span><span class="s2">%&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"top </span><span class="si">{</span><span class="n">format_rank_bucket</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span><span class="si">}</span><span class="s2">%"</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
@@ -1607,7 +1607,7 @@
 <div class="viewcode-block" id="cohort_cache_key">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.cohort_cache_key">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cohort_cache_key</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;wrapped:cohort:v1:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"wrapped:cohort:v1:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">start</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">end</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span></div>
 
 
 
@@ -1630,7 +1630,7 @@
 <div class="viewcode-block" id="student_ids_for_cohort">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.student_ids_for_cohort">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">student_ids_for_cohort</span><span class="p">():</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
 
 
 
@@ -1644,11 +1644,11 @@
             <span class="n">scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span>
             <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
         <span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
-            <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
+            <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span>
         <span class="p">)</span>
-        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped_count&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="s2">"wrapped_count"</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">counts_by_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">]</span></div>
 
@@ -1664,14 +1664,14 @@
             <span class="n">scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span>
             <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
         <span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
             <span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span>
-                <span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">,</span>
+                <span class="s2">"scheduled_activity__activity"</span><span class="p">,</span>
                 <span class="n">distinct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
-        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped_count&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="s2">"wrapped_count"</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">counts_by_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">]</span></div>
 
@@ -1682,12 +1682,12 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_visit_counts</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
     <span class="n">student_ids</span> <span class="o">=</span> <span class="n">student_ids_for_cohort</span><span class="p">()</span>
     <span class="n">counts_by_user</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-        <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id__in</span><span class="o">=</span><span class="n">student_ids</span><span class="p">,</span> <span class="n">timestamp__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp__lte</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">&quot;/wrapped&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">&quot;/api&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
-        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped_count&quot;</span><span class="p">)</span>
+        <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_id__in</span><span class="o">=</span><span class="n">student_ids</span><span class="p">,</span> <span class="n">timestamp__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp__lte</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"GET"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">"/wrapped"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">"/api"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">wrapped_count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="s2">"wrapped_count"</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">counts_by_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">student_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">student_id</span> <span class="ow">in</span> <span class="n">student_ids</span><span class="p">]</span></div>
 
@@ -1697,38 +1697,38 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.path_area">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">path_area</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="n">clean_path</span> <span class="o">=</span> <span class="n">urlsplit</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">path</span>
-    <span class="k">if</span> <span class="n">clean_path</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Dashboard&quot;</span>
-    <span class="k">if</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/wrapped&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/api&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">clean_path</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">"Dashboard"</span>
+    <span class="k">if</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/wrapped"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/api"</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="n">first</span> <span class="o">=</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="n">clean_path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;announcements&quot;</span><span class="p">:</span> <span class="s2">&quot;Announcements&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;bus&quot;</span><span class="p">:</span> <span class="s2">&quot;Bus&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;courses&quot;</span><span class="p">:</span> <span class="s2">&quot;Courses&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;eighth&quot;</span><span class="p">:</span> <span class="s2">&quot;8th Period&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="s2">&quot;Enrichment&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="s2">&quot;Events&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;files&quot;</span><span class="p">:</span> <span class="s2">&quot;Files&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;groups&quot;</span><span class="p">:</span> <span class="s2">&quot;Groups&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;lostfound&quot;</span><span class="p">:</span> <span class="s2">&quot;Lost &amp; Found&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;polls&quot;</span><span class="p">:</span> <span class="s2">&quot;Polls&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;preferences&quot;</span><span class="p">:</span> <span class="s2">&quot;Preferences&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;printing&quot;</span><span class="p">:</span> <span class="s2">&quot;Printing&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;profile&quot;</span><span class="p">:</span> <span class="s2">&quot;Profiles&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="s2">&quot;Schedule&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;search&quot;</span><span class="p">:</span> <span class="s2">&quot;Search&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;seniors&quot;</span><span class="p">:</span> <span class="s2">&quot;Seniors&quot;</span><span class="p">,</span>
+        <span class="s2">"announcements"</span><span class="p">:</span> <span class="s2">"Announcements"</span><span class="p">,</span>
+        <span class="s2">"bus"</span><span class="p">:</span> <span class="s2">"Bus"</span><span class="p">,</span>
+        <span class="s2">"courses"</span><span class="p">:</span> <span class="s2">"Courses"</span><span class="p">,</span>
+        <span class="s2">"eighth"</span><span class="p">:</span> <span class="s2">"8th Period"</span><span class="p">,</span>
+        <span class="s2">"enrichment"</span><span class="p">:</span> <span class="s2">"Enrichment"</span><span class="p">,</span>
+        <span class="s2">"events"</span><span class="p">:</span> <span class="s2">"Events"</span><span class="p">,</span>
+        <span class="s2">"files"</span><span class="p">:</span> <span class="s2">"Files"</span><span class="p">,</span>
+        <span class="s2">"groups"</span><span class="p">:</span> <span class="s2">"Groups"</span><span class="p">,</span>
+        <span class="s2">"lostfound"</span><span class="p">:</span> <span class="s2">"Lost &amp; Found"</span><span class="p">,</span>
+        <span class="s2">"polls"</span><span class="p">:</span> <span class="s2">"Polls"</span><span class="p">,</span>
+        <span class="s2">"preferences"</span><span class="p">:</span> <span class="s2">"Preferences"</span><span class="p">,</span>
+        <span class="s2">"printing"</span><span class="p">:</span> <span class="s2">"Printing"</span><span class="p">,</span>
+        <span class="s2">"profile"</span><span class="p">:</span> <span class="s2">"Profiles"</span><span class="p">,</span>
+        <span class="s2">"schedule"</span><span class="p">:</span> <span class="s2">"Schedule"</span><span class="p">,</span>
+        <span class="s2">"search"</span><span class="p">:</span> <span class="s2">"Search"</span><span class="p">,</span>
+        <span class="s2">"seniors"</span><span class="p">:</span> <span class="s2">"Seniors"</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">first</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;Dashboard&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">labels</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">first</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">"Dashboard"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="display_list">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.display_list">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_list</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">}</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="p">[{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">"count"</span><span class="p">:</span> <span class="n">count</span><span class="p">}</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span></div>
 
 
 
@@ -1743,18 +1743,18 @@
     <span class="n">previous_scheduled_activities</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">history</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">history</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">current_scheduled_activities</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;history_date&quot;</span><span class="p">,</span> <span class="s2">&quot;history_id&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity_id&quot;</span><span class="p">,</span> <span class="s2">&quot;history_date&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"history_date"</span><span class="p">,</span> <span class="s2">"history_id"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="s2">"scheduled_activity_id"</span><span class="p">,</span> <span class="s2">"history_date"</span><span class="p">)</span>
     <span class="p">)</span>
 
     <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
-        <span class="n">signup_id</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
-        <span class="n">scheduled_activity_id</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;scheduled_activity_id&quot;</span><span class="p">]</span>
+        <span class="n">signup_id</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span>
+        <span class="n">scheduled_activity_id</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">"scheduled_activity_id"</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">scheduled_activity_id</span> <span class="o">==</span> <span class="n">current_scheduled_activities</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">signup_id</span><span class="p">)</span>
             <span class="ow">and</span> <span class="n">previous_scheduled_activities</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">signup_id</span><span class="p">)</span> <span class="o">!=</span> <span class="n">scheduled_activity_id</span>
         <span class="p">):</span>
-            <span class="n">event_times</span><span class="p">[</span><span class="n">signup_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">&quot;history_date&quot;</span><span class="p">]</span>
+            <span class="n">event_times</span><span class="p">[</span><span class="n">signup_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="p">[</span><span class="s2">"history_date"</span><span class="p">]</span>
         <span class="n">previous_scheduled_activities</span><span class="p">[</span><span class="n">signup_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">scheduled_activity_id</span>
 
     <span class="k">return</span> <span class="n">event_times</span></div>
@@ -1766,20 +1766,20 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">build_eighth_stats</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">):</span>
     <span class="n">signups</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">scheduled_activity__block__date__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"scheduled_activity__activity"</span><span class="p">,</span> <span class="s2">"scheduled_activity__block"</span><span class="p">)</span>
         <span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span>
-            <span class="s2">&quot;scheduled_activity__activity__rooms&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scheduled_activity__rooms&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scheduled_activity__activity__sponsors&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scheduled_activity__sponsors&quot;</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity__activity__rooms"</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity__rooms"</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity__activity__sponsors"</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity__sponsors"</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="p">)</span>
 
     <span class="n">total</span> <span class="o">=</span> <span class="n">signups</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="n">top_activities</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">signups</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity__name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-count&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity__name&quot;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">signups</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"scheduled_activity__activity__name"</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">Count</span><span class="p">(</span><span class="s2">"id"</span><span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"-count"</span><span class="p">,</span> <span class="s2">"scheduled_activity__activity__name"</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
     <span class="p">)</span>
-    <span class="n">unique_activities</span> <span class="o">=</span> <span class="n">signups</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">&quot;scheduled_activity__activity&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">unique_activities</span> <span class="o">=</span> <span class="n">signups</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="s2">"scheduled_activity__activity"</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="n">favorites_count</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">favorited_activity_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="n">subscriptions_count</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">subscribed_activity_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="n">own_signup_count</span> <span class="o">=</span> <span class="n">signups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">own_signup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -1810,11 +1810,11 @@
             <span class="n">delta</span> <span class="o">=</span> <span class="n">deadline</span> <span class="o">-</span> <span class="n">signup_time</span>
             <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">delta</span> <span class="o">&lt;=</span> <span class="n">LAST_MINUTE_WINDOW</span><span class="p">:</span>
                 <span class="n">last_minute_count</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">closest_signup</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">closest_signup</span><span class="p">[</span><span class="s2">&quot;delta&quot;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">delta</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">closest_signup</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="n">closest_signup</span><span class="p">[</span><span class="s2">"delta"</span><span class="p">]):</span>
                 <span class="n">closest_signup</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="n">delta</span><span class="p">,</span>
-                    <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">full_title</span><span class="p">,</span>
-                    <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">short_text</span><span class="p">,</span>
+                    <span class="s2">"delta"</span><span class="p">:</span> <span class="n">delta</span><span class="p">,</span>
+                    <span class="s2">"activity"</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">full_title</span><span class="p">,</span>
+                    <span class="s2">"block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">short_text</span><span class="p">,</span>
                 <span class="p">}</span>
 
         <span class="n">rooms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">activity</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
@@ -1825,28 +1825,28 @@
         <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">sponsors</span><span class="p">:</span>
             <span class="n">sponsor_counts</span><span class="p">[</span><span class="n">sponsor</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="n">signup_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">&quot;signup-counts&quot;</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
-    <span class="n">unique_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">&quot;unique-activity-counts&quot;</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+    <span class="n">signup_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">"signup-counts"</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+    <span class="n">unique_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">"unique-activity-counts"</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
-        <span class="s2">&quot;top_activities&quot;</span><span class="p">:</span> <span class="n">display_list</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;scheduled_activity__activity__name&quot;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">top_activities</span><span class="p">),</span>
-        <span class="s2">&quot;unique_activities&quot;</span><span class="p">:</span> <span class="n">unique_activities</span><span class="p">,</span>
-        <span class="s2">&quot;favorites_count&quot;</span><span class="p">:</span> <span class="n">favorites_count</span><span class="p">,</span>
-        <span class="s2">&quot;subscriptions_count&quot;</span><span class="p">:</span> <span class="n">subscriptions_count</span><span class="p">,</span>
-        <span class="s2">&quot;after_deadline_count&quot;</span><span class="p">:</span> <span class="n">after_deadline_count</span><span class="p">,</span>
-        <span class="s2">&quot;own_signup_count&quot;</span><span class="p">:</span> <span class="n">own_signup_count</span><span class="p">,</span>
-        <span class="s2">&quot;admin_signup_count&quot;</span><span class="p">:</span> <span class="n">admin_signup_count</span><span class="p">,</span>
-        <span class="s2">&quot;absence_count&quot;</span><span class="p">:</span> <span class="n">absence_count</span><span class="p">,</span>
-        <span class="s2">&quot;attendance_taken_count&quot;</span><span class="p">:</span> <span class="n">attendance_taken_count</span><span class="p">,</span>
-        <span class="s2">&quot;present_count&quot;</span><span class="p">:</span> <span class="n">present_count</span><span class="p">,</span>
-        <span class="s2">&quot;top_blocks&quot;</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">block_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
-        <span class="s2">&quot;top_rooms&quot;</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">room_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
-        <span class="s2">&quot;top_sponsors&quot;</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">sponsor_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
-        <span class="s2">&quot;last_minute_count&quot;</span><span class="p">:</span> <span class="n">last_minute_count</span><span class="p">,</span>
-        <span class="s2">&quot;closest_signup&quot;</span><span class="p">:</span> <span class="n">closest_signup</span><span class="p">,</span>
-        <span class="s2">&quot;signup_percentile&quot;</span><span class="p">:</span> <span class="n">as_top_percent</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">signup_counts</span><span class="p">),</span>
-        <span class="s2">&quot;unique_percentile&quot;</span><span class="p">:</span> <span class="n">as_top_percent</span><span class="p">(</span><span class="n">unique_activities</span><span class="p">,</span> <span class="n">unique_counts</span><span class="p">),</span>
+        <span class="s2">"total"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+        <span class="s2">"top_activities"</span><span class="p">:</span> <span class="n">display_list</span><span class="p">((</span><span class="n">row</span><span class="p">[</span><span class="s2">"scheduled_activity__activity__name"</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s2">"count"</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">top_activities</span><span class="p">),</span>
+        <span class="s2">"unique_activities"</span><span class="p">:</span> <span class="n">unique_activities</span><span class="p">,</span>
+        <span class="s2">"favorites_count"</span><span class="p">:</span> <span class="n">favorites_count</span><span class="p">,</span>
+        <span class="s2">"subscriptions_count"</span><span class="p">:</span> <span class="n">subscriptions_count</span><span class="p">,</span>
+        <span class="s2">"after_deadline_count"</span><span class="p">:</span> <span class="n">after_deadline_count</span><span class="p">,</span>
+        <span class="s2">"own_signup_count"</span><span class="p">:</span> <span class="n">own_signup_count</span><span class="p">,</span>
+        <span class="s2">"admin_signup_count"</span><span class="p">:</span> <span class="n">admin_signup_count</span><span class="p">,</span>
+        <span class="s2">"absence_count"</span><span class="p">:</span> <span class="n">absence_count</span><span class="p">,</span>
+        <span class="s2">"attendance_taken_count"</span><span class="p">:</span> <span class="n">attendance_taken_count</span><span class="p">,</span>
+        <span class="s2">"present_count"</span><span class="p">:</span> <span class="n">present_count</span><span class="p">,</span>
+        <span class="s2">"top_blocks"</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">block_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+        <span class="s2">"top_rooms"</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">room_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+        <span class="s2">"top_sponsors"</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">sponsor_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+        <span class="s2">"last_minute_count"</span><span class="p">:</span> <span class="n">last_minute_count</span><span class="p">,</span>
+        <span class="s2">"closest_signup"</span><span class="p">:</span> <span class="n">closest_signup</span><span class="p">,</span>
+        <span class="s2">"signup_percentile"</span><span class="p">:</span> <span class="n">as_top_percent</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">signup_counts</span><span class="p">),</span>
+        <span class="s2">"unique_percentile"</span><span class="p">:</span> <span class="n">as_top_percent</span><span class="p">(</span><span class="n">unique_activities</span><span class="p">,</span> <span class="n">unique_counts</span><span class="p">),</span>
     <span class="p">}</span></div>
 
 
@@ -1855,37 +1855,37 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.build_usage_stats">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">build_usage_stats</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
     <span class="n">visits</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">timestamp__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp__lte</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;GET&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">&quot;/wrapped&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">&quot;/api&quot;</span><span class="p">)</span>
+        <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">timestamp__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp__lte</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"GET"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">"/wrapped"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">path__startswith</span><span class="o">=</span><span class="s2">"/api"</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">total</span> <span class="o">=</span> <span class="n">visits</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
     <span class="n">area_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
     <span class="n">month_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
     <span class="n">hour_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">visits</span><span class="o">.</span><span class="n">only</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">visit</span> <span class="ow">in</span> <span class="n">visits</span><span class="o">.</span><span class="n">only</span><span class="p">(</span><span class="s2">"path"</span><span class="p">,</span> <span class="s2">"timestamp"</span><span class="p">):</span>
         <span class="n">area</span> <span class="o">=</span> <span class="n">path_area</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">area</span><span class="p">:</span>
             <span class="n">area_counts</span><span class="p">[</span><span class="n">area</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">local_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">(</span><span class="n">visit</span><span class="o">.</span><span class="n">timestamp</span><span class="p">)</span>
-        <span class="n">month_counts</span><span class="p">[</span><span class="n">local_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">month_counts</span><span class="p">[</span><span class="n">local_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%B"</span><span class="p">)]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">hour_counts</span><span class="p">[</span><span class="n">local_time</span><span class="o">.</span><span class="n">hour</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="n">visit_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">&quot;visit-counts&quot;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">visit_counts</span> <span class="o">=</span> <span class="n">get_cached_cohort_counts</span><span class="p">(</span><span class="s2">"visit-counts"</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
 
     <span class="n">busiest_hour</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">hour_counts</span><span class="p">:</span>
         <span class="n">hour</span> <span class="o">=</span> <span class="n">hour_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">label_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="n">hour</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%I %p&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
-        <span class="n">busiest_hour</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">label_hour</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">hour_counts</span><span class="p">[</span><span class="n">hour</span><span class="p">]}</span>
+        <span class="n">label_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="n">hour</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%I %p"</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"0"</span><span class="p">)</span>
+        <span class="n">busiest_hour</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">label_hour</span><span class="p">,</span> <span class="s2">"count"</span><span class="p">:</span> <span class="n">hour_counts</span><span class="p">[</span><span class="n">hour</span><span class="p">]}</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
-        <span class="s2">&quot;top_areas&quot;</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">area_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
-        <span class="s2">&quot;top_month&quot;</span><span class="p">:</span> <span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">month_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">month_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]}</span> <span class="k">if</span> <span class="n">month_counts</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
-        <span class="s2">&quot;busiest_hour&quot;</span><span class="p">:</span> <span class="n">busiest_hour</span><span class="p">,</span>
-        <span class="s2">&quot;visit_percentile&quot;</span><span class="p">:</span> <span class="n">as_top_percent</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">visit_counts</span><span class="p">),</span>
+        <span class="s2">"total"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+        <span class="s2">"top_areas"</span><span class="p">:</span> <span class="n">display_list</span><span class="p">(</span><span class="n">area_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span>
+        <span class="s2">"top_month"</span><span class="p">:</span> <span class="p">({</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">month_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"count"</span><span class="p">:</span> <span class="n">month_counts</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]}</span> <span class="k">if</span> <span class="n">month_counts</span> <span class="k">else</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="s2">"busiest_hour"</span><span class="p">:</span> <span class="n">busiest_hour</span><span class="p">,</span>
+        <span class="s2">"visit_percentile"</span><span class="p">:</span> <span class="n">as_top_percent</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">visit_counts</span><span class="p">),</span>
     <span class="p">}</span></div>
 
 
@@ -1901,11 +1901,11 @@
     <span class="n">enrichments_attended</span> <span class="o">=</span> <span class="n">EnrichmentActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">attended</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">time__gte</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">time__lte</span><span class="o">=</span><span class="n">end</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;events_joined&quot;</span><span class="p">:</span> <span class="n">events_joined</span><span class="p">,</span>
-        <span class="s2">&quot;polls_voted&quot;</span><span class="p">:</span> <span class="n">polls_voted</span><span class="p">,</span>
-        <span class="s2">&quot;poll_answers&quot;</span><span class="p">:</span> <span class="n">poll_answers</span><span class="p">,</span>
-        <span class="s2">&quot;enrichments_joined&quot;</span><span class="p">:</span> <span class="n">enrichments_joined</span><span class="p">,</span>
-        <span class="s2">&quot;enrichments_attended&quot;</span><span class="p">:</span> <span class="n">enrichments_attended</span><span class="p">,</span>
+        <span class="s2">"events_joined"</span><span class="p">:</span> <span class="n">events_joined</span><span class="p">,</span>
+        <span class="s2">"polls_voted"</span><span class="p">:</span> <span class="n">polls_voted</span><span class="p">,</span>
+        <span class="s2">"poll_answers"</span><span class="p">:</span> <span class="n">poll_answers</span><span class="p">,</span>
+        <span class="s2">"enrichments_joined"</span><span class="p">:</span> <span class="n">enrichments_joined</span><span class="p">,</span>
+        <span class="s2">"enrichments_attended"</span><span class="p">:</span> <span class="n">enrichments_attended</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 
@@ -1920,127 +1920,127 @@
 
     <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">days</span><span class="p">:</span>
-        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">days</span><span class="si">}</span><span class="s2">d&quot;</span><span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">days</span><span class="si">}</span><span class="s2">d"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">days</span> <span class="ow">or</span> <span class="n">hours</span><span class="p">:</span>
-        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">}</span><span class="s2">h&quot;</span><span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">hours</span><span class="si">}</span><span class="s2">h"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">days</span> <span class="ow">or</span> <span class="n">hours</span> <span class="ow">or</span> <span class="n">minutes</span><span class="p">:</span>
-        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">minutes</span><span class="si">}</span><span class="s2">m&quot;</span><span class="p">)</span>
-    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">minutes</span><span class="si">}</span><span class="s2">m"</span><span class="p">)</span>
+    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">seconds</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="make_cards">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.wrapped.stats.html#intranet.apps.wrapped.stats.make_cards">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_cards</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">year_label</span><span class="p">,</span> <span class="n">eighth</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-    <span class="n">top_activity</span> <span class="o">=</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_activities&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_activities&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">top_area</span> <span class="o">=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;top_areas&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;top_areas&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">unique_rank</span> <span class="o">=</span> <span class="n">rank_label</span><span class="p">(</span><span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;unique_percentile&quot;</span><span class="p">])</span>
-    <span class="n">visit_rank</span> <span class="o">=</span> <span class="n">rank_label</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;visit_percentile&quot;</span><span class="p">])</span>
+    <span class="n">top_activity</span> <span class="o">=</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_activities"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_activities"</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">top_area</span> <span class="o">=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"top_areas"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"top_areas"</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">unique_rank</span> <span class="o">=</span> <span class="n">rank_label</span><span class="p">(</span><span class="n">eighth</span><span class="p">[</span><span class="s2">"unique_percentile"</span><span class="p">])</span>
+    <span class="n">visit_rank</span> <span class="o">=</span> <span class="n">rank_label</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">"visit_percentile"</span><span class="p">])</span>
 
     <span class="n">cards</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Ion Wrapped </span><span class="si">{</span><span class="n">year_label</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">, your Ion wrapped is ready.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;A quick recap of your year with Ion: including signups, visits, absences, and more.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="s2">&quot;Click to start&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;hero&quot;</span><span class="p">,</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Ion Wrapped </span><span class="si">{</span><span class="n">year_label</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">, your Ion wrapped is ready."</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="s2">"A quick recap of your year with Ion: including signups, visits, absences, and more."</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="s2">"Click to start"</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"hero"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;8th Period Signups&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;You signed up for&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;8th periods this year&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"8th Period Signups"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"You signed up for"</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">'total'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"unit"</span><span class="p">:</span> <span class="s2">"8th periods this year"</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"green"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Your top 3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;These activities saw you the most.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;list&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_activities&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;pink&quot;</span><span class="p">,</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Your top 3"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"These activities saw you the most."</span><span class="p">,</span>
+            <span class="s2">"list"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_activities"</span><span class="p">],</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"pink"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Variety&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;You tried&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">&#39;unique_activities&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;different activities this year&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;That is </span><span class="si">{</span><span class="n">unique_rank</span><span class="si">}</span><span class="s2"> among students.&quot;</span> <span class="k">if</span> <span class="n">unique_rank</span> <span class="k">else</span> <span class="s2">&quot;Your activity map was compact this year!&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Variety"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"You tried"</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">'unique_activities'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"unit"</span><span class="p">:</span> <span class="s2">"different activities this year"</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"That is </span><span class="si">{</span><span class="n">unique_rank</span><span class="si">}</span><span class="s2"> among students."</span> <span class="k">if</span> <span class="n">unique_rank</span> <span class="k">else</span> <span class="s2">"Your activity map was compact this year!"</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"yellow"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Time management&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Last-minute signups&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">&#39;last_minute_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;within the final </span><span class="si">{</span><span class="n">LAST_MINUTE_WINDOW</span><span class="o">.</span><span class="n">seconds</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="s2"> minutes&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Your closest call was </span><span class="si">{</span><span class="n">format_duration</span><span class="p">(</span><span class="n">eighth</span><span class="p">[</span><span class="s1">&#39;closest_signup&#39;</span><span class="p">][</span><span class="s1">&#39;delta&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> before signups closed for </span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">&#39;closest_signup&#39;</span><span class="p">][</span><span class="s1">&#39;activity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
-                <span class="k">if</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;closest_signup&quot;</span><span class="p">]</span>
-                <span class="k">else</span> <span class="s2">&quot;Congratulations, you had no close calls this year!&quot;</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Time management"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Last-minute signups"</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">'last_minute_count'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"unit"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"within the final </span><span class="si">{</span><span class="n">LAST_MINUTE_WINDOW</span><span class="o">.</span><span class="n">seconds</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="s2"> minutes"</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Your closest call was </span><span class="si">{</span><span class="n">format_duration</span><span class="p">(</span><span class="n">eighth</span><span class="p">[</span><span class="s1">'closest_signup'</span><span class="p">][</span><span class="s1">'delta'</span><span class="p">])</span><span class="si">}</span><span class="s2"> before signups closed for </span><span class="si">{</span><span class="n">eighth</span><span class="p">[</span><span class="s1">'closest_signup'</span><span class="p">][</span><span class="s1">'activity'</span><span class="p">]</span><span class="si">}</span><span class="s2">."</span>
+                <span class="k">if</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"closest_signup"</span><span class="p">]</span>
+                <span class="k">else</span> <span class="s2">"Congratulations, you had no close calls this year!"</span>
             <span class="p">),</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"purple"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Passes &amp; attendance&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;The official bits&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stats&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;after-deadline signups&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;after_deadline_count&quot;</span><span class="p">]},</span>
-                <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;8th period absences&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;absence_count&quot;</span><span class="p">]},</span>
-                <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s1">&#39;times marked &quot;present&quot;&#39;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;present_count&quot;</span><span class="p">]},</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Passes &amp; attendance"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"The official bits"</span><span class="p">,</span>
+            <span class="s2">"stats"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"after-deadline signups"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"after_deadline_count"</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"8th period absences"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"absence_count"</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s1">'times marked "present"'</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"present_count"</span><span class="p">]},</span>
             <span class="p">],</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;Don&#39;t worry, we won&#39;t tell anyone.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="s2">"Don't worry, we won't tell anyone."</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"blue"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Places &amp; people&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Your most common rooms and sponsors&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Rooms&quot;</span><span class="p">,</span> <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_rooms&quot;</span><span class="p">]},</span>
-                <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_sponsors&quot;</span><span class="p">]},</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Places &amp; people"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Your most common rooms and sponsors"</span><span class="p">,</span>
+            <span class="s2">"columns"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Rooms"</span><span class="p">,</span> <span class="s2">"items"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_rooms"</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Sponsors"</span><span class="p">,</span> <span class="s2">"items"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_sponsors"</span><span class="p">]},</span>
             <span class="p">],</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"orange"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Ion visits&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;You opened Ion&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">usage</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;times this year&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;That lands you in the </span><span class="si">{</span><span class="n">visit_rank</span><span class="si">}</span><span class="s2"> for visits.&quot;</span> <span class="k">if</span> <span class="n">visit_rank</span> <span class="k">else</span> <span class="s2">&quot;Do you even go to TJ?&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Ion visits"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"You opened Ion"</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">usage</span><span class="p">[</span><span class="s1">'total'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="s2">"unit"</span><span class="p">:</span> <span class="s2">"times this year"</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"That lands you in the </span><span class="si">{</span><span class="n">visit_rank</span><span class="si">}</span><span class="s2"> for visits."</span> <span class="k">if</span> <span class="n">visit_rank</span> <span class="k">else</span> <span class="s2">"Do you even go to TJ?"</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"green"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Most visited page&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">top_area</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">top_area</span> <span class="k">else</span> <span class="s2">&quot;No clear favorite&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">top_area</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">top_area</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;visits this year&quot;</span> <span class="k">if</span> <span class="n">top_area</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Your busiest month was </span><span class="si">{</span><span class="n">usage</span><span class="p">[</span><span class="s1">&#39;top_month&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, and your busiest hour was around </span><span class="si">{</span><span class="n">usage</span><span class="p">[</span><span class="s1">&#39;busiest_hour&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
-                <span class="k">if</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;top_month&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;busiest_hour&quot;</span><span class="p">]</span>
-                <span class="k">else</span> <span class="s2">&quot;The logs kept this one mysterious.&quot;</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Most visited page"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">top_area</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">if</span> <span class="n">top_area</span> <span class="k">else</span> <span class="s2">"No clear favorite"</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">top_area</span><span class="p">[</span><span class="s1">'count'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">top_area</span> <span class="k">else</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"unit"</span><span class="p">:</span> <span class="s2">"visits this year"</span> <span class="k">if</span> <span class="n">top_area</span> <span class="k">else</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Your busiest month was </span><span class="si">{</span><span class="n">usage</span><span class="p">[</span><span class="s1">'top_month'</span><span class="p">][</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2">, and your busiest hour was around </span><span class="si">{</span><span class="n">usage</span><span class="p">[</span><span class="s1">'busiest_hour'</span><span class="p">][</span><span class="s1">'name'</span><span class="p">]</span><span class="si">}</span><span class="s2">."</span>
+                <span class="k">if</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"top_month"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"busiest_hour"</span><span class="p">]</span>
+                <span class="k">else</span> <span class="s2">"The logs kept this one mysterious."</span>
             <span class="p">),</span>
-            <span class="s2">&quot;list&quot;</span><span class="p">:</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;top_areas&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">:],</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;pink&quot;</span><span class="p">,</span>
+            <span class="s2">"list"</span><span class="p">:</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"top_areas"</span><span class="p">][</span><span class="mi">1</span><span class="p">:],</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"pink"</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;Around Ion&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;You left your mark through the rest of Ion.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stats&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;events joined&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">other</span><span class="p">[</span><span class="s2">&quot;events_joined&quot;</span><span class="p">]},</span>
-                <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;polls voted in&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">other</span><span class="p">[</span><span class="s2">&quot;polls_voted&quot;</span><span class="p">]},</span>
-                <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;enrichments joined&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">other</span><span class="p">[</span><span class="s2">&quot;enrichments_joined&quot;</span><span class="p">]},</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"Around Ion"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"You left your mark through the rest of Ion."</span><span class="p">,</span>
+            <span class="s2">"stats"</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"events joined"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">other</span><span class="p">[</span><span class="s2">"events_joined"</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"polls voted in"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">other</span><span class="p">[</span><span class="s2">"polls_voted"</span><span class="p">]},</span>
+                <span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"enrichments joined"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">:</span> <span class="n">other</span><span class="p">[</span><span class="s2">"enrichments_joined"</span><span class="p">]},</span>
             <span class="p">],</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;Small clicks, real school year.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="s2">"Small clicks, real school year."</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"purple"</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">]</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">top_activity</span> <span class="ow">and</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">top_activity</span> <span class="ow">and</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"total"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">cards</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;eyebrow&quot;</span><span class="p">:</span> <span class="s2">&quot;8th Period&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Your activity list is still pretty empty.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;Ion Wrapped works best with a signups. Come back later once you&#39;ve gone to some activities.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;top activities&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;variant&quot;</span><span class="p">:</span> <span class="s2">&quot;pink&quot;</span><span class="p">,</span>
+            <span class="s2">"eyebrow"</span><span class="p">:</span> <span class="s2">"8th Period"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Your activity list is still pretty empty."</span><span class="p">,</span>
+            <span class="s2">"body"</span><span class="p">:</span> <span class="s2">"Ion Wrapped works best with a signups. Come back later once you've gone to some activities."</span><span class="p">,</span>
+            <span class="s2">"stat"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+            <span class="s2">"unit"</span><span class="p">:</span> <span class="s2">"top activities"</span><span class="p">,</span>
+            <span class="s2">"variant"</span><span class="p">:</span> <span class="s2">"pink"</span><span class="p">,</span>
         <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">cards</span></div>
@@ -2057,26 +2057,26 @@
     <span class="n">year_label</span> <span class="o">=</span> <span class="n">get_school_year_label</span><span class="p">()</span>
     <span class="n">cards</span> <span class="o">=</span> <span class="n">make_cards</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">year_label</span><span class="p">,</span> <span class="n">eighth</span><span class="p">,</span> <span class="n">usage</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-    <span class="n">top_activity</span> <span class="o">=</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_activities&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;top_activities&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;No top activity yet&quot;</span>
-    <span class="n">top_area</span> <span class="o">=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;top_areas&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;top_areas&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;Dashboard&quot;</span>
+    <span class="n">top_activity</span> <span class="o">=</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_activities"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">if</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"top_activities"</span><span class="p">]</span> <span class="k">else</span> <span class="s2">"No top activity yet"</span>
+    <span class="n">top_area</span> <span class="o">=</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"top_areas"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">if</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"top_areas"</span><span class="p">]</span> <span class="k">else</span> <span class="s2">"Dashboard"</span>
     <span class="n">share_card</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
-        <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">year_label</span><span class="p">,</span>
-        <span class="s2">&quot;signups&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;top_activity&quot;</span><span class="p">:</span> <span class="n">top_activity</span><span class="p">,</span>
-        <span class="s2">&quot;unique_activities&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;unique_activities&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;last_minute&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;last_minute_count&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;visits&quot;</span><span class="p">:</span> <span class="n">usage</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;top_area&quot;</span><span class="p">:</span> <span class="n">top_area</span><span class="p">,</span>
-        <span class="s2">&quot;absences&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">&quot;absence_count&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="n">rank_label</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">&quot;visit_percentile&quot;</span><span class="p">])</span> <span class="ow">or</span> <span class="s2">&quot;Ion regular&quot;</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span> <span class="ow">or</span> <span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+        <span class="s2">"year"</span><span class="p">:</span> <span class="n">year_label</span><span class="p">,</span>
+        <span class="s2">"signups"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"total"</span><span class="p">],</span>
+        <span class="s2">"top_activity"</span><span class="p">:</span> <span class="n">top_activity</span><span class="p">,</span>
+        <span class="s2">"unique_activities"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"unique_activities"</span><span class="p">],</span>
+        <span class="s2">"last_minute"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"last_minute_count"</span><span class="p">],</span>
+        <span class="s2">"visits"</span><span class="p">:</span> <span class="n">usage</span><span class="p">[</span><span class="s2">"total"</span><span class="p">],</span>
+        <span class="s2">"top_area"</span><span class="p">:</span> <span class="n">top_area</span><span class="p">,</span>
+        <span class="s2">"absences"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">[</span><span class="s2">"absence_count"</span><span class="p">],</span>
+        <span class="s2">"rank"</span><span class="p">:</span> <span class="n">rank_label</span><span class="p">(</span><span class="n">usage</span><span class="p">[</span><span class="s2">"visit_percentile"</span><span class="p">])</span> <span class="ow">or</span> <span class="s2">"Ion regular"</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;cards&quot;</span><span class="p">:</span> <span class="n">cards</span><span class="p">,</span>
-        <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">year_label</span><span class="p">,</span> <span class="s2">&quot;eighth&quot;</span><span class="p">:</span> <span class="n">eighth</span><span class="p">,</span> <span class="s2">&quot;usage&quot;</span><span class="p">:</span> <span class="n">usage</span><span class="p">,</span> <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="n">other</span><span class="p">},</span>
-        <span class="s2">&quot;share_card&quot;</span><span class="p">:</span> <span class="n">share_card</span><span class="p">,</span>
-        <span class="s2">&quot;wrapped_enabled&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_ION_WRAPPED</span><span class="p">,</span>
+        <span class="s2">"cards"</span><span class="p">:</span> <span class="n">cards</span><span class="p">,</span>
+        <span class="s2">"summary"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"year"</span><span class="p">:</span> <span class="n">year_label</span><span class="p">,</span> <span class="s2">"eighth"</span><span class="p">:</span> <span class="n">eighth</span><span class="p">,</span> <span class="s2">"usage"</span><span class="p">:</span> <span class="n">usage</span><span class="p">,</span> <span class="s2">"other"</span><span class="p">:</span> <span class="n">other</span><span class="p">},</span>
+        <span class="s2">"share_card"</span><span class="p">:</span> <span class="n">share_card</span><span class="p">,</span>
+        <span class="s2">"wrapped_enabled"</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_ION_WRAPPED</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 </pre></div>
@@ -2110,7 +2110,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

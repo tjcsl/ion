@@ -1564,12 +1564,12 @@
 <div class="viewcode-block" id="Link">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.Link.html#intranet.apps.events.models.Link">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Link</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A link about an item (Facebook event link, etc).</span>
+<span class="w">    </span><span class="sd">"""A link about an item (Facebook event link, etc).</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        url (str): The URL to link to</span>
 <span class="sd">        title (str): The text associated with the link</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">url</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">URLField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span></div>
@@ -1582,11 +1582,11 @@
 <div class="viewcode-block" id="EventQuerySet.this_year">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.EventQuerySet.html#intranet.apps.events.models.EventQuerySet.this_year">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Events created during this school year.</span>
+<span class="w">        </span><span class="sd">"""Get Events created during this school year.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Events created during this school year.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">added__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">added__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span></div>
 </div>
@@ -1602,7 +1602,7 @@
 <div class="viewcode-block" id="EventManager.visible_to_user">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.EventManager.html#intranet.apps.events.models.EventManager.visible_to_user">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of visible events for a given user (usually request.user).</span>
+<span class="w">        </span><span class="sd">"""Get a list of visible events for a given user (usually request.user).</span>
 
 <span class="sd">        These visible events will be those that either have no groups</span>
 <span class="sd">        assigned to them (and are therefore public) or those in which</span>
@@ -1616,7 +1616,7 @@
 <span class="sd">            Events that either have no groups assigned to them (and are</span>
 <span class="sd">            therefore public), were created by the user, or are in</span>
 <span class="sd">            a group.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">groups__in</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">))</span></div>
 
@@ -1624,7 +1624,7 @@
 <div class="viewcode-block" id="EventManager.hidden_events">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.EventManager.html#intranet.apps.events.models.EventManager.hidden_events">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">hidden_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of events marked as hidden for a given user (usually request.user).</span>
+<span class="w">        </span><span class="sd">"""Get a list of events marked as hidden for a given user (usually request.user).</span>
 
 <span class="sd">        These are all events visible to the user -- they have just decided to</span>
 <span class="sd">        hide them.</span>
@@ -1635,7 +1635,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Events a user has hid.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">events_hidden</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
 </div>
@@ -1645,7 +1645,7 @@
 <div class="viewcode-block" id="EventUserMap">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.EventUserMap.html#intranet.apps.events.models.EventUserMap">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EventUserMap</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a mapping between events and users.</span>
+<span class="w">    </span><span class="sd">"""Represents a mapping between events and users.</span>
 
 <span class="sd">    These attributes would be a part of the Event model, but if they are,</span>
 <span class="sd">    the last updated date is changed whenever a student sees or hides an event.</span>
@@ -1659,20 +1659,20 @@
 <span class="sd">        event (Event): The one-to-one mapping between this object and the Event it is for</span>
 <span class="sd">        users_hidden (UserQuerySet): A many-to-many field of Users who have hidden this event</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">event</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="s2">&quot;Event&quot;</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;_user_map&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-    <span class="n">users_hidden</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;events_hidden&quot;</span><span class="p">)</span>
+    <span class="n">event</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">OneToOneField</span><span class="p">(</span><span class="s2">"Event"</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"_user_map"</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">users_hidden</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"events_hidden"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;UserMap: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"UserMap: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span></div>
 
 
 
 <div class="viewcode-block" id="Event">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.Event.html#intranet.apps.events.models.Event">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An event available to the TJ community.</span>
+<span class="w">    </span><span class="sd">"""An event available to the TJ community.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        title (str): The title for the event.</span>
@@ -1691,20 +1691,20 @@
 <span class="sd">        show_on_dashboard (bool): Whether the event will be shown on the dashboard.</span>
 <span class="sd">        approved (bool): Whether the event has been approved and will be displayed.</span>
 <span class="sd">        approved_by (User): The user who approved the event.</span>
-<span class="sd">        rejected (bool): Whether the event was rejected and shouldn&#39;t be shown in the</span>
+<span class="sd">        rejected (bool): Whether the event was rejected and shouldn't be shown in the</span>
 <span class="sd">            list of events that need to be approved.</span>
 <span class="sd">        rejected_by (User): The user who rejected the event.</span>
 <span class="sd">        public (bool): Whether the event is public and can be shown on the login page.</span>
 <span class="sd">        category (str): The category of the event, used for ordering on the login page.</span>
 <span class="sd">        open_to (bool): Whether this event is open to parents, students, or both, shown on the login page.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">EventManager</span><span class="p">()</span>
 
     <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
     <span class="n">description</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
-    <span class="n">links</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">&quot;Link&quot;</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="s2">"Link"</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">added</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">updated</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -1713,35 +1713,35 @@
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
 
     <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
-    <span class="n">announcement</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;event&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">announcement</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"event"</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
 
     <span class="n">groups</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">DjangoGroup</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">attending</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;attending&quot;</span><span class="p">)</span>
+    <span class="n">attending</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"attending"</span><span class="p">)</span>
     <span class="n">show_attending</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">show_on_dashboard</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">approved</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">rejected</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">approved_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;approved_event&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
-    <span class="n">rejected_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">&quot;rejected_event&quot;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
+    <span class="n">approved_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"approved_event"</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
+    <span class="n">rejected_by</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s2">"rejected_event"</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">set_historical_user</span><span class="p">)</span>
 
-    <span class="n">public</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s2">&quot;Show on Login Page&quot;</span><span class="p">)</span>
+    <span class="n">public</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose_name</span><span class="o">=</span><span class="s2">"Show on Login Page"</span><span class="p">)</span>
 
-    <span class="n">category</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;school&quot;</span><span class="p">,</span> <span class="s2">&quot;In School&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;sports&quot;</span><span class="p">,</span> <span class="s2">&quot;Sports&quot;</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;school&quot;</span><span class="p">)</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">"school"</span><span class="p">,</span> <span class="s2">"In School"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"sports"</span><span class="p">,</span> <span class="s2">"Sports"</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="s2">"school"</span><span class="p">)</span>
 
-    <span class="n">open_to</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;everyone&quot;</span><span class="p">,</span> <span class="s2">&quot;Everyone&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;students&quot;</span><span class="p">,</span> <span class="s2">&quot;Students&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;parents&quot;</span><span class="p">,</span> <span class="s2">&quot;Parents&quot;</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;everyone&quot;</span><span class="p">)</span>
+    <span class="n">open_to</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">((</span><span class="s2">"everyone"</span><span class="p">,</span> <span class="s2">"Everyone"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"students"</span><span class="p">,</span> <span class="s2">"Students"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"parents"</span><span class="p">,</span> <span class="s2">"Parents"</span><span class="p">)),</span> <span class="n">default</span><span class="o">=</span><span class="s2">"everyone"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Event.show_fuzzy_date">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.Event.html#intranet.apps.events.models.Event.show_fuzzy_date">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">show_fuzzy_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether the event is in the next or previous 2 weeks.</span>
+<span class="w">        </span><span class="sd">"""Checks whether the event is in the next or previous 2 weeks.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Whether to display the fuzzy date.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
         <span class="k">if</span> <span class="n">date</span> <span class="o">&lt;=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">():</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">date</span>
@@ -1758,30 +1758,30 @@
 <div class="viewcode-block" id="Event.created_hook">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.Event.html#intranet.apps.events.models.Event.created_hook">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">created_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run when an event is created.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Run when an event is created."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"events"</span><span class="p">):</span>
             <span class="c1"># Send approval email</span>
             <span class="n">event_approval_request</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the event was created after the start of the school year.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return whether the event was created after the start of the school year."""</span>
         <span class="k">return</span> <span class="n">is_current_year</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">added</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">dashboard_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return what type of object it is&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;event&quot;</span>
+<span class="w">        </span><span class="sd">"""Return what type of object it is"""</span>
+        <span class="k">return</span> <span class="s2">"event"</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">pinned</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;TODO: implement event pinning&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""TODO: implement event pinning"""</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">user_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return or create an EventUserMap&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return or create an EventUserMap"""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_user_map</span>  <span class="c1"># pylint: disable=no-member; Defined via a related_name in EventUserMap</span>
         <span class="k">except</span> <span class="n">EventUserMap</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -1789,29 +1789,29 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">happened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether an event has happened.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return whether an event has happened."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">approved</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;UNAPPROVED - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"UNAPPROVED - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span></div>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"time"</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="TJStarUUIDMap">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.TJStarUUIDMap.html#intranet.apps.events.models.TJStarUUIDMap">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TJStarUUIDMap</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A mapping between a user and UUID for the tjSTAR widget.</span>
+<span class="w">    </span><span class="sd">"""A mapping between a user and UUID for the tjSTAR widget.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        user: The associated user.</span>
 <span class="sd">        uuid: The tjSTAR UUUID</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">AUTH_USER_MODEL</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">uuid</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span></div>
@@ -1821,8 +1821,8 @@
 <div class="viewcode-block" id="clear_event_cache">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.models.html#intranet.apps.events.models.clear_event_cache">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">clear_event_cache</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clears any cached event data.&quot;&quot;&quot;</span>
-    <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;sports_school_events&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Clears any cached event data."""</span>
+    <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">"sports_school_events"</span><span class="p">)</span></div>
 
 
 
@@ -1859,7 +1859,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

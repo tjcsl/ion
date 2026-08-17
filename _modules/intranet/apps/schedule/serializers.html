@@ -1560,7 +1560,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Time</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">)</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"hour"</span><span class="p">,</span> <span class="s2">"minute"</span><span class="p">)</span></div>
 
 
 
@@ -1572,31 +1572,31 @@
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Block</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;order&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"order"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">,</span> <span class="s2">"start"</span><span class="p">,</span> <span class="s2">"end"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="DayTypeSerializer">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.schedule.serializers.DayTypeSerializer.html#intranet.apps.schedule.serializers.DayTypeSerializer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DayTypeSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
-    <span class="c1"># url = serializers.HyperlinkedIdentityField(view_name=&quot;api_eighth_activity_detail&quot;)</span>
+    <span class="c1"># url = serializers.HyperlinkedIdentityField(view_name="api_eighth_activity_detail")</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">BlockSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">DayType</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;special&quot;</span><span class="p">,</span> <span class="s2">&quot;blocks&quot;</span><span class="p">)</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"special"</span><span class="p">,</span> <span class="s2">"blocks"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="DaySerializer">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.schedule.serializers.DaySerializer.html#intranet.apps.schedule.serializers.DaySerializer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DaySerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedModelSerializer</span><span class="p">):</span>
-    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">&quot;api_schedule_day_detail&quot;</span><span class="p">,</span> <span class="n">lookup_field</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">HyperlinkedIdentityField</span><span class="p">(</span><span class="n">view_name</span><span class="o">=</span><span class="s2">"api_schedule_day_detail"</span><span class="p">,</span> <span class="n">lookup_field</span><span class="o">=</span><span class="s2">"date"</span><span class="p">)</span>
     <span class="n">day_type</span> <span class="o">=</span> <span class="n">DayTypeSerializer</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Day</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;day_type&quot;</span><span class="p">)</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"url"</span><span class="p">,</span> <span class="s2">"date"</span><span class="p">,</span> <span class="s2">"day_type"</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1629,7 +1629,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

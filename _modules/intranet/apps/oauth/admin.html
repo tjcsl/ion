@@ -1553,13 +1553,13 @@
 <div class="viewcode-block" id="CSLApplicationAdmin">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.admin.CSLApplicationAdmin.html#intranet.apps.oauth.admin.CSLApplicationAdmin">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CSLApplicationAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Custom admin interface for the CSLApplication model.</span>
 <span class="sd">    Adds display and filtering by relevant fields.</span>
 <span class="sd">    Adds actions to sanction and unsanction applications.</span>
 <span class="sd">    Registered by oauth2_provider.admin</span>
 <span class="sd">    Communicated to oauth2_provider by settings.OAUTH2_PROVIDER.APPLICATION_ADMIN_CLASS</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Render user_has_oauth_and_api_access using checkmarks or crosses</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">user_has_oauth_and_api_access</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -1568,91 +1568,91 @@
     <span class="n">user_has_oauth_and_api_access</span><span class="o">.</span><span class="n">boolean</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;id&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;user&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;client_type&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;authorization_grant_type&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sanctioned&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;skip_authorization&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;user_has_oauth_and_api_access&quot;</span><span class="p">,</span>
+        <span class="s2">"id"</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">,</span>
+        <span class="s2">"user"</span><span class="p">,</span>
+        <span class="s2">"client_type"</span><span class="p">,</span>
+        <span class="s2">"authorization_grant_type"</span><span class="p">,</span>
+        <span class="s2">"sanctioned"</span><span class="p">,</span>
+        <span class="s2">"skip_authorization"</span><span class="p">,</span>
+        <span class="s2">"user_has_oauth_and_api_access"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;sanctioned&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;skip_authorization&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sanctioned_but_do_not_skip_authorization&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;user__oauth_and_api_access&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;client_type&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;authorization_grant_type&quot;</span><span class="p">,</span>
+        <span class="s2">"sanctioned"</span><span class="p">,</span>
+        <span class="s2">"skip_authorization"</span><span class="p">,</span>
+        <span class="s2">"sanctioned_but_do_not_skip_authorization"</span><span class="p">,</span>
+        <span class="s2">"user__oauth_and_api_access"</span><span class="p">,</span>
+        <span class="s2">"client_type"</span><span class="p">,</span>
+        <span class="s2">"authorization_grant_type"</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="n">radio_fields</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;client_type&quot;</span><span class="p">:</span> <span class="n">admin</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">,</span>
-        <span class="s2">&quot;authorization_grant_type&quot;</span><span class="p">:</span> <span class="n">admin</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">,</span>
+        <span class="s2">"client_type"</span><span class="p">:</span> <span class="n">admin</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">,</span>
+        <span class="s2">"authorization_grant_type"</span><span class="p">:</span> <span class="n">admin</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">search_fields</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;user__username&quot;</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">,</span>
+        <span class="s2">"user__username"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"user"</span><span class="p">,)</span>
 
     <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;sanction_applications&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;unsanction_applications&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;skip_authorization_for_applications&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;do_not_skip_authorization_for_applications&quot;</span><span class="p">,</span>
+        <span class="s2">"sanction_applications"</span><span class="p">,</span>
+        <span class="s2">"unsanction_applications"</span><span class="p">,</span>
+        <span class="s2">"skip_authorization_for_applications"</span><span class="p">,</span>
+        <span class="s2">"do_not_skip_authorization_for_applications"</span><span class="p">,</span>
     <span class="p">]</span>
 
-    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sanction selected applications&quot;</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Sanction selected applications"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">sanction_applications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="n">updated</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sanctioned</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_authorization</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span>
             <span class="n">request</span><span class="p">,</span>
             <span class="n">ngettext</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully sanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application.&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully sanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications.&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully sanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application."</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully sanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications."</span><span class="p">,</span>
                 <span class="n">updated</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unsanction selected applications&quot;</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Unsanction selected applications"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">unsanction_applications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="n">updated</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sanctioned</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">skip_authorization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span>
             <span class="n">request</span><span class="p">,</span>
             <span class="n">ngettext</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully unsanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application.&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully unsanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications.&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully unsanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application."</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully unsanctioned </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications."</span><span class="p">,</span>
                 <span class="n">updated</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Skip authorization for selected applications&quot;</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Skip authorization for selected applications"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">skip_authorization_for_applications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="n">updated</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">skip_authorization</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span>
             <span class="n">request</span><span class="p">,</span>
             <span class="n">ngettext</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application to skip authorization.&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications to skip authorization.&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application to skip authorization."</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications to skip authorization."</span><span class="p">,</span>
                 <span class="n">updated</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Do not skip authorization for selected applications&quot;</span><span class="p">)</span>
+    <span class="nd">@admin</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">"Do not skip authorization for selected applications"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">do_not_skip_authorization_for_applications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">queryset</span><span class="p">):</span>
         <span class="n">updated</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">skip_authorization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">message_user</span><span class="p">(</span>
             <span class="n">request</span><span class="p">,</span>
             <span class="n">ngettext</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application to not skip authorization.&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications to not skip authorization.&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> application to not skip authorization."</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Successfully marked </span><span class="si">{</span><span class="n">updated</span><span class="si">}</span><span class="s2"> applications to not skip authorization."</span><span class="p">,</span>
                 <span class="n">updated</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">messages</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span>
@@ -1689,7 +1689,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -1567,16 +1567,16 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">    NOTE: Phone and website information have been disabled because of privacy reasons.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="get_personal_info">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.get_personal_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_personal_info</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a user&#39;s personal info attributes to pass as an initial value to a</span>
-<span class="sd">    PersonalInformationForm.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a user's personal info attributes to pass as an initial value to a</span>
+<span class="sd">    PersonalInformationForm."""</span>
     <span class="c1"># change this to not use other_phones</span>
     <span class="c1"># num_phones = len(user.phones.all() or [])</span>
     <span class="n">num_phones</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1589,15 +1589,15 @@
     <span class="n">personal_info</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="c1"># for i in range(num_phones):</span>
-    <span class="c1">#     personal_info[&quot;phone_{}&quot;.format(i)] = user.phones.all()[i]</span>
+    <span class="c1">#     personal_info["phone_{}".format(i)] = user.phones.all()[i]</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_emails</span><span class="p">):</span>
-        <span class="n">personal_info</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;email_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">personal_info</span><span class="p">[</span><span class="sa">f</span><span class="s2">"email_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span>
 
     <span class="c1"># for i in range(num_websites):</span>
-    <span class="c1">#     personal_info[&quot;website_{}&quot;.format(i)] = user.websites.all()[i]</span>
+    <span class="c1">#     personal_info["website_{}".format(i)] = user.websites.all()[i]</span>
 
-    <span class="n">num_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;phones&quot;</span><span class="p">:</span> <span class="n">num_phones</span><span class="p">,</span> <span class="s2">&quot;emails&quot;</span><span class="p">:</span> <span class="n">num_emails</span><span class="p">,</span> <span class="s2">&quot;websites&quot;</span><span class="p">:</span> <span class="n">num_websites</span><span class="p">}</span>
+    <span class="n">num_fields</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"phones"</span><span class="p">:</span> <span class="n">num_phones</span><span class="p">,</span> <span class="s2">"emails"</span><span class="p">:</span> <span class="n">num_emails</span><span class="p">,</span> <span class="s2">"websites"</span><span class="p">:</span> <span class="n">num_websites</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="n">personal_info</span><span class="p">,</span> <span class="n">num_fields</span></div>
 
@@ -1606,12 +1606,12 @@
 <div class="viewcode-block" id="save_personal_info">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.save_personal_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-    <span class="c1"># phone_formset = PhoneFormset(request.POST, instance=user, prefix=&quot;pf&quot;)</span>
+    <span class="c1"># phone_formset = PhoneFormset(request.POST, instance=user, prefix="pf")</span>
     <span class="n">phone_formset</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">email_formset</span> <span class="o">=</span> <span class="n">EmailFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ef&quot;</span><span class="p">)</span>
+    <span class="n">email_formset</span> <span class="o">=</span> <span class="n">EmailFormset</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"ef"</span><span class="p">)</span>
 
-    <span class="c1"># website_formset = WebsiteFormset(request.POST, instance=user, prefix=&quot;wf&quot;)</span>
+    <span class="c1"># website_formset = WebsiteFormset(request.POST, instance=user, prefix="wf")</span>
     <span class="n">website_formset</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1619,18 +1619,18 @@
     <span class="c1"># if phone_formset.is_valid():</span>
     <span class="c1">#     phone_formset.save()</span>
     <span class="c1"># else:</span>
-    <span class="c1">#     errors.append(&quot;Could not set phone numbers.&quot;)</span>
+    <span class="c1">#     errors.append("Could not set phone numbers.")</span>
     <span class="k">if</span> <span class="n">email_formset</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
         <span class="n">email_formset</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">email_formset</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Could not set emails.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"address"</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">error</span><span class="p">[</span><span class="s2">"address"</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"Could not set emails."</span><span class="p">)</span>
     <span class="c1"># if website_formset.is_valid():</span>
     <span class="c1">#     website_formset.save()</span>
     <span class="c1"># else:</span>
-    <span class="c1">#     errors.append(&quot;Could not set websites.&quot;)</span>
+    <span class="c1">#     errors.append("Could not set websites.")</span>
 
     <span class="k">return</span> <span class="n">phone_formset</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">website_formset</span><span class="p">,</span> <span class="n">errors</span></div>
 
@@ -1639,13 +1639,13 @@
 <div class="viewcode-block" id="get_preferred_pic">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.get_preferred_pic">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_preferred_pic</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a user&#39;s preferred picture attributes to pass as an initial value to a</span>
-<span class="sd">    PreferredPictureForm.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a user's preferred picture attributes to pass as an initial value to a</span>
+<span class="sd">    PreferredPictureForm."""</span>
 
     <span class="c1"># FIXME: remove this hardcoded junk</span>
-    <span class="n">preferred_pic</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">}</span>
+    <span class="n">preferred_pic</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"preferred_photo"</span><span class="p">:</span> <span class="s2">"AUTO"</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="p">:</span>
-        <span class="n">preferred_pic</span><span class="p">[</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="o">.</span><span class="n">grade_number</span>
+        <span class="n">preferred_pic</span><span class="p">[</span><span class="s2">"preferred_photo"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="o">.</span><span class="n">grade_number</span>
 
     <span class="k">return</span> <span class="n">preferred_pic</span></div>
 
@@ -1659,27 +1659,27 @@
     <span class="k">if</span> <span class="n">preferred_pic_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">preferred_pic_form</span><span class="o">.</span><span class="n">has_changed</span><span class="p">():</span>
             <span class="n">fields</span> <span class="o">=</span> <span class="n">preferred_pic_form</span><span class="o">.</span><span class="n">cleaned_data</span>
-            <span class="k">if</span> <span class="s2">&quot;preferred_photo&quot;</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-                <span class="c1"># These aren&#39;t actually the Photos, these are the grade_numbers of the Photos</span>
-                <span class="n">new_preferred_pic</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">]</span>
-                <span class="n">old_preferred_pic</span> <span class="o">=</span> <span class="n">preferred_pic</span><span class="p">[</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">preferred_pic</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s2">"preferred_photo"</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+                <span class="c1"># These aren't actually the Photos, these are the grade_numbers of the Photos</span>
+                <span class="n">new_preferred_pic</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="s2">"preferred_photo"</span><span class="p">]</span>
+                <span class="n">old_preferred_pic</span> <span class="o">=</span> <span class="n">preferred_pic</span><span class="p">[</span><span class="s2">"preferred_photo"</span><span class="p">]</span> <span class="k">if</span> <span class="n">preferred_pic</span> <span class="k">else</span> <span class="kc">None</span>
                 <span class="k">if</span> <span class="n">old_preferred_pic</span> <span class="o">==</span> <span class="n">new_preferred_pic</span><span class="p">:</span>
                     <span class="k">pass</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">new_preferred_pic</span> <span class="o">==</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">new_preferred_pic</span> <span class="o">==</span> <span class="s2">"AUTO"</span><span class="p">:</span>
                             <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">new_preferred_pic</span><span class="p">)</span>
                         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Unable to set field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;preferred_pic&quot;</span><span class="p">,</span> <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unable to set field preferred_pic with value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Unable to set field </span><span class="si">{}</span><span class="s2"> with value </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"preferred_pic"</span><span class="p">,</span> <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Unable to set field preferred_pic with value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">new_preferred_pic</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
                             <span class="n">request</span><span class="p">,</span>
-                            <span class="s2">&quot;Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                <span class="s2">&quot;preferred_pic&quot;</span><span class="p">,</span> <span class="n">new_preferred_pic</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_preferred_pic</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_preferred_pic</span><span class="p">)</span>
+                            <span class="s2">"Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="s2">"preferred_pic"</span><span class="p">,</span> <span class="n">new_preferred_pic</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_preferred_pic</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">new_preferred_pic</span><span class="p">)</span>
                             <span class="p">),</span>
                         <span class="p">)</span>
     <span class="k">return</span> <span class="n">preferred_pic_form</span></div>
@@ -1689,14 +1689,14 @@
 <div class="viewcode-block" id="get_privacy_options">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.get_privacy_options">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a user&#39;s privacy options to pass as an initial value to a PrivacyOptionsForm.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a user's privacy options to pass as an initial value to a PrivacyOptionsForm."""</span>
 
     <span class="n">privacy_options</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">ptype</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
-                <span class="n">privacy_options</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ptype</span> <span class="o">==</span> <span class="s2">"self"</span><span class="p">:</span>
+                <span class="n">privacy_options</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">ptype</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">privacy_options</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">permissions</span><span class="p">[</span><span class="n">ptype</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
 
@@ -1717,30 +1717,30 @@
                     <span class="k">pass</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">):</span>
-                            <span class="n">field_name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="n">field_type</span> <span class="o">=</span> <span class="s2">&quot;self&quot;</span>
-                        <span class="k">elif</span> <span class="n">field</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">):</span>
-                            <span class="n">field_name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="n">field_type</span> <span class="o">=</span> <span class="s2">&quot;self&quot;</span>
+                        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"-self"</span><span class="p">):</span>
+                            <span class="n">field_name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"-self"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">field_type</span> <span class="o">=</span> <span class="s2">"self"</span>
+                        <span class="k">elif</span> <span class="n">field</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"self"</span><span class="p">):</span>
+                            <span class="n">field_name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"self"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">field_type</span> <span class="o">=</span> <span class="s2">"self"</span>
                         <span class="k">else</span><span class="p">:</span>
                             <span class="n">field_name</span> <span class="o">=</span> <span class="n">field</span>
-                            <span class="n">field_type</span> <span class="o">=</span> <span class="s2">&quot;parent&quot;</span>
-                        <span class="k">if</span> <span class="n">field_type</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
+                            <span class="n">field_type</span> <span class="o">=</span> <span class="s2">"parent"</span>
+                        <span class="k">if</span> <span class="n">field_type</span> <span class="o">==</span> <span class="s2">"self"</span><span class="p">:</span>
                             <span class="n">success</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">set_permission</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">admin</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">)</span>
                         <span class="k">elif</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
                             <span class="n">success</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">set_permission</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">parent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You do not have permission to change this parent field.&quot;</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"You do not have permission to change this parent field."</span><span class="p">)</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">success</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;You cannot override the parent field.&quot;</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"You cannot override the parent field."</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Unable to set field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> with value </span><span class="si">{</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Unable to set field </span><span class="si">%s</span><span class="s2"> with value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Unable to set field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> with value </span><span class="si">{</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Unable to set field </span><span class="si">%s</span><span class="s2"> with value </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="n">e</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
                             <span class="n">request</span><span class="p">,</span>
-                            <span class="s2">&quot;Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])),</span>
+                            <span class="s2">"Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])),</span>
                         <span class="p">)</span>
     <span class="k">return</span> <span class="n">privacy_options_form</span></div>
 
@@ -1749,18 +1749,18 @@
 <div class="viewcode-block" id="get_notification_options">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.get_notification_options">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_notification_options</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a user&#39;s notification options to pass as an initial value to a</span>
-<span class="sd">    NotificationOptionsForm.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a user's notification options to pass as an initial value to a</span>
+<span class="sd">    NotificationOptionsForm."""</span>
 
     <span class="n">notification_options</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">notification_options</span><span class="p">[</span><span class="s2">&quot;receive_news_emails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">receive_news_emails</span>
-    <span class="n">notification_options</span><span class="p">[</span><span class="s2">&quot;receive_eighth_emails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">receive_eighth_emails</span>
+    <span class="n">notification_options</span><span class="p">[</span><span class="s2">"receive_news_emails"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">receive_news_emails</span>
+    <span class="n">notification_options</span><span class="p">[</span><span class="s2">"receive_eighth_emails"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">receive_eighth_emails</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">notification_options</span><span class="p">[</span><span class="s2">&quot;primary_email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">primary_email</span>
+        <span class="n">notification_options</span><span class="p">[</span><span class="s2">"primary_email"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">primary_email</span>
     <span class="k">except</span> <span class="n">Email</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
         <span class="n">user</span><span class="o">.</span><span class="n">primary_email</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">notification_options</span><span class="p">[</span><span class="s2">&quot;primary_email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">notification_options</span><span class="p">[</span><span class="s2">"primary_email"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">notification_options</span></div>
 
@@ -1783,7 +1783,7 @@
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
                             <span class="n">request</span><span class="p">,</span>
-                            <span class="s2">&quot;Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])),</span>
+                            <span class="s2">"Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])),</span>
                         <span class="p">)</span>
                     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                         <span class="k">pass</span>
@@ -1794,10 +1794,10 @@
 <div class="viewcode-block" id="get_bus_route">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.get_bus_route">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_bus_route</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a user&#39;s bus route to pass as an initial value to a</span>
-<span class="sd">    BusRouteForm.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a user's bus route to pass as an initial value to a</span>
+<span class="sd">    BusRouteForm."""</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bus_route&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">bus_route</span><span class="o">.</span><span class="n">route_name</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">bus_route</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"bus_route"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">bus_route</span><span class="o">.</span><span class="n">route_name</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">bus_route</span> <span class="k">else</span> <span class="kc">None</span><span class="p">}</span></div>
 
 
 
@@ -1822,17 +1822,17 @@
                         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="c1"># TODO: replace with better error handling</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error processing Bus Route Form: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Error processing Bus Route Form: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]:</span>
                             <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span>
                                 <span class="n">request</span><span class="p">,</span>
-                                <span class="s2">&quot;Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                    <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
+                                <span class="s2">"Set field </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="n">field</span><span class="p">,</span> <span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">],</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">])</span>
                                 <span class="p">),</span>
                             <span class="p">)</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Cleared field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Cleared field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
                         <span class="k">pass</span>
     <span class="k">return</span> <span class="n">bus_route_form</span></div>
@@ -1843,32 +1843,32 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.save_gcm_options">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_gcm_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">notificationconfig</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">notificationconfig</span><span class="o">.</span><span class="n">gcm_token</span><span class="p">:</span>
-        <span class="n">receive</span> <span class="o">=</span> <span class="s2">&quot;receive_push_notifications&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span>
+        <span class="n">receive</span> <span class="o">=</span> <span class="s2">"receive_push_notifications"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span>
         <span class="k">if</span> <span class="n">receive</span><span class="p">:</span>
             <span class="n">nc</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">notificationconfig</span>
             <span class="k">if</span> <span class="n">nc</span><span class="o">.</span><span class="n">gcm_optout</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">nc</span><span class="o">.</span><span class="n">gcm_optout</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">nc</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Enabled push notifications&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Enabled push notifications"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">nc</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">notificationconfig</span>
             <span class="k">if</span> <span class="n">nc</span><span class="o">.</span><span class="n">gcm_optout</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="n">nc</span><span class="o">.</span><span class="n">gcm_optout</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">nc</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Disabled push notifications&quot;</span><span class="p">)</span></div>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Disabled push notifications"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="save_dark_mode_settings">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.save_dark_mode_settings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">save_dark_mode_settings</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-    <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
+    <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">"dark_mode_enabled"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
     <span class="k">if</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">has_changed</span><span class="p">():</span>
-            <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span> <span class="o">=</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">]</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span> <span class="o">=</span> <span class="n">dark_mode_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"dark_mode_enabled"</span><span class="p">]</span>
             <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Dark mode enabled&quot;</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span> <span class="k">else</span> <span class="s2">&quot;Dark mode disabled&quot;</span><span class="p">))</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="s2">"Dark mode enabled"</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span> <span class="k">else</span> <span class="s2">"Dark mode disabled"</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">dark_mode_form</span></div>
 
@@ -1878,20 +1878,20 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.preferences_view">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">preferences_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;View and process updates to the preferences page.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""View and process updates to the preferences page."""</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Preparing to update user preferences for user </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Preparing to update user preferences for user </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="c1"># phone_formset, email_formset, website_formset, errors = save_personal_info(request, user)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">email_formset</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">save_personal_info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">save_preferred_pic</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""</span>
 <span class="sd">            The privacy options form is disabled due to the</span>
 <span class="sd">            permissions feature being unused and changes to school policy.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+<span class="sd">            """</span>
             <span class="c1"># privacy_options_form = save_privacy_options(request, user)</span>
             <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1910,12 +1910,12 @@
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># phone_formset = PhoneFormset(instance=user, prefix=&quot;pf&quot;)</span>
-        <span class="n">email_formset</span> <span class="o">=</span> <span class="n">EmailFormset</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;ef&quot;</span><span class="p">)</span>
-        <span class="c1"># website_formset = WebsiteFormset(instance=user, prefix=&quot;wf&quot;)</span>
+        <span class="c1"># phone_formset = PhoneFormset(instance=user, prefix="pf")</span>
+        <span class="n">email_formset</span> <span class="o">=</span> <span class="n">EmailFormset</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">"ef"</span><span class="p">)</span>
+        <span class="c1"># website_formset = WebsiteFormset(instance=user, prefix="wf")</span>
 
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
             <span class="n">preferred_pic</span> <span class="o">=</span> <span class="n">get_preferred_pic</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
@@ -1923,14 +1923,14 @@
             <span class="n">preferred_pic_form</span> <span class="o">=</span> <span class="n">PreferredPictureForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">preferred_pic</span><span class="p">)</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="n">BusRouteForm</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">bus_route</span><span class="p">)</span>
 
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""</span>
 <span class="sd">            The privacy options form is disabled due to the</span>
 <span class="sd">            permissions feature being unused and changes to school policy.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            """</span>
+<span class="w">            </span><span class="sd">"""</span>
 <span class="sd">            privacy_options = get_privacy_options(user)</span>
 <span class="sd">            privacy_options_form = PrivacyOptionsForm(user, initial=privacy_options)</span>
-<span class="sd">            &quot;&quot;&quot;</span>
+<span class="sd">            """</span>
             <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">bus_route_form</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1941,19 +1941,19 @@
         <span class="n">notification_options</span> <span class="o">=</span> <span class="n">get_notification_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="n">notification_options_form</span> <span class="o">=</span> <span class="n">NotificationOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">notification_options</span><span class="p">)</span>
 
-        <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
+        <span class="n">dark_mode_form</span> <span class="o">=</span> <span class="n">DarkModeForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">"dark_mode_enabled"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">})</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="c1"># &quot;phone_formset&quot;: phone_formset,</span>
-        <span class="s2">&quot;email_formset&quot;</span><span class="p">:</span> <span class="n">email_formset</span><span class="p">,</span>
-        <span class="c1"># &quot;website_formset&quot;: website_formset,</span>
-        <span class="s2">&quot;preferred_pic_form&quot;</span><span class="p">:</span> <span class="n">preferred_pic_form</span><span class="p">,</span>
-        <span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span>
-        <span class="s2">&quot;notification_options_form&quot;</span><span class="p">:</span> <span class="n">notification_options_form</span><span class="p">,</span>
-        <span class="s2">&quot;bus_route_form&quot;</span><span class="p">:</span> <span class="n">bus_route_form</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;dark_mode_form&quot;</span><span class="p">:</span> <span class="n">dark_mode_form</span><span class="p">,</span>
+        <span class="c1"># "phone_formset": phone_formset,</span>
+        <span class="s2">"email_formset"</span><span class="p">:</span> <span class="n">email_formset</span><span class="p">,</span>
+        <span class="c1"># "website_formset": website_formset,</span>
+        <span class="s2">"preferred_pic_form"</span><span class="p">:</span> <span class="n">preferred_pic_form</span><span class="p">,</span>
+        <span class="s2">"privacy_options_form"</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span>
+        <span class="s2">"notification_options_form"</span><span class="p">:</span> <span class="n">notification_options_form</span><span class="p">,</span>
+        <span class="s2">"bus_route_form"</span><span class="p">:</span> <span class="n">bus_route_form</span> <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_BUS_APP</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"dark_mode_form"</span><span class="p">:</span> <span class="n">dark_mode_form</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/preferences.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"preferences/preferences.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1961,20 +1961,20 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.views.html#intranet.apps.preferences.views.privacy_options_view">[docs]</a>
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">privacy_options_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;View and edit privacy options for a user.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""View and edit privacy options for a user."""</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="c1"># NOTE: DO NOT assume that only eighth admins can access this view.</span>
     <span class="c1"># Yes, this is decorated with @eighth_admin_required. That is subject to change at any time.</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
-        <span class="c1"># ONLY eighth admins are allowed to change other students&#39; prferences</span>
-        <span class="k">if</span> <span class="s2">&quot;user&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="s2">&quot;student_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">))</span>
+        <span class="c1"># ONLY eighth admins are allowed to change other students' prferences</span>
+        <span class="k">if</span> <span class="s2">"user"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_ion_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user"</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="s2">"student_id"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"student_id"</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid user.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Invalid user."</span><span class="p">)</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
@@ -1982,16 +1982,16 @@
         <span class="n">user</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">user</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
             <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">save_privacy_options</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">privacy_options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
             <span class="n">privacy_options_form</span> <span class="o">=</span> <span class="n">PrivacyOptionsForm</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="n">privacy_options</span><span class="p">)</span>
 
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;privacy_options_form&quot;</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span> <span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"privacy_options_form"</span><span class="p">:</span> <span class="n">privacy_options_form</span><span class="p">,</span> <span class="s2">"profile_user"</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;profile_user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;preferences/privacy_options.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"profile_user"</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"preferences/privacy_options.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -2024,7 +2024,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

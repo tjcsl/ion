@@ -1565,27 +1565,27 @@
 <div class="viewcode-block" id="ProfileDetail">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.users.api.ProfileDetail.html#intranet.apps.users.api.ProfileDetail">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProfileDetail</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint that retrieves an Ion profile.</span>
+<span class="w">    </span><span class="sd">"""API endpoint that retrieves an Ion profile.</span>
 
 <span class="sd">    /api/profile: retrieve your profile</span>
 <span class="sd">    /api/profile/&lt;pk&gt;: retrieve the profile of the user with id &lt;pk&gt;</span>
 <span class="sd">    /api/profile/&lt;username&gt;: retrieve the profile of the user with username &lt;username&gt;</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;pk&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;pk&quot;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">"pk"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"pk"</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="s2">"username"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"username"</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s2">&quot;detail&quot;</span><span class="p">:</span> <span class="s2">&quot;You do not have permission to perform this action.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Response</span><span class="p">({</span><span class="s2">"detail"</span><span class="p">:</span> <span class="s2">"You do not have permission to perform this action."</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="n">user</span> <span class="o">!=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span>
@@ -1593,16 +1593,16 @@
         <span class="c1"># Remove sensitive information</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_serializer</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
         <span class="n">fields_to_remove</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;middle_name&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;absences&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;address&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;emails&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;phones&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;websites&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;is_announcements_admin&quot;</span><span class="p">,</span>
+            <span class="s2">"middle_name"</span><span class="p">,</span>
+            <span class="s2">"absences"</span><span class="p">,</span>
+            <span class="s2">"address"</span><span class="p">,</span>
+            <span class="s2">"emails"</span><span class="p">,</span>
+            <span class="s2">"phones"</span><span class="p">,</span>
+            <span class="s2">"websites"</span><span class="p">,</span>
+            <span class="s2">"is_announcements_admin"</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_teacher</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">):</span>
-            <span class="n">fields_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;student_id&quot;</span><span class="p">)</span>
+            <span class="n">fields_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"student_id"</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields_to_remove</span><span class="p">:</span>
             <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
@@ -1614,28 +1614,28 @@
 <div class="viewcode-block" id="ProfilePictureDetail">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.users.api.ProfilePictureDetail.html#intranet.apps.users.api.ProfilePictureDetail">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProfilePictureDetail</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint that retrieves an Ion profile picture.</span>
+<span class="w">    </span><span class="sd">"""API endpoint that retrieves an Ion profile picture.</span>
 
 <span class="sd">    /api/profile/&lt;pk&gt;/picture: retrieve default profile picture</span>
 <span class="sd">    /api/profile/&lt;pk&gt;/picture/&lt;photo_year&gt;: retrieve profile picture for year &lt;photo_year&gt;</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">DenyRestrictedPermission</span><span class="p">,)</span>
     <span class="n">renderer_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">JPEGRenderer</span><span class="p">,)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;pk&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;pk&quot;</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">"pk"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"pk"</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="s2">"username"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"username"</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
 
         <span class="n">binary</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="s2">&quot;photo_year&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">photo_year</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;photo_year&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">"photo_year"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">photo_year</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"photo_year"</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">photo_year</span> <span class="ow">in</span> <span class="n">Grade</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
                 <span class="n">grade_number</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">number_from_name</span><span class="p">(</span><span class="n">photo_year</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">grade_number</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -1645,43 +1645,43 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">binary</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">default_photo</span>
         <span class="k">if</span> <span class="n">binary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">default_image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">&quot;static/img/default_profile_pic.png&quot;</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">default_image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">PROJECT_ROOT</span><span class="p">,</span> <span class="s2">"static/img/default_profile_pic.png"</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">default_image_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">binary</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">"image/jpeg"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="Search">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.users.api.Search.html#intranet.apps.users.api.Search">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Search</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">RetrieveAPIView</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;API endpoint that retrieves the results of a search for Ion users.</span>
+<span class="w">    </span><span class="sd">"""API endpoint that retrieves the results of a search for Ion users.</span>
 
 <span class="sd">    Paginated using ?page=&lt;page&gt;</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">ApiAndOauthPermission</span><span class="p">,)</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"query"</span><span class="p">]</span>
         <span class="n">user_ids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">get_search_results</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">unserialized_user</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
             <span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unserialized_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-        <span class="n">queryset</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk__in</span><span class="o">=</span><span class="n">user_ids</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;pk&quot;</span><span class="p">)</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk__in</span><span class="o">=</span><span class="n">user_ids</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"pk"</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paginate_queryset</span><span class="p">(</span><span class="n">queryset</span><span class="p">)</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
-                <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StudentSerializer</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">StudentSerializer</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">"request"</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CounselorTeacherSerializer</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CounselorTeacherSerializer</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">"request"</span><span class="p">:</span> <span class="n">request</span><span class="p">})</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_paginated_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
 
@@ -1716,7 +1716,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

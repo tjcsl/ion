@@ -1576,19 +1576,19 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">..seniors.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Senior</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Announcement</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">"T"</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Announcement</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="gen_schedule">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.dashboard.views.html#intranet.apps.dashboard.views.gen_schedule">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gen_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">EighthBlock</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a list of information about a block and a student&#39;s current activity signup.</span>
+<span class="w">    </span><span class="sd">"""Generate a list of information about a block and a student's current activity signup.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        schedule</span>
 <span class="sd">        no_signup_today</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">no_signup_today</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">schedule</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1600,9 +1600,9 @@
                 <span class="n">now</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
-                    <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity__name</span><span class="o">=</span><span class="s2">&quot;z - Hybrid Sticky&quot;</span><span class="p">,</span> <span class="n">members__in</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="p">])</span>
+                    <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity__name</span><span class="o">=</span><span class="s2">"z - Hybrid Sticky"</span><span class="p">,</span> <span class="n">members__in</span><span class="o">=</span><span class="p">[</span><span class="n">user</span><span class="p">])</span>
                 <span class="p">)</span>
-                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"date"</span><span class="p">,</span> <span class="s2">"block_letter"</span><span class="p">)</span>
                 <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
             <span class="p">)[:</span><span class="n">num_blocks</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1614,7 +1614,7 @@
 
     <span class="c1"># Use select_related to reduce query count</span>
     <span class="n">signups</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">scheduled_activity__block__in</span><span class="o">=</span><span class="n">surrounding_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
-        <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__block&quot;</span><span class="p">,</span> <span class="s2">&quot;scheduled_activity__activity&quot;</span>
+        <span class="s2">"scheduled_activity"</span><span class="p">,</span> <span class="s2">"scheduled_activity__block"</span><span class="p">,</span> <span class="s2">"scheduled_activity__activity"</span>
     <span class="p">)</span>
     <span class="n">block_signup_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">scheduled_activity</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">signups</span><span class="p">}</span>
 
@@ -1633,31 +1633,31 @@
 
         <span class="c1"># warning flag (red block text and signup link) if no signup today</span>
         <span class="c1"># cancelled flag (red activity text) if cancelled</span>
-        <span class="n">flags</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">locked</span> <span class="k">else</span> <span class="s2">&quot;open&quot;</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="s2">"locked"</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">locked</span> <span class="k">else</span> <span class="s2">"open"</span>
         <span class="n">blk_today</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">is_today</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">blk_today</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">current_signup</span><span class="p">:</span>
-            <span class="n">flags</span> <span class="o">+=</span> <span class="s2">&quot; warning&quot;</span>
+            <span class="n">flags</span> <span class="o">+=</span> <span class="s2">" warning"</span>
         <span class="k">if</span> <span class="n">current_signup_cancelled</span><span class="p">:</span>
-            <span class="n">flags</span> <span class="o">+=</span> <span class="s2">&quot; cancelled warning&quot;</span>
+            <span class="n">flags</span> <span class="o">+=</span> <span class="s2">" cancelled warning"</span>
 
         <span class="k">if</span> <span class="n">current_signup_cancelled</span><span class="p">:</span>
-            <span class="c1"># don&#39;t duplicate this info; already caught</span>
-            <span class="n">current_signup</span> <span class="o">=</span> <span class="n">current_signup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; (Cancelled)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="c1"># don't duplicate this info; already caught</span>
+            <span class="n">current_signup</span> <span class="o">=</span> <span class="n">current_signup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" (Cancelled)"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
         <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span>
-            <span class="s2">&quot;block_letter&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">block_letter</span><span class="p">,</span>
-            <span class="s2">&quot;current_signup&quot;</span><span class="p">:</span> <span class="n">current_signup</span><span class="p">,</span>
-            <span class="s2">&quot;current_signup_cancelled&quot;</span><span class="p">:</span> <span class="n">current_signup_cancelled</span><span class="p">,</span>
-            <span class="s2">&quot;current_signup_sticky&quot;</span><span class="p">:</span> <span class="n">current_signup_sticky</span><span class="p">,</span>
-            <span class="s2">&quot;locked&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">locked</span><span class="p">,</span>
-            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
-            <span class="s2">&quot;flags&quot;</span><span class="p">:</span> <span class="n">flags</span><span class="p">,</span>
-            <span class="s2">&quot;is_today&quot;</span><span class="p">:</span> <span class="n">blk_today</span><span class="p">,</span>
-            <span class="s2">&quot;signup_time&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">signup_time</span><span class="p">,</span>
-            <span class="s2">&quot;signup_time_future&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">signup_time_future</span><span class="p">(),</span>
-            <span class="s2">&quot;rooms&quot;</span><span class="p">:</span> <span class="n">rooms</span><span class="p">,</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s2">"block"</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span>
+            <span class="s2">"block_letter"</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">block_letter</span><span class="p">,</span>
+            <span class="s2">"current_signup"</span><span class="p">:</span> <span class="n">current_signup</span><span class="p">,</span>
+            <span class="s2">"current_signup_cancelled"</span><span class="p">:</span> <span class="n">current_signup_cancelled</span><span class="p">,</span>
+            <span class="s2">"current_signup_sticky"</span><span class="p">:</span> <span class="n">current_signup_sticky</span><span class="p">,</span>
+            <span class="s2">"locked"</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">locked</span><span class="p">,</span>
+            <span class="s2">"date"</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+            <span class="s2">"flags"</span><span class="p">:</span> <span class="n">flags</span><span class="p">,</span>
+            <span class="s2">"is_today"</span><span class="p">:</span> <span class="n">blk_today</span><span class="p">,</span>
+            <span class="s2">"signup_time"</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">signup_time</span><span class="p">,</span>
+            <span class="s2">"signup_time_future"</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">signup_time_future</span><span class="p">(),</span>
+            <span class="s2">"rooms"</span><span class="p">:</span> <span class="n">rooms</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">schedule</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
@@ -1671,7 +1671,7 @@
 <div class="viewcode-block" id="gen_sponsor_schedule">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.dashboard.views.html#intranet.apps.dashboard.views.gen_sponsor_schedule">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gen_sponsor_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">sponsor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">given_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return a list of :class:`EighthScheduledActivity`\s in which the</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""Return a list of :class:`EighthScheduledActivity`\s in which the</span>
 <span class="sd">    given user is sponsoring.</span>
 
 <span class="sd">    Returns:</span>
@@ -1679,7 +1679,7 @@
 <span class="sd">            activities</span>
 <span class="sd">            no_attendance_today</span>
 <span class="sd">            num_acts</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">no_attendance_today</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">acts</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1690,7 +1690,7 @@
     <span class="k">if</span> <span class="n">surrounding_blocks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_upcoming_blocks</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">)</span>
 
-    <span class="n">activities_sponsoring</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__in</span><span class="o">=</span><span class="n">surrounding_blocks</span><span class="p">)</span>
+    <span class="n">activities_sponsoring</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"block"</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__in</span><span class="o">=</span><span class="n">surrounding_blocks</span><span class="p">)</span>
     <span class="n">sponsoring_block_map</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">sa</span> <span class="ow">in</span> <span class="n">activities_sponsoring</span><span class="p">:</span>
         <span class="n">bid</span> <span class="o">=</span> <span class="n">sa</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">id</span>
@@ -1715,7 +1715,7 @@
 
         <span class="k">if</span> <span class="n">num_added</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># fake an entry for a block where there is no sponsorship</span>
-            <span class="n">acts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;fake&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+            <span class="n">acts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"block"</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"fake"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">num_acts</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -1733,12 +1733,12 @@
     <span class="n">prev_blocks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">first_block</span><span class="o">.</span><span class="n">previous_blocks</span><span class="p">(</span><span class="n">num_blocks</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="n">first_block</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">prev_date</span> <span class="o">=</span> <span class="n">prev_blocks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">date</span> <span class="k">if</span> <span class="n">prev_blocks</span> <span class="k">else</span> <span class="n">first_block_date</span>  <span class="c1"># pylint: disable=unsubscriptable-object</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;sponsor_schedule&quot;</span><span class="p">:</span> <span class="n">acts</span><span class="p">,</span>
-        <span class="s2">&quot;no_attendance_today&quot;</span><span class="p">:</span> <span class="n">no_attendance_today</span><span class="p">,</span>
-        <span class="s2">&quot;num_attendance_acts&quot;</span><span class="p">:</span> <span class="n">num_acts</span><span class="p">,</span>
-        <span class="s2">&quot;sponsor_schedule_cur_date&quot;</span><span class="p">:</span> <span class="n">cur_date</span><span class="p">,</span>
-        <span class="s2">&quot;sponsor_schedule_next_date&quot;</span><span class="p">:</span> <span class="n">next_date</span><span class="p">,</span>
-        <span class="s2">&quot;sponsor_schedule_prev_date&quot;</span><span class="p">:</span> <span class="n">prev_date</span><span class="p">,</span>
+        <span class="s2">"sponsor_schedule"</span><span class="p">:</span> <span class="n">acts</span><span class="p">,</span>
+        <span class="s2">"no_attendance_today"</span><span class="p">:</span> <span class="n">no_attendance_today</span><span class="p">,</span>
+        <span class="s2">"num_attendance_acts"</span><span class="p">:</span> <span class="n">num_acts</span><span class="p">,</span>
+        <span class="s2">"sponsor_schedule_cur_date"</span><span class="p">:</span> <span class="n">cur_date</span><span class="p">,</span>
+        <span class="s2">"sponsor_schedule_next_date"</span><span class="p">:</span> <span class="n">next_date</span><span class="p">,</span>
+        <span class="s2">"sponsor_schedule_prev_date"</span><span class="p">:</span> <span class="n">prev_date</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 
@@ -1748,11 +1748,11 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighth_admin</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
-            <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;eighth_signup&quot;</span>
+            <span class="n">view</span> <span class="o">=</span> <span class="s2">"eighth_signup"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;eighth_admin_dashboard&quot;</span>
+            <span class="n">view</span> <span class="o">=</span> <span class="s2">"eighth_admin_dashboard"</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;eighth_redirect&quot;</span>
+        <span class="n">view</span> <span class="o">=</span> <span class="s2">"eighth_redirect"</span>
 
     <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">build_absolute_uri</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="n">view</span><span class="p">))</span></div>
 
@@ -1761,7 +1761,7 @@
 <div class="viewcode-block" id="get_announcements_list">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.dashboard.views.html#intranet.apps.dashboard.views.get_announcements_list">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span> <span class="o">|</span> <span class="n">Event</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An announcement will be shown if:</span>
 
 <span class="sd">    * It is not expired</span>
@@ -1771,7 +1771,7 @@
 <span class="sd">    * It is visible to the user</span>
 
 <span class="sd">      * There are no groups on the announcement (so it is public)</span>
-<span class="sd">      * The user&#39;s groups are in union with the groups on the</span>
+<span class="sd">      * The user's groups are in union with the groups on the</span>
 <span class="sd">        announcement (at least one matches)</span>
 <span class="sd">      * The user submitted the announcement directly</span>
 <span class="sd">      * The user submitted the announcement through a request</span>
@@ -1793,38 +1793,38 @@
 <span class="sd">      * There are no groups</span>
 <span class="sd">      * The groups are in union</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;announcements_admin&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"announcements_admin"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">context</span><span class="p">[</span><span class="s2">"show_all"</span><span class="p">]:</span>
         <span class="c1"># Show all announcements if user has admin permissions and the</span>
         <span class="c1"># show_all GET argument is given.</span>
         <span class="n">announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_expired&quot;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">context</span><span class="p">[</span><span class="s2">"show_expired"</span><span class="p">]:</span>
         <span class="n">announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
 
     <span class="c1"># Load information on the user who posted the announcement</span>
     <span class="c1"># Unless the announcement has a custom author (some do, but not all), we will need the user information to construct the byline,</span>
-    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">)</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"user"</span><span class="p">,</span> <span class="s2">"activity"</span><span class="p">)</span>
 
     <span class="c1"># We may query the announcement request multiple times while checking if the user submitted or approved the announcement.</span>
     <span class="c1"># prefetch_related() will still make a separate query for each request, but the results are cached if we check them multiple times</span>
-    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;announcementrequest_set&quot;</span><span class="p">,</span> <span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+    <span class="n">announcements</span> <span class="o">=</span> <span class="n">announcements</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"announcementrequest_set"</span><span class="p">,</span> <span class="s2">"groups"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;events_admin&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"events_admin"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">context</span><span class="p">[</span><span class="s2">"show_all"</span><span class="p">]:</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="k">elif</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_expired&quot;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">context</span><span class="p">[</span><span class="s2">"show_expired"</span><span class="p">]:</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">show_on_dashboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># Unlike announcements, show events for the rest of the day after they occur.</span>
         <span class="n">midnight</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">midnight</span><span class="p">,</span> <span class="n">show_on_dashboard</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;groups&quot;</span><span class="p">)</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">"user"</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"groups"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">announcements_sorting_key</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_expired&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;show_all&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"show_expired"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">context</span><span class="p">[</span><span class="s2">"show_all"</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">added</span>
         <span class="c1"># otherwise sort by pinned and then added date</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">pinned</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">added</span><span class="p">)</span>
@@ -1838,7 +1838,7 @@
 <div class="viewcode-block" id="split_club_announcements">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.dashboard.views.html#intranet.apps.dashboard.views.split_club_announcements">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_club_announcements</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Announcement</span> <span class="o">|</span> <span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split items into standard and club announcements.</span>
+<span class="w">    </span><span class="sd">"""Split items into standard and club announcements.</span>
 
 <span class="sd">    .. warning::</span>
 
@@ -1847,10 +1847,10 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        a tuple of standard and club announcements.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">is_announcement</span><span class="p">(</span><span class="n">item</span><span class="p">:</span> <span class="n">Announcement</span> <span class="o">|</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TypeGuard</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">dashboard_type</span> <span class="o">==</span> <span class="s2">&quot;announcement&quot;</span>
+        <span class="k">return</span> <span class="n">item</span><span class="o">.</span><span class="n">dashboard_type</span> <span class="o">==</span> <span class="s2">"announcement"</span>
 
     <span class="n">standard</span><span class="p">,</span> <span class="n">club</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 
@@ -1870,11 +1870,11 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">filter_club_announcements</span><span class="p">(</span>
     <span class="n">user</span><span class="p">,</span> <span class="n">user_hidden_announcements</span><span class="p">:</span> <span class="n">QuerySet</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="n">club_items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter club announcements into categories</span>
+<span class="w">    </span><span class="sd">"""Filter club announcements into categories</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        a tuple of visible, hidden, and unsubscribed club announcements for the user.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">visible</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">unsubscribed</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">club_items</span><span class="p">:</span>
@@ -1911,9 +1911,9 @@
     <span class="n">items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
     <span class="n">visible_club_items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">query_param</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;page&quot;</span><span class="p">,</span>
+    <span class="n">query_param</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"page"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RawPaginationData</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the raw data for paginating announcements.</span>
+<span class="w">    </span><span class="sd">"""Return the raw data for paginating announcements.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        request: The :class:`django.http.HttpRequest` object.</span>
@@ -1923,10 +1923,10 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A dictionary intended to be merged into the context.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">DEFAULT_PAGE_NUM</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="n">num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_param</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_param</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">num</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
         <span class="n">page_num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1970,16 +1970,16 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">paginate_announcements_list</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">Announcement</span><span class="p">](</span>
     <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">visible_club_items</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Announcement</span><span class="p">]</span> <span class="o">=</span> <span class="p">()</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Page</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Paginate ``items`` in groups of 15</span>
+<span class="w">    </span><span class="sd">"""Paginate ``items`` in groups of 15</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A tuple of the updated context and the page.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">new_ctx</span> <span class="o">=</span> <span class="n">paginate_announcements_list_raw</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">items</span><span class="p">,</span> <span class="n">visible_club_items</span><span class="p">)</span>
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_ctx</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;all_items&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"all_items"</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">"items"</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">new_ctx</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">context</span><span class="p">,</span> <span class="n">new_ctx</span><span class="p">[</span><span class="s2">"items"</span><span class="p">]</span></div>
 
 
 
@@ -1988,7 +1988,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">get_tjstar_mapping</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">TJStarUUIDMap</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">m</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;tjstar_uuid&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">uuid</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"tjstar_uuid"</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">uuid</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="p">{}</span></div>
 
@@ -1997,7 +1997,7 @@
 <div class="viewcode-block" id="add_widgets_context">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.dashboard.views.html#intranet.apps.dashboard.views.add_widgets_context">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_widgets_context</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    WIDGETS:</span>
 
 <span class="sd">    * Eighth signup (STUDENT)</span>
@@ -2007,14 +2007,14 @@
 <span class="sd">    * Administration (ADMIN)</span>
 <span class="sd">    * Links (ALL)</span>
 <span class="sd">    * Seniors (STUDENT; graduation countdown if senior, link to destinations otherwise) if settings.ENABLE_SENIOR_DESTINATIONS</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">user</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;is_student&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">]:</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"is_student"</span><span class="p">]</span> <span class="ow">or</span> <span class="n">context</span><span class="p">[</span><span class="s2">"eighth_sponsor"</span><span class="p">]:</span>
         <span class="n">num_blocks</span> <span class="o">=</span> <span class="mi">6</span>
         <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_upcoming_blocks</span><span class="p">(</span><span class="n">num_blocks</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;is_student&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"is_student"</span><span class="p">]:</span>
         <span class="c1">#######</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_HYBRID_EIGHTH</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">surrounding_blocks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2024,25 +2024,25 @@
                 <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span>
                         <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-                            <span class="n">activity__name</span><span class="o">=</span><span class="s2">&quot;z - Hybrid Sticky&quot;</span><span class="p">,</span> <span class="n">members__in</span><span class="o">=</span><span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">]</span>
+                            <span class="n">activity__name</span><span class="o">=</span><span class="s2">"z - Hybrid Sticky"</span><span class="p">,</span> <span class="n">members__in</span><span class="o">=</span><span class="p">[</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">]</span>
                         <span class="p">)</span>
                     <span class="p">)</span>
-                    <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"date"</span><span class="p">,</span> <span class="s2">"block_letter"</span><span class="p">)</span>
                     <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">now</span><span class="p">)</span>
                 <span class="p">)[:</span><span class="n">num_blocks</span><span class="p">]</span>
         <span class="c1">#######</span>
         <span class="n">schedule</span><span class="p">,</span> <span class="n">no_signup_today</span> <span class="o">=</span> <span class="n">gen_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="n">schedule</span><span class="p">,</span>
-                <span class="s2">&quot;last_displayed_block&quot;</span><span class="p">:</span> <span class="n">schedule</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">schedule</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="s2">&quot;no_signup_today&quot;</span><span class="p">:</span> <span class="n">no_signup_today</span><span class="p">,</span>
-                <span class="s2">&quot;senior_graduation&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S&quot;</span><span class="p">),</span>
+                <span class="s2">"schedule"</span><span class="p">:</span> <span class="n">schedule</span><span class="p">,</span>
+                <span class="s2">"last_displayed_block"</span><span class="p">:</span> <span class="n">schedule</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">schedule</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">"no_signup_today"</span><span class="p">:</span> <span class="n">no_signup_today</span><span class="p">,</span>
+                <span class="s2">"senior_graduation"</span><span class="p">:</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%B </span><span class="si">%d</span><span class="s2"> %Y %H:%M:%S"</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">]:</span>
-        <span class="n">sponsor_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sponsor_date&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s2">"eighth_sponsor"</span><span class="p">]:</span>
+        <span class="n">sponsor_date</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sponsor_date"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sponsor_date</span><span class="p">:</span>
             <span class="n">sponsor_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">sponsor_date</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">sponsor_date</span><span class="p">:</span>
@@ -2052,10 +2052,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">surrounding_blocks</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">sponsor_sch</span> <span class="o">=</span> <span class="n">gen_sponsor_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">],</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="p">,</span> <span class="n">sponsor_date</span><span class="p">)</span>
+        <span class="n">sponsor_sch</span> <span class="o">=</span> <span class="n">gen_sponsor_schedule</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s2">"eighth_sponsor"</span><span class="p">],</span> <span class="n">num_blocks</span><span class="p">,</span> <span class="n">surrounding_blocks</span><span class="p">,</span> <span class="n">sponsor_date</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sponsor_sch</span><span class="p">)</span>
-        <span class="c1"># &quot;sponsor_schedule&quot;, &quot;no_attendance_today&quot;, &quot;num_attendance_acts&quot;,</span>
-        <span class="c1"># &quot;sponsor_schedule_cur_date&quot;, &quot;sponsor_schedule_prev_date&quot;, &quot;sponsor_schedule_next_date&quot;</span>
+        <span class="c1"># "sponsor_schedule", "no_attendance_today", "num_attendance_acts",</span>
+        <span class="c1"># "sponsor_schedule_cur_date", "sponsor_schedule_prev_date", "sponsor_schedule_next_date"</span>
 
     <span class="n">sched_ctx</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">sched_ctx</span><span class="p">)</span>
@@ -2063,7 +2063,7 @@
     <span class="n">today_midnight</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">microsecond</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">"enrichments"</span><span class="p">:</span> <span class="p">(</span>
                 <span class="n">EnrichmentActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                     <span class="n">time__gte</span><span class="o">=</span><span class="n">today_midnight</span><span class="p">,</span>
                     <span class="n">time__lte</span><span class="o">=</span><span class="n">today_midnight</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
@@ -2071,7 +2071,7 @@
                 <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_ENRICHMENT_APP</span>
                 <span class="k">else</span> <span class="p">[]</span>
             <span class="p">),</span>
-            <span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
+            <span class="s2">"senior_graduation_year"</span><span class="p">:</span> <span class="n">get_senior_graduation_year</span><span class="p">(),</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
@@ -2083,74 +2083,74 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.dashboard.views.html#intranet.apps.dashboard.views.dashboard_view">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">dashboard_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">show_widgets</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_expired</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_hidden_club</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ignore_dashboard_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_welcome</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process and show the dashboard, which includes activities, events, and widgets.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Process and show the dashboard, which includes activities, events, and widgets."""</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_EIGHTH_LOCATION_REDIRECT</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seen_eighth_location&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_EIGHTH_LOCATION_REDIRECT</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seen_eighth_location"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"1"</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">today_8</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="p">)</span>
+            <span class="n">today_8</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">day_type</span><span class="o">.</span><span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">name__contains</span><span class="o">=</span><span class="s2">"8"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">today_8</span><span class="p">:</span>
                 <span class="n">first_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="n">today_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">today_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
                 <span class="n">last_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="n">today_8</span><span class="o">.</span><span class="n">last</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">today_8</span><span class="o">.</span><span class="n">last</span><span class="p">()</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">minute</span><span class="p">)</span>
                 <span class="n">first_start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">first_start_time</span><span class="p">)</span>
                 <span class="n">last_start_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">last_start_time</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">first_start_date</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">today</span><span class="p">(),</span> <span class="n">now</span><span class="o">.</span><span class="n">time</span><span class="p">())</span> <span class="o">&lt;</span> <span class="n">last_start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_location&quot;</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_location"</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_DISMISSAL_BUS_REDIRECT</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;seen_bus_redirect&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_PRE_DISMISSAL_BUS_REDIRECT</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">COOKIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seen_bus_redirect"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"1"</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">day</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">day</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">day</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()))</span>
                 <span class="k">if</span> <span class="n">end_of_day</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">now</span> <span class="o">&lt;=</span> <span class="n">end_of_day</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-                    <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;afternoon_bus&quot;</span><span class="p">))</span>
-                    <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s2">&quot;seen_bus_redirect&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"afternoon_bus"</span><span class="p">))</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s2">"seen_bus_redirect"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">response</span>
             <span class="k">elif</span> <span class="n">settings</span><span class="o">.</span><span class="n">IS_SUMMER_SCHOOL</span><span class="p">:</span>
                 <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_END_HOUR</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_END_MINUTE</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">end_of_day</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">now</span> <span class="o">&lt;=</span> <span class="n">end_of_day</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-                    <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;afternoon_bus&quot;</span><span class="p">))</span>
-                    <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s2">&quot;seen_bus_redirect&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"afternoon_bus"</span><span class="p">))</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span><span class="s2">"seen_bus_redirect"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">,</span> <span class="n">max_age</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">response</span>
 
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="n">announcements_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;announcements&quot;</span><span class="p">)</span>
-    <span class="n">events_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+    <span class="n">announcements_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"announcements"</span><span class="p">)</span>
+    <span class="n">events_admin</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"events"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">show_expired</span><span class="p">:</span>
-        <span class="n">show_expired</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_expired&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span>
+        <span class="n">show_expired</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"show_expired"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span>
 
-    <span class="n">show_all</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_all&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span>
-    <span class="k">if</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
+    <span class="n">show_all</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"show_all"</span><span class="p">,</span> <span class="s2">"0"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"0"</span>
+    <span class="k">if</span> <span class="s2">"show_all"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_eighthoffice</span><span class="p">:</span>
         <span class="c1"># Show all by default to 8th period office</span>
         <span class="n">show_all</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">show_hidden_club</span><span class="p">:</span>
-        <span class="n">show_hidden_club</span> <span class="o">=</span> <span class="s2">&quot;show_hidden_club&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
+        <span class="n">show_hidden_club</span> <span class="o">=</span> <span class="s2">"show_hidden_club"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
 
-    <span class="n">is_index_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="n">is_index_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">path_info</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"/"</span><span class="p">,</span> <span class="s2">""</span><span class="p">]</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;prerender_url&quot;</span><span class="p">:</span> <span class="n">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
-        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
-        <span class="s2">&quot;announcements_admin&quot;</span><span class="p">:</span> <span class="n">announcements_admin</span><span class="p">,</span>
-        <span class="s2">&quot;events_admin&quot;</span><span class="p">:</span> <span class="n">events_admin</span><span class="p">,</span>
-        <span class="s2">&quot;is_index_page&quot;</span><span class="p">:</span> <span class="n">is_index_page</span><span class="p">,</span>
-        <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
-        <span class="s2">&quot;show_hidden_club&quot;</span><span class="p">:</span> <span class="n">show_hidden_club</span><span class="p">,</span>
-        <span class="s2">&quot;show_expired&quot;</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
-        <span class="s2">&quot;show_tjstar&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_BANNER_START_DATE</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_DATE</span><span class="p">,</span>
-        <span class="s2">&quot;user_sponsor_obj&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span>
+        <span class="s2">"prerender_url"</span><span class="p">:</span> <span class="n">get_prerender_url</span><span class="p">(</span><span class="n">request</span><span class="p">),</span>
+        <span class="s2">"user"</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s2">"announcements_admin"</span><span class="p">:</span> <span class="n">announcements_admin</span><span class="p">,</span>
+        <span class="s2">"events_admin"</span><span class="p">:</span> <span class="n">events_admin</span><span class="p">,</span>
+        <span class="s2">"is_index_page"</span><span class="p">:</span> <span class="n">is_index_page</span><span class="p">,</span>
+        <span class="s2">"show_all"</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
+        <span class="s2">"show_hidden_club"</span><span class="p">:</span> <span class="n">show_hidden_club</span><span class="p">,</span>
+        <span class="s2">"show_expired"</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
+        <span class="s2">"show_tjstar"</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_BANNER_START_DATE</span> <span class="o">&lt;=</span> <span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJSTAR_DATE</span><span class="p">,</span>
+        <span class="s2">"user_sponsor_obj"</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">(),</span>
     <span class="p">}</span>
 
-    <span class="n">user_hidden_announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">user_hidden_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_events</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_hidden_announcements</span> <span class="o">=</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_announcements</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">user_hidden_events</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">hidden_events</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"id"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Get list of announcements</span>
     <span class="n">items</span> <span class="o">=</span> <span class="n">get_announcements_list</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
@@ -2170,23 +2170,23 @@
         <span class="n">raw_pagination_data</span> <span class="o">=</span> <span class="n">paginate_announcements_list_raw</span><span class="p">(</span>
             <span class="n">request</span><span class="p">,</span>
             <span class="n">unsubscribed_club_announcements</span><span class="p">,</span>
-            <span class="n">query_param</span><span class="o">=</span><span class="s2">&quot;unsubscribed_page&quot;</span><span class="p">,</span>
+            <span class="n">query_param</span><span class="o">=</span><span class="s2">"unsubscribed_page"</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># namespace the pagination data for unsubscribed club announcements so it doesn&#39;t</span>
+        <span class="c1"># namespace the pagination data for unsubscribed club announcements so it doesn't</span>
         <span class="c1"># conflict with other pagination data</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;unsubscribed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_pagination_data</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;all_items&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">],</span> <span class="o">*</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;unsubscribed&quot;</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">])</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"unsubscribed"</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_pagination_data</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"all_items"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">context</span><span class="p">[</span><span class="s2">"items"</span><span class="p">],</span> <span class="o">*</span><span class="n">context</span><span class="p">[</span><span class="s2">"unsubscribed"</span><span class="p">][</span><span class="s2">"items"</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">ignore_dashboard_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ignore_dashboard_types</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;hide_announcements&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;hide_events&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;user_hidden_announcements&quot;</span><span class="p">:</span> <span class="n">user_hidden_announcements</span><span class="p">,</span>
-            <span class="s2">&quot;user_hidden_events&quot;</span><span class="p">:</span> <span class="n">user_hidden_events</span><span class="p">,</span>
-            <span class="s2">&quot;ignore_dashboard_types&quot;</span><span class="p">:</span> <span class="n">ignore_dashboard_types</span><span class="p">,</span>
+            <span class="s2">"hide_announcements"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"hide_events"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"user_hidden_announcements"</span><span class="p">:</span> <span class="n">user_hidden_announcements</span><span class="p">,</span>
+            <span class="s2">"user_hidden_events"</span><span class="p">:</span> <span class="n">user_hidden_events</span><span class="p">,</span>
+            <span class="s2">"ignore_dashboard_types"</span><span class="p">:</span> <span class="n">ignore_dashboard_types</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
@@ -2197,19 +2197,19 @@
     <span class="n">eighth_sponsor</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get_eighth_sponsor</span><span class="p">()</span>
 
     <span class="c1"># the URL path for forward/back buttons</span>
-    <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;index&quot;</span>
+    <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">"index"</span>
 
     <span class="k">if</span> <span class="n">show_widgets</span><span class="p">:</span>
-        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="s2">&quot;Dashboard&quot;</span>
-        <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Dashboard&quot;</span>
+        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="s2">"Dashboard"</span>
+        <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">"Dashboard"</span>
     <span class="k">elif</span> <span class="n">show_expired</span><span class="p">:</span>
-        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Announcement Archive&quot;</span>
-        <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;announcements_archive&quot;</span>
+        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">"Announcement Archive"</span>
+        <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">"announcements_archive"</span>
     <span class="k">if</span> <span class="n">show_hidden_club</span><span class="p">:</span>
-        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Club Announcements&quot;</span>
-        <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">&quot;club_announcements&quot;</span>
+        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">"Club Announcements"</span>
+        <span class="n">view_announcements_url</span> <span class="o">=</span> <span class="s2">"club_announcements"</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">&quot;Dashboard&quot;</span>
+        <span class="n">dashboard_title</span> <span class="o">=</span> <span class="n">dashboard_header</span> <span class="o">=</span> <span class="s2">"Dashboard"</span>
 
     <span class="n">num_senior_destinations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Senior</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filled</span><span class="p">())</span>
 
@@ -2232,22 +2232,22 @@
 
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;dash_warning&quot;</span><span class="p">:</span> <span class="n">dash_warning</span><span class="p">,</span>
-            <span class="s2">&quot;show_widgets&quot;</span><span class="p">:</span> <span class="n">show_widgets</span><span class="p">,</span>
-            <span class="s2">&quot;show_expired&quot;</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
-            <span class="s2">&quot;show_near_graduation_message&quot;</span><span class="p">:</span> <span class="n">is_senior</span>
+            <span class="s2">"dash_warning"</span><span class="p">:</span> <span class="n">dash_warning</span><span class="p">,</span>
+            <span class="s2">"show_widgets"</span><span class="p">:</span> <span class="n">show_widgets</span><span class="p">,</span>
+            <span class="s2">"show_expired"</span><span class="p">:</span> <span class="n">show_expired</span><span class="p">,</span>
+            <span class="s2">"show_near_graduation_message"</span><span class="p">:</span> <span class="n">is_senior</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">NEAR_GRADUATION_DAYS</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">get_senior_graduation_date</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()),</span>
-            <span class="s2">&quot;view_announcements_url&quot;</span><span class="p">:</span> <span class="n">view_announcements_url</span><span class="p">,</span>
-            <span class="s2">&quot;dashboard_title&quot;</span><span class="p">:</span> <span class="n">dashboard_title</span><span class="p">,</span>
-            <span class="s2">&quot;dashboard_header&quot;</span><span class="p">:</span> <span class="n">dashboard_header</span><span class="p">,</span>
-            <span class="s2">&quot;is_student&quot;</span><span class="p">:</span> <span class="n">is_student</span><span class="p">,</span>
-            <span class="s2">&quot;is_teacher&quot;</span><span class="p">:</span> <span class="n">is_teacher</span><span class="p">,</span>
-            <span class="s2">&quot;is_senior&quot;</span><span class="p">:</span> <span class="n">is_senior</span><span class="p">,</span>
-            <span class="s2">&quot;show_ion_wrapped_banner&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_ION_WRAPPED</span> <span class="ow">and</span> <span class="n">is_student</span><span class="p">,</span>
-            <span class="s2">&quot;ion_wrapped_year&quot;</span><span class="p">:</span> <span class="n">get_school_year_label</span><span class="p">(),</span>
-            <span class="s2">&quot;show_admin_widget&quot;</span><span class="p">:</span> <span class="n">show_admin_widget</span><span class="p">,</span>
-            <span class="s2">&quot;eighth_sponsor&quot;</span><span class="p">:</span> <span class="n">eighth_sponsor</span><span class="p">,</span>
-            <span class="s2">&quot;num_senior_destinations&quot;</span><span class="p">:</span> <span class="n">num_senior_destinations</span><span class="p">,</span>
+            <span class="s2">"view_announcements_url"</span><span class="p">:</span> <span class="n">view_announcements_url</span><span class="p">,</span>
+            <span class="s2">"dashboard_title"</span><span class="p">:</span> <span class="n">dashboard_title</span><span class="p">,</span>
+            <span class="s2">"dashboard_header"</span><span class="p">:</span> <span class="n">dashboard_header</span><span class="p">,</span>
+            <span class="s2">"is_student"</span><span class="p">:</span> <span class="n">is_student</span><span class="p">,</span>
+            <span class="s2">"is_teacher"</span><span class="p">:</span> <span class="n">is_teacher</span><span class="p">,</span>
+            <span class="s2">"is_senior"</span><span class="p">:</span> <span class="n">is_senior</span><span class="p">,</span>
+            <span class="s2">"show_ion_wrapped_banner"</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_ION_WRAPPED</span> <span class="ow">and</span> <span class="n">is_student</span><span class="p">,</span>
+            <span class="s2">"ion_wrapped_year"</span><span class="p">:</span> <span class="n">get_school_year_label</span><span class="p">(),</span>
+            <span class="s2">"show_admin_widget"</span><span class="p">:</span> <span class="n">show_admin_widget</span><span class="p">,</span>
+            <span class="s2">"eighth_sponsor"</span><span class="p">:</span> <span class="n">eighth_sponsor</span><span class="p">,</span>
+            <span class="s2">"num_senior_destinations"</span><span class="p">:</span> <span class="n">num_senior_destinations</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
@@ -2256,7 +2256,7 @@
 
     <span class="c1">#######</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">ENABLE_HYBRID_EIGHTH</span><span class="p">:</span>
-        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;hybrid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"hybrid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
     <span class="c1">#######</span>
 
     <span class="k">if</span> <span class="n">show_widgets</span><span class="p">:</span>
@@ -2267,24 +2267,24 @@
         <span class="n">awaiting_teacher</span> <span class="o">=</span> <span class="n">all_waiting</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">teachers_approved__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">awaiting_approval</span> <span class="o">=</span> <span class="n">all_waiting</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">teachers_approved__isnull</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;awaiting_teacher&quot;</span><span class="p">:</span> <span class="n">awaiting_teacher</span><span class="p">,</span> <span class="s2">&quot;awaiting_approval&quot;</span><span class="p">:</span> <span class="n">awaiting_approval</span><span class="p">})</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"awaiting_teacher"</span><span class="p">:</span> <span class="n">awaiting_teacher</span><span class="p">,</span> <span class="s2">"awaiting_approval"</span><span class="p">:</span> <span class="n">awaiting_approval</span><span class="p">})</span>
 
     <span class="n">self_awaiting_teacher</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">AnnouncementRequest</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">posted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rejected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">teachers_requested</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
         <span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">teachers_rejected</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">teachers_approved</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">))</span>
         <span class="o">.</span><span class="n">this_year</span><span class="p">()</span>
     <span class="p">)</span>
-    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;self_awaiting_teacher&quot;</span><span class="p">:</span> <span class="n">self_awaiting_teacher</span><span class="p">})</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"self_awaiting_teacher"</span><span class="p">:</span> <span class="n">self_awaiting_teacher</span><span class="p">})</span>
 
     <span class="n">already_teacher_approved</span> <span class="o">=</span> <span class="n">AnnouncementRequest</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
         <span class="n">posted</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rejected</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">teachers_requested</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">teachers_approved</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>
     <span class="p">)</span>
-    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;already_teacher_approved&quot;</span><span class="p">:</span> <span class="n">already_teacher_approved</span><span class="p">})</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"already_teacher_approved"</span><span class="p">:</span> <span class="n">already_teacher_approved</span><span class="p">})</span>
 
     <span class="k">if</span> <span class="n">show_welcome</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;welcome/student.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"welcome/student.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;dashboard/dashboard.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"dashboard/dashboard.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -2317,7 +2317,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

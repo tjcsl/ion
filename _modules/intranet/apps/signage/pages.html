@@ -1559,14 +1559,14 @@
 <div class="viewcode-block" id="hello_world">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.pages.html#intranet.apps.signage.pages.hello_world">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">hello_world</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">sign</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> says Hello&quot;</span><span class="p">}</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"message"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">sign</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> says Hello"</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="announcements">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.pages.html#intranet.apps.signage.pages.announcements">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">announcements</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;public_announcements&quot;</span><span class="p">:</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())}</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"public_announcements"</span><span class="p">:</span> <span class="n">Announcement</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">expiration_date__gt</span><span class="o">=</span><span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">())}</span></div>
 
 
 
@@ -1574,23 +1574,23 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.pages.html#intranet.apps.signage.pages.bus">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">bus</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>  <span class="c1"># pylint: disable=unused-argument</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
-    <span class="n">time</span> <span class="o">=</span> <span class="s2">&quot;afternoon&quot;</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="s2">"afternoon"</span>
     <span class="k">if</span> <span class="n">now</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span><span class="p">:</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="s2">&quot;morning&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="s2">"morning"</span>
     <span class="n">day</span> <span class="o">=</span> <span class="n">Day</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">day</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">day</span><span class="o">.</span><span class="n">end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">date_obj</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_END_HOUR</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_END_MINUTE</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;admin&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;signage&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;ws_protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;ws&quot;</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">&quot;http&quot;</span> <span class="k">else</span> <span class="s2">&quot;wss&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ws_host&quot;</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">(),</span>
-        <span class="s2">&quot;school_end_hour&quot;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
-        <span class="s2">&quot;school_end_time&quot;</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
-        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
-        <span class="s2">&quot;changeover_time&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span><span class="p">,</span>
+        <span class="s2">"admin"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">"signage"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"ws_protocol"</span><span class="p">:</span> <span class="s2">"ws"</span> <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">scheme</span> <span class="o">==</span> <span class="s2">"http"</span> <span class="k">else</span> <span class="s2">"wss"</span><span class="p">,</span>
+        <span class="s2">"ws_host"</span><span class="p">:</span> <span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">(),</span>
+        <span class="s2">"school_end_hour"</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span>
+        <span class="s2">"school_end_time"</span><span class="p">:</span> <span class="n">end_of_day</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span>
+        <span class="s2">"time"</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
+        <span class="s2">"changeover_time"</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 </pre></div>
@@ -1624,7 +1624,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

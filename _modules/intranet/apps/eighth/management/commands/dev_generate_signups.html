@@ -1559,27 +1559,27 @@
 <div class="viewcode-block" id="Command">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.management.commands.dev_generate_signups.Command.html#intranet.apps.eighth.management.commands.dev_generate_signups.Command">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Generate 8th Period signups from existing users and activities. This should not be run in production&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">"Generate 8th Period signups from existing users and activities. This should not be run in production"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
-        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"date"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
-            <span class="s2">&quot;Are you sure you want to run this command? This is strictly for dev environments and should NEVER be run in production. (y/N) &quot;</span>
+            <span class="s2">"Are you sure you want to run this command? This is strictly for dev environments and should NEVER be run in production. (y/N) "</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">answer</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="s2">&quot;Operation Cancelled&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">answer</span> <span class="o">!=</span> <span class="s2">"y"</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="s2">"Operation Cancelled"</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">date</span> <span class="o">=</span> <span class="n">localdate</span><span class="p">(</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%Y&quot;</span><span class="p">)))</span>
-            <span class="n">ablock</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
-            <span class="n">bblock</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">localdate</span><span class="p">(</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"date"</span><span class="p">],</span> <span class="s2">"%m/</span><span class="si">%d</span><span class="s2">/%Y"</span><span class="p">)))</span>
+            <span class="n">ablock</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"A"</span><span class="p">)</span>
+            <span class="n">bblock</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">CommandError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ex</span>
 
         <span class="n">a_activities_list</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">ablock</span><span class="p">)[::</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">b_activities_list</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">bblock</span><span class="p">)[::</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">students</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">)</span>
+        <span class="n">students</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">"student"</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">student</span> <span class="ow">in</span> <span class="n">students</span><span class="p">:</span>
             <span class="n">a_activity</span> <span class="o">=</span> <span class="n">a_activities_list</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">a_activities_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
@@ -1625,7 +1625,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

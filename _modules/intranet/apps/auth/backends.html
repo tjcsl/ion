@@ -1557,12 +1557,12 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">pam_authenticate</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="s2">&quot;intranet_pam_authenticate&quot;</span><span class="p">,</span> <span class="s2">&quot;PAM authentication requests&quot;</span><span class="p">)</span>
-<span class="n">pam_authenticate_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">&quot;intranet_pam_authenticate_failures&quot;</span><span class="p">,</span> <span class="s2">&quot;Number of failed PAM authentication attempts&quot;</span><span class="p">)</span>
+<span class="n">pam_authenticate</span> <span class="o">=</span> <span class="n">Summary</span><span class="p">(</span><span class="s2">"intranet_pam_authenticate"</span><span class="p">,</span> <span class="s2">"PAM authentication requests"</span><span class="p">)</span>
+<span class="n">pam_authenticate_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="s2">"intranet_pam_authenticate_failures"</span><span class="p">,</span> <span class="s2">"Number of failed PAM authentication attempts"</span><span class="p">)</span>
 <span class="n">pam_authenticate_post_failures</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
-    <span class="s2">&quot;intranet_pam_authenticate_post_failures&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;Number of PAM authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not &quot;</span>
-    <span class="s2">&quot;exist)&quot;</span><span class="p">,</span>
+    <span class="s2">"intranet_pam_authenticate_post_failures"</span><span class="p">,</span>
+    <span class="s2">"Number of PAM authentication attempts that failed even though a ticket was successfully obtained (for example, if the user object does not "</span>
+    <span class="s2">"exist)"</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -1578,30 +1578,30 @@
 <div class="viewcode-block" id="PamAuthenticationBackend">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.PamAuthenticationBackend.html#intranet.apps.auth.backends.PamAuthenticationBackend">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PamAuthenticationBackend</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate using PAM.</span>
+<span class="w">    </span><span class="sd">"""Authenticate using PAM.</span>
 
 <span class="sd">    This is the default authentication backend.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="PamAuthenticationBackend.pam_auth_timeout_handle">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.PamAuthenticationBackend.html#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth_timeout_handle">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">pam_auth_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the user exists before we throw an error.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check if the user exists before we throw an error."""</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;pam_auth timed out for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> (invalid user)&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">"pam_auth timed out for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> (invalid user)"</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
-            <span class="s2">&quot;pam_auth timed out for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">"pam_auth timed out for </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
             <span class="n">realm</span><span class="p">,</span>
             <span class="n">extra</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;stack&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">},</span>
-                <span class="s2">&quot;sentry.interfaces.User&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">&quot;ip_address&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">},</span>
+                <span class="s2">"stack"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">},</span>
+                <span class="s2">"sentry.interfaces.User"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"username"</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span> <span class="s2">"ip_address"</span><span class="p">:</span> <span class="s2">"127.0.0.1"</span><span class="p">},</span>
             <span class="p">},</span>
         <span class="p">)</span></div>
 
@@ -1610,7 +1610,7 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.PamAuthenticationBackend.html#intranet.apps.auth.backends.PamAuthenticationBackend.pam_auth">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">pam_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Attempts to authenticate a user against PAM.</span>
+<span class="w">        </span><span class="sd">"""Attempts to authenticate a user against PAM.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            username</span>
@@ -1621,27 +1621,27 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Boolean indicating success or failure of PAM authentication</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># We should not try to authenticate with an empty password</span>
-        <span class="k">if</span> <span class="n">password</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">password</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span><span class="p">,</span> <span class="kc">False</span>
 
         <span class="n">realm</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">CSL_REALM</span>
         <span class="n">pam_authenticator</span> <span class="o">=</span> <span class="n">pam</span><span class="o">.</span><span class="n">pam</span><span class="p">()</span>
-        <span class="n">full_username</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">realm</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">full_username</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">realm</span><span class="si">}</span><span class="s2">"</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">full_username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;PAM authorized </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"PAM authorized </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;PAM failed to authorize </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"PAM failed to authorize </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">FAILURE</span>
-            <span class="k">if</span> <span class="s2">&quot;authentication token is no longer valid&quot;</span> <span class="ow">in</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">reason</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"authentication token is no longer valid"</span> <span class="ow">in</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">reason</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">EXPIRED</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Password for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> expired, needs reset&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;timeout&quot;</span> <span class="ow">in</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">reason</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Password for </span><span class="si">%s</span><span class="s2">@</span><span class="si">%s</span><span class="s2"> expired, needs reset"</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">"timeout"</span> <span class="ow">in</span> <span class="n">pam_authenticator</span><span class="o">.</span><span class="n">reason</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
                 <span class="n">PamAuthenticationBackend</span><span class="o">.</span><span class="n">pam_auth_timeout_handle</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">realm</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
@@ -1651,7 +1651,7 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.PamAuthenticationBackend.html#intranet.apps.auth.backends.PamAuthenticationBackend.authenticate">[docs]</a>
     <span class="nd">@pam_authenticate</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
+<span class="w">        </span><span class="sd">"""Authenticate a username-password pair.</span>
 
 <span class="sd">        Creates a new user if one is not already in the database.</span>
 
@@ -1664,7 +1664,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            `User`</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -1675,7 +1675,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pam_auth</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Authentication successful&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Authentication successful"</span><span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
@@ -1687,7 +1687,7 @@
             <span class="k">return</span> <span class="n">user</span>
 
         <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="n">PamAuthenticationResult</span><span class="o">.</span><span class="n">EXPIRED</span><span class="p">:</span>
-            <span class="n">user</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;RESET_PASSWORD&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">999999</span><span class="p">)</span>
+            <span class="n">user</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"RESET_PASSWORD"</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">"service"</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">999999</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">user</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">pam_authenticate_failures</span><span class="o">.</span><span class="n">inc</span><span class="p">()</span>
@@ -1697,13 +1697,13 @@
 <div class="viewcode-block" id="PamAuthenticationBackend.get_user">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.PamAuthenticationBackend.html#intranet.apps.auth.backends.PamAuthenticationBackend.get_user">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
+<span class="w">        </span><span class="sd">"""Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
 <span class="sd">                The user id of the user to fetch.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            User or None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -1715,12 +1715,12 @@
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MasterPasswordAuthenticationBackend</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Authenticate as any user against a master password whose hash is in secret.py.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Authenticate as any user against a master password whose hash is in secret.py."""</span>
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.authenticate">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.authenticate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate a username-password pair.</span>
+<span class="w">        </span><span class="sd">"""Authenticate a username-password pair.</span>
 
 <span class="sd">        Creates a new user if one is not already in the database.</span>
 
@@ -1732,36 +1732,36 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            `User`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;MASTER_PASSWORD&quot;</span><span class="p">):</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Master password not set.&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"MASTER_PASSWORD"</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Master password not set."</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">check_password</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_PASSWORD</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username__iexact</span><span class="o">=</span><span class="n">username</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_NOTIFY</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication FAILED due to invalid username </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Master password correct, user does not exist&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">"Master password authentication FAILED due to invalid username </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Master password correct, user does not exist"</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">MASTER_NOTIFY</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Master password authentication SUCCEEDED with username </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Authentication with master password successful&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">"Master password authentication SUCCEEDED with username </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Authentication with master password successful"</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">user</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Master password authentication failed&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Master password authentication failed"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="MasterPasswordAuthenticationBackend.get_user">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.html#intranet.apps.auth.backends.MasterPasswordAuthenticationBackend.get_user">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a user, given his or her user id. Required for a custom authentication backend.</span>
+<span class="w">        </span><span class="sd">"""Returns a user, given his or her user id. Required for a custom authentication backend.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            user_id</span>
 <span class="sd">                The user id of the user to fetch.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            User or None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
@@ -1799,7 +1799,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

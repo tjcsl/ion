@@ -1546,9 +1546,9 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for intranet.apps.files.tests</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Tests for the filecenter.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">patch</span>
 
@@ -1563,21 +1563,21 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">FilesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
 <div class="viewcode-block" id="FilesTest.test_delete_file">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.files.tests.FilesTest.html#intranet.apps.files.tests.FilesTest.test_delete_file">[docs]</a>
-    <span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;pysftp.Connection&quot;</span><span class="p">)</span>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s2">"pysftp.Connection"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">m_sftp</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests deleting a file in the filecenter.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Tests deleting a file in the filecenter."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
         <span class="c1"># Create hosts entry.</span>
-        <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Computer Systems Lab&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;csl&quot;</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">&quot;remote.tjhsst.edu&quot;</span><span class="p">,</span> <span class="n">linux</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Host</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Computer Systems Lab"</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">"csl"</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">"remote.tjhsst.edu"</span><span class="p">,</span> <span class="n">linux</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Login to remote file system</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;files_auth&quot;</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;hunter2&quot;</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"files_auth"</span><span class="p">),</span> <span class="p">{</span><span class="s2">"password"</span><span class="p">:</span> <span class="s2">"hunter2"</span><span class="p">})</span>
         <span class="c1"># Check redirect back to filesystem selection menu.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;/files&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"/files"</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span>
 
         <span class="c1"># Create fake directory root.</span>
-        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">pwd</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">pwd</span> <span class="o">=</span> <span class="s2">"/"</span>
 
         <span class="c1"># Create fake return code for stat call.</span>
         <span class="n">m_stat</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">()</span>
@@ -1585,20 +1585,20 @@
         <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="n">m_stat</span>
 
         <span class="c1"># Ensure that we can see the deletion confirmation dialog.</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;files_delete&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;csl&quot;</span><span class="p">]),</span> <span class="p">{</span><span class="s2">&quot;dir&quot;</span><span class="p">:</span> <span class="s2">&quot;/test/deleteme.txt&quot;</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"files_delete"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">"csl"</span><span class="p">]),</span> <span class="p">{</span><span class="s2">"dir"</span><span class="p">:</span> <span class="s2">"/test/deleteme.txt"</span><span class="p">})</span>
         <span class="c1"># Check if sftp connection is created.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">m_sftp</span><span class="o">.</span><span class="n">called</span><span class="p">)</span>
         <span class="c1"># Verify that the user is not redirected.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
         <span class="c1"># Attempt to delete file.</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;files_delete&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;csl&quot;</span><span class="p">]),</span> <span class="p">{</span><span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;/test/deleteme.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;confirm&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"files_delete"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">"csl"</span><span class="p">]),</span> <span class="p">{</span><span class="s2">"path"</span><span class="p">:</span> <span class="s2">"/test/deleteme.txt"</span><span class="p">,</span> <span class="s2">"confirm"</span><span class="p">:</span> <span class="s2">""</span><span class="p">})</span>
         <span class="c1"># Check if sftp connection is created.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">m_sftp</span><span class="o">.</span><span class="n">called</span><span class="p">)</span>
         <span class="c1"># Verify that the file was deleted.</span>
-        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s2">&quot;/test/deleteme.txt&quot;</span><span class="p">)</span>
+        <span class="n">m_sftp</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="s2">"/test/deleteme.txt"</span><span class="p">)</span>
         <span class="c1"># Verify that the user is redirected back to folder.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">&quot;/files/csl?dir=/test&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertRedirects</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s2">"/files/csl?dir=/test"</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">302</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -1632,7 +1632,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

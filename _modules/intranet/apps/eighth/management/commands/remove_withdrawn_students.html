@@ -1559,7 +1559,7 @@
 <div class="viewcode-block" id="Command">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.management.commands.remove_withdrawn_students.Command.html#intranet.apps.eighth.management.commands.remove_withdrawn_students.Command">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">BaseCommand</span><span class="p">):</span>
-    <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Withdraw students from TJ automatically &amp;&amp; notify relevant administrators&quot;</span>
+    <span class="n">help</span> <span class="o">=</span> <span class="s2">"Withdraw students from TJ automatically &amp;&amp; notify relevant administrators"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1567,38 +1567,38 @@
         <span class="n">NOTIFY_EMAILS</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">NOTIFY_ADMIN_EMAILS</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Withdrawn from TJ&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Withdrawn from TJ"</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Withdrawn group could not be found.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"Withdrawn group could not be found.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;No users found in withdrawn group.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">"No users found in withdrawn group.</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://ion.tjhsst.edu&quot;</span>
+        <span class="n">base_url</span> <span class="o">=</span> <span class="s2">"https://ion.tjhsst.edu"</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;withdrawn_group_str&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
-            <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()],</span>
-            <span class="s2">&quot;help_email&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">,</span>
-            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
-            <span class="s2">&quot;info_link&quot;</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
+            <span class="s2">"withdrawn_group_str"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+            <span class="s2">"users"</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">)"</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()],</span>
+            <span class="s2">"help_email"</span><span class="p">:</span> <span class="n">settings</span><span class="o">.</span><span class="n">FEEDBACK_EMAIL</span><span class="p">,</span>
+            <span class="s2">"base_url"</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
+            <span class="s2">"info_link"</span><span class="p">:</span> <span class="n">base_url</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">NOTIFY_EMAILS</span><span class="p">:</span>
             <span class="n">email_send_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span>
-                <span class="s2">&quot;eighth/emails/withdrawn_students.txt&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;eighth/emails/withdrawn_students.html&quot;</span><span class="p">,</span>
+                <span class="s2">"eighth/emails/withdrawn_students.txt"</span><span class="p">,</span>
+                <span class="s2">"eighth/emails/withdrawn_students.html"</span><span class="p">,</span>
                 <span class="n">data</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s2">&quot;Withdrawn Students on </span><span class="si">{</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">"Withdrawn Students on </span><span class="si">{</span><span class="n">timezone</span><span class="o">.</span><span class="n">localdate</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                 <span class="n">NOTIFY_EMAILS</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleting </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deleting </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">user</span><span class="o">.</span><span class="n">handle_delete</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">delete</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">delete</span><span class="p">())</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1631,7 +1631,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

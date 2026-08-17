@@ -1553,9 +1553,9 @@
 <div class="viewcode-block" id="PrometheusAccessMiddleware">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.monitoring.PrometheusAccessMiddleware.html#intranet.middleware.monitoring.PrometheusAccessMiddleware">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PrometheusAccessMiddleware</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Restricts access to Django Prometheus metrics to ALLOWED_METRIC_IPS and superusers.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="PrometheusAccessMiddleware.__init__">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.monitoring.PrometheusAccessMiddleware.html#intranet.middleware.monitoring.PrometheusAccessMiddleware.__init__">[docs]</a>
@@ -1564,14 +1564,14 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-        <span class="c1"># We would like to be able to just check request.resolver_match.app_name. Unfortunately, URL resolving has not taken place yet, so we can&#39;t.</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">&quot;/prometheus&quot;</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/prometheus/&quot;</span><span class="p">):</span>
-            <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;x-real-ip&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;x-real-ip&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="c1"># We would like to be able to just check request.resolver_match.app_name. Unfortunately, URL resolving has not taken place yet, so we can't.</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">"/prometheus"</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/prometheus/"</span><span class="p">):</span>
+            <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">"x-real-ip"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"x-real-ip"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"REMOTE_ADDR"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
             <span class="n">is_superuser</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span>
 
-            <span class="c1"># If they&#39;re not from an IP on the white list and they&#39;re not a superuser, deny access</span>
+            <span class="c1"># If they're not from an IP on the white list and they're not a superuser, deny access</span>
             <span class="k">if</span> <span class="n">remote_addr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">ALLOWED_METRIC_SCRAPE_IPS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_superuser</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to view this page.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"error/403.html"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"You are not authorized to view this page."</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
 
@@ -1606,7 +1606,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

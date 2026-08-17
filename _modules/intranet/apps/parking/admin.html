@@ -1553,19 +1553,19 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">...utils.admin_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">export_csv_action</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">CarApplication</span><span class="p">,</span> <span class="n">ParkingApplication</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Give parking group admin privileges:</span>
-<span class="sd">group = Group.objects.get(name=&quot;admin_parking&quot;)</span>
-<span class="sd">perms = Permission.objects.filter(Q(codename__endswith=&quot;carapplication&quot;)|Q(codename__endswith=&quot;parkingapplication&quot;))</span>
+<span class="sd">group = Group.objects.get(name="admin_parking")</span>
+<span class="sd">perms = Permission.objects.filter(Q(codename__endswith="carapplication")|Q(codename__endswith="parkingapplication"))</span>
 <span class="sd">group.permissions.add(*perms)</span>
 <span class="sd">group.save()</span>
-<span class="sd">staff_group = Group.objects.get(name=&quot;admin_staff&quot;)</span>
+<span class="sd">staff_group = Group.objects.get(name="admin_staff")</span>
 <span class="sd">for u in group.user_set.all():</span>
 <span class="sd">    # allow access to admin</span>
 <span class="sd">    u.groups.add(staff_group)</span>
 <span class="sd">    u.save()</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="ParkingAdmin">
@@ -1574,17 +1574,17 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ParkingAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">user</span>
-        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="si">}</span><span class="s2">)&lt;br&gt;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> absences&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="si">}</span><span class="s2">)&lt;br&gt;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> absences"</span><span class="p">)</span>
 
-    <span class="n">get_user</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;User&quot;</span>  <span class="c1"># type: ignore</span>
+    <span class="n">get_user</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"User"</span>  <span class="c1"># type: ignore</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_joint_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">joint_user</span>
         <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="si">}</span><span class="s2">)&lt;br&gt;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> absences&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;n/a&quot;</span>
+            <span class="k">return</span> <span class="n">mark_safe</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">last_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span><span class="si">}</span><span class="s2">)&lt;br&gt;</span><span class="si">{</span><span class="n">u</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span><span class="si">}</span><span class="s2"> absences"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"n/a"</span>
 
-    <span class="n">get_joint_user</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;Joint User&quot;</span>  <span class="c1"># type: ignore</span>
+    <span class="n">get_joint_user</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Joint User"</span>  <span class="c1"># type: ignore</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_absences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="n">absences</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">0</span>
@@ -1592,18 +1592,18 @@
             <span class="n">absences</span> <span class="o">+=</span> <span class="n">obj</span><span class="o">.</span><span class="n">joint_user</span><span class="o">.</span><span class="n">absence_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">absences</span>
 
-    <span class="n">get_absences</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;Absences&quot;</span>  <span class="c1"># type: ignore</span>
+    <span class="n">get_absences</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Absences"</span>  <span class="c1"># type: ignore</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_cars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">&quot;{</span><span class="si">% f</span><span class="s2">or car in cars %}{{ car }}{</span><span class="si">% i</span><span class="s2">f not forloop.last %}&lt;br&gt;{</span><span class="si">% e</span><span class="s2">ndif %}{</span><span class="si">% e</span><span class="s2">ndfor %}&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s2">&quot;cars&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">cars</span><span class="o">.</span><span class="n">all</span><span class="p">()}))</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="s2">"{</span><span class="si">% f</span><span class="s2">or car in cars %}{{ car }}{</span><span class="si">% i</span><span class="s2">f not forloop.last %}&lt;br&gt;{</span><span class="si">% e</span><span class="s2">ndif %}{</span><span class="si">% e</span><span class="s2">ndfor %}"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">Context</span><span class="p">({</span><span class="s2">"cars"</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">cars</span><span class="o">.</span><span class="n">all</span><span class="p">()}))</span>
 
-    <span class="n">get_cars</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;Cars&quot;</span>  <span class="c1"># type: ignore</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;get_user&quot;</span><span class="p">,</span> <span class="s2">&quot;get_joint_user&quot;</span><span class="p">,</span> <span class="s2">&quot;get_absences&quot;</span><span class="p">,</span> <span class="s2">&quot;mentorship&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;get_cars&quot;</span><span class="p">)</span>
-    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">,</span> <span class="s2">&quot;updated&quot;</span><span class="p">)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;joint_user&quot;</span><span class="p">)</span>
-    <span class="n">filter_horizontal</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;cars&quot;</span><span class="p">,)</span>
+    <span class="n">get_cars</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">"Cars"</span>  <span class="c1"># type: ignore</span>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"get_user"</span><span class="p">,</span> <span class="s2">"get_joint_user"</span><span class="p">,</span> <span class="s2">"get_absences"</span><span class="p">,</span> <span class="s2">"mentorship"</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">,</span> <span class="s2">"get_cars"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"added"</span><span class="p">,</span> <span class="s2">"updated"</span><span class="p">)</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"-added"</span><span class="p">,)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"user"</span><span class="p">,</span> <span class="s2">"joint_user"</span><span class="p">)</span>
+    <span class="n">filter_horizontal</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"cars"</span><span class="p">,)</span>
     <span class="n">actions</span> <span class="o">=</span> <span class="p">[</span><span class="n">export_csv_action</span><span class="p">()]</span></div>
 
 
@@ -1612,10 +1612,10 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.parking.admin.CarAdmin.html#intranet.apps.parking.admin.CarAdmin">[docs]</a>
 <span class="nd">@admin</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">CarApplication</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CarAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
-    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;license_plate&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;make&quot;</span><span class="p">,</span> <span class="s2">&quot;model&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">)</span>
-    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">,</span> <span class="s2">&quot;updated&quot;</span><span class="p">)</span>
-    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;-added&quot;</span><span class="p">,)</span>
-    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,)</span></div>
+    <span class="n">list_display</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"license_plate"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"make"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">)</span>
+    <span class="n">list_filter</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"added"</span><span class="p">,</span> <span class="s2">"updated"</span><span class="p">)</span>
+    <span class="n">ordering</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"-added"</span><span class="p">,)</span>
+    <span class="n">raw_id_fields</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"user"</span><span class="p">,)</span></div>
 
 </pre></div>
         </article>
@@ -1648,7 +1648,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

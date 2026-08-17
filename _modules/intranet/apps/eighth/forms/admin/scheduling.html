@@ -1556,7 +1556,7 @@
 <div class="viewcode-block" id="ScheduledActivityForm">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.forms.admin.scheduling.ScheduledActivityForm.html#intranet.apps.eighth.forms.admin.scheduling.ScheduledActivityForm">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ScheduledActivityForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a row in the table activity scheduling admin page.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Represents a row in the table activity scheduling admin page."""</span>
 
     <span class="c1"># Whether the activity should actually be scheduled for the block</span>
     <span class="n">scheduled</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -1568,56 +1568,56 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sponsors&quot;</span><span class="p">,</span> <span class="s2">&quot;rooms&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"sponsors"</span><span class="p">,</span> <span class="s2">"rooms"</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span><span class="o">.</span><span class="n">help_text</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">fieldname</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"block"</span><span class="p">,</span> <span class="s2">"activity"</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldname</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">HiddenInput</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;sticky_students&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">UserMultipleChoiceField</span><span class="p">(</span>
-            <span class="n">queryset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sticky_students&quot;</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">none</span><span class="p">()),</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"sticky_students"</span><span class="p">]</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">UserMultipleChoiceField</span><span class="p">(</span>
+            <span class="n">queryset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sticky_students"</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">none</span><span class="p">()),</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">SelectMultiple</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;remote-source remote-sticky-students&quot;</span><span class="p">}),</span>
+            <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">SelectMultiple</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"class"</span><span class="p">:</span> <span class="s2">"remote-source remote-sticky-students"</span><span class="p">}),</span>
         <span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_unique</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># We&#39;ll handle this ourselves by updating if already exists</span>
+        <span class="c1"># We'll handle this ourselves by updating if already exists</span>
         <span class="k">pass</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;cancelled&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scheduled&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;unschedule&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;block&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;activity&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;rooms&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;capacity&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;sponsors&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;special&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;administrative&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;restricted&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;sticky&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;both_blocks&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;comments&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;admin_comments&quot;</span><span class="p">,</span>
+            <span class="s2">"cancelled"</span><span class="p">,</span>
+            <span class="s2">"scheduled"</span><span class="p">,</span>
+            <span class="s2">"unschedule"</span><span class="p">,</span>
+            <span class="s2">"block"</span><span class="p">,</span>
+            <span class="s2">"activity"</span><span class="p">,</span>
+            <span class="s2">"rooms"</span><span class="p">,</span>
+            <span class="s2">"capacity"</span><span class="p">,</span>
+            <span class="s2">"sponsors"</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">,</span>
+            <span class="s2">"special"</span><span class="p">,</span>
+            <span class="s2">"administrative"</span><span class="p">,</span>
+            <span class="s2">"restricted"</span><span class="p">,</span>
+            <span class="s2">"sticky"</span><span class="p">,</span>
+            <span class="s2">"both_blocks"</span><span class="p">,</span>
+            <span class="s2">"comments"</span><span class="p">,</span>
+            <span class="s2">"admin_comments"</span><span class="p">,</span>
         <span class="p">]</span>
         <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;capacity&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(),</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
-            <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
-            <span class="s2">&quot;admin_comments&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
+            <span class="s2">"capacity"</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(),</span>
+            <span class="s2">"title"</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"size"</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
+            <span class="s2">"comments"</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"rows"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"cols"</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
+            <span class="s2">"admin_comments"</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">Textarea</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"rows"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"cols"</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
 
-        <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
-        <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;comments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;comments&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
-        <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;admin_comments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;admin_comments&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">)</span>
+        <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"comments"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"comments"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">)</span>
+        <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"admin_comments"</span><span class="p">]</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"admin_comments"</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">cleaned_data</span></div>
 
@@ -1652,7 +1652,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

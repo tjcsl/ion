@@ -1558,28 +1558,28 @@
 <div class="viewcode-block" id="EighthAbstractTest">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthAbstractTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class to be inherited by the test cases for the Eighth app.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class to be inherited by the test cases for the Eighth app."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">8889</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam"</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="mi">8889</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 <div class="viewcode-block" id="EighthAbstractTest.create_sponsor">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.create_sponsor">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_sponsor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates a teacher.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            a User object that is a teacher</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;ateacher&quot;</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;Teacher&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;teacher&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"ateacher"</span><span class="p">,</span> <span class="n">first_name</span><span class="o">=</span><span class="s2">"A"</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s2">"Teacher"</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">"teacher"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="EighthAbstractTest.add_block">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_block">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">block_letter</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthBlock</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Adds an EighthBlock.</span>
 <span class="sd">        Arguments are passed to intranet.apps.eighth.forms.admin.blocks.QuickBlockForm.</span>
 
@@ -1590,10 +1590,10 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The EighthBlock that was created.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Bypass the manual block creation form.</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;custom_block&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_add_block&quot;</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">:</span> <span class="n">block_letter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">})</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"custom_block"</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_add_block"</span><span class="p">),</span> <span class="p">{</span><span class="s2">"date"</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span> <span class="s2">"block_letter"</span><span class="p">:</span> <span class="n">block_letter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="n">block_letter</span><span class="p">)</span></div>
 
@@ -1601,7 +1601,7 @@
 <div class="viewcode-block" id="EighthAbstractTest.add_room">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_room">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_room</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthRoom</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Adds an EighthRoom.</span>
 <span class="sd">        Arguments are passed to intranet.apps.eighth.forms.admin.rooms.RoomForm.</span>
 
@@ -1612,8 +1612,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The EighthRoom created.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_add_room&quot;</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;capacity&quot;</span><span class="p">:</span> <span class="n">capacity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">})</span>
+<span class="sd">        """</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_add_room"</span><span class="p">),</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">"capacity"</span><span class="p">:</span> <span class="n">capacity</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -1621,7 +1621,7 @@
 <div class="viewcode-block" id="EighthAbstractTest.add_activity">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.add_activity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthActivity</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add an EighthActivity.</span>
 
 <span class="sd">        Args:</span>
@@ -1631,18 +1631,18 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The EighthActivity added.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+<span class="sd">        """</span>
+        <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
         <span class="n">arguments</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_add_activity&quot;</span><span class="p">),</span> <span class="n">arguments</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_add_activity"</span><span class="p">),</span> <span class="n">arguments</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">arguments</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">arguments</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span></div>
 
 
 <div class="viewcode-block" id="EighthAbstractTest.schedule_activity">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.html#intranet.apps.eighth.tests.eighth_test.EighthAbstractTest.schedule_activity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">schedule_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">activity_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EighthScheduledActivity</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Creates an EighthScheduledActivity; aka schedule an eighth period activity.</span>
 
 <span class="sd">        Args:</span>
@@ -1653,18 +1653,18 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The EighthScheduledActivity created.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># FIXME: figure out a way to do this that involves less hard-coding.</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
-            <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity_id</span><span class="p">,</span>
-            <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="n">capacity</span><span class="p">,</span>
+            <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+            <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+            <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
+            <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity_id</span><span class="p">,</span>
+            <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="n">capacity</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span> <span class="n">args</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span> <span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block__id</span><span class="o">=</span><span class="n">block_id</span><span class="p">,</span> <span class="n">activity__id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span></div>
 
@@ -1706,7 +1706,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

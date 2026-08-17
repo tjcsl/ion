@@ -1546,7 +1546,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for intranet.apps.auth.decorators</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Decorators that restrict views to certain types of users.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Decorators that restrict views to certain types of users."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
@@ -1560,12 +1560,12 @@
 <div class="viewcode-block" id="admin_required">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.auth.decorators.html#intranet.apps.auth.decorators.admin_required">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">admin_required</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator that requires the user to be in a certain admin group.</span>
+<span class="w">    </span><span class="sd">"""Decorator that requires the user to be in a certain admin group.</span>
 
-<span class="sd">    For example, @admin_required(&quot;polls&quot;) would check whether a user is</span>
-<span class="sd">    in the &quot;admin_polls&quot; group or in the &quot;admin_all&quot; group.</span>
+<span class="sd">    For example, @admin_required("polls") would check whether a user is</span>
+<span class="sd">    in the "admin_polls" group or in the "admin_all" group.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">in_admin_group</span><span class="p">(</span><span class="n">user</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
@@ -1575,16 +1575,16 @@
 
 
 <span class="c1">#: Restrict the wrapped view to eighth admins</span>
-<span class="n">eighth_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">&quot;eighth&quot;</span><span class="p">)</span>
+<span class="n">eighth_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">"eighth"</span><span class="p">)</span>
 
 <span class="c1">#: Restrict the wrapped view to announcements admins</span>
-<span class="n">announcements_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">&quot;announcements&quot;</span><span class="p">)</span>
+<span class="n">announcements_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">"announcements"</span><span class="p">)</span>
 
 <span class="c1">#: Restrict the wrapped view to events admins</span>
-<span class="n">events_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">&quot;events&quot;</span><span class="p">)</span>
+<span class="n">events_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">"events"</span><span class="p">)</span>
 
 <span class="c1">#: Restrict the wrapped view to board admins</span>
-<span class="n">board_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">&quot;board&quot;</span><span class="p">)</span>
+<span class="n">board_admin_required</span> <span class="o">=</span> <span class="n">admin_required</span><span class="p">(</span><span class="s2">"board"</span><span class="p">)</span>
 
 <span class="c1">#: Restrict the wrapped view to users who can take attendance</span>
 <span class="n">attendance_taker_required</span> <span class="o">=</span> <span class="n">user_passes_test</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">:</span> <span class="ow">not</span> <span class="n">u</span><span class="o">.</span><span class="n">is_anonymous</span> <span class="ow">and</span> <span class="n">u</span><span class="o">.</span><span class="n">is_attendance_taker</span><span class="p">)</span>
@@ -1598,8 +1598,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_anonymous</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You are not authorized to access that page.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You are not authorized to access that page."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"index"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">inner</span></div>
 
@@ -1611,12 +1611,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># request is the first argument in a view</span>
         <span class="k">if</span> <span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reauthenticated_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;reauthenticated_at&quot;</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">REAUTHENTICATION_EXPIRE_TIMEOUT</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"reauthenticated_at"</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="nb">float</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"reauthenticated_at"</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">REAUTHENTICATION_EXPIRE_TIMEOUT</span>
         <span class="p">):</span>
             <span class="k">return</span> <span class="n">wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">?next=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;reauth&quot;</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"</span><span class="si">{}</span><span class="s2">?next=</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"reauth"</span><span class="p">),</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">inner</span></div>
 
@@ -1651,7 +1651,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

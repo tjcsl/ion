@@ -1552,7 +1552,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">...models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span>
 
 <span class="n">block_letter_validator</span> <span class="o">=</span> <span class="n">RegexValidator</span><span class="p">(</span>
-    <span class="sa">r</span><span class="s2">&quot;^[a-z A-Z0-9_-]{1,10}$&quot;</span><span class="p">,</span> <span class="s2">&quot;A block letter must be less than 10 characters long, and include only alphanumeric characters and spaces.&quot;</span>
+    <span class="sa">r</span><span class="s2">"^[a-z A-Z0-9_-]{1,10}$"</span><span class="p">,</span> <span class="s2">"A block letter must be less than 10 characters long, and include only alphanumeric characters and spaces."</span>
 <span class="p">)</span>
 
 
@@ -1560,7 +1560,7 @@
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.forms.admin.blocks.BlockDisplayField.html#intranet.apps.eighth.forms.admin.blocks.BlockDisplayField">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BlockDisplayField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">"</span></div>
 
 
 
@@ -1569,20 +1569,20 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">BlockSelectionForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 <div class="viewcode-block" id="BlockSelectionForm.__init__">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm.html#intranet.apps.eighth.forms.admin.blocks.BlockSelectionForm.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Block&quot;</span><span class="p">,</span> <span class="n">exclude_before_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_locked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Block"</span><span class="p">,</span> <span class="n">exclude_before_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_locked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">filter_params</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">exclude_before_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;date__gte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_before_date</span>
+            <span class="n">filter_params</span><span class="p">[</span><span class="s2">"date__gte"</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_before_date</span>
 
         <span class="k">if</span> <span class="n">only_locked</span><span class="p">:</span>
-            <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">filter_params</span><span class="p">[</span><span class="s2">"locked"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_params</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">BlockDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">empty_label</span><span class="o">=</span><span class="s2">&quot;Select a block&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span> <span class="o">=</span> <span class="n">BlockDisplayField</span><span class="p">(</span><span class="n">queryset</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">empty_label</span><span class="o">=</span><span class="s2">"Select a block"</span><span class="p">)</span></div>
 </div>
 
 
@@ -1592,26 +1592,26 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">HybridBlockSelectionForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">Form</span><span class="p">):</span>
 <div class="viewcode-block" id="HybridBlockSelectionForm.__init__">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.forms.admin.blocks.HybridBlockSelectionForm.html#intranet.apps.eighth.forms.admin.blocks.HybridBlockSelectionForm.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Block&quot;</span><span class="p">,</span> <span class="n">exclude_before_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_locked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Block"</span><span class="p">,</span> <span class="n">exclude_before_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">only_locked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">filter_params</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">if</span> <span class="n">exclude_before_date</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;date__gte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_before_date</span>
+            <span class="n">filter_params</span><span class="p">[</span><span class="s2">"date__gte"</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclude_before_date</span>
 
         <span class="k">if</span> <span class="n">only_locked</span><span class="p">:</span>
-            <span class="n">filter_params</span><span class="p">[</span><span class="s2">&quot;locked&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">filter_params</span><span class="p">[</span><span class="s2">"locked"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="n">blocks_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">filter_params</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity__name</span><span class="o">=</span><span class="s2">&quot;z - Hybrid Sticky&quot;</span><span class="p">)</span>
+            <span class="n">eighthscheduledactivity__in</span><span class="o">=</span><span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity__name</span><span class="o">=</span><span class="s2">"z - Hybrid Sticky"</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="n">blocks_set</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">date</span><span class="p">),</span> <span class="n">b</span><span class="o">.</span><span class="n">block_letter</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-        <span class="n">queryset</span> <span class="o">=</span> <span class="p">[(</span><span class="n">b</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">blocks_set</span><span class="p">)]</span>
-        <span class="n">queryset</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;Select or search for a block&quot;</span><span class="p">))</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="p">[(</span><span class="n">b</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">blocks_set</span><span class="p">)]</span>
+        <span class="n">queryset</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"Select or search for a block"</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="n">queryset</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
 </div>
 
 
@@ -1623,7 +1623,7 @@
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthBlock</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;block_letter&quot;</span><span class="p">]</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"date"</span><span class="p">,</span> <span class="s2">"block_letter"</span><span class="p">]</span></div>
 
 
 
@@ -1635,12 +1635,12 @@
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthBlock</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;date&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;block_letter&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;locked&quot;</span><span class="p">,</span>
-            <span class="c1"># &quot;override_blocks&quot;,</span>
-            <span class="s2">&quot;signup_time&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;comments&quot;</span><span class="p">,</span>
+            <span class="s2">"date"</span><span class="p">,</span>
+            <span class="s2">"block_letter"</span><span class="p">,</span>
+            <span class="s2">"locked"</span><span class="p">,</span>
+            <span class="c1"># "override_blocks",</span>
+            <span class="s2">"signup_time"</span><span class="p">,</span>
+            <span class="s2">"comments"</span><span class="p">,</span>
         <span class="p">]</span></div>
 
 </pre></div>
@@ -1674,7 +1674,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

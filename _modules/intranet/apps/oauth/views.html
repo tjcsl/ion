@@ -1557,47 +1557,47 @@
 <div class="viewcode-block" id="ApplicationRegistrationView">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.views.ApplicationRegistrationView.html#intranet.apps.oauth.views.ApplicationRegistrationView">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ApplicationRegistrationView</span><span class="p">(</span><span class="n">ApplicationRegistration</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Custom registration view.</span>
 <span class="sd">    Check that the user has OAuth and API access before allowing them to register an application.</span>
 <span class="sd">    Disable showing algorithm field.</span>
 <span class="sd">    Disable editing client_id and client_secret fields.</span>
 <span class="sd">    Note that there are three layers of permission checking: at the template level, form level, and response level.</span>
 <span class="sd">    This view handles the form and response levels.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ApplicationRegistrationView.get_form_class">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.views.ApplicationRegistrationView.html#intranet.apps.oauth.views.ApplicationRegistrationView.get_form_class">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_form_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns the form class for the application model</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">modelform_factory</span><span class="p">(</span><span class="n">BlankModel</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">())</span>
 
         <span class="n">form</span> <span class="o">=</span> <span class="n">modelform_factory</span><span class="p">(</span>
             <span class="n">get_application_model</span><span class="p">(),</span>
             <span class="n">fields</span><span class="o">=</span><span class="p">(</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;client_type&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;authorization_grant_type&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;redirect_uris&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;client_id&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;client_secret&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;oidc_enabled&quot;</span><span class="p">,</span>
+                <span class="s2">"name"</span><span class="p">,</span>
+                <span class="s2">"client_type"</span><span class="p">,</span>
+                <span class="s2">"authorization_grant_type"</span><span class="p">,</span>
+                <span class="s2">"redirect_uris"</span><span class="p">,</span>
+                <span class="s2">"client_id"</span><span class="p">,</span>
+                <span class="s2">"client_secret"</span><span class="p">,</span>
+                <span class="s2">"oidc_enabled"</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">help_texts</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="p">(</span>
-                    <span class="s2">&quot;Save this now, as you will not be able to access it again. Keep it secure - it acts as your application&#39;s password.&quot;</span>
+                <span class="s2">"client_secret"</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="s2">"Save this now, as you will not be able to access it again. Keep it secure - it acts as your application's password."</span>
                 <span class="p">),</span>
-                <span class="s2">&quot;oidc_enabled&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Check this box to enable OpenID Connect (OIDC) support in your application. Authorization code grant type only.&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;redirect_uris&quot;</span><span class="p">:</span> <span class="s2">&quot;Space or line separated list&quot;</span><span class="p">,</span>
+                <span class="s2">"oidc_enabled"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Check this box to enable OpenID Connect (OIDC) support in your application. Authorization code grant type only."</span><span class="p">),</span>
+                <span class="s2">"redirect_uris"</span><span class="p">:</span> <span class="s2">"Space or line separated list"</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
 
         <span class="c1"># make client_id and client_secret read-only</span>
-        <span class="n">form</span><span class="o">.</span><span class="n">base_fields</span><span class="p">[</span><span class="s2">&quot;client_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;readonly&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">form</span><span class="o">.</span><span class="n">base_fields</span><span class="p">[</span><span class="s2">&quot;client_secret&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;readonly&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">base_fields</span><span class="p">[</span><span class="s2">"client_id"</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"readonly"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">base_fields</span><span class="p">[</span><span class="s2">"client_secret"</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"readonly"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="n">form</span></div>
 
@@ -1609,8 +1609,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span>
-                <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to manage OAuth applications. This incident has been reported.&quot;</span><span class="p">},</span>
+                <span class="s2">"error/403.html"</span><span class="p">,</span>
+                <span class="p">{</span><span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"You are not authorized to manage OAuth applications. This incident has been reported."</span><span class="p">},</span>
                 <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -1620,26 +1620,26 @@
 <div class="viewcode-block" id="ApplicationUpdateView">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.views.ApplicationUpdateView.html#intranet.apps.oauth.views.ApplicationUpdateView">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ApplicationUpdateView</span><span class="p">(</span><span class="n">ApplicationUpdate</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Custom update view to disable showing the algorithm, client_id and client_secret fields</span>
 <span class="sd">    and check if the user can update applications.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ApplicationUpdateView.get_form_class">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.views.ApplicationUpdateView.html#intranet.apps.oauth.views.ApplicationUpdateView.get_form_class">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_form_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Returns the form class for the application model</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">modelform_factory</span><span class="p">(</span><span class="n">BlankModel</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="p">())</span>
 
         <span class="k">return</span> <span class="n">modelform_factory</span><span class="p">(</span>
             <span class="n">get_application_model</span><span class="p">(),</span>
-            <span class="n">fields</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;client_type&quot;</span><span class="p">,</span> <span class="s2">&quot;authorization_grant_type&quot;</span><span class="p">,</span> <span class="s2">&quot;redirect_uris&quot;</span><span class="p">,</span> <span class="s2">&quot;oidc_enabled&quot;</span><span class="p">),</span>
+            <span class="n">fields</span><span class="o">=</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"client_type"</span><span class="p">,</span> <span class="s2">"authorization_grant_type"</span><span class="p">,</span> <span class="s2">"redirect_uris"</span><span class="p">,</span> <span class="s2">"oidc_enabled"</span><span class="p">),</span>
             <span class="n">help_texts</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;redirect_uris&quot;</span><span class="p">:</span> <span class="s2">&quot;Space or line separated list&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;oidc_enabled&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;Check this box to enable OpenID Connect (OIDC) support in your application. Authorization code grant type only.&quot;</span><span class="p">),</span>
+                <span class="s2">"redirect_uris"</span><span class="p">:</span> <span class="s2">"Space or line separated list"</span><span class="p">,</span>
+                <span class="s2">"oidc_enabled"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Check this box to enable OpenID Connect (OIDC) support in your application. Authorization code grant type only."</span><span class="p">),</span>
             <span class="p">},</span>
         <span class="p">)</span></div>
 
@@ -1651,8 +1651,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span>
-                <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to manage OAuth applications. This incident has been reported.&quot;</span><span class="p">},</span>
+                <span class="s2">"error/403.html"</span><span class="p">,</span>
+                <span class="p">{</span><span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"You are not authorized to manage OAuth applications. This incident has been reported."</span><span class="p">},</span>
                 <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -1662,7 +1662,7 @@
 <div class="viewcode-block" id="ApplicationDeleteView">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.oauth.views.ApplicationDeleteView.html#intranet.apps.oauth.views.ApplicationDeleteView">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ApplicationDeleteView</span><span class="p">(</span><span class="n">ApplicationDelete</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom delete view to check if the user can delete applications.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Custom delete view to check if the user can delete applications."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span>
@@ -1671,8 +1671,8 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
-                <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span>
-                <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to manage OAuth applications. This incident has been reported.&quot;</span><span class="p">},</span>
+                <span class="s2">"error/403.html"</span><span class="p">,</span>
+                <span class="p">{</span><span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"You are not authorized to manage OAuth applications. This incident has been reported."</span><span class="p">},</span>
                 <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -1708,7 +1708,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

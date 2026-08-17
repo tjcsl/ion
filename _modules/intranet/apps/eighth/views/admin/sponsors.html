@@ -1565,19 +1565,19 @@
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.sponsors.html#intranet.apps.eighth.views.admin.sponsors.add_sponsor_view">[docs]</a>
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_sponsor_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">SponsorForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added sponsor.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully added sponsor."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding sponsor.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Error adding sponsor."</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">SponsorForm</span><span class="p">()</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/add_sponsor.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Add Sponsor"</span><span class="p">,</span> <span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/add_sponsor.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1590,10 +1590,10 @@
         <span class="n">lst</span><span class="p">[</span><span class="n">sponsor</span><span class="p">]</span> <span class="o">=</span> <span class="n">sponsor</span><span class="o">.</span><span class="n">eighthactivity_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;View Sponsors by Activity&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sponsors&quot;</span><span class="p">:</span> <span class="n">lst</span><span class="p">,</span>
+        <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"View Sponsors by Activity"</span><span class="p">,</span>
+        <span class="s2">"sponsors"</span><span class="p">:</span> <span class="n">lst</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/list_sponsor_by_activity.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/list_sponsor_by_activity.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1602,7 +1602,7 @@
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_sponsor_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"block"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">block</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">block_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1613,42 +1613,42 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">blocks</span><span class="p">,</span> <span class="s2">&quot;chosen_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"blocks"</span><span class="p">:</span> <span class="n">blocks</span><span class="p">,</span> <span class="s2">"chosen_block"</span><span class="p">:</span> <span class="n">block</span><span class="p">}</span>
 
     <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">acts</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
         <span class="n">lst</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="n">lst</span><span class="p">[</span><span class="n">sponsor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">acts</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;sponsors&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;rooms&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">acts</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"sponsors"</span><span class="p">)</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"rooms"</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">sponsor</span> <span class="ow">in</span> <span class="n">act</span><span class="o">.</span><span class="n">get_true_sponsors</span><span class="p">():</span>
                 <span class="n">lst</span><span class="p">[</span><span class="n">sponsor</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">act</span><span class="p">)</span>
         <span class="n">lst</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">lst</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sponsor_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lst</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"sponsor_list"</span><span class="p">]</span> <span class="o">=</span> <span class="n">lst</span>
 
-        <span class="n">get_csv</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_list_sponsor_csv&quot;</span>
+        <span class="n">get_csv</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">"eighth_admin_list_sponsor_csv"</span>
 
         <span class="k">if</span> <span class="n">get_csv</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
-            <span class="n">block_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
-            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;attachment; filename=&quot;sponsor_list_</span><span class="si">{</span><span class="n">block_str</span><span class="si">}</span><span class="s1">.csv&quot;&#39;</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">"text/csv"</span><span class="p">)</span>
+            <span class="n">block_str</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{}{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">"</span><span class="p">),</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\W+"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">block_letter</span><span class="p">))</span>
+            <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Disposition"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'attachment; filename="sponsor_list_</span><span class="si">{</span><span class="n">block_str</span><span class="si">}</span><span class="s1">.csv"'</span>
             <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;Activity&quot;</span><span class="p">,</span> <span class="s2">&quot;Room&quot;</span><span class="p">,</span> <span class="s2">&quot;Eighth Contracted&quot;</span><span class="p">,</span> <span class="s2">&quot;Signups&quot;</span><span class="p">,</span> <span class="s2">&quot;Capacity&quot;</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sponsor_list&quot;</span><span class="p">]:</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">"Sponsor"</span><span class="p">,</span> <span class="s2">"Activity"</span><span class="p">,</span> <span class="s2">"Room"</span><span class="p">,</span> <span class="s2">"Eighth Contracted"</span><span class="p">,</span> <span class="s2">"Signups"</span><span class="p">,</span> <span class="s2">"Capacity"</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">context</span><span class="p">[</span><span class="s2">"sponsor_list"</span><span class="p">]:</span>
                 <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
                     <span class="p">[</span>
                         <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">full_title</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
-                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                        <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">full_title</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                        <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">get_true_rooms</span><span class="p">()])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
                         <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contracted_eighth</span><span class="p">,</span>
-                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
-                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                        <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">count</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
+                        <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">get_true_capacity</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]]),</span>
                     <span class="p">]</span>
                 <span class="p">)</span>
             <span class="k">return</span> <span class="n">response</span>
 
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Sponsor Schedule List&quot;</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/list_sponsors.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"admin_page_title"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Sponsor Schedule List"</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/list_sponsors.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1661,19 +1661,19 @@
     <span class="k">except</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">SponsorForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully edited sponsor.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully edited sponsor."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding sponsor.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Error adding sponsor."</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">SponsorForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">sponsor</span><span class="p">)</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Edit Sponsor&quot;</span><span class="p">,</span> <span class="s2">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_delete_sponsor&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">sponsor_id</span><span class="p">])}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/edit_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Edit Sponsor"</span><span class="p">,</span> <span class="s2">"delete_url"</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_delete_sponsor"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">sponsor_id</span><span class="p">])}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/edit_form.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1686,21 +1686,21 @@
     <span class="k">except</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">sponsor</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted sponsor.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully deleted sponsor."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Sponsor&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sponsor</span><span class="p">),</span>
-            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this sponsor will remove all records &quot;</span>
-            <span class="s2">&quot;of this user related to eighth period, but will &quot;</span>
-            <span class="s2">&quot;not remove the user account associated with it (if &quot;</span>
-            <span class="s2">&quot;there is one).&quot;</span><span class="p">,</span>
+            <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Delete Sponsor"</span><span class="p">,</span>
+            <span class="s2">"item_name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">sponsor</span><span class="p">),</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"Deleting this sponsor will remove all records "</span>
+            <span class="s2">"of this user related to eighth period, but will "</span>
+            <span class="s2">"not remove the user account associated with it (if "</span>
+            <span class="s2">"there is one)."</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/delete_form.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1717,7 +1717,7 @@
 
     <span class="c1"># for_sponsor() excludes cancelled activities</span>
     <span class="n">sched_acts</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;block__date&quot;</span><span class="p">,</span> <span class="s2">&quot;block__block_letter&quot;</span><span class="p">)</span>
+        <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">for_sponsor</span><span class="p">(</span><span class="n">sponsor</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">block__date__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"block__date"</span><span class="p">,</span> <span class="s2">"block__block_letter"</span><span class="p">)</span>
     <span class="p">)</span>
 
     <span class="c1"># Find list of all activities before the list is filtered to only show one activity</span>
@@ -1727,21 +1727,21 @@
     <span class="n">activities</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
 
     <span class="n">activity</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="s2">&quot;activity&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">activity_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"activity"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">activity_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"activity"</span><span class="p">)</span>
         <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">activity_id</span><span class="p">)</span>
         <span class="n">sched_acts</span> <span class="o">=</span> <span class="n">sched_acts</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;scheduled_activities&quot;</span><span class="p">:</span> <span class="n">sched_acts</span><span class="p">,</span>
-        <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>
-        <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Sponsor Schedule&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sponsor&quot;</span><span class="p">:</span> <span class="n">sponsor</span><span class="p">,</span>
-        <span class="s2">&quot;all_sponsors&quot;</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+        <span class="s2">"scheduled_activities"</span><span class="p">:</span> <span class="n">sched_acts</span><span class="p">,</span>
+        <span class="s2">"activities"</span><span class="p">:</span> <span class="n">activities</span><span class="p">,</span>
+        <span class="s2">"activity"</span><span class="p">:</span> <span class="n">activity</span><span class="p">,</span>
+        <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Sponsor Schedule"</span><span class="p">,</span>
+        <span class="s2">"sponsor"</span><span class="p">:</span> <span class="n">sponsor</span><span class="p">,</span>
+        <span class="s2">"all_sponsors"</span><span class="p">:</span> <span class="n">EighthSponsor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/sponsor_schedule.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/sponsor_schedule.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1750,7 +1750,7 @@
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sponsor_sanity_check_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"block"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="n">block</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">block_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1761,7 +1761,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">blocks</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">date__gte</span><span class="o">=</span><span class="n">get_start_date</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">blocks</span><span class="p">,</span> <span class="s2">&quot;chosen_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"blocks"</span><span class="p">:</span> <span class="n">blocks</span><span class="p">,</span> <span class="s2">"chosen_block"</span><span class="p">:</span> <span class="n">block</span><span class="p">}</span>
 
     <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sponsor_conflicts</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1776,11 +1776,11 @@
 
         <span class="k">for</span> <span class="n">sponsor_name</span><span class="p">,</span> <span class="n">activities</span> <span class="ow">in</span> <span class="n">sponsors</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">sponsor_conflicts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;sponsor_name&quot;</span><span class="p">:</span> <span class="n">sponsor_name</span><span class="p">,</span> <span class="s2">&quot;activities&quot;</span><span class="p">:</span> <span class="n">activities</span><span class="p">})</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sponsor_conflicts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sponsor_conflicts</span>
+                <span class="n">sponsor_conflicts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"sponsor_name"</span><span class="p">:</span> <span class="n">sponsor_name</span><span class="p">,</span> <span class="s2">"activities"</span><span class="p">:</span> <span class="n">activities</span><span class="p">})</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"sponsor_conflicts"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sponsor_conflicts</span>
 
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Sponsor Assignment Sanity Check&quot;</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/sponsor_sanity_check.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"admin_page_title"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Sponsor Assignment Sanity Check"</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/sponsor_sanity_check.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1813,7 +1813,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

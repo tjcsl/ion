@@ -1558,9 +1558,9 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.customthemes.views.html#intranet.apps.customthemes.views.chat_view">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">chat_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;april_fools&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_theme_names</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">enable_april_fools</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;themes/april_fools/chat.html&quot;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="s2">"april_fools"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_theme_names</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">enable_april_fools</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"index"</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"themes/april_fools/chat.html"</span><span class="p">)</span></div>
 
 
 
@@ -1568,19 +1568,19 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.customthemes.views.html#intranet.apps.customthemes.views.intranet4">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">intranet4</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;april_fools&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_theme_names</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">"april_fools"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_theme_names</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"index"</span><span class="p">))</span>
     <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">enable_april_fools</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">enable_april_fools</span>
     <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">seen_april_fools</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">enable_april_fools</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Happy April Fools!&quot;</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Welcome to Intranet 4!&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;chat&quot;</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Happy April Fools!"</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Welcome to Intranet 4!"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"chat"</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Welcome back to Intranet 3&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span></div>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Welcome back to Intranet 3"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"index"</span><span class="p">))</span></div>
 
 
 
@@ -1588,13 +1588,13 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.customthemes.views.html#intranet.apps.customthemes.views.intranet3">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">intranet3</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;april_fools&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_theme_names</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">"april_fools"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">get_theme_names</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"index"</span><span class="p">))</span>
     <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">enable_april_fools</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">seen_april_fools</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You have chosen to stay on Intranet 3&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">))</span></div>
+    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You have chosen to stay on Intranet 3"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"index"</span><span class="p">))</span></div>
 
 </pre></div>
         </article>
@@ -1627,7 +1627,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

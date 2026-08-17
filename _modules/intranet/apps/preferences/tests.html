@@ -1564,131 +1564,131 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.tests.PreferencesTest.html#intranet.apps.preferences.tests.PreferencesTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PreferencesTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;99999&quot;</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">route_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;JT-002&quot;</span><span class="p">,</span> <span class="s2">&quot;JT-001&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam"</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"99999"</span><span class="p">,</span> <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">route_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"JT-002"</span><span class="p">,</span> <span class="s2">"JT-001"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">route_name</span> <span class="ow">in</span> <span class="n">route_names</span><span class="p">:</span>
-            <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="n">route_name</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="n">route_name</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">route_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">route_names</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factory</span> <span class="o">=</span> <span class="n">RequestFactory</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_get_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_set_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">settings_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;pf-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-number&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;555-555-5555&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1000&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-MIN_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-MIN_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-MIN_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AUTO&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-address&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;awilliam@tjhsst.edu&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;show_pictures-self&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-purpose&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1000&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;receive_push_notifications&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-url&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;http://ion.tjhsst.edu/logout&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1000&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;show_pictures&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;bus_route&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;JT-001&quot;</span><span class="p">],</span>
+            <span class="s2">"pf-TOTAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+            <span class="s2">"ef-0-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"pf-0-number"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"555-555-5555"</span><span class="p">],</span>
+            <span class="s2">"wf-INITIAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"pf-0-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"wf-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1000"</span><span class="p">],</span>
+            <span class="s2">"ef-MIN_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"wf-TOTAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+            <span class="s2">"ef-TOTAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+            <span class="s2">"wf-MIN_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"pf-MIN_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"pf-INITIAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"ef-0-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"preferred_photo"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"AUTO"</span><span class="p">],</span>
+            <span class="s2">"ef-0-address"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"awilliam@tjhsst.edu"</span><span class="p">],</span>
+            <span class="s2">"show_pictures-self"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"ef-INITIAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"pf-0-purpose"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"h"</span><span class="p">],</span>
+            <span class="s2">"ef-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1000"</span><span class="p">],</span>
+            <span class="s2">"receive_push_notifications"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"wf-0-url"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"http://ion.tjhsst.edu/logout"</span><span class="p">],</span>
+            <span class="s2">"wf-0-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"pf-0-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"wf-0-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"pf-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1000"</span><span class="p">],</span>
+            <span class="s2">"show_pictures"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"bus_route"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"JT-001"</span><span class="p">],</span>
         <span class="p">}</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># Add a photo and try to set it as preferred</span>
         <span class="n">photo</span> <span class="o">=</span> <span class="n">Photo</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
-        <span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">})</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"preferred_photo"</span><span class="p">:</span> <span class="mi">9</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
-        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">photo</span><span class="p">,</span> <span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="p">)</span>
 
         <span class="c1"># Set it back to auto</span>
-        <span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="s2">&quot;AUTO&quot;</span><span class="p">})</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"preferred_photo"</span><span class="p">:</span> <span class="s2">"AUTO"</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">),</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
-        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">preferred_photo</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_clear_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
         <span class="n">pref_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;pf-1-number&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-1-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-number&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;555-555-5555&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;12&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1000&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-MIN_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-MIN_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-1-purpose&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;4&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-url&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;http://ion.tjhsst.edu/logout&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-1-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-DELETE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-1-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-DELETE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1000&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-1-address&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-1-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-MIN_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;10&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-1-url&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;preferred_photo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;AUTO&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-address&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;awilliam@tjhsst.edu&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-purpose&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1000&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-1-id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;wf-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-0-DELETE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;pf-0-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;ef-1-user&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;99999&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;show_pictures&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;on&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;bus_route&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">],</span>
+            <span class="s2">"pf-1-number"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"pf-1-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"pf-0-number"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"555-555-5555"</span><span class="p">],</span>
+            <span class="s2">"pf-0-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"12"</span><span class="p">],</span>
+            <span class="s2">"wf-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1000"</span><span class="p">],</span>
+            <span class="s2">"ef-MIN_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"wf-TOTAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"2"</span><span class="p">],</span>
+            <span class="s2">"wf-MIN_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"pf-1-purpose"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"o"</span><span class="p">],</span>
+            <span class="s2">"wf-0-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"4"</span><span class="p">],</span>
+            <span class="s2">"pf-TOTAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"2"</span><span class="p">],</span>
+            <span class="s2">"wf-0-url"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"http://ion.tjhsst.edu/logout"</span><span class="p">],</span>
+            <span class="s2">"wf-1-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"pf-0-DELETE"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"ef-1-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"wf-0-DELETE"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"pf-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1000"</span><span class="p">],</span>
+            <span class="s2">"wf-0-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"ef-1-address"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"ef-0-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"pf-1-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"ef-TOTAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"2"</span><span class="p">],</span>
+            <span class="s2">"pf-MIN_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"0"</span><span class="p">],</span>
+            <span class="s2">"pf-INITIAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+            <span class="s2">"ef-0-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"10"</span><span class="p">],</span>
+            <span class="s2">"wf-1-url"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"preferred_photo"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"AUTO"</span><span class="p">],</span>
+            <span class="s2">"ef-0-address"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"awilliam@tjhsst.edu"</span><span class="p">],</span>
+            <span class="s2">"ef-INITIAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+            <span class="s2">"pf-0-purpose"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"h"</span><span class="p">],</span>
+            <span class="s2">"ef-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1000"</span><span class="p">],</span>
+            <span class="s2">"wf-1-id"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
+            <span class="s2">"wf-INITIAL_FORMS"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"1"</span><span class="p">],</span>
+            <span class="s2">"ef-0-DELETE"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"pf-0-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"ef-1-user"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"99999"</span><span class="p">],</span>
+            <span class="s2">"show_pictures"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"on"</span><span class="p">],</span>
+            <span class="s2">"bus_route"</span><span class="p">:</span> <span class="p">[</span><span class="s2">""</span><span class="p">],</span>
         <span class="p">}</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertLogs</span><span class="p">(</span><span class="s2">&quot;intranet.apps.preferences.views&quot;</span><span class="p">,</span> <span class="s2">&quot;DEBUG&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">),</span> <span class="n">pref_dict</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertLogs</span><span class="p">(</span><span class="s2">"intranet.apps.preferences.views"</span><span class="p">,</span> <span class="s2">"DEBUG"</span><span class="p">)</span> <span class="k">as</span> <span class="n">logger</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">),</span> <span class="n">pref_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">output</span><span class="p">,</span>
             <span class="p">[</span>
-                <span class="s2">&quot;DEBUG:intranet.apps.preferences.views:Unable to set field phones with value []&quot;</span>
-                <span class="s2">&quot;: Can not set User attribute &#39;phones&#39; -- not in user attribute list.&quot;</span>
+                <span class="s2">"DEBUG:intranet.apps.preferences.views:Unable to set field phones with value []"</span>
+                <span class="s2">": Can not set User attribute 'phones' -- not in user attribute list."</span>
             <span class="p">],</span>
         <span class="p">)</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">logger</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="s2">&quot;Error processing Bus Route Form&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="s2">"Error processing Bus Route Form"</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">302</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_save_bus_route</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Test that save_bus_route() works</span>
 
         <span class="c1"># Test that choices are in order</span>
-        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">))</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">))</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">save_bus_route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-        <span class="n">choices</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;bus_route&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"bus_route"</span><span class="p">]</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">choices</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">route_names</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">route_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">route_names</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route_name</span><span class="p">,</span> <span class="n">choices</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
@@ -1696,23 +1696,23 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_get_personal_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Make a user</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam1"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Add some details</span>
 
         <span class="c1"># Disabling Phone and Website tests because they are no longer used due to privacy reasons</span>
-        <span class="c1"># phone = Phone.objects.create(user=user, purpose=&quot;m&quot;, _number=&quot;5551231234&quot;)</span>
-        <span class="c1"># phone2 = Phone.objects.create(user=user, purpose=&quot;h&quot;, _number=&quot;5551243245&quot;)</span>
+        <span class="c1"># phone = Phone.objects.create(user=user, purpose="m", _number="5551231234")</span>
+        <span class="c1"># phone2 = Phone.objects.create(user=user, purpose="h", _number="5551243245")</span>
 
-        <span class="n">email</span> <span class="o">=</span> <span class="n">Email</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">&quot;test@example.com&quot;</span><span class="p">)</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="n">Email</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="s2">"test@example.com"</span><span class="p">)</span>
 
-        <span class="c1"># website = Website.objects.create(user=user, url=&quot;www.example.com&quot;)</span>
+        <span class="c1"># website = Website.objects.create(user=user, url="www.example.com")</span>
 
         <span class="c1"># There are two phones, one email, and one website</span>
         <span class="c1"># personal_info, num_fields = get_personal_info(user)</span>
         <span class="n">personal_info</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_personal_info</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
 
-        <span class="c1"># self.assertEqual({&quot;phones&quot;: 2, &quot;emails&quot;: 1, &quot;websites&quot;: 1}, num_fields)</span>
+        <span class="c1"># self.assertEqual({"phones": 2, "emails": 1, "websites": 1}, num_fields)</span>
 
         <span class="c1"># It is unpredictable which order the phones appear in, so this will do</span>
         <span class="c1"># for user_object in [phone, phone2, email, website]:</span>
@@ -1720,27 +1720,27 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">user_object</span><span class="p">,</span> <span class="n">personal_info</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
         <span class="c1"># Then, check the email and the website</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">&quot;email_0&quot;</span><span class="p">])</span>
-        <span class="c1"># self.assertEqual(website, personal_info[&quot;website_0&quot;])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="n">personal_info</span><span class="p">[</span><span class="s2">"email_0"</span><span class="p">])</span>
+        <span class="c1"># self.assertEqual(website, personal_info["website_0"])</span>
 
 <div class="viewcode-block" id="PreferencesTest.test_privacy_options_view">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.tests.PreferencesTest.html#intranet.apps.preferences.tests.PreferencesTest.test_privacy_options_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_privacy_options_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Test the get privacy options views and associated methods.&quot;&quot;&quot;</span>
-        <span class="n">user_student</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam1&quot;</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">12345</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">"""Test the get privacy options views and associated methods."""</span>
+        <span class="n">user_student</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam1"</span><span class="p">,</span> <span class="n">user_type</span><span class="o">=</span><span class="s2">"student"</span><span class="p">,</span> <span class="n">student_id</span><span class="o">=</span><span class="mi">12345</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Start by testing the get_privacy_options method</span>
         <span class="n">options</span> <span class="o">=</span> <span class="n">get_privacy_options</span><span class="p">(</span><span class="n">user_student</span><span class="p">)</span>
 
         <span class="n">PERMISSIONS_NAMES</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">prefix</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">UserProperties</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)]</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;self&quot;</span><span class="p">,</span> <span class="s2">&quot;parent&quot;</span><span class="p">]</span>
+            <span class="n">prefix</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">UserProperties</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s2">"_"</span><span class="p">)]</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"self"</span><span class="p">,</span> <span class="s2">"parent"</span><span class="p">]</span>
         <span class="p">}</span>
 
         <span class="k">for</span> <span class="n">permission_type</span><span class="p">,</span> <span class="n">permissions</span> <span class="ow">in</span> <span class="n">PERMISSIONS_NAMES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">permission</span> <span class="ow">in</span> <span class="n">permissions</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">permission_type</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">permission_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">permission_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">permission_type</span> <span class="o">==</span> <span class="s2">"self"</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">permission_type</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">permission</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">permission_type</span><span class="si">}</span><span class="s2">"</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">permission</span><span class="p">),</span> <span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">permission</span><span class="p">)])</span>
@@ -1748,45 +1748,45 @@
         <span class="c1"># Now, test loading the view</span>
         <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
-        <span class="n">user</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;teacher&quot;</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">"teacher"</span>
         <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-        <span class="c1"># This should fail b/c we&#39;re not an admin</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">))</span>
+        <span class="c1"># This should fail b/c we're not an admin</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"privacy_options"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>  <span class="c1"># to login page</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="c1"># Now, this should load</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"privacy_options"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># However, since `awilliam` is not a student, this should have</span>
-        <span class="c1"># &quot;Student not found&quot; in the response</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;Student not found&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="c1"># "Student not found" in the response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">"Student not found"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 
-        <span class="c1"># Load awilliam1&#39;s preferences</span>
+        <span class="c1"># Load awilliam1's preferences</span>
         <span class="c1"># first, by Ion ID</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user_student</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"privacy_options"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"user"</span><span class="p">:</span> <span class="n">user_student</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">"12345"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 
         <span class="c1"># now, by student ID</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;student_id&quot;</span><span class="p">:</span> <span class="n">user_student</span><span class="o">.</span><span class="n">student_id</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"privacy_options"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"student_id"</span><span class="p">:</span> <span class="n">user_student</span><span class="o">.</span><span class="n">student_id</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">"12345"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 
         <span class="c1"># Try saving the form</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;privacy_options&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;?student_id=</span><span class="si">{</span><span class="n">user_student</span><span class="o">.</span><span class="n">student_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"privacy_options"</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"?student_id=</span><span class="si">{</span><span class="n">user_student</span><span class="o">.</span><span class="n">student_id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;show_address&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;show_address-self&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"show_address"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"show_address-self"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;12345&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">"12345"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
 
         <span class="n">user_student_properties</span> <span class="o">=</span> <span class="n">UserProperties</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user_student</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">user_student_properties</span><span class="o">.</span><span class="n">parent_show_address</span><span class="p">)</span>
@@ -1815,15 +1815,15 @@
         <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
         <span class="c1"># Test valid address</span>
-        <span class="n">form_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="s2">&quot;test@example.com&quot;</span><span class="p">}</span>
+        <span class="n">form_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"address"</span><span class="p">:</span> <span class="s2">"test@example.com"</span><span class="p">}</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EmailForm</span><span class="p">(</span><span class="n">form_params</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
 
         <span class="c1"># Test invalid address</span>
-        <span class="n">form_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="s2">&quot;test@fcpsschools.net&quot;</span><span class="p">}</span>
+        <span class="n">form_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"address"</span><span class="p">:</span> <span class="s2">"test@fcpsschools.net"</span><span class="p">}</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EmailForm</span><span class="p">(</span><span class="n">form_params</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">has_error</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid&quot;</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">has_error</span><span class="p">(</span><span class="s2">"address"</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">"invalid"</span><span class="p">))</span></div>
 
 </pre></div>
         </article>
@@ -1856,7 +1856,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

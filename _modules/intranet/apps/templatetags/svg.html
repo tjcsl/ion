@@ -1570,32 +1570,32 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.templatetags.svg.html#intranet.apps.templatetags.svg.svg">[docs]</a>
 <span class="nd">@register</span><span class="o">.</span><span class="n">simple_tag</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">svg</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="n">SVG_DIRS</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">&quot;SVG_DIRS&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">SVG_DIRS</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="s2">"SVG_DIRS"</span><span class="p">,</span> <span class="p">[])</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">SVG_DIRS</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">ImproperlyConfigured</span><span class="p">(</span><span class="s2">&quot;SVG_DIRS setting must be a list&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ImproperlyConfigured</span><span class="p">(</span><span class="s2">"SVG_DIRS setting must be a list"</span><span class="p">)</span>
 
     <span class="n">path</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">SVG_DIRS</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">SVG_DIRS</span><span class="p">:</span>
-            <span class="n">svg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">)</span>
+            <span class="n">svg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">svg_path</span><span class="p">):</span>
                 <span class="n">path</span> <span class="o">=</span> <span class="n">svg_path</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">finders</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&quot;</span><span class="p">))</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">finders</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"svg"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg"</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SVG &#39;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg&#39; not found&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"SVG '</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">.svg' not found"</span>
 
         <span class="c1"># Raise exception if DEBUG is True, else just log a warning.</span>
         <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SVGNotFound</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">return</span> <span class="s2">""</span>
 
-    <span class="c1"># Sometimes path can be a list/tuple if there&#39;s more than one file found</span>
+    <span class="c1"># Sometimes path can be a list/tuple if there's more than one file found</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -1635,7 +1635,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

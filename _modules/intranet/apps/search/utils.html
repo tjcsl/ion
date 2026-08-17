@@ -1553,34 +1553,34 @@
 
 <div class="viewcode-block" id="normalize_query">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.search.utils.html#intranet.apps.search.utils.normalize_query">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">normalize_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">findterms</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&quot;([^&quot;]+)&quot;|(\S+)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">,</span> <span class="n">normspace</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s{2,}&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Splits the query string in individual keywords, getting rid of unnecessary spaces</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">normalize_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">findterms</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">'"([^"]+)"|(\S+)'</span><span class="p">)</span><span class="o">.</span><span class="n">findall</span><span class="p">,</span> <span class="n">normspace</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s{2,}"</span><span class="p">)</span><span class="o">.</span><span class="n">sub</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Splits the query string in individual keywords, getting rid of unnecessary spaces</span>
 <span class="sd">    and grouping quoted words together.</span>
 <span class="sd">    Example:</span>
 
-<span class="sd">    &gt;&gt;&gt; normalize_query(&#39;  some random  words &quot;with   quotes  &quot; and   spaces&#39;)</span>
-<span class="sd">    [&#39;some&#39;, &#39;random&#39;, &#39;words&#39;, &#39;with quotes&#39;, &#39;and&#39;, &#39;spaces&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; normalize_query('  some random  words "with   quotes  " and   spaces')</span>
+<span class="sd">    ['some', 'random', 'words', 'with quotes', 'and', 'spaces']</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">normspace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">findterms</span><span class="p">(</span><span class="n">query_string</span><span class="p">)]</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">normspace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">findterms</span><span class="p">(</span><span class="n">query_string</span><span class="p">)]</span></div>
 
 
 
 <div class="viewcode-block" id="get_query">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.search.utils.html#intranet.apps.search.utils.get_query">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">,</span> <span class="n">search_fields</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a query, that is a combination of Q objects.</span>
+<span class="w">    </span><span class="sd">"""Returns a query, that is a combination of Q objects.</span>
 
 <span class="sd">    That combination aims to search keywords within a model by testing</span>
 <span class="sd">    the given search fields.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">query</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Query to search for every search term</span>
     <span class="n">terms</span> <span class="o">=</span> <span class="n">normalize_query</span><span class="p">(</span><span class="n">query_string</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">terms</span><span class="p">:</span>
         <span class="n">or_query</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Query to search for a given term in each field</span>
         <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">search_fields</span><span class="p">:</span>
-            <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">__icontains&quot;</span><span class="p">:</span> <span class="n">term</span><span class="p">})</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">__icontains"</span><span class="p">:</span> <span class="n">term</span><span class="p">})</span>
             <span class="k">if</span> <span class="n">or_query</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">or_query</span> <span class="o">=</span> <span class="n">q</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1622,7 +1622,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

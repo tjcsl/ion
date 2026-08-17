@@ -1568,15 +1568,15 @@
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">index_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="c1"># Delete expired trusted sessions</span>
-    <span class="c1"># There isn&#39;t really a much better place to do this.</span>
+    <span class="c1"># There isn't really a much better place to do this.</span>
     <span class="n">TrustedSession</span><span class="o">.</span><span class="n">delete_expired_sessions</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;trusted_sessions&quot;</span><span class="p">:</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span>
-        <span class="s2">&quot;cur_session_trusted&quot;</span><span class="p">:</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">session_key</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">session_key</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+        <span class="s2">"trusted_sessions"</span><span class="p">:</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">),</span>
+        <span class="s2">"cur_session_trusted"</span><span class="p">:</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">session_key</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">session_key</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;sessionmgmt/index.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"sessionmgmt/index.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1584,10 +1584,10 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.sessionmgmt.views.html#intranet.apps.sessionmgmt.views.trust_session_view">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">trust_session_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;trust&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;TRUST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">"trust"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"TRUST"</span><span class="p">:</span>
         <span class="n">trust_session</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;sessionmgmt&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"sessionmgmt"</span><span class="p">)</span></div>
 
 
 
@@ -1595,12 +1595,12 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.sessionmgmt.views.html#intranet.apps.sessionmgmt.views.revoke_session_view">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">revoke_session_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="s2">&quot;session_key&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span> <span class="ow">and</span> <span class="s2">"session_key"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">trusted_session</span> <span class="o">=</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">session_key</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;session_key&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+            <span class="n">trusted_session</span> <span class="o">=</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">session_key</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"session_key"</span><span class="p">,</span> <span class="s2">""</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">TrustedSession</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You&#39;ve already revoked that session.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;sessionmgmt&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You've already revoked that session."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"sessionmgmt"</span><span class="p">)</span>
 
         <span class="n">session_store</span> <span class="o">=</span> <span class="n">SessionStore</span><span class="p">(</span><span class="n">session_key</span><span class="o">=</span><span class="n">trusted_session</span><span class="o">.</span><span class="n">session_key</span><span class="p">)</span>
         <span class="n">session_store</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
@@ -1608,10 +1608,10 @@
         <span class="n">trusted_session</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">session_key</span> <span class="o">==</span> <span class="n">trusted_session</span><span class="o">.</span><span class="n">session_key</span><span class="p">:</span>
-            <span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>  <span class="c1"># Without this, it doesn&#39;t seem to work properly (maybe because the session is re-saved?)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+            <span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>  <span class="c1"># Without this, it doesn't seem to work properly (maybe because the session is re-saved?)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"index"</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;sessionmgmt&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"sessionmgmt"</span><span class="p">)</span></div>
 
 
 
@@ -1619,7 +1619,7 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.sessionmgmt.views.html#intranet.apps.sessionmgmt.views.global_logout_view">[docs]</a>
 <span class="nd">@login_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">global_logout_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;global_logout&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GLOBAL_LOGOUT&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">"global_logout"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"GLOBAL_LOGOUT"</span><span class="p">:</span>
         <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">last_global_logout_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
@@ -1631,9 +1631,9 @@
 
         <span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"index"</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;sessionmgmt&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"sessionmgmt"</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1666,7 +1666,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

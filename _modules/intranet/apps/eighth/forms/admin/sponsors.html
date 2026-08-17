@@ -1565,12 +1565,12 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">id_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">"invalid_choice"</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">"invalid_choice"</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">id_value</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">"invalid_choice"</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">"invalid_choice"</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="k">return</span> <span class="n">user</span></div>
 
@@ -1579,11 +1579,11 @@
 <div class="viewcode-block" id="SponsorForm">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.forms.admin.sponsors.SponsorForm.html#intranet.apps.eighth.forms.admin.sponsors.SponsorForm">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SponsorForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">AutoCreateUserField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;User ID&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">AutoCreateUserField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"User ID"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">EighthSponsor</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;department&quot;</span><span class="p">,</span> <span class="s2">&quot;full_time&quot;</span><span class="p">,</span> <span class="s2">&quot;online_attendance&quot;</span><span class="p">,</span> <span class="s2">&quot;contracted_eighth&quot;</span><span class="p">,</span> <span class="s2">&quot;show_full_name&quot;</span><span class="p">]</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"first_name"</span><span class="p">,</span> <span class="s2">"last_name"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">,</span> <span class="s2">"department"</span><span class="p">,</span> <span class="s2">"full_time"</span><span class="p">,</span> <span class="s2">"online_attendance"</span><span class="p">,</span> <span class="s2">"contracted_eighth"</span><span class="p">,</span> <span class="s2">"show_full_name"</span><span class="p">]</span></div>
 
 </pre></div>
         </article>
@@ -1616,7 +1616,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

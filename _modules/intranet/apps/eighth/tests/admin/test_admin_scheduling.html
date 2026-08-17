@@ -1562,37 +1562,37 @@
 <div class="viewcode-block" id="EighthAdminSchedulingTest.test_schedule_activity_view">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.html#intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.test_schedule_activity_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_schedule_activity_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.scheduling.schedule_activity_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Tests :func:`~intranet.apps.eighth.views.admin.scheduling.schedule_activity_view`."""</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="c1"># Add a block and an activity</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
-        <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Activity&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"A"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Test Activity"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Load the page</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># Load the page and select the activity</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"activity"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"rows"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="c1"># Schedule this activity</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1600,15 +1600,15 @@
 
         <span class="c1"># Cancel this activity</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1616,16 +1616,16 @@
 
         <span class="c1"># Unschedule this activity (i.e. delete it)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-unschedule&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"form-0-unschedule"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1635,16 +1635,16 @@
         <span class="n">activity</span><span class="o">.</span><span class="n">both_blocks</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">activity</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-both_blocks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-0-both_blocks"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1652,11 +1652,11 @@
 
         <span class="c1"># Sign someone up for this activity</span>
         <span class="n">user1</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-            <span class="n">username</span><span class="o">=</span><span class="s2">&quot;2021ttest&quot;</span><span class="p">,</span>
-            <span class="n">first_name</span><span class="o">=</span><span class="s2">&quot;Tommy&quot;</span><span class="p">,</span>
-            <span class="n">last_name</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">,</span>
+            <span class="n">username</span><span class="o">=</span><span class="s2">"2021ttest"</span><span class="p">,</span>
+            <span class="n">first_name</span><span class="o">=</span><span class="s2">"Tommy"</span><span class="p">,</span>
+            <span class="n">last_name</span><span class="o">=</span><span class="s2">"Test"</span><span class="p">,</span>
             <span class="n">student_id</span><span class="o">=</span><span class="mi">1234568</span><span class="p">,</span>
-            <span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span>
+            <span class="n">user_type</span><span class="o">=</span><span class="s2">"student"</span><span class="p">,</span>
             <span class="n">graduation_year</span><span class="o">=</span><span class="n">get_senior_graduation_year</span><span class="p">(),</span>
         <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
@@ -1665,16 +1665,16 @@
 
         <span class="c1"># Cancelling should still work</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-both_blocks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-0-both_blocks"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1684,17 +1684,17 @@
 
         <span class="c1"># but deleting should not</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-unschedule&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-both_blocks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"form-0-unschedule"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-0-both_blocks"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1707,17 +1707,17 @@
 
         <span class="c1"># Try again, the scheduled activity should be deleted</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-unschedule&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-both_blocks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">"form-0-unschedule"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-0-both_blocks"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
@@ -1729,110 +1729,110 @@
 <div class="viewcode-block" id="EighthAdminSchedulingTest.test_room_change_notification_view">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.html#intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.test_room_change_notification_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_room_change_notification_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests room change notifications in :func:`~intranet.apps.eighth.views.admin.scheduling.schedule_activity_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Tests room change notifications in :func:`~intranet.apps.eighth.views.admin.scheduling.schedule_activity_view`."""</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="c1"># Add a block, a room and an activity</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
-        <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Activity&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">room1</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Room 1&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">room2</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Room 2&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"A"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Test Activity"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">room1</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Room 1"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">room2</span> <span class="o">=</span> <span class="n">EighthRoom</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Room 2"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Schedule this activity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-rooms&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">room1</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-rooms"</span><span class="p">:</span> <span class="p">[</span><span class="n">room1</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">)</span>
 
         <span class="c1"># Change the room and ensure emails are sent</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-rooms&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">room2</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-rooms"</span><span class="p">:</span> <span class="p">[</span><span class="n">room2</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;Notifying students of this room change.&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">"Notifying students of this room change."</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"messages"</span><span class="p">]))))</span>
 
-        <span class="c1"># Keep the room constant and ensure emails aren&#39;t sent</span>
+        <span class="c1"># Keep the room constant and ensure emails aren't sent</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_schedule_activity&quot;</span><span class="p">),</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_schedule_activity"</span><span class="p">),</span>
             <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-                <span class="s2">&quot;form-TOTAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-INITIAL_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-MAX_NUM_FORMS&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-scheduled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="s2">&quot;form-0-rooms&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">room2</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
-                <span class="s2">&quot;form-0-capacity&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s2">"form-TOTAL_FORMS"</span><span class="p">:</span> <span class="s2">"1"</span><span class="p">,</span>
+                <span class="s2">"form-INITIAL_FORMS"</span><span class="p">:</span> <span class="s2">"0"</span><span class="p">,</span>
+                <span class="s2">"form-MAX_NUM_FORMS"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+                <span class="s2">"form-0-block"</span><span class="p">:</span> <span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"form-0-scheduled"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">"form-0-rooms"</span><span class="p">:</span> <span class="p">[</span><span class="n">room2</span><span class="o">.</span><span class="n">id</span><span class="p">],</span>
+                <span class="s2">"form-0-capacity"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
             <span class="p">},</span>
             <span class="n">follow</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s2">&quot;Notifying students of this room change.&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]))))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s2">"Notifying students of this room change."</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"messages"</span><span class="p">]))))</span></div>
 
 
 <div class="viewcode-block" id="EighthAdminSchedulingTest.test_show_activity_schedule_view">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.html#intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.test_show_activity_schedule_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_show_activity_schedule_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Tests :func:`~intranet.apps.eighth.views.admin.scheduling.show_activity_schedule_view`."""</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="c1"># Add an activity and a block and schedule it</span>
         <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Activity&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">today</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"A"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Test Activity"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">scheduled</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># Load the page</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_view_activity_schedule&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_view_activity_schedule"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">activity</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">activity</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"activities"</span><span class="p">]))</span>
 
         <span class="c1"># Select the activity</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_view_activity_schedule&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_view_activity_schedule"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"activity"</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">scheduled</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;scheduled_activities&quot;</span><span class="p">]))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">activity</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"activity"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">([</span><span class="n">scheduled</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"scheduled_activities"</span><span class="p">]))</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_distribute_students_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO: does this view even work?</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_distribute_students&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_distribute_students"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EighthAdminSchedulingTest.test_transfer_students">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.html#intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.test_transfer_students">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_transfer_students</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the transfer students views.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Tests the transfer students views."""</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
-        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">&quot;awilliam&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">block_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;9001-4-20&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
-        <span class="n">block_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">&quot;9001-4-20&quot;</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
-        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test1&quot;</span><span class="p">)</span>
-        <span class="n">act2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test2&quot;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s2">"awilliam"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">block_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">"9001-4-20"</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"A"</span><span class="p">)</span>
+        <span class="n">block_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="s2">"9001-4-20"</span><span class="p">,</span> <span class="n">block_letter</span><span class="o">=</span><span class="s2">"B"</span><span class="p">)</span>
+        <span class="n">act1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Test1"</span><span class="p">)</span>
+        <span class="n">act2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_activity</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Test2"</span><span class="p">)</span>
         <span class="n">schact_a1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_a</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">)</span>
         <span class="n">schact_a2</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_a</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act2</span><span class="p">)</span>
         <span class="n">schact_b1</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block_b</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">act1</span><span class="p">)</span>
@@ -1840,46 +1840,46 @@
         <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">scheduled_activity</span><span class="o">=</span><span class="n">schact_b1</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
 
         <span class="c1"># Load the page</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># POST the first step (select block to transfer from)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students&quot;</span><span class="p">),</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eighth_admin_transfer_students_wizard-current_step&quot;</span><span class="p">:</span> <span class="s2">&quot;block_1&quot;</span><span class="p">,</span> <span class="s2">&quot;block_1-block&quot;</span><span class="p">:</span> <span class="n">block_b</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students"</span><span class="p">),</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"eighth_admin_transfer_students_wizard-current_step"</span><span class="p">:</span> <span class="s2">"block_1"</span><span class="p">,</span> <span class="s2">"block_1-block"</span><span class="p">:</span> <span class="n">block_b</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># POST the second step (select activity to transfer from)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students&quot;</span><span class="p">),</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eighth_admin_transfer_students_wizard-current_step&quot;</span><span class="p">:</span> <span class="s2">&quot;activity_1&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_1-activity&quot;</span><span class="p">:</span> <span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students"</span><span class="p">),</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"eighth_admin_transfer_students_wizard-current_step"</span><span class="p">:</span> <span class="s2">"activity_1"</span><span class="p">,</span> <span class="s2">"activity_1-activity"</span><span class="p">:</span> <span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># POST the third step (select block to transfer to)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students&quot;</span><span class="p">),</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eighth_admin_transfer_students_wizard-current_step&quot;</span><span class="p">:</span> <span class="s2">&quot;block_2&quot;</span><span class="p">,</span> <span class="s2">&quot;block_2-block&quot;</span><span class="p">:</span> <span class="n">block_a</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students"</span><span class="p">),</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"eighth_admin_transfer_students_wizard-current_step"</span><span class="p">:</span> <span class="s2">"block_2"</span><span class="p">,</span> <span class="s2">"block_2-block"</span><span class="p">:</span> <span class="n">block_a</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># POST the fourth step (select activity to transfer to)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-            <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students&quot;</span><span class="p">),</span>
-            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eighth_admin_transfer_students_wizard-current_step&quot;</span><span class="p">:</span> <span class="s2">&quot;activity_2&quot;</span><span class="p">,</span> <span class="s2">&quot;activity_2-activity&quot;</span><span class="p">:</span> <span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
+            <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students"</span><span class="p">),</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"eighth_admin_transfer_students_wizard-current_step"</span><span class="p">:</span> <span class="s2">"activity_2"</span><span class="p">,</span> <span class="s2">"activity_2-activity"</span><span class="p">:</span> <span class="n">act1</span><span class="o">.</span><span class="n">id</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students_action&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;?source_act=</span><span class="si">{</span><span class="n">schact_b1</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&amp;dest_act=</span><span class="si">{</span><span class="n">schact_a1</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students_action"</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">"?source_act=</span><span class="si">{</span><span class="n">schact_b1</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&amp;dest_act=</span><span class="si">{</span><span class="n">schact_a1</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
 
-        <span class="c1"># GET the &quot;confirm&quot; page</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students_action&quot;</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source_act&quot;</span><span class="p">:</span> <span class="n">schact_b1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;dest_act&quot;</span><span class="p">:</span> <span class="n">schact_a1</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="c1"># GET the "confirm" page</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students_action"</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"source_act"</span><span class="p">:</span> <span class="n">schact_b1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"dest_act"</span><span class="p">:</span> <span class="n">schact_a1</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">schact_b1</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;source_act&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">schact_a1</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;dest_act&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">schact_b1</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"source_act"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">schact_a1</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">"dest_act"</span><span class="p">])</span>
 
         <span class="c1"># Attempt move user from `schact_b1` to `schact_a1`, removing the signup for `schact_a2`</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_transfer_students_action&quot;</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;source_act&quot;</span><span class="p">:</span> <span class="n">schact_b1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;dest_act&quot;</span><span class="p">:</span> <span class="n">schact_a1</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_transfer_students_action"</span><span class="p">),</span> <span class="p">{</span><span class="s2">"source_act"</span><span class="p">:</span> <span class="n">schact_b1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">"dest_act"</span><span class="p">:</span> <span class="n">schact_a1</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block_a</span><span class="p">)),</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block_a</span><span class="p">)</span><span class="o">.</span><span class="n">scheduled_activity</span><span class="p">,</span> <span class="n">schact_a1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">eighthsignup_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block_b</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">())</span></div>
@@ -1888,16 +1888,16 @@
 <div class="viewcode-block" id="EighthAdminSchedulingTest.test_remove_duplicates_view">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.html#intranet.apps.eighth.tests.admin.test_admin_scheduling.EighthAdminSchedulingTest.test_remove_duplicates_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_remove_duplicates_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests :func:`~intranet.apps.eighth.views.admin.scheduling.remove_duplicates_view`.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Tests :func:`~intranet.apps.eighth.views.admin.scheduling.remove_duplicates_view`."""</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">make_admin</span><span class="p">()</span>
 
         <span class="c1"># Load the page</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_remove_duplicates&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_remove_duplicates"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 
         <span class="c1"># POST to the page</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_remove_duplicates&quot;</span><span class="p">))</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_remove_duplicates"</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">302</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span></div>
 </div>
 
@@ -1932,7 +1932,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

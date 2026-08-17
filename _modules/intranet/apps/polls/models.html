@@ -1565,7 +1565,7 @@
 <div class="viewcode-block" id="PollQuerySet.this_year">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.PollQuerySet.html#intranet.apps.polls.models.PollQuerySet.this_year">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">this_year</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Polls from this school year only.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get Polls from this school year only."""</span>
         <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">get_date_range_this_year</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">start_time__gte</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">start_time__lte</span><span class="o">=</span><span class="n">end_date</span><span class="p">)</span></div>
 </div>
@@ -1581,13 +1581,13 @@
 <div class="viewcode-block" id="PollManager.visible_to_user">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.PollManager.html#intranet.apps.polls.models.PollManager.visible_to_user">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visible_to_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of visible polls for a given user (usually request.user).</span>
+<span class="w">        </span><span class="sd">"""Get a list of visible polls for a given user (usually request.user).</span>
 
 <span class="sd">        These visible polls will be those that either have no groups</span>
 <span class="sd">        assigned to them (and are therefore public) or those in which</span>
 <span class="sd">        the user is a member.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">return</span> <span class="n">Poll</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">groups__in</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">groups__isnull</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span></div>
 </div>
@@ -1597,7 +1597,7 @@
 <div class="viewcode-block" id="Poll">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Poll.html#intranet.apps.polls.models.Poll">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Poll</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Poll, for the TJ community.</span>
+<span class="w">    </span><span class="sd">"""A Poll, for the TJ community.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        title</span>
@@ -1611,7 +1611,7 @@
 <span class="sd">        visible</span>
 <span class="sd">            Whether the poll is visible to the users it is for.</span>
 <span class="sd">        is_secret</span>
-<span class="sd">            Whether the poll is a &#39;secret&#39; poll. Poll admins will not be able to view individual</span>
+<span class="sd">            Whether the poll is a 'secret' poll. Poll admins will not be able to view individual</span>
 <span class="sd">            user responses for secret polls.</span>
 <span class="sd">        is_election</span>
 <span class="sd">            Whether the poll is an election.</span>
@@ -1621,7 +1621,7 @@
 
 <span class="sd">    Access questions for the poll through poll.question_set.all()</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">objects</span> <span class="o">=</span> <span class="n">PollManager</span><span class="p">()</span>
 
@@ -1639,7 +1639,7 @@
 <div class="viewcode-block" id="Poll.before_end_time">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Poll.html#intranet.apps.polls.models.Poll.before_end_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">before_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Has the poll not ended yet?&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Has the poll not ended yet?"""</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span></div>
 
@@ -1647,7 +1647,7 @@
 <div class="viewcode-block" id="Poll.before_start_time">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Poll.html#intranet.apps.polls.models.Poll.before_start_time">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">before_start_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Has the poll not started yet?&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Has the poll not started yet?"""</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span></div>
 
@@ -1655,7 +1655,7 @@
 <div class="viewcode-block" id="Poll.in_time_range">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Poll.html#intranet.apps.polls.models.Poll.in_time_range">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">in_time_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Is it within the poll time range?&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Is it within the poll time range?"""</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_start_time</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">before_end_time</span><span class="p">()</span></div>
 
 
@@ -1670,24 +1670,24 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_num_eligible_voters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__poll</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">"service"</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups__poll</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">user_type</span><span class="o">=</span><span class="s2">"service"</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_percentage_voted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voted</span><span class="p">,</span> <span class="n">able</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">able</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">voted</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">able</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="mi">0</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">able</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">voted</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">able</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_voted_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">users_voted</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_users_voted</span><span class="p">())</span>
         <span class="n">users_able</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_eligible_voters</span><span class="p">()</span>
         <span class="n">percent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_percentage_voted</span><span class="p">(</span><span class="n">users_voted</span><span class="p">,</span> <span class="n">users_able</span><span class="p">)</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">users_voted</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">users_able</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">percent</span><span class="si">}</span><span class="s2">) eligible users voted in this poll.&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">users_voted</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="n">users_able</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">percent</span><span class="si">}</span><span class="s2">) eligible users voted in this poll."</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">has_user_voted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question__in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">question_set</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">can_vote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;polls&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"polls"</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible</span><span class="p">:</span>
@@ -1709,7 +1709,7 @@
 <div class="viewcode-block" id="Question">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Question.html#intranet.apps.polls.models.Question">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Question</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A question for a Poll.</span>
+<span class="w">    </span><span class="sd">"""A question for a Poll.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        poll</span>
@@ -1733,28 +1733,28 @@
 
 <span class="sd">        Access possible choices for this question through question.choice_set.all()</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">poll</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Poll</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">question</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
     <span class="n">num</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
-    <span class="n">STD</span> <span class="o">=</span> <span class="s2">&quot;STD&quot;</span>
-    <span class="n">ELECTION</span> <span class="o">=</span> <span class="s2">&quot;ELC&quot;</span>
-    <span class="n">RANK</span> <span class="o">=</span> <span class="s2">&quot;RAN&quot;</span>
-    <span class="n">APP</span> <span class="o">=</span> <span class="s2">&quot;APP&quot;</span>
-    <span class="n">SPLIT_APP</span> <span class="o">=</span> <span class="s2">&quot;SAP&quot;</span>
-    <span class="n">FREE_RESP</span> <span class="o">=</span> <span class="s2">&quot;FRE&quot;</span>
-    <span class="n">SHORT_RESP</span> <span class="o">=</span> <span class="s2">&quot;SRE&quot;</span>
-    <span class="n">STD_OTHER</span> <span class="o">=</span> <span class="s2">&quot;STO&quot;</span>
+    <span class="n">STD</span> <span class="o">=</span> <span class="s2">"STD"</span>
+    <span class="n">ELECTION</span> <span class="o">=</span> <span class="s2">"ELC"</span>
+    <span class="n">RANK</span> <span class="o">=</span> <span class="s2">"RAN"</span>
+    <span class="n">APP</span> <span class="o">=</span> <span class="s2">"APP"</span>
+    <span class="n">SPLIT_APP</span> <span class="o">=</span> <span class="s2">"SAP"</span>
+    <span class="n">FREE_RESP</span> <span class="o">=</span> <span class="s2">"FRE"</span>
+    <span class="n">SHORT_RESP</span> <span class="o">=</span> <span class="s2">"SRE"</span>
+    <span class="n">STD_OTHER</span> <span class="o">=</span> <span class="s2">"STO"</span>
     <span class="n">TYPE</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="p">(</span><span class="n">STD</span><span class="p">,</span> <span class="s2">&quot;Standard&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s2">&quot;Election&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">RANK</span><span class="p">,</span> <span class="s2">&quot;Rank choice&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s2">&quot;Approval&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s2">&quot;Split approval&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s2">&quot;Free response&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s2">&quot;Short response&quot;</span><span class="p">),</span>
-        <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s2">&quot;Standard other&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">STD</span><span class="p">,</span> <span class="s2">"Standard"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">ELECTION</span><span class="p">,</span> <span class="s2">"Election"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">RANK</span><span class="p">,</span> <span class="s2">"Rank choice"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">APP</span><span class="p">,</span> <span class="s2">"Approval"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">SPLIT_APP</span><span class="p">,</span> <span class="s2">"Split approval"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">FREE_RESP</span><span class="p">,</span> <span class="s2">"Free response"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">SHORT_RESP</span><span class="p">,</span> <span class="s2">"Short response"</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">STD_OTHER</span><span class="p">,</span> <span class="s2">"Standard other"</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">TYPE</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">STD</span><span class="p">)</span>
     <span class="n">max_choices</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -1777,20 +1777,20 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">trunc_question</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">comp</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">comp</span><span class="p">[:</span><span class="mi">47</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+            <span class="k">return</span> <span class="n">comp</span><span class="p">[:</span><span class="mi">47</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">comp</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_users_voted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">users</span> <span class="o">=</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s2">"user"</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">users</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_total_votes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">rank</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="bp">self</span><span class="p">))</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_rank_choice</span><span class="p">()</span> <span class="k">else</span> <span class="n">Answer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># return &quot;{} + #{} (&#39;{}&#39;)&quot;.format(self.poll, self.num, self.trunc_question())</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Question #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="si">}</span><span class="s2">: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">trunc_question</span><span class="p">()</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="c1"># return "{} + #{} ('{}')".format(self.poll, self.num, self.trunc_question())</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Question #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="si">}</span><span class="s2">: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">trunc_question</span><span class="p">()</span><span class="si">}</span><span class="s2">'"</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_question_types</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -1803,14 +1803,14 @@
         <span class="k">return</span> <span class="n">choices</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">]</span></div>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"num"</span><span class="p">]</span></div>
 
 
 
 <div class="viewcode-block" id="Choice">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Choice.html#intranet.apps.polls.models.Choice">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Choice</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>  <span class="c1"># individual answer choices</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A choice for a Question.</span>
+<span class="w">    </span><span class="sd">"""A choice for a Question.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        question</span>
@@ -1820,7 +1820,7 @@
 <span class="sd">        info</span>
 <span class="sd">            Textual information about this answer choice.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">question</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Question</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
     <span class="n">num</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">()</span>
@@ -1829,19 +1829,19 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">trunc_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">comp</span> <span class="o">=</span> <span class="n">strip_tags</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">comp</span><span class="p">[:</span><span class="mi">47</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;...&quot;</span>
+            <span class="k">return</span> <span class="n">comp</span><span class="p">[:</span><span class="mi">47</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"..."</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">comp</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">display_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trunc_info</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trunc_info</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"|"</span><span class="p">,</span> <span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># return &quot;{} + O#{}(&#39;{}&#39;)&quot;.format(self.question, self.num, self.trunc_info())</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Option #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">trunc_info</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="c1"># return "{} + O#{}('{}')".format(self.question, self.num, self.trunc_info())</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"Option #</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">trunc_info</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">]</span></div>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"num"</span><span class="p">]</span></div>
 
 
 
@@ -1860,7 +1860,7 @@
 <div class="viewcode-block" id="Answer.display_votes">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.polls.models.Answer.html#intranet.apps.polls.models.Answer.display_votes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">display_votes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert rank to votes for displaying by assigning rank 1 the max number of votes and continuing down.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Convert rank to votes for displaying by assigning rank 1 the max number of votes and continuing down."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Question</span><span class="o">.</span><span class="n">RANK</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">question</span><span class="o">.</span><span class="n">max_choices</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="kc">None</span></div>
@@ -1868,13 +1868,13 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">choice</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">answer</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">answer</span><span class="p">[:</span><span class="mi">25</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">answer</span><span class="p">[:</span><span class="mi">25</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_vote</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> Clear&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> Clear"</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> None&quot;</span></div>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="si">}</span><span class="s2"> None"</span></div>
 
 
 
@@ -1921,7 +1921,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

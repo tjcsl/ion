@@ -1559,10 +1559,10 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">get_task_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">HOME_SCHOOL</span> <span class="o">=</span> <span class="s2">&quot;Thomas Jefferson Science &amp; Technology High School&quot;</span>
-<span class="n">HOME_SHORT</span> <span class="o">=</span> <span class="s2">&quot;TJHSST&quot;</span>
+<span class="n">HOME_SCHOOL</span> <span class="o">=</span> <span class="s2">"Thomas Jefferson Science &amp; Technology High School"</span>
+<span class="n">HOME_SHORT</span> <span class="o">=</span> <span class="s2">"TJHSST"</span>
 
-<span class="n">REQUIRED_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">,</span> <span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="s2">&quot;Time&quot;</span><span class="p">,</span> <span class="s2">&quot;Description&quot;</span><span class="p">,</span> <span class="s2">&quot;Location&quot;</span><span class="p">]</span>
+<span class="n">REQUIRED_FIELDS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Title"</span><span class="p">,</span> <span class="s2">"Date"</span><span class="p">,</span> <span class="s2">"Time"</span><span class="p">,</span> <span class="s2">"Description"</span><span class="p">,</span> <span class="s2">"Location"</span><span class="p">]</span>
 
 
 <span class="nd">@shared_task</span>
@@ -1580,36 +1580,36 @@
 
     <span class="n">all_events</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">year</span><span class="p">,</span> <span class="n">event_month</span> <span class="ow">in</span> <span class="n">months_to_pull</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fetching sports schedule for </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">event_month</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Fetching sports schedule for </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">event_month</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">fetch_sports_events</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">event_month</span><span class="p">)</span>
         <span class="n">all_events</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">all_events</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">REQUIRED_FIELDS</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">event</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">event</span><span class="p">[</span><span class="n">field</span><span class="p">]:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> in event: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Missing required field </span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> in event: </span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-        <span class="n">event_date</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span>
-        <span class="n">event_title</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">]</span>
-        <span class="n">event_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M&quot;</span><span class="p">))</span>
+        <span class="n">event_date</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">"Date"</span><span class="p">]</span>
+        <span class="n">event_title</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">"Title"</span><span class="p">]</span>
+        <span class="n">event_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M"</span><span class="p">))</span>
 
         <span class="n">existing_event</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">event_title</span><span class="p">,</span> <span class="n">time__date</span><span class="o">=</span><span class="n">event_date</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;cancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;moved&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">event</span><span class="p">[</span><span class="s2">"Status"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"cancelled"</span><span class="p">,</span> <span class="s2">"moved"</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">existing_event</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleting cancelled/moved event: </span><span class="si">{</span><span class="n">event_title</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">event_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Deleting cancelled/moved event: </span><span class="si">{</span><span class="n">event_title</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">event_date</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
                 <span class="n">existing_event</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="n">existing_event</span> <span class="ow">or</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">existing_event</span> <span class="ow">or</span> <span class="n">event</span><span class="p">[</span><span class="s2">"Status"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"ok"</span><span class="p">:</span>
             <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span>
-                <span class="n">title</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;Title&quot;</span><span class="p">],</span>
-                <span class="n">description</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;Description&quot;</span><span class="p">],</span>
-                <span class="n">location</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;Location&quot;</span><span class="p">],</span>
+                <span class="n">title</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">"Title"</span><span class="p">],</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">"Description"</span><span class="p">],</span>
+                <span class="n">location</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">"Location"</span><span class="p">],</span>
                 <span class="n">show_attending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">show_on_dashboard</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                 <span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">public</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">category</span><span class="o">=</span><span class="s2">&quot;sports&quot;</span><span class="p">,</span>
-                <span class="n">open_to</span><span class="o">=</span><span class="s2">&quot;everyone&quot;</span><span class="p">,</span>
+                <span class="n">category</span><span class="o">=</span><span class="s2">"sports"</span><span class="p">,</span>
+                <span class="n">open_to</span><span class="o">=</span><span class="s2">"everyone"</span><span class="p">,</span>
                 <span class="n">time</span><span class="o">=</span><span class="n">event_time</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -1617,83 +1617,83 @@
 <div class="viewcode-block" id="fetch_sports_events">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.events.tasks.html#intranet.apps.events.tasks.fetch_sports_events">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fetch_sports_events</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">month</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.northernregionva.org/public/genie/202/school/9/date/</span><span class="si">{year}</span><span class="s2">-</span><span class="si">{month:02d}</span><span class="s2">-</span><span class="si">{day:02d}</span><span class="s2">/view/week/&quot;</span>
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">"https://www.northernregionva.org/public/genie/202/school/9/date/</span><span class="si">{year}</span><span class="s2">-</span><span class="si">{month:02d}</span><span class="s2">-</span><span class="si">{day:02d}</span><span class="s2">/view/week/"</span>
     <span class="n">soup_pages</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">start_day</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">29</span><span class="p">]:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="n">start_day</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fetching: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Fetching: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
             <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-            <span class="n">soup_pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">))</span>
+            <span class="n">soup_pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">"html.parser"</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> due to error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2"> due to error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">soup</span> <span class="ow">in</span> <span class="n">soup_pages</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;.contentTitle h2&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">".contentTitle h2"</span><span class="p">):</span>
             <span class="n">event_date_str</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">event_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">event_date_str</span><span class="p">,</span> <span class="s2">&quot;%A, %B </span><span class="si">%d</span><span class="s2">, %Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+                <span class="n">event_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">event_date_str</span><span class="p">,</span> <span class="s2">"%A, %B </span><span class="si">%d</span><span class="s2">, %Y"</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="n">table</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">find_next</span><span class="p">(</span><span class="s2">&quot;table&quot;</span><span class="p">)</span>
+            <span class="n">table</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">find_next</span><span class="p">(</span><span class="s2">"table"</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;tbody tr.table-data-styles&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">"tbody tr.table-data-styles"</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">time</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;data-title&quot;</span><span class="p">:</span> <span class="s2">&quot;Time&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                    <span class="n">event_cell</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;data-title&quot;</span><span class="p">:</span> <span class="s2">&quot;Event&quot;</span><span class="p">})</span>
-                    <span class="n">location_cell</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;data-title&quot;</span><span class="p">:</span> <span class="s2">&quot;Location&quot;</span><span class="p">})</span>
+                    <span class="n">time</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"td"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"data-title"</span><span class="p">:</span> <span class="s2">"Time"</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">event_cell</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"td"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"data-title"</span><span class="p">:</span> <span class="s2">"Event"</span><span class="p">})</span>
+                    <span class="n">location_cell</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"td"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"data-title"</span><span class="p">:</span> <span class="s2">"Location"</span><span class="p">})</span>
 
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">event_cell</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">location_cell</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Missing structure&quot;</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Missing structure"</span><span class="p">)</span>
 
-                    <span class="n">title_text</span> <span class="o">=</span> <span class="n">event_cell</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">title_text</span> <span class="o">=</span> <span class="n">event_cell</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
                     <span class="n">row_text</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">text</span>
-                    <span class="k">if</span> <span class="s2">&quot;Cancelled&quot;</span> <span class="ow">in</span> <span class="n">row_text</span><span class="p">:</span>
-                        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;cancelled&quot;</span>
-                    <span class="k">elif</span> <span class="s2">&quot;Date Changed&quot;</span> <span class="ow">in</span> <span class="n">row_text</span><span class="p">:</span>
-                        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;moved&quot;</span>
+                    <span class="k">if</span> <span class="s2">"Cancelled"</span> <span class="ow">in</span> <span class="n">row_text</span><span class="p">:</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s2">"cancelled"</span>
+                    <span class="k">elif</span> <span class="s2">"Date Changed"</span> <span class="ow">in</span> <span class="n">row_text</span><span class="p">:</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s2">"moved"</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
+                        <span class="n">status</span> <span class="o">=</span> <span class="s2">"ok"</span>
 
                     <span class="n">opponent_line</span> <span class="o">=</span> <span class="n">location_cell</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                    <span class="n">location_name</span> <span class="o">=</span> <span class="n">location_cell</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">location_name</span> <span class="o">=</span> <span class="n">location_cell</span><span class="o">.</span><span class="n">select_one</span><span class="p">(</span><span class="s2">"a"</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-                    <span class="n">parts</span> <span class="o">=</span> <span class="n">opponent_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;vs.&quot;</span><span class="p">)</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">opponent_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"vs."</span><span class="p">)</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="n">opponent</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">opponent</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">".."</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">opponent</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+                        <span class="n">opponent</span> <span class="o">=</span> <span class="s2">"Unknown"</span>
 
                     <span class="k">if</span> <span class="n">location_name</span> <span class="o">==</span> <span class="n">HOME_SCHOOL</span><span class="p">:</span>
-                        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Home game vs. </span><span class="si">{</span><span class="n">opponent</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Home game vs. </span><span class="si">{</span><span class="n">opponent</span><span class="si">}</span><span class="s2">"</span>
                         <span class="n">location_display</span> <span class="o">=</span> <span class="n">HOME_SHORT</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Away game vs. </span><span class="si">{</span><span class="n">opponent</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Away game vs. </span><span class="si">{</span><span class="n">opponent</span><span class="si">}</span><span class="s2">"</span>
                         <span class="n">location_display</span> <span class="o">=</span> <span class="n">location_name</span>
 
-                    <span class="n">time_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s2">&quot;%I:%M%p&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                    <span class="n">time_obj</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s2">"%I:%M%p"</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
                     <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                         <span class="p">{</span>
-                            <span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="n">title_text</span><span class="p">,</span>
-                            <span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">event_date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
-                            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">time_obj</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M&quot;</span><span class="p">),</span>
-                            <span class="s2">&quot;Description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
-                            <span class="s2">&quot;Location&quot;</span><span class="p">:</span> <span class="n">location_display</span><span class="p">,</span>
-                            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+                            <span class="s2">"Title"</span><span class="p">:</span> <span class="n">title_text</span><span class="p">,</span>
+                            <span class="s2">"Date"</span><span class="p">:</span> <span class="n">event_date</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+                            <span class="s2">"Time"</span><span class="p">:</span> <span class="n">time_obj</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%H:%M"</span><span class="p">),</span>
+                            <span class="s2">"Description"</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                            <span class="s2">"Location"</span><span class="p">:</span> <span class="n">location_display</span><span class="p">,</span>
+                            <span class="s2">"Status"</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
                         <span class="p">}</span>
                     <span class="p">)</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping row due to error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping row due to error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">unique_events</span> <span class="o">=</span> <span class="nb">list</span><span class="p">({</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">events</span><span class="p">}</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
@@ -1730,7 +1730,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

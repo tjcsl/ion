@@ -1557,7 +1557,7 @@
 <div class="viewcode-block" id="StripNewlinesMiddleware">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.StripNewlinesMiddleware.html#intranet.middleware.templates.StripNewlinesMiddleware">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StripNewlinesMiddleware</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Strip extra newlines from rendered templates to enhance readability.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Strip extra newlines from rendered templates to enhance readability."""</span>
 
 <div class="viewcode-block" id="StripNewlinesMiddleware.__init__">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.StripNewlinesMiddleware.html#intranet.middleware.templates.StripNewlinesMiddleware.__init__">[docs]</a>
@@ -1568,14 +1568,14 @@
 <div class="viewcode-block" id="StripNewlinesMiddleware.__call__">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.StripNewlinesMiddleware.html#intranet.middleware.templates.StripNewlinesMiddleware.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process the response and strip extra newlines from HTML.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Process the response and strip extra newlines from HTML."""</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">is_html</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;text/html&quot;</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;text/html;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;Content-Type&quot;</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"text/html"</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"text/html;"</span><span class="p">)</span> <span class="k">if</span> <span class="s2">"Content-Type"</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># noqa: E501 pylint: disable=line-too-long</span>
         <span class="k">if</span> <span class="n">is_html</span> <span class="ow">and</span> <span class="n">settings</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n(\s*)\n&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(\s*)\n&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\n(\s*)\n"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^(\s*)\n"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">response</span></div>
 </div>
 
@@ -1584,12 +1584,12 @@
 <div class="viewcode-block" id="AdminSelectizeLoadingIndicatorMiddleware">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.html#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AdminSelectizeLoadingIndicatorMiddleware</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Automatically add a loading placeholder for Selectize inputs in admin templates.</span>
+<span class="w">    </span><span class="sd">"""Automatically add a loading placeholder for Selectize inputs in admin templates.</span>
 
 <span class="sd">    This is probably not a good practice, but it really needs to be done</span>
 <span class="sd">    server-side for the loading indicators to show up instantly.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="AdminSelectizeLoadingIndicatorMiddleware.__init__">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.html#intranet.middleware.templates.AdminSelectizeLoadingIndicatorMiddleware.__init__">[docs]</a>
@@ -1600,18 +1600,18 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">is_html</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;text/html&quot;</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;text/html;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;Content-Type&quot;</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"text/html"</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"text/html;"</span><span class="p">)</span> <span class="k">if</span> <span class="s2">"Content-Type"</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># noqa: E501 pylint: disable=line-too-long</span>
-        <span class="k">if</span> <span class="n">is_html</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/eighth/admin&quot;</span><span class="p">):</span>
-            <span class="n">replacement</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;/select&gt;</span>
-<span class="s2">                &lt;div class=&quot;selectize-control selectize-loading&quot;&gt;</span>
-<span class="s2">                    &lt;div class=&quot;selectize-input disabled&quot;&gt;</span>
-<span class="s2">                        &lt;input type=&quot;text&quot; value=&quot;Loading...&quot; disabled&gt;</span>
+        <span class="k">if</span> <span class="n">is_html</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"/eighth/admin"</span><span class="p">):</span>
+            <span class="n">replacement</span> <span class="o">=</span> <span class="s2">"""&lt;/select&gt;</span>
+<span class="s2">                &lt;div class="selectize-control selectize-loading"&gt;</span>
+<span class="s2">                    &lt;div class="selectize-input disabled"&gt;</span>
+<span class="s2">                        &lt;input type="text" value="Loading..." disabled&gt;</span>
 <span class="s2">                    &lt;/div&gt;</span>
 <span class="s2">                &lt;/div&gt;</span>
-<span class="s2">                &quot;&quot;&quot;</span>
+<span class="s2">                """</span>
 
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;/select&gt;&quot;</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"&lt;/select&gt;"</span><span class="p">,</span> <span class="n">replacement</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 
@@ -1619,7 +1619,7 @@
 <div class="viewcode-block" id="NoReferrerMiddleware">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.NoReferrerMiddleware.html#intranet.middleware.templates.NoReferrerMiddleware">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NoReferrerMiddleware</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set all links to have rel=&#39;noreferrer noopener&#39; to prevent malicious JS from editing what the user sees&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Set all links to have rel='noreferrer noopener' to prevent malicious JS from editing what the user sees"""</span>
 
 <div class="viewcode-block" id="NoReferrerMiddleware.__init__">
 <a class="viewcode-back" href="../../../reference/intranet.middleware.templates.NoReferrerMiddleware.html#intranet.middleware.templates.NoReferrerMiddleware.__init__">[docs]</a>
@@ -1630,10 +1630,10 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="n">is_html</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;text/html&quot;</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;text/html;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;Content-Type&quot;</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"text/html"</span> <span class="ow">or</span> <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"text/html;"</span><span class="p">)</span> <span class="k">if</span> <span class="s2">"Content-Type"</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># noqa: E501 pylint: disable=line-too-long</span>
         <span class="k">if</span> <span class="n">is_html</span><span class="p">:</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;a(.*href ?= ?[</span><span class="se">\&#39;</span><span class="s1">&quot;]http.*)&gt;&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;&lt;a rel=&quot;noopener noreferrer&quot;\1&gt;&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'&lt;a(.*href ?= ?[</span><span class="se">\'</span><span class="s1">"]http.*)&gt;'</span><span class="p">,</span> <span class="sa">r</span><span class="s1">'&lt;a rel="noopener noreferrer"\1&gt;'</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 </pre></div>
@@ -1667,7 +1667,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

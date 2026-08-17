@@ -1570,7 +1570,7 @@
 <div class="viewcode-block" id="check_internal_ip">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.views.html#intranet.apps.signage.views.check_internal_ip">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HttpResponse</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A method to determine if a request is allowed to load a signage page.</span>
 
 <span class="sd">    Denies access by returning None unless the user is authenticated and not restricted,</span>
@@ -1578,10 +1578,10 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        a 403 if the request is unauthorized or None if the request is authorized</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;x-real-ip&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;x-real-ip&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">"x-real-ip"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"x-real-ip"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"REMOTE_ADDR"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span><span class="p">)</span> <span class="ow">and</span> <span class="n">remote_addr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">TJ_IPS</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to view this page.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"error/403.html"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"You are not authorized to view this page."</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -1603,37 +1603,37 @@
         <span class="n">end_of_day</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">now</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">now</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_END_HOUR</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">SCHOOL_END_MINUTE</span><span class="p">)</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="n">schedule_context</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sign&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;page_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;end_switch_page_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">end_of_day</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">sign</span><span class="o">.</span><span class="n">day_end_switch_minutes</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;custom_switch_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">custom_switch_time</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;senior_graduation_year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/base.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"sign"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"page_args"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"end_switch_page_time"</span><span class="p">]</span> <span class="o">=</span> <span class="n">end_of_day</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">sign</span><span class="o">.</span><span class="n">day_end_switch_minutes</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"custom_switch_time"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sign</span><span class="o">.</span><span class="n">custom_switch_time</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"senior_graduation_year"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_senior_graduation_year</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"signage/base.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="eighth">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.views.html#intranet.apps.signage.views.eighth">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">eighth</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Displays the eighth period signage page. This cannot be a regular signage page because it needs to reload</span>
-<span class="sd">    in order to switch blocks or update information..&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Displays the eighth period signage page. This cannot be a regular signage page because it needs to reload</span>
+<span class="sd">    in order to switch blocks or update information.."""</span>
     <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">check_internal_ip</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">internal_ip</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">internal_ip</span>
 
-    <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block_id&quot;</span><span class="p">)</span>
+    <span class="n">block_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"block_id"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">block_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_first_upcoming_block</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;eighthscheduledactivity_set&quot;</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"eighthscheduledactivity_set"</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">block_id</span><span class="p">)</span>
 
     <span class="c1"># If block_increment is specified, the eighth period block that is &lt;block_increment&gt; blocks ahead of the current</span>
     <span class="c1"># block (or the block specified with block_id) will be displayed. This is used in the template to skip to A/B</span>
     <span class="c1"># blocks.</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">block_increment</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block_increment&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">block_increment</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"block_increment"</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="n">block_increment</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -1649,14 +1649,14 @@
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">get_signage_user</span><span class="p">()</span>
 
-    <span class="n">serializer_context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;request&quot;</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
+    <span class="n">serializer_context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"request"</span><span class="p">:</span> <span class="n">request</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">:</span> <span class="n">user</span><span class="p">}</span>
     <span class="n">block_info</span> <span class="o">=</span> <span class="n">EighthBlockDetailSerializer</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">serializer_context</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">reload_mins</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reload_mins&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">reload_mins</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"reload_mins"</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="n">reload_mins</span> <span class="o">=</span> <span class="mi">5</span>
 
-    <span class="n">touch_signage</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;no_touch&quot;</span><span class="p">)</span>
+    <span class="n">touch_signage</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_touch"</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">next_block</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">next_blocks</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1672,53 +1672,53 @@
     <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
         <span class="n">prev_block</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">use_scroll</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">touch_signage</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scroll&quot;</span><span class="p">))</span>
+    <span class="n">use_scroll</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">touch_signage</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"scroll"</span><span class="p">))</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
-        <span class="s2">&quot;block_info&quot;</span><span class="p">:</span> <span class="n">block_info</span><span class="p">,</span>
-        <span class="s2">&quot;activities_list&quot;</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">block_info</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]),</span>
-        <span class="s2">&quot;active_block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">,</span>
-        <span class="s2">&quot;active_block_current_signup&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="s2">&quot;no_title&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;no_title&quot;</span><span class="p">)),</span>
-        <span class="s2">&quot;no_detail&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;no_detail&quot;</span><span class="p">)),</span>
-        <span class="s2">&quot;no_rooms&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;no_rooms&quot;</span><span class="p">)),</span>
-        <span class="s2">&quot;use_scroll&quot;</span><span class="p">:</span> <span class="n">use_scroll</span><span class="p">,</span>
-        <span class="s2">&quot;do_reload&quot;</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;no_reload&quot;</span><span class="p">)),</span>
-        <span class="s2">&quot;preload_background&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;reload_mins&quot;</span><span class="p">:</span> <span class="n">reload_mins</span><span class="p">,</span>
-        <span class="s2">&quot;no_user_display&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;no_fav&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;touch_signage&quot;</span><span class="p">:</span> <span class="n">touch_signage</span><span class="p">,</span>
-        <span class="s2">&quot;next_block&quot;</span><span class="p">:</span> <span class="n">next_block</span><span class="p">,</span>
-        <span class="s2">&quot;prev_block&quot;</span><span class="p">:</span> <span class="n">prev_block</span><span class="p">,</span>
-        <span class="s2">&quot;signage&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"user"</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s2">"block_info"</span><span class="p">:</span> <span class="n">block_info</span><span class="p">,</span>
+        <span class="s2">"activities_list"</span><span class="p">:</span> <span class="n">safe_json</span><span class="p">(</span><span class="n">block_info</span><span class="p">[</span><span class="s2">"activities"</span><span class="p">]),</span>
+        <span class="s2">"active_block"</span><span class="p">:</span> <span class="n">block</span><span class="p">,</span>
+        <span class="s2">"active_block_current_signup"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">"no_title"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_title"</span><span class="p">)),</span>
+        <span class="s2">"no_detail"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_detail"</span><span class="p">)),</span>
+        <span class="s2">"no_rooms"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_rooms"</span><span class="p">)),</span>
+        <span class="s2">"use_scroll"</span><span class="p">:</span> <span class="n">use_scroll</span><span class="p">,</span>
+        <span class="s2">"do_reload"</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_reload"</span><span class="p">)),</span>
+        <span class="s2">"preload_background"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"reload_mins"</span><span class="p">:</span> <span class="n">reload_mins</span><span class="p">,</span>
+        <span class="s2">"no_user_display"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"no_fav"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"touch_signage"</span><span class="p">:</span> <span class="n">touch_signage</span><span class="p">,</span>
+        <span class="s2">"next_block"</span><span class="p">:</span> <span class="n">next_block</span><span class="p">,</span>
+        <span class="s2">"prev_block"</span><span class="p">:</span> <span class="n">prev_block</span><span class="p">,</span>
+        <span class="s2">"signage"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;signage/pages/eighth.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"signage/pages/eighth.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="prometheus_metrics">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.views.html#intranet.apps.signage.views.prometheus_metrics">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">prometheus_metrics</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prometheus metrics for signage displays. Currently just whether or not they are online.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Prometheus metrics for signage displays. Currently just whether or not they are online."""</span>
 
-    <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;x-real-ip&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;x-real-ip&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REMOTE_ADDR&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">"x-real-ip"</span><span class="p">]</span> <span class="k">if</span> <span class="s2">"x-real-ip"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="k">else</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"REMOTE_ADDR"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
     <span class="n">is_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span>
 
-    <span class="c1"># If they&#39;re not from an IP on the white list and they&#39;re not an admin, deny access</span>
+    <span class="c1"># If they're not from an IP on the white list and they're not an admin, deny access</span>
     <span class="k">if</span> <span class="n">remote_addr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">ALLOWED_METRIC_SCRAPE_IPS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_admin</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;error/403.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="s2">&quot;You are not authorized to view this page.&quot;</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"error/403.html"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"reason"</span><span class="p">:</span> <span class="s2">"You are not authorized to view this page."</span><span class="p">},</span> <span class="n">status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
-    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;intranet_signage_num_signs_online&quot;</span><span class="p">:</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter_online</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()}</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"intranet_signage_num_signs_online"</span><span class="p">:</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter_online</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()}</span>
 
     <span class="k">for</span> <span class="n">sign</span> <span class="ow">in</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
-        <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;intranet_signage_sign_is_online</span><span class="se">{{</span><span class="s1">display=&quot;</span><span class="si">{</span><span class="n">sign</span><span class="o">.</span><span class="n">display</span><span class="si">}</span><span class="s1">&quot;</span><span class="se">}}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="n">sign</span><span class="o">.</span><span class="n">is_offline</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="sa">f</span><span class="s1">'intranet_signage_sign_is_online</span><span class="se">{{</span><span class="s1">display="</span><span class="si">{</span><span class="n">sign</span><span class="o">.</span><span class="n">display</span><span class="si">}</span><span class="s1">"</span><span class="se">}}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="n">sign</span><span class="o">.</span><span class="n">is_offline</span><span class="p">)</span>
 
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="n">metrics</span><span class="p">}</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"metrics"</span><span class="p">:</span> <span class="n">metrics</span><span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;monitoring/prometheus-metrics.txt&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/plain&quot;</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"monitoring/prometheus-metrics.txt"</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">"text/plain"</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1751,7 +1751,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

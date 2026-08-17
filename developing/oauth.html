@@ -1604,41 +1604,41 @@
 <p>For a Python client, use requests with requests-oauthlib.</p>
 <p>If running locally (without HTTPS), override the SSL requirement for OAuth2.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;OAUTHLIB_INSECURE_TRANSPORT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'OAUTHLIB_INSECURE_TRANSPORT'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'1'</span>
 </pre></div>
 </div>
 <p>Create an OAuth2Session, with the CLIENT_ID and REDIRECT_URI you entered in the application form. Redirect the user to authorization_url.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">requests_oauthlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">OAuth2Session</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">oauth</span> <span class="o">=</span> <span class="n">OAuth2Session</span><span class="p">(</span><span class="n">CLIENT_ID</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                      <span class="n">redirect_uri</span><span class="o">=</span><span class="n">REDIRECT_URI</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                      <span class="n">scope</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;read&quot;</span><span class="p">,</span><span class="s2">&quot;write&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span>                      <span class="n">scope</span><span class="o">=</span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span><span class="s2">"write"</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">authorization_url</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">authorization_url</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/authorize/&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">authorization_url</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">authorization_url</span><span class="p">(</span><span class="s2">"https://ion.tjhsst.edu/oauth/authorize/"</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The user authenticates, approves the request, and is redirected to the callback URL specified in redirect_uri, with a “code” GET parameter.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">fetch_token</span><span class="p">(</span><span class="s2">"https://ion.tjhsst.edu/oauth/token/"</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">code</span><span class="o">=</span><span class="n">CODE</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>                          <span class="n">client_secret</span><span class="o">=</span><span class="n">CLIENT_SECRET</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
-<span class="go">{&#39;refresh_token&#39;: &#39;XXX&#39;, &#39;access_token&#39;: &#39;XXX&#39;, &#39;expires_in&#39;: 36000, &#39;expires_at&#39;: 1455370143.573362, &#39;scope&#39;: [&#39;read&#39;, &#39;write&#39;], &#39;token_type&#39;: &#39;Bearer&#39;}</span>
+<span class="go">{'refresh_token': 'XXX', 'access_token': 'XXX', 'expires_in': 36000, 'expires_at': 1455370143.573362, 'scope': ['read', 'write'], 'token_type': 'Bearer'}</span>
 </pre></div>
 </div>
 <p>At this point, a valid access token has been gained, and you can request API resources.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
-    <span class="n">profile</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/api/profile&quot;</span><span class="p">)</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"https://ion.tjhsst.edu/api/profile"</span><span class="p">)</span>
 <span class="k">except</span> <span class="n">TokenExpiredError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span> <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">CLIENT_SECRET</span> <span class="p">}</span>
-    <span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">"client_id"</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span> <span class="s2">"client_secret"</span><span class="p">:</span> <span class="n">CLIENT_SECRET</span> <span class="p">}</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">"https://ion.tjhsst.edu/oauth/token/"</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
-<span class="p">{</span> <span class="s1">&#39;ion_username&#39;</span><span class="p">:</span> <span class="s1">&#39;2016jwoglom&#39;</span><span class="p">,</span> <span class="o">...</span> <span class="p">}</span>
+<span class="p">{</span> <span class="s1">'ion_username'</span><span class="p">:</span> <span class="s1">'2016jwoglom'</span><span class="p">,</span> <span class="o">...</span> <span class="p">}</span>
 </pre></div>
 </div>
 <p>After 36,000 seconds (1 hour), the token will expire; you need to renew it. This can be handled by putting API commands inside a try-except for a oauthlib.oauth2.TokenExpiredError, such as seen above. Alternatively, you can provide “auto_refresh_url=refresh_url, auto_refresh_kwargs=args” as additional arguments to OAuth2Session when it is created.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span> <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">CLIENT_SECRET</span> <span class="p">}</span>
-<span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">&quot;https://ion.tjhsst.edu/oauth/token/&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">"client_id"</span><span class="p">:</span> <span class="n">CLIENT_ID</span><span class="p">,</span> <span class="s2">"client_secret"</span><span class="p">:</span> <span class="n">CLIENT_SECRET</span> <span class="p">}</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">oauth</span><span class="o">.</span><span class="n">refresh_token</span><span class="p">(</span><span class="s2">"https://ion.tjhsst.edu/oauth/token/"</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -1646,7 +1646,7 @@
 <h3>Node.js<a class="headerlink" href="#node-js" title="Link to this heading">¶</a></h3>
 <p>You can use the <a class="reference external" href="https://github.com/lelylan/simple-oauth2">simple-oauth2</a> library to perform authentication. Below is some sample code.</p>
 <p><strong>Note</strong>: This code will not work out of the box. Read the comments carefully to determine how to integrate it into your application.</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">simpleoauth2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">&quot;simple-oauth2&quot;</span><span class="p">);</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="kd">var</span><span class="w"> </span><span class="nx">simpleoauth2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s2">"simple-oauth2"</span><span class="p">);</span>
 
 <span class="c1">// make sure these variables are set</span>
 <span class="kd">var</span><span class="w"> </span><span class="nx">ion_client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">ION_CLIENT_ID</span><span class="p">;</span>
@@ -1659,20 +1659,20 @@
 <span class="w">        </span><span class="nx">secret</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_client_secret</span>
 <span class="w">    </span><span class="p">},</span>
 <span class="w">    </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">tokenHost</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;https://ion.tjhsst.edu/oauth/&#39;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">authorizePath</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;https://ion.tjhsst.edu/oauth/authorize&#39;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">tokenPath</span><span class="o">:</span><span class="w">     </span><span class="s1">&#39;https://ion.tjhsst.edu/oauth/token/&#39;</span>
+<span class="w">        </span><span class="nx">tokenHost</span><span class="o">:</span><span class="w">     </span><span class="s1">'https://ion.tjhsst.edu/oauth/'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">authorizePath</span><span class="o">:</span><span class="w"> </span><span class="s1">'https://ion.tjhsst.edu/oauth/authorize'</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">tokenPath</span><span class="o">:</span><span class="w">     </span><span class="s1">'https://ion.tjhsst.edu/oauth/token/'</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">});</span>
 
 <span class="c1">// 1) when the user visits the site, redirect them to login_url to begin authentication</span>
 <span class="kd">var</span><span class="w"> </span><span class="nx">login_url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oauth</span><span class="p">.</span><span class="nx">authorizationCode</span><span class="p">.</span><span class="nx">authorizeURL</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;read&quot;</span><span class="p">,</span><span class="w"> </span><span class="c1">// remove scope: read if you also want write access</span>
+<span class="w">    </span><span class="nx">scope</span><span class="o">:</span><span class="w"> </span><span class="s2">"read"</span><span class="p">,</span><span class="w"> </span><span class="c1">// remove scope: read if you also want write access</span>
 <span class="w">    </span><span class="nx">redirect_uri</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_redirect_uri</span>
 <span class="p">});</span>
 
 <span class="c1">// 2) on the ion_redirect_uri endpoint, add the following code to process the authentication</span>
-<span class="kd">var</span><span class="w"> </span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">];</span><span class="w"> </span><span class="c1">// GET parameter</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">[</span><span class="s2">"code"</span><span class="p">];</span><span class="w"> </span><span class="c1">// GET parameter</span>
 <span class="nx">oauth</span><span class="p">.</span><span class="nx">authorizationCode</span><span class="p">.</span><span class="nx">getToken</span><span class="p">({</span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="nx">code</span><span class="p">,</span><span class="w"> </span><span class="nx">redirect_uri</span><span class="o">:</span><span class="w"> </span><span class="nx">ion_redirect_uri</span><span class="p">}).</span><span class="nx">then</span><span class="p">((</span><span class="nx">result</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oauth</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
 
@@ -1689,9 +1689,9 @@
 
 <span class="c1">// 4) to refresh the access_token, use the following code</span>
 <span class="kd">var</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">oauth</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
-<span class="w">    </span><span class="s2">&quot;access_token&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">access_token</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;refresh_token&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">refresh_token</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">&quot;expires_in&quot;</span><span class="o">:</span><span class="w"> </span><span class="nx">expires_in</span>
+<span class="w">    </span><span class="s2">"access_token"</span><span class="o">:</span><span class="w"> </span><span class="nx">access_token</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"refresh_token"</span><span class="o">:</span><span class="w"> </span><span class="nx">refresh_token</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"expires_in"</span><span class="o">:</span><span class="w"> </span><span class="nx">expires_in</span>
 <span class="p">});</span>
 
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">token</span><span class="p">.</span><span class="nx">expired</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
@@ -1780,7 +1780,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

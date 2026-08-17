@@ -1563,22 +1563,22 @@
 <span class="n">PAGE_RANGE</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="n">HTTP_METHODS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DELETE&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PATCH&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;HEAD&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;OPTIONS&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;CONNECT&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;TRACE&quot;</span><span class="p">,</span>
+    <span class="s2">"GET"</span><span class="p">,</span>
+    <span class="s2">"POST"</span><span class="p">,</span>
+    <span class="s2">"PUT"</span><span class="p">,</span>
+    <span class="s2">"DELETE"</span><span class="p">,</span>
+    <span class="s2">"PATCH"</span><span class="p">,</span>
+    <span class="s2">"HEAD"</span><span class="p">,</span>
+    <span class="s2">"OPTIONS"</span><span class="p">,</span>
+    <span class="s2">"CONNECT"</span><span class="p">,</span>
+    <span class="s2">"TRACE"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="n">TEXT_SEARCH_TYPES</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;equals&quot;</span><span class="p">,</span> <span class="s2">&quot;Equals&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;contains&quot;</span><span class="p">,</span> <span class="s2">&quot;Contains&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;starts&quot;</span><span class="p">,</span> <span class="s2">&quot;Starts with&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;ends&quot;</span><span class="p">,</span> <span class="s2">&quot;Ends with&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"equals"</span><span class="p">,</span> <span class="s2">"Equals"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"contains"</span><span class="p">,</span> <span class="s2">"Contains"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"starts"</span><span class="p">,</span> <span class="s2">"Starts with"</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"ends"</span><span class="p">,</span> <span class="s2">"Ends with"</span><span class="p">),</span>
 <span class="p">]</span>
 
 
@@ -1589,31 +1589,31 @@
     <span class="n">last</span> <span class="o">=</span> <span class="n">total</span> <span class="o">//</span> <span class="n">DISPLAY_NUM</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">page</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;page&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">page</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"page"</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">page</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">page</span><span class="p">),</span> <span class="n">last</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="n">start</span> <span class="o">=</span> <span class="p">(</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">DISPLAY_NUM</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">page</span> <span class="o">*</span> <span class="n">DISPLAY_NUM</span>
-    <span class="n">rqs</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">)[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+    <span class="n">rqs</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">prefetch_related</span><span class="p">(</span><span class="s2">"user"</span><span class="p">)[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;rqs&quot;</span><span class="p">:</span> <span class="n">rqs</span><span class="p">,</span>
-        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
-        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">total</span><span class="p">),</span>
-        <span class="s2">&quot;last_page&quot;</span><span class="p">:</span> <span class="n">last</span><span class="p">,</span>
-        <span class="s2">&quot;current_page&quot;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-        <span class="s2">&quot;show_first_page&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&quot;show_first_page_dot&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&quot;show_last_page&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="o">-</span> <span class="n">PAGE_RANGE</span><span class="p">,</span>
-        <span class="s2">&quot;show_last_page_dot&quot;</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="o">-</span> <span class="n">PAGE_RANGE</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"rqs"</span><span class="p">:</span> <span class="n">rqs</span><span class="p">,</span>
+        <span class="s2">"total"</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+        <span class="s2">"start"</span><span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"end"</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">total</span><span class="p">),</span>
+        <span class="s2">"last_page"</span><span class="p">:</span> <span class="n">last</span><span class="p">,</span>
+        <span class="s2">"current_page"</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+        <span class="s2">"show_first_page"</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"show_first_page_dot"</span><span class="p">:</span> <span class="n">page</span> <span class="o">&gt;</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"show_last_page"</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="o">-</span> <span class="n">PAGE_RANGE</span><span class="p">,</span>
+        <span class="s2">"show_last_page_dot"</span><span class="p">:</span> <span class="n">page</span> <span class="o">&lt;</span> <span class="n">last</span> <span class="o">-</span> <span class="n">PAGE_RANGE</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">PAGE_RANGE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">context</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;next_page_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span> <span class="o">+</span> <span class="n">i</span> <span class="k">if</span> <span class="n">page</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">last</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="n">context</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;prev_page_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span> <span class="o">-</span> <span class="n">i</span> <span class="k">if</span> <span class="n">page</span> <span class="o">-</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">context</span><span class="p">[</span><span class="sa">f</span><span class="s2">"next_page_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span> <span class="o">+</span> <span class="n">i</span> <span class="k">if</span> <span class="n">page</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">last</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">context</span><span class="p">[</span><span class="sa">f</span><span class="s2">"prev_page_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">page</span> <span class="o">-</span> <span class="n">i</span> <span class="k">if</span> <span class="n">page</span> <span class="o">-</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">return</span> <span class="n">context</span></div>
 
@@ -1626,36 +1626,36 @@
         <span class="k">raise</span> <span class="n">Http404</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;all_users&quot;</span><span class="p">:</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
-        <span class="s2">&quot;all_methods&quot;</span><span class="p">:</span> <span class="n">HTTP_METHODS</span><span class="p">,</span>
-        <span class="s2">&quot;text_search_types&quot;</span><span class="p">:</span> <span class="n">TEXT_SEARCH_TYPES</span><span class="p">,</span>
+        <span class="s2">"all_users"</span><span class="p">:</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"username"</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+        <span class="s2">"all_methods"</span><span class="p">:</span> <span class="n">HTTP_METHODS</span><span class="p">,</span>
+        <span class="s2">"text_search_types"</span><span class="p">:</span> <span class="n">TEXT_SEARCH_TYPES</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="n">queries</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">))</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"user"</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_users"</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="s2">&quot;anonymous&quot;</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
-            <span class="n">users</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;anonymous&quot;</span><span class="p">)</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user__isnull&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="s2">"anonymous"</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+            <span class="n">users</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"anonymous"</span><span class="p">)</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"user__isnull"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Searching only for anonymous users. Ignoring other users.&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Searching only for anonymous users. Ignoring other users."</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username__in</span><span class="o">=</span><span class="n">users</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user__in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"user__in"</span><span class="p">]</span> <span class="o">=</span> <span class="n">users</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ip&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">ips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;ip&quot;</span><span class="p">))</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_ips&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">to_expand</span> <span class="o">=</span> <span class="p">[</span><span class="n">ip</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ips</span> <span class="k">if</span> <span class="s2">&quot;/&quot;</span> <span class="ow">in</span> <span class="n">ip</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">ips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"ip"</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_ips"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">to_expand</span> <span class="o">=</span> <span class="p">[</span><span class="n">ip</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ips</span> <span class="k">if</span> <span class="s2">"/"</span> <span class="ow">in</span> <span class="n">ip</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">to_expand</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -1663,85 +1663,85 @@
                 <span class="n">ips</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">network</span><span class="o">.</span><span class="n">num_addresses</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">**</span><span class="mi">16</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Subnet too large: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Subnet too large: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">ips</span> <span class="o">|=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span> <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">hosts</span><span class="p">()}</span>
 
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Invalid IP network: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Invalid IP network: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"ip"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;ip__in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"ip__in"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">selected_methods</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;method&quot;</span><span class="p">))</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_methods&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">selected_methods</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"method"</span><span class="p">))</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_methods"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected_methods</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;method__in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"method__in"</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_methods</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;from&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">from_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">]</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_from&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_time</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"from"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">from_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"from"</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_from"</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_time</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">from_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">from_time</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">from_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">from_time</span><span class="p">,</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S"</span><span class="p">)</span>
             <span class="n">from_time</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">from_time</span><span class="p">)</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;timestamp__gte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_time</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"timestamp__gte"</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_time</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid from time.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Invalid from time."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;to&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">to_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;to&quot;</span><span class="p">]</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_to&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_time</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"to"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">to_time</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"to"</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_to"</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_time</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">to_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">to_time</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="n">to_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">to_time</span><span class="p">,</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S"</span><span class="p">)</span>
             <span class="n">to_time</span> <span class="o">=</span> <span class="n">make_aware</span><span class="p">(</span><span class="n">to_time</span><span class="p">)</span>
-            <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;timestamp__lte&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_time</span>
+            <span class="n">queries</span><span class="p">[</span><span class="s2">"timestamp__lte"</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_time</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Invalid to time.&quot;</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_to&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;to&quot;</span><span class="p">]</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Invalid to time."</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_to"</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"to"</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path-type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">path_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;path-type&quot;</span><span class="p">]</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_path_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_type</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path-type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">path_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"path-type"</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_path_type"</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_type</span>
 
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"path"</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"selected_path"</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
 
-            <span class="k">if</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path__contains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
-            <span class="k">elif</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">&quot;starts&quot;</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path__startswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
-            <span class="k">elif</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">&quot;ends&quot;</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path__endswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">if</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">"contains"</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"path__contains"</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">elif</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">"starts"</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"path__startswith"</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">elif</span> <span class="n">path_type</span> <span class="o">==</span> <span class="s2">"ends"</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"path__endswith"</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"path"</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user-agent-type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">user_agent_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;user-agent-type&quot;</span><span class="p">]</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_user_agent_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent_type</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user-agent-type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">user_agent_type</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"user-agent-type"</span><span class="p">]</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"selected_user_agent_type"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent_type</span>
 
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user-agent&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">user_agent</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;user-agent&quot;</span><span class="p">]</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;selected_user_agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"user-agent"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">user_agent</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"user-agent"</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"selected_user_agent"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
 
-            <span class="k">if</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">&quot;contains&quot;</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent__contains&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
-            <span class="k">elif</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">&quot;starts&quot;</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent__startswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
-            <span class="k">elif</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">&quot;ends&quot;</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent__endswith&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+            <span class="k">if</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">"contains"</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"user_agent__contains"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+            <span class="k">elif</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">"starts"</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"user_agent__startswith"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+            <span class="k">elif</span> <span class="n">user_agent_type</span> <span class="o">==</span> <span class="s2">"ends"</span><span class="p">:</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"user_agent__endswith"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">queries</span><span class="p">[</span><span class="s2">&quot;user_agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+                <span class="n">queries</span><span class="p">[</span><span class="s2">"user_agent"</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
 
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">Request</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="n">queries</span><span class="p">)</span>
     <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">logs_context</span><span class="p">(</span><span class="n">queryset</span><span class="p">,</span> <span class="n">request</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;logs/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"logs/home.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
@@ -1752,7 +1752,7 @@
 
     <span class="n">rq</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Request</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">request_id</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;logs/request.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;rq&quot;</span><span class="p">:</span> <span class="n">rq</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"logs/request.html"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"rq"</span><span class="p">:</span> <span class="n">rq</span><span class="p">})</span>
 </pre></div>
         </article>
       </div>
@@ -1784,7 +1784,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

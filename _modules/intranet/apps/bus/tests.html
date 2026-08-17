@@ -1560,44 +1560,44 @@
 <div class="viewcode-block" id="BusTest">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.bus.tests.BusTest.html#intranet.apps.bus.tests.BusTest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BusTest</span><span class="p">(</span><span class="n">IonTestCase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test for bus module&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Test for bus module"""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_bus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">login</span><span class="p">()</span>
 
         <span class="c1"># Test morning</span>
         <span class="n">morning_tz</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django.utils.timezone.localtime&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">morning_tz</span><span class="p">)</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">))</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">"django.utils.timezone.localtime"</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">morning_tz</span><span class="p">)</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"bus"</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">&quot;bus/morning.html&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">"bus/morning.html"</span><span class="p">)</span>
 
         <span class="n">m</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
 
         <span class="c1"># Test afternoon</span>
         <span class="n">afternoon_tz</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">make_aware</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">BUS_PAGE_CHANGEOVER_HOUR</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django.utils.timezone.localtime&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">afternoon_tz</span><span class="p">)</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;bus&quot;</span><span class="p">))</span>
+        <span class="k">with</span> <span class="n">patch</span><span class="p">(</span><span class="s2">"django.utils.timezone.localtime"</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">afternoon_tz</span><span class="p">)</span> <span class="k">as</span> <span class="n">m</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"bus"</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">&quot;bus/home.html&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTemplateUsed</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">template_name</span><span class="o">=</span><span class="s2">"bus/home.html"</span><span class="p">)</span>
 
         <span class="n">m</span><span class="o">.</span><span class="n">assert_called</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">&quot;JT-01&quot;</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">&quot;JT-01&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">route</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
-        <span class="n">route</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="s2">&quot;_1&quot;</span>
+        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">"JT-01"</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">"JT-01"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">route</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">"a"</span>
+        <span class="n">route</span><span class="o">.</span><span class="n">space</span> <span class="o">=</span> <span class="s2">"_1"</span>
         <span class="n">route</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
         <span class="n">route</span><span class="o">.</span><span class="n">reset_status</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="s2">&quot;o&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">space</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">test_route_representation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">&quot;JT-01&quot;</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">&quot;JT-01&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">route_name</span><span class="o">=</span><span class="s2">"JT-01"</span><span class="p">,</span> <span class="n">bus_number</span><span class="o">=</span><span class="s2">"JT-01"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">route_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">,</span> <span class="n">route_str</span><span class="p">)</span></div>
@@ -1633,7 +1633,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

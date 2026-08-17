@@ -1579,21 +1579,21 @@
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.html#intranet.apps.eighth.views.admin.groups.add_group_view">[docs]</a>
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">QuickGroupForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]):</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]):</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You must be a superuser on Ion to manage administrative groups"</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
             <span class="n">group</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added group.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully added group."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding group.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Error adding group."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">"POST"</span><span class="p">],</span> <span class="s2">"405: METHOD NOT ALLOWED"</span><span class="p">)</span></div>
 
 
 
@@ -1607,51 +1607,51 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You must be a superuser on Ion to manage administrative groups"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">invalidate_model</span><span class="p">(</span><span class="n">Group</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;all students&quot;</span><span class="p">):</span>
-            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;users:students&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;remove_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"all students"</span><span class="p">):</span>
+            <span class="n">cache</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">"users:students"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"remove_all"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
             <span class="n">num</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
                 <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
             <span class="n">group</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Successfully deleted </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2"> members of the group.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Successfully deleted </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s2"> members of the group."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">GroupForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
-            <span class="k">if</span> <span class="s2">&quot;student_visible&quot;</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"student_visible"</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">:</span>
                 <span class="n">props</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">properties</span>
-                <span class="n">props</span><span class="o">.</span><span class="n">student_visible</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;student_visible&quot;</span><span class="p">]</span>
+                <span class="n">props</span><span class="o">.</span><span class="n">student_visible</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"student_visible"</span><span class="p">]</span>
                 <span class="n">props</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                 <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
 
             <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully edited group.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully edited group."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error modifying group.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Error modifying group."</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">form</span> <span class="o">=</span> <span class="n">GroupForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">group</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;student_visible&quot;</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">student_visible</span><span class="p">})</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">GroupForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">group</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="p">{</span><span class="s2">"student_visible"</span><span class="p">:</span> <span class="n">group</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">student_visible</span><span class="p">})</span>
 
     <span class="n">student_query</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span><span class="p">:</span>
-        <span class="n">student_query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"GET"</span><span class="p">:</span>
+        <span class="n">student_query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"q"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">student_query</span><span class="p">:</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>  <span class="c1"># Order not strictly alphabetical</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ion_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">sid</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">student_query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+        <span class="n">ion_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">sid</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">sid</span> <span class="ow">in</span> <span class="n">student_query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)]</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username__in</span><span class="o">=</span><span class="n">ion_ids</span><span class="p">)</span>
-    <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">,</span> <span class="s2">&quot;student_id&quot;</span><span class="p">)</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"username"</span><span class="p">,</span> <span class="s2">"first_name"</span><span class="p">,</span> <span class="s2">"last_name"</span><span class="p">,</span> <span class="s2">"student_id"</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>  <span class="c1"># Paginating to limit LDAP queries (slow)</span>
 
-    <span class="n">page_num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">page_num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">page</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="n">page_num</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">PageNotAnInteger</span><span class="p">:</span>
@@ -1663,15 +1663,15 @@
         <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span>
         <span class="n">members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
-                <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
-                <span class="s2">&quot;student_id&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">student_id</span><span class="p">,</span>
-                <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span>
-                <span class="s2">&quot;grade&quot;</span><span class="p">:</span> <span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="s2">&quot;Staff&quot;</span><span class="p">,</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s2">"first_name"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                <span class="s2">"last_name"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span>
+                <span class="s2">"student_id"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">student_id</span><span class="p">,</span>
+                <span class="s2">"email"</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">,</span>
+                <span class="s2">"grade"</span><span class="p">:</span> <span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="mi">13</span> <span class="k">else</span> <span class="s2">"Staff"</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
-    <span class="n">members</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">members</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">&quot;last_name&quot;</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">&quot;first_name&quot;</span><span class="p">]))</span>
+    <span class="n">members</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">members</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"last_name"</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">"first_name"</span><span class="p">]))</span>
     <span class="n">linked_activities</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">groups_allowed</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">parse_int</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
@@ -1681,32 +1681,32 @@
             <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-        <span class="s2">&quot;members&quot;</span><span class="p">:</span> <span class="n">members</span><span class="p">,</span>
-        <span class="s2">&quot;member_count&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-        <span class="s2">&quot;members_page&quot;</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
-        <span class="s2">&quot;edit_form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s2">&quot;added_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">parse_int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;added&quot;</span><span class="p">)],</span>
-        <span class="s2">&quot;linked_activities&quot;</span><span class="p">:</span> <span class="n">linked_activities</span><span class="p">,</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Edit Group&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;delete_url&quot;</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_delete_group&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group_id</span><span class="p">]),</span>
+        <span class="s2">"group"</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+        <span class="s2">"members"</span><span class="p">:</span> <span class="n">members</span><span class="p">,</span>
+        <span class="s2">"member_count"</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+        <span class="s2">"members_page"</span><span class="p">:</span> <span class="n">page</span><span class="p">,</span>
+        <span class="s2">"edit_form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s2">"added_ids"</span><span class="p">:</span> <span class="p">[</span><span class="n">parse_int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"added"</span><span class="p">)],</span>
+        <span class="s2">"linked_activities"</span><span class="p">:</span> <span class="n">linked_activities</span><span class="p">,</span>
+        <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Edit Group"</span><span class="p">,</span>
+        <span class="s2">"delete_url"</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_delete_group"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group_id</span><span class="p">]),</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="s2">&quot;possible_student&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">student_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;possible_student&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"possible_student"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">student_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"possible_student"</span><span class="p">)</span>
         <span class="n">possible_students</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">student_ids</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;possible_students&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">possible_students</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"possible_students"</span><span class="p">]</span> <span class="o">=</span> <span class="n">possible_students</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/edit_group.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/edit_group.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="get_file_string">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.html#intranet.apps.eighth.views.admin.groups.get_file_string">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_file_string</span><span class="p">(</span><span class="n">fileobj</span><span class="p">):</span>
-    <span class="n">filetext</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">filetext</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">chunks</span><span class="p">():</span>
-        <span class="n">filetext</span> <span class="o">+=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span>
+        <span class="n">filetext</span> <span class="o">+=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">"ISO-8859-1"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">filetext</span></div>
 
 
@@ -1714,20 +1714,20 @@
 <div class="viewcode-block" id="get_user_info">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.html#intranet.apps.eighth.views.admin.groups.get_user_info">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_info</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">User</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"username"</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">]:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="p">})</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">u</span>
 
-    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;student_id&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"student_id"</span><span class="p">:</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">if</span> <span class="n">u</span> <span class="k">else</span> <span class="p">[]</span>
 
-    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;^[A-Za-z ]*$&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-            <span class="n">vals</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">"name"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">"^[A-Za-z ]*$"</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">u</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_name</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">u</span><span class="p">:</span>
@@ -1770,8 +1770,8 @@
         <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
-            <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">","</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
@@ -1782,23 +1782,23 @@
                             <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
                 <span class="k">continue</span>
 
         <span class="c1"># Try username, user id</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;student_id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"username"</span><span class="p">,</span> <span class="s2">"id"</span><span class="p">,</span> <span class="s2">"student_id"</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">]:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">get_user_info</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">sure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
                 <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">break</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="s2">&quot; &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="s2">" "</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
             <span class="c1"># Reverse</span>
-            <span class="n">new_line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">get_user_info</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">new_line</span><span class="p">)</span>
+            <span class="n">new_line</span> <span class="o">=</span> <span class="s2">" "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">get_user_info</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="n">new_line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
                 <span class="n">sure_users</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">line</span><span class="p">,</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
                 <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1820,85 +1820,85 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You must be a superuser on Ion to manage administrative groups"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
-    <span class="n">stage</span> <span class="o">=</span> <span class="s2">&quot;upload&quot;</span>
+    <span class="n">stage</span> <span class="o">=</span> <span class="s2">"upload"</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">filetext</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UploadGroupForm</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;file&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
-            <span class="n">fileobj</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s2">&quot;text/&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">content_type</span><span class="p">:</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;The uploaded file is not of the correct type, plain text.&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">"file"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+            <span class="n">fileobj</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">"file"</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">"text/"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">content_type</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"The uploaded file is not of the correct type, plain text."</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="n">filetext</span> <span class="o">=</span> <span class="n">get_file_string</span><span class="p">(</span><span class="n">fileobj</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;filetext&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-            <span class="n">filetext</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;filetext&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;user_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-            <span class="n">userids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"filetext"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">filetext</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"filetext"</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"user_id"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">userids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
             <span class="n">num_added</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">userids</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">uid</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;User with ID </span><span class="si">{</span><span class="n">uid</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"User with ID </span><span class="si">{</span><span class="n">uid</span><span class="si">}</span><span class="s2"> does not exist"</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> is already in group&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"User </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> is already in group"</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
                     <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                     <span class="n">num_added</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num_added</span><span class="si">}</span><span class="s2"> added to group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;import_group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">num_added</span><span class="si">}</span><span class="s2"> added to group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">"import_group"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">import_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;import_group&quot;</span><span class="p">])</span>
+                <span class="n">import_group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">"import_group"</span><span class="p">])</span>
             <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
             <span class="n">num_users</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="s2">&quot;import_confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"import_confirm"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">import_group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
                     <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">member</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> is already in group&quot;</span><span class="p">)</span>
+                        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"User </span><span class="si">{</span><span class="n">member</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> is already in group"</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">member</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
                         <span class="n">member</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
                         <span class="n">num_users</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Added </span><span class="si">{</span><span class="n">num_users</span><span class="si">}</span><span class="s2"> users from </span><span class="si">{</span><span class="n">import_group</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Added </span><span class="si">{</span><span class="n">num_users</span><span class="si">}</span><span class="s2"> users from </span><span class="si">{</span><span class="n">import_group</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
                 <span class="n">request</span><span class="p">,</span>
-                <span class="s2">&quot;eighth/admin/upload_group.html&quot;</span><span class="p">,</span>
+                <span class="s2">"eighth/admin/upload_group.html"</span><span class="p">,</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Import Group Members: </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="s2">&quot;import_confirm&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-                    <span class="s2">&quot;import_group&quot;</span><span class="p">:</span> <span class="n">import_group</span><span class="p">,</span>
-                    <span class="s2">&quot;num_users&quot;</span><span class="p">:</span> <span class="n">num_users</span><span class="p">,</span>
+                    <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Import Group Members: </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+                    <span class="s2">"stage"</span><span class="p">:</span> <span class="s2">"import_confirm"</span><span class="p">,</span>
+                    <span class="s2">"group"</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+                    <span class="s2">"import_group"</span><span class="p">:</span> <span class="n">import_group</span><span class="p">,</span>
+                    <span class="s2">"num_users"</span><span class="p">:</span> <span class="n">num_users</span><span class="p">,</span>
                 <span class="p">},</span>
             <span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">UploadGroupForm</span><span class="p">()</span>
-    <span class="n">all_groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">all_groups</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"name"</span><span class="p">)</span>
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Upload/Import Group Members: </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
-        <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="n">stage</span><span class="p">,</span>
-        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
-        <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-        <span class="s2">&quot;all_groups&quot;</span><span class="p">:</span> <span class="n">all_groups</span><span class="p">,</span>
+        <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"Upload/Import Group Members: </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+        <span class="s2">"stage"</span><span class="p">:</span> <span class="n">stage</span><span class="p">,</span>
+        <span class="s2">"data"</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span>
+        <span class="s2">"group"</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+        <span class="s2">"all_groups"</span><span class="p">:</span> <span class="n">all_groups</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">if</span> <span class="n">filetext</span><span class="p">:</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;stage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;parse&quot;</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"stage"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"parse"</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">handle_group_input</span><span class="p">(</span><span class="n">filetext</span><span class="p">)</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;sure_users&quot;</span><span class="p">],</span> <span class="n">context</span><span class="p">[</span><span class="s2">&quot;unsure_users&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"sure_users"</span><span class="p">],</span> <span class="n">context</span><span class="p">[</span><span class="s2">"unsure_users"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/upload_group.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/upload_group.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1912,21 +1912,21 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You must be a superuser on Ion to manage administrative groups"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">group</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully deleted group.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully deleted group."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Group&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;item_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
-            <span class="s2">&quot;help_text&quot;</span><span class="p">:</span> <span class="s2">&quot;Deleting this group will remove all records of it related to eighth period.&quot;</span><span class="p">,</span>
+            <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Delete Group"</span><span class="p">,</span>
+            <span class="s2">"item_name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">group</span><span class="p">),</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"Deleting this group will remove all records of it related to eighth period."</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_form.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/delete_form.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -1939,11 +1939,11 @@
     <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">)</span>
-    <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Disposition&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;attachment; filename=&quot;</span><span class="si">{</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.csv&quot;&#39;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponse</span><span class="p">(</span><span class="n">content_type</span><span class="o">=</span><span class="s2">"text/csv"</span><span class="p">)</span>
+    <span class="n">response</span><span class="p">[</span><span class="s2">"Content-Disposition"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'attachment; filename="</span><span class="si">{</span><span class="n">group</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.csv"'</span>
 
     <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">&quot;Last Name&quot;</span><span class="p">,</span> <span class="s2">&quot;First Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Student ID&quot;</span><span class="p">,</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s2">&quot;Email&quot;</span><span class="p">])</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s2">"Last Name"</span><span class="p">,</span> <span class="s2">"First Name"</span><span class="p">,</span> <span class="s2">"Student ID"</span><span class="p">,</span> <span class="s2">"Grade"</span><span class="p">,</span> <span class="s2">"Email"</span><span class="p">])</span>
     <span class="n">users</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">users</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
@@ -1952,7 +1952,7 @@
         <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">first_name</span><span class="p">)</span>
         <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">student_id</span><span class="p">)</span>
         <span class="n">grade</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">grade</span>
-        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">grade</span> <span class="k">else</span> <span class="s2">&quot;Staff&quot;</span><span class="p">)</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">grade</span><span class="o">.</span><span class="n">number</span> <span class="k">if</span> <span class="n">grade</span> <span class="k">else</span> <span class="s2">"Staff"</span><span class="p">)</span>
         <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">tj_email</span><span class="p">)</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
@@ -1963,49 +1963,49 @@
 <div class="viewcode-block" id="EighthAdminSignUpGroupWizard">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard.html#intranet.apps.eighth.views.admin.groups.EighthAdminSignUpGroupWizard">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthAdminSignUpGroupWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
-    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"block"</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">"activity"</span><span class="p">,</span> <span class="n">ActivitySelectionForm</span><span class="p">)]</span>
 
-    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">}</span>
+    <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"block"</span><span class="p">:</span> <span class="s2">"eighth/admin/sign_up_group.html"</span><span class="p">,</span> <span class="s2">"activity"</span><span class="p">:</span> <span class="s2">"eighth/admin/sign_up_group.html"</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
-        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span>
-            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">"block"</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"exclude_before_date"</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">"activity"</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">"block"</span><span class="p">)[</span><span class="s2">"block"</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"block"</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
 
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;Select an activity&quot;</span><span class="p">}</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"block"</span><span class="p">:</span> <span class="s2">"Select a block"</span><span class="p">,</span> <span class="s2">"activity"</span><span class="p">:</span> <span class="s2">"Select an activity"</span><span class="p">}</span>
 
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"label"</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
 
         <span class="k">return</span> <span class="n">kwargs</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">"block"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block_obj&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]})</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"block_obj"</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]})</span>
 
-        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Sign Up Group&quot;</span><span class="p">})</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Sign Up Group"</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">context</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">form_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form_list</span><span class="p">)</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
-        <span class="n">activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activity&quot;</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span>
+        <span class="n">activity</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"activity"</span><span class="p">]</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">,</span> <span class="n">activity</span><span class="o">=</span><span class="n">activity</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group_id&quot;</span><span class="p">])</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"group_id"</span><span class="p">])</span>
         <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_signup_group_action&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span></div>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_signup_group_action"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">scheduled_activity</span><span class="o">.</span><span class="n">id</span><span class="p">]))</span></div>
 
 
 
@@ -2032,36 +2032,36 @@
     <span class="n">sticky_users_and_activities</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">sticky_users_and_activities</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">last_name</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">users</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;The group you have selected has no members.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"The group you have selected has no members."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;confirm&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"confirm"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="n">skip_users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sticky_users_and_activities</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;remove_from_sticky&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"remove_from_sticky"</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
                 <span class="n">skip_users</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
             <span class="k">except</span> <span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
-                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error signing up user </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> for activity.&quot;</span><span class="p">)</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Error signing up user </span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> for activity."</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;run_in_background&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"run_in_background"</span><span class="p">):</span>
             <span class="n">eighth_admin_signup_group_task</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">group_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">schact_id</span><span class="o">=</span><span class="n">schact_id</span><span class="p">,</span> <span class="n">skip_users</span><span class="o">=</span><span class="n">skip_users</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Group members are being signed up in the background.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Group members are being signed up in the background."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">eighth_admin_perform_group_signup</span><span class="p">(</span><span class="n">group_id</span><span class="o">=</span><span class="n">group_id</span><span class="p">,</span> <span class="n">schact_id</span><span class="o">=</span><span class="n">schact_id</span><span class="p">,</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">skip_users</span><span class="o">=</span><span class="n">skip_users</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully signed up group for activity.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully signed up group for activity."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
         <span class="n">request</span><span class="p">,</span>
-        <span class="s2">&quot;eighth/admin/sign_up_group.html&quot;</span><span class="p">,</span>
+        <span class="s2">"eighth/admin/sign_up_group.html"</span><span class="p">,</span>
         <span class="p">{</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Confirm Group Signup&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
-            <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
-            <span class="s2">&quot;users_num&quot;</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
-            <span class="s2">&quot;sticky_users_and_activities&quot;</span><span class="p">:</span> <span class="n">sticky_users_and_activities</span><span class="p">,</span>
+            <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Confirm Group Signup"</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity"</span><span class="p">:</span> <span class="n">scheduled_activity</span><span class="p">,</span>
+            <span class="s2">"group"</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span>
+            <span class="s2">"users_num"</span><span class="p">:</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+            <span class="s2">"sticky_users_and_activities"</span><span class="p">:</span> <span class="n">sticky_users_and_activities</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">)</span></div>
 
@@ -2070,7 +2070,7 @@
 <div class="viewcode-block" id="eighth_admin_perform_group_signup">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.html#intranet.apps.eighth.views.admin.groups.eighth_admin_perform_group_signup">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">eighth_admin_perform_group_signup</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">schact_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpRequest</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">skip_users</span><span class="p">:</span> <span class="nb">set</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs sign up of all users in a specific group up for a</span>
+<span class="w">    </span><span class="sd">"""Performs sign up of all users in a specific group up for a</span>
 <span class="sd">    specific scheduled activity.</span>
 
 <span class="sd">    Args:</span>
@@ -2080,7 +2080,7 @@
 <span class="sd">        request: If possible, the request object associated with the operation.</span>
 <span class="sd">        skip_users: A list of users that should not be signed up for the activity,</span>
 <span class="sd">            usually because they are stickied into another activity.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># We assume these exist</span>
     <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">schact_id</span><span class="p">)</span>
@@ -2095,23 +2095,23 @@
 <div class="viewcode-block" id="EighthAdminDistributeGroupWizard">
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard.html#intranet.apps.eighth.views.admin.groups.EighthAdminDistributeGroupWizard">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthAdminDistributeGroupWizard</span><span class="p">(</span><span class="n">SessionWizardView</span><span class="p">):</span>
-    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;block&quot;</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;activity&quot;</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)]</span>
+    <span class="n">FORMS</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"block"</span><span class="p">,</span> <span class="n">BlockSelectionForm</span><span class="p">),</span> <span class="p">(</span><span class="s2">"activity"</span><span class="p">,</span> <span class="n">ScheduledActivityMultiSelectForm</span><span class="p">)]</span>
 
     <span class="n">TEMPLATES</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;choose&quot;</span><span class="p">:</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span>
+        <span class="s2">"block"</span><span class="p">:</span> <span class="s2">"eighth/admin/distribute_group.html"</span><span class="p">,</span>
+        <span class="s2">"activity"</span><span class="p">:</span> <span class="s2">"eighth/admin/distribute_group.html"</span><span class="p">,</span>
+        <span class="s2">"choose"</span><span class="p">:</span> <span class="s2">"eighth/admin/distribute_group.html"</span><span class="p">,</span>
     <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_template_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">TEMPLATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="o">.</span><span class="n">current</span><span class="p">]]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group_id"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="p">)</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
         <span class="k">except</span> <span class="n">Group</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">"eighth_admin_distribute_unsigned"</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># pylint: disable=attribute-defined-outside-init</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
@@ -2121,46 +2121,46 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_form_kwargs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;block&quot;</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;exclude_before_date&quot;</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
-        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span>
-            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">"block"</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"exclude_before_date"</span><span class="p">:</span> <span class="n">get_start_date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">)})</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="s2">"activity"</span><span class="p">:</span>
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">"block"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
-                <span class="n">block</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
-            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
+                <span class="n">block</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"block"</span><span class="p">:</span> <span class="n">block</span><span class="p">})</span>
 
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Select a block&quot;</span><span class="p">,</span> <span class="s2">&quot;activity&quot;</span><span class="p">:</span> <span class="s2">&quot;Select multiple activities&quot;</span><span class="p">}</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"block"</span><span class="p">:</span> <span class="s2">"Select a block"</span><span class="p">,</span> <span class="s2">"activity"</span><span class="p">:</span> <span class="s2">"Select multiple activities"</span><span class="p">}</span>
 
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"label"</span><span class="p">:</span> <span class="n">labels</span><span class="p">[</span><span class="n">step</span><span class="p">]})</span>
 
         <span class="k">return</span> <span class="n">kwargs</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_cleaned_data_for_step</span><span class="p">(</span><span class="s2">"block"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">:</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">})</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"group"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">group</span><span class="p">})</span>
         <span class="k">elif</span> <span class="n">block</span><span class="p">:</span>
-            <span class="n">unsigned</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_unsigned_students</span><span class="p">()</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">unsigned</span><span class="p">,</span> <span class="s2">&quot;eighthblock&quot;</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]})</span>
+            <span class="n">unsigned</span> <span class="o">=</span> <span class="n">block</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span><span class="o">.</span><span class="n">get_unsigned_students</span><span class="p">()</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"users"</span><span class="p">:</span> <span class="n">unsigned</span><span class="p">,</span> <span class="s2">"eighthblock"</span><span class="p">:</span> <span class="n">block</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]})</span>
 
-        <span class="k">if</span> <span class="s2">&quot;block&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="n">block_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
-            <span class="n">context</span><span class="p">[</span><span class="s2">&quot;redirect_block_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_id</span>
+        <span class="k">if</span> <span class="s2">"block"</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">block_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span>
+            <span class="n">context</span><span class="p">[</span><span class="s2">"redirect_block_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_id</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;users_type&quot;</span><span class="p">:</span> <span class="s2">&quot;unsigned&quot;</span><span class="p">})</span>
-            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">"eighth_admin_distribute_unsigned"</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"users_type"</span><span class="p">:</span> <span class="s2">"unsigned"</span><span class="p">})</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"group"</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 
-        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Distribute Group Members Among Activities&quot;</span><span class="p">})</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Distribute Group Members Among Activities"</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">context</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">form_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form_list</span><span class="p">)</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;block&quot;</span><span class="p">]</span>
-        <span class="n">activities</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;activities&quot;</span><span class="p">]</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"block"</span><span class="p">]</span>
+        <span class="n">activities</span> <span class="o">=</span> <span class="n">form_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"activities"</span><span class="p">]</span>
 
         <span class="n">schact_ids</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">activities</span><span class="p">:</span>
@@ -2170,16 +2170,16 @@
             <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&amp;schact=</span><span class="si">{</span><span class="n">said</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">said</span> <span class="ow">in</span> <span class="n">schact_ids</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"&amp;schact=</span><span class="si">{</span><span class="n">said</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">said</span> <span class="ow">in</span> <span class="n">schact_ids</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s2">&quot;group_id&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">gid</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;group_id&quot;</span><span class="p">]</span>
-            <span class="n">args</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&amp;group=</span><span class="si">{</span><span class="n">gid</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="s2">"group_id"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">gid</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"group_id"</span><span class="p">]</span>
+            <span class="n">args</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"&amp;group=</span><span class="si">{</span><span class="n">gid</span><span class="si">}</span><span class="s2">"</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">&quot;eighth_admin_distribute_unsigned&quot;</span><span class="p">:</span>
-            <span class="n">args</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&amp;unsigned=1&amp;block=</span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">resolver_match</span><span class="o">.</span><span class="n">url_name</span> <span class="o">==</span> <span class="s2">"eighth_admin_distribute_unsigned"</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"&amp;unsigned=1&amp;block=</span><span class="si">{</span><span class="n">block</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/eighth/admin/groups/distribute_action?</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="sa">f</span><span class="s2">"/eighth/admin/groups/distribute_action?</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 
@@ -2193,15 +2193,15 @@
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">eighth_admin_distribute_action</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">block</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="s2">&quot;users&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">"users"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
         <span class="n">activity_user_map</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">item</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;schact&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"schact"</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">sid</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">6</span><span class="p">:])</span>
                     <span class="n">schact</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">sid</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;ScheduledActivity does not exist with id </span><span class="si">{</span><span class="n">sid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"ScheduledActivity does not exist with id </span><span class="si">{</span><span class="n">sid</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
                 <span class="n">userids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
                 <span class="n">activity_user_map</span><span class="p">[</span><span class="n">schact</span><span class="p">]</span> <span class="o">=</span> <span class="n">userids</span>
@@ -2217,7 +2217,7 @@
                     <span class="n">sticky_users_and_activities</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="n">sticky_activity_signup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span>
 
         <span class="n">skip_users</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sticky_users_and_activities</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;remove_from_sticky&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">uid</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"remove_from_sticky"</span><span class="p">):</span>
             <span class="n">skip_users</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
 
         <span class="n">changes</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2227,11 +2227,11 @@
                     <span class="n">changes</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="n">schact</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">uid</span><span class="p">)),</span> <span class="n">request</span><span class="o">=</span><span class="n">request</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">no_after_deadline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Successfully completed </span><span class="si">{</span><span class="n">changes</span><span class="si">}</span><span class="s2"> activity signups.&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Successfully completed </span><span class="si">{</span><span class="n">changes</span><span class="si">}</span><span class="s2"> activity signups."</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s2">&quot;schact&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">schactids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;schact&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">"schact"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">schactids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"schact"</span><span class="p">)</span>
 
         <span class="n">schacts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">schact</span> <span class="ow">in</span> <span class="n">schactids</span><span class="p">:</span>
@@ -2242,17 +2242,17 @@
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
         <span class="n">users</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">users_type</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">users_type</span> <span class="o">=</span> <span class="s2">""</span>
 
-        <span class="k">if</span> <span class="s2">&quot;group&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;group&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s2">"group"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"group"</span><span class="p">))</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-            <span class="n">users_type</span> <span class="o">=</span> <span class="s2">&quot;group&quot;</span>
-        <span class="k">elif</span> <span class="s2">&quot;unsigned&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+            <span class="n">users_type</span> <span class="o">=</span> <span class="s2">"group"</span>
+        <span class="k">elif</span> <span class="s2">"unsigned"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
             <span class="n">unsigned</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="k">if</span> <span class="s2">&quot;block&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-                <span class="n">blockid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;block&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">"block"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+                <span class="n">blockid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"block"</span><span class="p">)</span>
                 <span class="n">block</span> <span class="o">=</span> <span class="n">EighthBlock</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">blockid</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
@@ -2260,10 +2260,10 @@
             <span class="n">unsigned</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_students</span><span class="p">()</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">eighthsignup__scheduled_activity__block__id</span><span class="o">=</span><span class="n">blockid</span><span class="p">)</span>
 
             <span class="n">users</span> <span class="o">=</span> <span class="n">unsigned</span>
-            <span class="n">users_type</span> <span class="o">=</span> <span class="s2">&quot;unsigned&quot;</span>
+            <span class="n">users_type</span> <span class="o">=</span> <span class="s2">"unsigned"</span>
 
-            <span class="k">if</span> <span class="s2">&quot;limit&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-                <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;limit&quot;</span><span class="p">))]</span>
+            <span class="k">if</span> <span class="s2">"limit"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+                <span class="n">users</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">))]</span>
 
         <span class="c1"># Sort by last name</span>
         <span class="n">users</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
@@ -2273,26 +2273,26 @@
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
             <span class="n">sticky_activity_signup</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                 <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span>
-                <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;unsigned&quot;</span> <span class="k">else</span> <span class="n">schacts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">block</span><span class="p">,</span>  <span class="c1"># pylint: disable=used-before-assignment</span>
+                <span class="n">scheduled_activity__block</span><span class="o">=</span><span class="n">block</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">"unsigned"</span> <span class="k">else</span> <span class="n">schacts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">block</span><span class="p">,</span>  <span class="c1"># pylint: disable=used-before-assignment</span>
             <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">scheduled_activity__activity__sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">scheduled_activity__sticky</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">sticky_activity_signup</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="n">sticky_users_and_activities</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="n">sticky_activity_signup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scheduled_activity</span>
         <span class="n">sticky_users_and_activities</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">sticky_users_and_activities</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">last_name</span><span class="p">))</span>
 
         <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Distribute Group Members Across Activities&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;users_type&quot;</span><span class="p">:</span> <span class="n">users_type</span><span class="p">,</span>
-            <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;group&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;eighthblock&quot;</span><span class="p">:</span> <span class="n">block</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">&quot;unsigned&quot;</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;schacts&quot;</span><span class="p">:</span> <span class="n">schacts</span><span class="p">,</span>
-            <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span>
-            <span class="s2">&quot;show_selection&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">&quot;sticky_users_and_activities&quot;</span><span class="p">:</span> <span class="n">sticky_users_and_activities</span><span class="p">,</span>
+            <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Distribute Group Members Across Activities"</span><span class="p">,</span>
+            <span class="s2">"users_type"</span><span class="p">:</span> <span class="n">users_type</span><span class="p">,</span>
+            <span class="s2">"group"</span><span class="p">:</span> <span class="n">group</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">"group"</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"eighthblock"</span><span class="p">:</span> <span class="n">block</span> <span class="k">if</span> <span class="n">users_type</span> <span class="o">==</span> <span class="s2">"unsigned"</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"schacts"</span><span class="p">:</span> <span class="n">schacts</span><span class="p">,</span>
+            <span class="s2">"users"</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span>
+            <span class="s2">"show_selection"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"sticky_users_and_activities"</span><span class="p">:</span> <span class="n">sticky_users_and_activities</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/distribute_group.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/distribute_group.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span></div>
 
 
 
@@ -2300,8 +2300,8 @@
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.html#intranet.apps.eighth.views.admin.groups.add_member_to_group_view">[docs]</a>
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_member_to_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">"POST"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">"POST"</span><span class="p">],</span> <span class="s2">"HTTP 405: METHOD NOT ALLOWED"</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
@@ -2309,46 +2309,46 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You must be a superuser on Ion to manage administrative groups"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
-    <span class="n">next_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;group_id&quot;</span><span class="p">:</span> <span class="n">group_id</span><span class="p">})</span>
+    <span class="n">next_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"group_id"</span><span class="p">:</span> <span class="n">group_id</span><span class="p">})</span>
 
-    <span class="k">if</span> <span class="s2">&quot;user_id&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-        <span class="n">user_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"user_id"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="n">user_ids</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s2">"user_id"</span><span class="p">)</span>
         <span class="n">user_objects</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">user_ids</span><span class="p">)</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="n">groups</span><span class="o">=</span><span class="n">group</span><span class="p">)</span>
-        <span class="n">next_url</span> <span class="o">+=</span> <span class="s2">&quot;?&quot;</span>
+        <span class="n">next_url</span> <span class="o">+=</span> <span class="s2">"?"</span>
         <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">user_objects</span><span class="p">:</span>
             <span class="n">user</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
             <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span>
-                <span class="n">next_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;added=</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&amp;&quot;</span>
+                <span class="n">next_url</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"added=</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&amp;"</span>
         <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully added </span><span class="si">{}</span><span class="s2"> user</span><span class="si">{}</span><span class="s2"> to the group.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">),</span> <span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully added </span><span class="si">{}</span><span class="s2"> user</span><span class="si">{}</span><span class="s2"> to the group."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">),</span> <span class="s2">"s"</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_objects</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">""</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;query&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?error=s&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">"query"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">"?error=s"</span><span class="p">)</span>
 
-    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">"query"</span><span class="p">]</span>
     <span class="n">from_sid</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">user_with_student_id</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">from_sid</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">from_sid</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">from_sid</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
             <span class="n">from_sid</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Successfully added user &quot;</span><span class="si">{</span><span class="n">from_sid</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s1">&quot; to the group.&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?added=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">from_sid</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Successfully added user "</span><span class="si">{</span><span class="n">from_sid</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s1">" to the group.'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">"?added="</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">from_sid</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
 
     <span class="n">errors</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="n">get_search_results</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Could not process search query.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?error=n&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Could not process search query."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">"?error=n"</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">results</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">&quot;?error=n&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span> <span class="o">+</span> <span class="s2">"?error=n"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">users</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">first_name</span><span class="p">))</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">&quot;users&quot;</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add Members to Group&quot;</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/possible_students_add_group.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"query"</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">"users"</span><span class="p">:</span> <span class="n">users</span><span class="p">,</span> <span class="s2">"group"</span><span class="p">:</span> <span class="n">group</span><span class="p">,</span> <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Add Members to Group"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/possible_students_add_group.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
 
 
 
@@ -2356,8 +2356,8 @@
 <a class="viewcode-back" href="../../../../../../reference/intranet.apps.eighth.views.admin.groups.html#intranet.apps.eighth.views.admin.groups.remove_member_from_group_view">[docs]</a>
 <span class="nd">@eighth_admin_required</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">remove_member_from_group_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">&quot;POST&quot;</span><span class="p">],</span> <span class="s2">&quot;HTTP 405: METHOD NOT ALLOWED&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">!=</span> <span class="s2">"POST"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">HttpResponseNotAllowed</span><span class="p">([</span><span class="s2">"POST"</span><span class="p">],</span> <span class="s2">"HTTP 405: METHOD NOT ALLOWED"</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">group_id</span><span class="p">)</span>
@@ -2365,25 +2365,25 @@
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">can_manage_group</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You must be a superuser on Ion to manage administrative groups&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You must be a superuser on Ion to manage administrative groups"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">)</span>
 
-    <span class="n">uid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;profile_id&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">uid</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"profile_id"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">uid</span><span class="p">:</span>
-        <span class="n">next_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;user_profile&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">uid</span><span class="p">,))</span>
+        <span class="n">next_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"user_profile"</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">uid</span><span class="p">,))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">next_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_edit_group&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;group_id&quot;</span><span class="p">:</span> <span class="n">group_id</span><span class="p">})</span>
+        <span class="n">next_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_edit_group"</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"group_id"</span><span class="p">:</span> <span class="n">group_id</span><span class="p">})</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;There was an error removing this user.&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"There was an error removing this user."</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
 
     <span class="n">group</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
     <span class="n">group</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
     <span class="n">invalidate_obj</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
-    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Successfully removed user &quot;</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s1">&quot; from the group.&#39;</span><span class="p">)</span>
+    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Successfully removed user "</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">full_name</span><span class="si">}</span><span class="s1">" from the group.'</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_url</span><span class="p">)</span></div>
 
@@ -2395,18 +2395,18 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">delete_empty_groups_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">empty_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">user_set</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">empty_groups</span><span class="p">:</span>
             <span class="n">g</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully removed empty groups.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;eighth_admin_dashboard&quot;</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully removed empty groups."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">reverse</span><span class="p">(</span><span class="s2">"eighth_admin_dashboard"</span><span class="p">))</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;admin_page_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete Empty Groups&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;groups&quot;</span><span class="p">:</span> <span class="n">empty_groups</span><span class="p">,</span>
+        <span class="s2">"admin_page_title"</span><span class="p">:</span> <span class="s2">"Delete Empty Groups"</span><span class="p">,</span>
+        <span class="s2">"groups"</span><span class="p">:</span> <span class="n">empty_groups</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;eighth/admin/delete_empty_groups.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"eighth/admin/delete_empty_groups.html"</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -2439,7 +2439,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

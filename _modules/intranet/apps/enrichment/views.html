@@ -1568,7 +1568,7 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.date_format">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">date_format</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">d</span></div>
@@ -1579,7 +1579,7 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.decode_date">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_date</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">d</span></div>
@@ -1616,16 +1616,16 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">enrichments</span><span class="p">:</span>
         <span class="n">has_enrichments</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">enrichments</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>  <span class="c1"># don&#39;t display if there are no enrichments and it is a weekend</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">enrichments</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_weekday</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>  <span class="c1"># don't display if there are no enrichments and it is a weekend</span>
         <span class="n">display</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;enrichment_ctx&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
-            <span class="s2">&quot;date_today&quot;</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date_today</span><span class="p">),</span>
-            <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">enrichments</span><span class="p">,</span>
-            <span class="s2">&quot;display&quot;</span><span class="p">:</span> <span class="n">display</span><span class="p">,</span>
-            <span class="s2">&quot;has_enrichments&quot;</span><span class="p">:</span> <span class="n">has_enrichments</span><span class="p">,</span>
+        <span class="s2">"enrichment_ctx"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"date"</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+            <span class="s2">"date_today"</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">date_today</span><span class="p">),</span>
+            <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">enrichments</span><span class="p">,</span>
+            <span class="s2">"display"</span><span class="p">:</span> <span class="n">display</span><span class="p">,</span>
+            <span class="s2">"has_enrichments"</span><span class="p">:</span> <span class="n">has_enrichments</span><span class="p">,</span>
         <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">data</span></div>
@@ -1637,10 +1637,10 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">date</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">date</span>
-    <span class="k">elif</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="s2">"date"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"date"</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">start_date</span> <span class="o">=</span> <span class="n">enrichment_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">&quot;enrichment_ctx&quot;</span><span class="p">][</span><span class="s2">&quot;date&quot;</span><span class="p">]</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">enrichment_context</span><span class="p">(</span><span class="n">request</span><span class="p">)[</span><span class="s2">"enrichment_ctx"</span><span class="p">][</span><span class="s2">"date"</span><span class="p">]</span>
 
     <span class="n">delta</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">isoweekday</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">start_date</span> <span class="o">-=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
@@ -1655,10 +1655,10 @@
     <span class="n">today</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">())</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;days&quot;</span><span class="p">:</span> <span class="n">days</span><span class="p">,</span>
-        <span class="s2">&quot;next_week&quot;</span><span class="p">:</span> <span class="n">next_week</span><span class="p">,</span>
-        <span class="s2">&quot;last_week&quot;</span><span class="p">:</span> <span class="n">last_week</span><span class="p">,</span>
-        <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">today</span><span class="p">,</span>
+        <span class="s2">"days"</span><span class="p">:</span> <span class="n">days</span><span class="p">,</span>
+        <span class="s2">"next_week"</span><span class="p">:</span> <span class="n">next_week</span><span class="p">,</span>
+        <span class="s2">"last_week"</span><span class="p">:</span> <span class="n">last_week</span><span class="p">,</span>
+        <span class="s2">"today"</span><span class="p">:</span> <span class="n">today</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
@@ -1667,8 +1667,8 @@
 <div class="viewcode-block" id="month_data">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.enrichment.views.html#intranet.apps.enrichment.views.month_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
-        <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">"date"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">decode_date</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"date"</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">start_date</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
 
@@ -1676,17 +1676,17 @@
     <span class="n">start_date</span> <span class="o">-=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">delta</span><span class="p">)</span>
 
     <span class="n">week1</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">start_date</span><span class="p">)</span>
-    <span class="n">week2</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week1</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
-    <span class="n">week3</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week2</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
-    <span class="n">week4</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week3</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
-    <span class="n">week5</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week4</span><span class="p">[</span><span class="s2">&quot;next_week&quot;</span><span class="p">]))</span>
+    <span class="n">week2</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week1</span><span class="p">[</span><span class="s2">"next_week"</span><span class="p">]))</span>
+    <span class="n">week3</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week2</span><span class="p">[</span><span class="s2">"next_week"</span><span class="p">]))</span>
+    <span class="n">week4</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week3</span><span class="p">[</span><span class="s2">"next_week"</span><span class="p">]))</span>
+    <span class="n">week5</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">decode_date</span><span class="p">(</span><span class="n">week4</span><span class="p">[</span><span class="s2">"next_week"</span><span class="p">]))</span>
 
-    <span class="n">month</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%B&quot;</span><span class="p">)</span>
+    <span class="n">month</span> <span class="o">=</span> <span class="n">start_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%B"</span><span class="p">)</span>
     <span class="n">one_month</span> <span class="o">=</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">next_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span> <span class="o">+</span> <span class="n">one_month</span><span class="p">)</span>
     <span class="n">last_month</span> <span class="o">=</span> <span class="n">date_format</span><span class="p">(</span><span class="n">start_date</span> <span class="o">-</span> <span class="n">one_month</span><span class="p">)</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weeks&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">week1</span><span class="p">,</span> <span class="n">week2</span><span class="p">,</span> <span class="n">week3</span><span class="p">,</span> <span class="n">week4</span><span class="p">,</span> <span class="n">week5</span><span class="p">],</span> <span class="s2">&quot;next_month&quot;</span><span class="p">:</span> <span class="n">next_month</span><span class="p">,</span> <span class="s2">&quot;last_month&quot;</span><span class="p">:</span> <span class="n">last_month</span><span class="p">,</span> <span class="s2">&quot;current_month&quot;</span><span class="p">:</span> <span class="n">month</span><span class="p">}</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"weeks"</span><span class="p">:</span> <span class="p">[</span><span class="n">week1</span><span class="p">,</span> <span class="n">week2</span><span class="p">,</span> <span class="n">week3</span><span class="p">,</span> <span class="n">week4</span><span class="p">,</span> <span class="n">week5</span><span class="p">],</span> <span class="s2">"next_month"</span><span class="p">:</span> <span class="n">next_month</span><span class="p">,</span> <span class="s2">"last_month"</span><span class="p">:</span> <span class="n">last_month</span><span class="p">,</span> <span class="s2">"current_month"</span><span class="p">:</span> <span class="n">month</span><span class="p">}</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
 
@@ -1694,17 +1694,17 @@
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enrichment homepage.</span>
+<span class="w">    </span><span class="sd">"""Enrichment homepage.</span>
 
 <span class="sd">    Shows a list of enrichments occurring in the next week, month, and</span>
 <span class="sd">    future.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
     <span class="n">show_all</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">if</span> <span class="n">is_enrichment_admin</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s2">&quot;show_all&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"show_all"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
             <span class="n">show_all</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">viewable_enrichments</span> <span class="o">=</span> <span class="n">EnrichmentActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1712,7 +1712,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">viewable_enrichments</span> <span class="o">=</span> <span class="n">EnrichmentActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">visible_to_user</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span><span class="o">.</span><span class="n">this_year</span><span class="p">()</span>
 
-    <span class="n">classic</span> <span class="o">=</span> <span class="s2">&quot;classic&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
+    <span class="n">classic</span> <span class="o">=</span> <span class="s2">"classic"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span>
 
     <span class="c1"># get date objects for week and month</span>
     <span class="n">today</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
@@ -1721,16 +1721,16 @@
     <span class="n">this_month</span> <span class="o">=</span> <span class="p">(</span><span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">timezone</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">31</span><span class="p">))</span>
 
     <span class="n">enrichments_categories</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;This week&quot;</span><span class="p">,</span> <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
-        <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;This month&quot;</span><span class="p">,</span> <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
+        <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"This week"</span><span class="p">,</span> <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
+        <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"This month"</span><span class="p">,</span> <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])},</span>
     <span class="p">]</span>
 
     <span class="n">week_and_month</span> <span class="o">=</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">show_all</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">classic</span><span class="p">:</span>
         <span class="n">enrichments_categories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Week and month&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">week_and_month</span><span class="p">,</span>
+                <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Week and month"</span><span class="p">,</span>
+                <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">week_and_month</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
 
@@ -1739,123 +1739,123 @@
         <span class="n">future_enrichments</span> <span class="o">=</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">show_all</span><span class="p">:</span>
-            <span class="n">enrichments_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Future&quot;</span><span class="p">,</span> <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">future_enrichments</span><span class="p">})</span>
-            <span class="n">enrichments_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Past&quot;</span><span class="p">,</span> <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">past_enrichments</span><span class="p">})</span>
+            <span class="n">enrichments_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Future"</span><span class="p">,</span> <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">future_enrichments</span><span class="p">})</span>
+            <span class="n">enrichments_categories</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Past"</span><span class="p">,</span> <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">past_enrichments</span><span class="p">})</span>
 
     <span class="n">num_enrichments</span> <span class="o">=</span> <span class="n">viewable_enrichments</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">time__gte</span><span class="o">=</span><span class="n">this_week</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">time__lt</span><span class="o">=</span><span class="n">this_month</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;enrichments&quot;</span><span class="p">:</span> <span class="n">enrichments_categories</span><span class="p">,</span>
-        <span class="s2">&quot;authorized_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">week_and_month</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)},</span>
-        <span class="s2">&quot;blacklisted_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">week_and_month</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)},</span>
-        <span class="s2">&quot;num_enrichments&quot;</span><span class="p">:</span> <span class="n">num_enrichments</span><span class="p">,</span>
-        <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
-        <span class="s2">&quot;show_attend&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s2">&quot;show_icon&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;show_all&quot;</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
-        <span class="s2">&quot;classic&quot;</span><span class="p">:</span> <span class="n">classic</span><span class="p">,</span>
-        <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">today</span><span class="p">),</span>
+        <span class="s2">"enrichments"</span><span class="p">:</span> <span class="n">enrichments_categories</span><span class="p">,</span>
+        <span class="s2">"authorized_enrichments"</span><span class="p">:</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">week_and_month</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)},</span>
+        <span class="s2">"blacklisted_enrichments"</span><span class="p">:</span> <span class="p">{</span><span class="n">e</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">week_and_month</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)},</span>
+        <span class="s2">"num_enrichments"</span><span class="p">:</span> <span class="n">num_enrichments</span><span class="p">,</span>
+        <span class="s2">"is_enrichment_admin"</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
+        <span class="s2">"show_attend"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">"show_icon"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">"show_all"</span><span class="p">:</span> <span class="n">show_all</span><span class="p">,</span>
+        <span class="s2">"classic"</span><span class="p">:</span> <span class="n">classic</span><span class="p">,</span>
+        <span class="s2">"today"</span><span class="p">:</span> <span class="n">date_format</span><span class="p">(</span><span class="n">today</span><span class="p">),</span>
     <span class="p">}</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;week_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-    <span class="n">context</span><span class="p">[</span><span class="s2">&quot;month_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"week_data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">week_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s2">"month_data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">month_data</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s2">&quot;view&quot;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;month&quot;</span>
+    <span class="k">if</span> <span class="s2">"view"</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">[</span><span class="s2">"view"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"month"</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"view"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"month"</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;view&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;week&quot;</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">"view"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"week"</span>
 
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;enrichment/home.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"enrichment/home.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">enrichment_signup_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">happened</span><span class="p">:</span>  <span class="c1"># and request.POST.get(&quot;attending&quot;) == &quot;true&quot;:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Signups are locked for this enrichment activity.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">happened</span><span class="p">:</span>  <span class="c1"># and request.POST.get("attending") == "true":</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Signups are locked for this enrichment activity."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You do not have permission to sign up for this enrichment activity.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"You do not have permission to sign up for this enrichment activity."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">presign</span><span class="p">:</span>
             <span class="n">too_early_to_signup</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">is_too_early_to_signup</span>
             <span class="k">if</span> <span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                     <span class="n">request</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s2">&quot;You may not sign up for this enrichment activity until </span><span class="si">{</span><span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%A, %B </span><span class="si">%-d</span><span class="s1"> at %-I:%M %p&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"You may not sign up for this enrichment activity until </span><span class="si">{</span><span class="n">too_early_to_signup</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%A, %B </span><span class="si">%-d</span><span class="s1"> at %-I:%M %p'</span><span class="p">)</span><span class="si">}</span><span class="s2">."</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">capacity</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;The capacity for this enrichment activity has been reached. You may not sign up for it at this time.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"The capacity for this enrichment activity has been reached. You may not sign up for it at this time."</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
-        <span class="n">enrichment_date</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%A, %B </span><span class="si">%-d</span><span class="s2"> at %-I:%M %p&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attending&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
+        <span class="n">enrichment_date</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%A, %B </span><span class="si">%-d</span><span class="s2"> at %-I:%M %p"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"attending"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"true"</span><span class="p">:</span>
             <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Signed up for </span><span class="si">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">enrichment_date</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Signed up for </span><span class="si">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">enrichment_date</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Removed signup for </span><span class="si">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">enrichment_date</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Removed signup for </span><span class="si">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="n">enrichment_date</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">enrichment_roster_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
-    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
     <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_enrichment_admin</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
         <span class="n">present_user_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">present_user_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;csrfmiddlewaretoken&quot;</span><span class="p">)</span>
+        <span class="n">present_user_ids</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">"csrfmiddlewaretoken"</span><span class="p">)</span>
         <span class="n">present_users</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">present_user_ids</span><span class="p">)</span>
         <span class="n">enrichment</span><span class="o">.</span><span class="n">attended</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">present_users</span><span class="p">)</span>
         <span class="n">enrichment</span><span class="o">.</span><span class="n">attendance_taken</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">enrichment</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment_roster&quot;</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment_roster"</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
 
     <span class="n">enrichment_is_today</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">==</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">())</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
     <span class="p">)</span>
     <span class="n">roster</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
-            <span class="s2">&quot;present&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attended</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
+            <span class="s2">"user"</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+            <span class="s2">"present"</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attended</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span>
         <span class="p">}</span>
-        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;first_name&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">attending</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"first_name"</span><span class="p">,</span> <span class="s2">"last_name"</span><span class="p">)</span>
     <span class="p">]</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span>
-        <span class="s2">&quot;authorized_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
-        <span class="s2">&quot;blacklisted_enrichments&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
-        <span class="s2">&quot;enrichment_time&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">()),</span>
-        <span class="s2">&quot;enrichment_is_today&quot;</span><span class="p">:</span> <span class="n">enrichment_is_today</span><span class="p">,</span>
-        <span class="s2">&quot;roster&quot;</span><span class="p">:</span> <span class="n">roster</span><span class="p">,</span>
-        <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
-        <span class="s2">&quot;today&quot;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
+        <span class="s2">"enrichment"</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span>
+        <span class="s2">"authorized_enrichments"</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_can_signup</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
+        <span class="s2">"blacklisted_enrichments"</span><span class="p">:</span> <span class="p">{</span><span class="n">enrichment</span><span class="o">.</span><span class="n">id</span> <span class="k">if</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">user_is_blacklisted</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">},</span>
+        <span class="s2">"enrichment_time"</span><span class="p">:</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">get_default_timezone</span><span class="p">()),</span>
+        <span class="s2">"enrichment_is_today"</span><span class="p">:</span> <span class="n">enrichment_is_today</span><span class="p">,</span>
+        <span class="s2">"roster"</span><span class="p">:</span> <span class="n">roster</span><span class="p">,</span>
+        <span class="s2">"is_enrichment_admin"</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">,</span>
+        <span class="s2">"today"</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">(),</span>
     <span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;enrichment/roster.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"enrichment/roster.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add enrichment activity page.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Add enrichment activity page."""</span>
 
-    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_enrichment_admin</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EnrichmentActivityForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
@@ -1863,72 +1863,72 @@
             <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> added enrichment activity: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Admin </span><span class="si">%s</span><span class="s2"> added enrichment activity: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)"</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error adding enrichment activity.&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Error adding enrichment activity."</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EnrichmentActivityForm</span><span class="p">()</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Add&quot;</span><span class="p">,</span> <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;enrichment/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">:</span> <span class="s2">"add"</span><span class="p">,</span> <span class="s2">"action_title"</span><span class="p">:</span> <span class="s2">"Add"</span><span class="p">,</span> <span class="s2">"is_enrichment_admin"</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"enrichment/add_modify.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">modify_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Modify enrichment activity page.</span>
+<span class="w">    </span><span class="sd">"""Modify enrichment activity page.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        enrichment_id (int): enrichment activity id</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
-    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+    <span class="n">is_enrichment_admin</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_enrichment_admin</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EnrichmentActivityForm</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">enrichment</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
             <span class="c1"># SAFE HTML</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">safe_html</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
             <span class="n">obj</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Successfully modified enrichment activity.&quot;</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> modified enrichment activity: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Successfully modified enrichment activity."</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Admin </span><span class="si">%s</span><span class="s2"> modified enrichment activity: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)"</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Error modifying enrichment activity.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"Error modifying enrichment activity."</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">form</span> <span class="o">=</span> <span class="n">EnrichmentActivityForm</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">enrichment</span><span class="p">)</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;modify&quot;</span><span class="p">,</span> <span class="s2">&quot;action_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Modify&quot;</span><span class="p">,</span> <span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span> <span class="s2">&quot;is_enrichment_admin&quot;</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;enrichment/add_modify.html&quot;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"form"</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">:</span> <span class="s2">"modify"</span><span class="p">,</span> <span class="s2">"action_title"</span><span class="p">:</span> <span class="s2">"Modify"</span><span class="p">,</span> <span class="s2">"enrichment"</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span> <span class="s2">"is_enrichment_admin"</span><span class="p">:</span> <span class="n">is_enrichment_admin</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"enrichment/add_modify.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
 
 
 <span class="nd">@login_required</span>
 <span class="nd">@deny_restricted</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">delete_enrichment_view</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">enrichment_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete enrichment activity page.</span>
+<span class="w">    </span><span class="sd">"""Delete enrichment activity page.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        enrichment_id: enrichment activity id</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">enrichment</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">EnrichmentActivity</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">enrichment_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">http</span><span class="o">.</span><span class="n">Http404</span>
 
-    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="n">enrichment_title</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">title</span>
         <span class="n">enrichment_time</span> <span class="o">=</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">time</span>
         <span class="n">enrichment</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
-        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Deleted enrichment activity: &quot;</span><span class="si">{</span><span class="n">enrichment_title</span><span class="si">}</span><span class="s1">&quot; scheduled on </span><span class="si">{</span><span class="n">enrichment_time</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Admin </span><span class="si">%s</span><span class="s2"> deleted enrichment activity: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">enrichment</span><span class="p">,</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">&quot;enrichment&quot;</span><span class="p">)</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'Deleted enrichment activity: "</span><span class="si">{</span><span class="n">enrichment_title</span><span class="si">}</span><span class="s1">" scheduled on </span><span class="si">{</span><span class="n">enrichment_time</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Admin </span><span class="si">%s</span><span class="s2"> deleted enrichment activity: </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">)"</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">enrichment</span><span class="p">,</span> <span class="n">enrichment</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"enrichment"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;enrichment/delete.html&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;enrichment&quot;</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"enrichment/delete.html"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"enrichment"</span><span class="p">:</span> <span class="n">enrichment</span><span class="p">,</span> <span class="s2">"action"</span><span class="p">:</span> <span class="s2">"delete"</span><span class="p">})</span>
 </pre></div>
         </article>
       </div>
@@ -1960,7 +1960,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

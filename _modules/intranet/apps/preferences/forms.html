@@ -1564,11 +1564,11 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.forms.BusRouteForm.html#intranet.apps.preferences.forms.BusRouteForm.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Set bus route...&quot;</span><span class="p">)]</span>
-        <span class="n">routes</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;route_name&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"Set bus route..."</span><span class="p">)]</span>
+        <span class="n">routes</span> <span class="o">=</span> <span class="n">Route</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"route_name"</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">route_name</span><span class="p">)]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;bus_route&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">Select</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"bus_route"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">BUS_ROUTE_CHOICES</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">Select</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 </div>
 
 
@@ -1581,17 +1581,17 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;AUTO&quot;</span><span class="p">,</span> <span class="s2">&quot;Auto-select the most recent photo&quot;</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"AUTO"</span><span class="p">,</span> <span class="s2">"Auto-select the most recent photo"</span><span class="p">)]</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">grade</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">user</span><span class="o">.</span><span class="n">photos</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">grade_number</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">)</span>  <span class="c1"># Only display option if the photo exists</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">,</span> <span class="n">grade</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot; Photo&quot;</span><span class="p">)]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">9</span><span class="p">,</span> <span class="n">grade</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">" Photo"</span><span class="p">)]</span>
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">pass</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;preferred_photo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">RadioSelect</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"preferred_photo"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ChoiceField</span><span class="p">(</span><span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">PREFERRED_PICTURE_CHOICES</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">RadioSelect</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 </div>
 
 
@@ -1607,38 +1607,38 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">flag</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_address&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_address-self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Show Address&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_address-self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Show Address"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_telephone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_telephone-self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Show Phone&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_telephone"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_telephone-self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Show Phone"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_birthday&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_birthday-self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Show Birthday&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_birthday"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_birthday-self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Show Birthday"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">pictures_label</span> <span class="o">=</span> <span class="s2">&quot;Show Pictures&quot;</span>
+        <span class="n">pictures_label</span> <span class="o">=</span> <span class="s2">"Show Pictures"</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_student</span><span class="p">:</span>
-            <span class="n">pictures_label</span> <span class="o">+=</span> <span class="s2">&quot; on Import&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_pictures&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_pictures-self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="n">pictures_label</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">pictures_label</span> <span class="o">+=</span> <span class="s2">" on Import"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_pictures"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_pictures-self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="n">pictures_label</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="c1"># photos = user.photo_permissions[&quot;self&quot;]</span>
+        <span class="c1"># photos = user.photo_permissions["self"]</span>
 
         <span class="c1"># for i in range(4):</span>
         <span class="c1">#     grade = Grade.names[i]</span>
         <span class="c1">#     if photos[grade] is not None:</span>
-        <span class="c1">#         self.fields[&quot;photoperm-{}&quot;.format(grade)] = flag(None, False)</span>
-        <span class="c1">#         self.fields[&quot;photoperm-{}-self&quot;.format(grade)] = flag(&quot;Show {} Photo&quot;.format(grade.capitalize()), False)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_eighth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_eighth-self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Show Eighth Period Schedule&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="c1">#         self.fields["photoperm-{}".format(grade)] = flag(None, False)</span>
+        <span class="c1">#         self.fields["photoperm-{}-self".format(grade)] = flag("Show {} Photo".format(grade.capitalize()), False)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_eighth"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_eighth-self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Show Eighth Period Schedule"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_schedule&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;show_schedule-self&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Show Class Schedule&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_schedule"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"show_schedule-self"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Show Class Schedule"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">&quot;preferences&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">user</span><span class="o">.</span><span class="n">has_admin_permission</span><span class="p">(</span><span class="s2">"preferences"</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;-self&quot;</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;disabled&quot;</span></div>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"-self"</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"class"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"disabled"</span></div>
 </div>
 
 
@@ -1654,12 +1654,12 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">flag</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">initial</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;receive_news_emails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Receive News Emails&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;receive_eighth_emails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">&quot;Receive Eighth Period Emails&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Primary Email&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"receive_news_emails"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Receive News Emails"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"receive_eighth_emails"</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span><span class="p">(</span><span class="s2">"Receive Eighth Period Emails"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="s2">"Primary Email"</span>
         <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;You can set a primary email after adding emails below.&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;primary_email&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">(</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="s2">"You can set a primary email after adding emails below."</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"primary_email"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">ModelChoiceField</span><span class="p">(</span>
             <span class="n">queryset</span><span class="o">=</span><span class="n">Email</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">disabled</span><span class="o">=</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">emails</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
         <span class="p">)</span></div>
 </div>
@@ -1673,8 +1673,8 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.forms.DarkModeForm.html#intranet.apps.preferences.forms.DarkModeForm.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;dark_mode_enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
-            <span class="n">initial</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Enable dark mode?&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"dark_mode_enabled"</span><span class="p">]</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span>
+            <span class="n">initial</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">dark_mode_properties</span><span class="o">.</span><span class="n">dark_mode_enabled</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Enable dark mode?"</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span></div>
 </div>
 
@@ -1683,13 +1683,13 @@
 <div class="viewcode-block" id="PhoneForm">
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.forms.PhoneForm.html#intranet.apps.preferences.forms.PhoneForm">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PhoneForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a phone number (number + purpose)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Represents a phone number (number + purpose)"""</span>
 
     <span class="n">_number</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Phone</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;purpose&quot;</span><span class="p">,</span> <span class="s2">&quot;_number&quot;</span><span class="p">]</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"purpose"</span><span class="p">,</span> <span class="s2">"_number"</span><span class="p">]</span></div>
 
 
 
@@ -1697,15 +1697,15 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.preferences.forms.EmailForm.html#intranet.apps.preferences.forms.EmailForm">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EmailForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">clean_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;@fcpsschools.net&quot;</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;You cannot provide a fcpsschools.net address.&quot;</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"address"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"@fcpsschools.net"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">"You cannot provide a fcpsschools.net address."</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="s2">"invalid"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">data</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Email</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"address"</span><span class="p">]</span></div>
 
 
 
@@ -1714,7 +1714,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">WebsiteForm</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelForm</span><span class="p">):</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Website</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"url"</span><span class="p">]</span></div>
 
 
 
@@ -1752,7 +1752,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -1557,15 +1557,15 @@
 <a class="viewcode-back" href="../../../../reference/intranet.apps.signage.consumers.SignageConsumer.html#intranet.apps.signage.consumers.SignageConsumer">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SignageConsumer</span><span class="p">(</span><span class="n">JsonWebsocketConsumer</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span>
-        <span class="n">headers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">])</span>
-        <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="sa">b</span><span class="s2">&quot;x-real-ip&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="sa">b</span><span class="s2">&quot;x-real-ip&quot;</span> <span class="ow">in</span> <span class="n">headers</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;client&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">"user"</span><span class="p">]</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">"headers"</span><span class="p">])</span>
+        <span class="n">remote_addr</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="sa">b</span><span class="s2">"x-real-ip"</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span> <span class="k">if</span> <span class="sa">b</span><span class="s2">"x-real-ip"</span> <span class="ow">in</span> <span class="n">headers</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">"client"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="n">remote_addr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">INTERNAL_IPS</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">&quot;url_route&quot;</span><span class="p">][</span><span class="s2">&quot;kwargs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;display_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scope</span><span class="p">[</span><span class="s2">"url_route"</span><span class="p">][</span><span class="s2">"kwargs"</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"display_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span> <span class="o">=</span> <span class="n">Sign</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">display</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">display_name</span><span class="p">)</span>
@@ -1578,7 +1578,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">latest_heartbeat_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;latest_heartbeat_time&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"latest_heartbeat_time"</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">receive_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pylint: disable=arguments-differ</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
@@ -1587,10 +1587,10 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">latest_heartbeat_time</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">localtime</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;latest_heartbeat_time&quot;</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"latest_heartbeat_time"</span><span class="p">])</span>
 
-        <span class="k">if</span> <span class="n">content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;heartbeat&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;heartbeat-response&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"heartbeat"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_json</span><span class="p">({</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"heartbeat-response"</span><span class="p">})</span>
             <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1604,7 +1604,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">latest_heartbeat_time</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;latest_heartbeat_time&quot;</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sign_obj</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">update_fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"latest_heartbeat_time"</span><span class="p">])</span></div>
 
 </pre></div>
         </article>
@@ -1637,7 +1637,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

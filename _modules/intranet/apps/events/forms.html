@@ -1561,20 +1561,20 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_groups</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">student_visible</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">student_visible</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">student_visible</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">hidden_widget</span><span class="p">()</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">]</span><span class="o">.</span><span class="n">hidden_widget</span><span class="p">()</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clean_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">time</span> <span class="o">&lt;</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;The event time cannot be in the past!&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">"The event time cannot be in the past!"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">time</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Event</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;location&quot;</span><span class="p">,</span> <span class="s2">&quot;groups&quot;</span><span class="p">,</span> <span class="s2">&quot;show_attending&quot;</span><span class="p">,</span> <span class="s2">&quot;show_on_dashboard&quot;</span><span class="p">,</span> <span class="s2">&quot;public&quot;</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">,</span> <span class="s2">&quot;open_to&quot;</span><span class="p">]</span></div>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"location"</span><span class="p">,</span> <span class="s2">"groups"</span><span class="p">,</span> <span class="s2">"show_attending"</span><span class="p">,</span> <span class="s2">"show_on_dashboard"</span><span class="p">,</span> <span class="s2">"public"</span><span class="p">,</span> <span class="s2">"category"</span><span class="p">,</span> <span class="s2">"open_to"</span><span class="p">]</span></div>
 
 
 
@@ -1586,29 +1586,29 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">all_groups</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">all_groups</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">&quot;groups&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">student_visible</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="s2">"groups"</span><span class="p">]</span><span class="o">.</span><span class="n">queryset</span> <span class="o">=</span> <span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">student_visible</span><span class="p">()</span></div>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Event</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;title&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;time&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;location&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;announcement&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;groups&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;show_attending&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;show_on_dashboard&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;public&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;category&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;open_to&quot;</span><span class="p">,</span>
+            <span class="s2">"title"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">,</span>
+            <span class="s2">"time"</span><span class="p">,</span>
+            <span class="s2">"location"</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity"</span><span class="p">,</span>
+            <span class="s2">"announcement"</span><span class="p">,</span>
+            <span class="s2">"groups"</span><span class="p">,</span>
+            <span class="s2">"show_attending"</span><span class="p">,</span>
+            <span class="s2">"show_on_dashboard"</span><span class="p">,</span>
+            <span class="s2">"public"</span><span class="p">,</span>
+            <span class="s2">"category"</span><span class="p">,</span>
+            <span class="s2">"open_to"</span><span class="p">,</span>
         <span class="p">]</span>
-        <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">NumberInput</span><span class="p">(),</span> <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">NumberInput</span><span class="p">()}</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"scheduled_activity"</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">NumberInput</span><span class="p">(),</span> <span class="s2">"announcement"</span><span class="p">:</span> <span class="n">forms</span><span class="o">.</span><span class="n">NumberInput</span><span class="p">()}</span>
         <span class="n">help_texts</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;scheduled_activity&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL: Enter the ID of the scheduled activity -- it will be displayed above the event.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;announcement&quot;</span><span class="p">:</span> <span class="s2">&quot;OPTIONAL: Enter the ID of the announcement -- it will be displayed above the event.&quot;</span><span class="p">,</span>
+            <span class="s2">"scheduled_activity"</span><span class="p">:</span> <span class="s2">"OPTIONAL: Enter the ID of the scheduled activity -- it will be displayed above the event."</span><span class="p">,</span>
+            <span class="s2">"announcement"</span><span class="p">:</span> <span class="s2">"OPTIONAL: Enter the ID of the announcement -- it will be displayed above the event."</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 </pre></div>
@@ -1642,7 +1642,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

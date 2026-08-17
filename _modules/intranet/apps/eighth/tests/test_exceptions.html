@@ -1556,13 +1556,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">test_signup_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">signup_exception</span> <span class="o">=</span> <span class="n">SignupException</span><span class="p">()</span>
         <span class="c1"># Test that response is plain with no errors</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">"Content-Type"</span><span class="p">],</span> <span class="s2">"text/plain"</span><span class="p">)</span>
 
         <span class="n">signup_exception</span><span class="o">.</span><span class="n">SignupForbidden</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">errors</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># Test that response is plain with 1 error</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">()[</span><span class="s2">"Content-Type"</span><span class="p">],</span> <span class="s2">"text/plain"</span><span class="p">)</span>
 
         <span class="n">signup_exception</span><span class="o">.</span><span class="n">ScheduledActivityCancelled</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">errors</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
@@ -1570,18 +1570,18 @@
         <span class="c1"># Test SignupException messages</span>
         <span class="n">expected_messages_no_admin</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">expected_messages_admin</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ScheduledActivityCancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;SignupForbidden&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"ScheduledActivityCancelled"</span><span class="p">,</span> <span class="s2">"SignupForbidden"</span><span class="p">]:</span>
             <span class="n">expected_messages_no_admin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SignupException</span><span class="o">.</span><span class="n">_messages</span><span class="p">[</span><span class="n">error</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># pylint: disable=protected-access</span>
             <span class="n">expected_messages_admin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SignupException</span><span class="o">.</span><span class="n">_messages</span><span class="p">[</span><span class="n">error</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># pylint: disable=protected-access</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">messages</span><span class="p">(),</span> <span class="n">expected_messages_no_admin</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">signup_exception</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">admin</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">expected_messages_admin</span><span class="p">)</span>
         <span class="n">response_plain</span> <span class="o">=</span> <span class="n">signup_exception</span><span class="o">.</span><span class="n">as_response</span><span class="p">(</span><span class="n">html</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response_plain</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">expected_messages_no_admin</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response_plain</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response_plain</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">expected_messages_no_admin</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response_plain</span><span class="p">[</span><span class="s2">"Content-Type"</span><span class="p">],</span> <span class="s2">"text/plain"</span><span class="p">)</span>
 
         <span class="c1"># Test string representations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="s2">&quot;ScheduledActivityCancelled, SignupForbidden&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;SignupException(</span><span class="si">{</span><span class="n">signup_exception</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="s2">"ScheduledActivityCancelled, SignupForbidden"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">signup_exception</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"SignupException(</span><span class="si">{</span><span class="n">signup_exception</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1614,7 +1614,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

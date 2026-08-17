@@ -1554,25 +1554,25 @@
 <div class="viewcode-block" id="UserMultipleChoiceField">
 <a class="viewcode-back" href="../../../../../reference/intranet.apps.eighth.forms.fields.UserMultipleChoiceField.html#intranet.apps.eighth.forms.fields.UserMultipleChoiceField">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UserMultipleChoiceField</span><span class="p">(</span><span class="n">forms</span><span class="o">.</span><span class="n">ModelMultipleChoiceField</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Choose any user from the database.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Choose any user from the database."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">queryset</span><span class="o">.</span><span class="n">none</span><span class="p">()</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">required</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;required&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">"required"</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">"required"</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">users</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">"invalid_choice"</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">"invalid_choice"</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">&quot;invalid_choice&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error_messages</span><span class="p">[</span><span class="s2">"invalid_choice"</span><span class="p">],</span> <span class="n">code</span><span class="o">=</span><span class="s2">"invalid_choice"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
         <span class="k">return</span> <span class="n">users</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">label_from_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">get_user_model</span><span class="p">()):</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">)"</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">label_from_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
 </pre></div>
@@ -1606,7 +1606,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../_static/documentation_options.js?v=82a1c103"></script>
+</div><script src="../../../../../_static/documentation_options.js?v=72a56c83"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/scripts/furo.js?v=46bd48cc"></script>
