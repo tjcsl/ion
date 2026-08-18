@@ -128,6 +128,13 @@ def global_custom_theme(request) -> dict[str, dict[str, dict[str, str]] | list[s
         theme.setdefault("js", []).append("themes/halloween/halloween-cookie.js")
         theme.setdefault("css", []).append("themes/halloween/halloween-button.css")
 
+    if "thanksgiving" in theme_names and request.COOKIES.get("disable-thanksgiving", None) == "1":
+        if "js" in theme and "themes/thanksgiving/thanksgiving.js" in theme["js"]:
+            theme["js"].remove("themes/thanksgiving/thanksgiving.js")
+        if "css" in theme and "themes/thanksgiving/thanksgiving.css" in theme["css"]:
+            theme["css"].remove("themes/thanksgiving/thanksgiving.css")
+        theme.setdefault("js", []).append("themes/thanksgiving/thanksgiving-cookie.js")
+
     return {"theme": theme, "theme_names": theme_names}
 
 
