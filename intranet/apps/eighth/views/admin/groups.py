@@ -645,10 +645,12 @@ def eighth_admin_distribute_action(request):
         schactids = request.GET.getlist("schact")
 
         schacts = []
+        remaining_capacities = []
         for schact in schactids:
             try:
                 sch = EighthScheduledActivity.objects.get(id=schact)
                 schacts.append(sch)
+                remaining_capacities.append(max(0, sch.capacity - sch.members.count()))
             except EighthScheduledActivity.DoesNotExist as e:
                 raise http.Http404 from e
 
@@ -695,7 +697,7 @@ def eighth_admin_distribute_action(request):
             "users_type": users_type,
             "group": group if users_type == "group" else None,
             "eighthblock": block if users_type == "unsigned" else None,
-            "schacts": schacts,
+            "schacts": list(zip(schacts, remaining_capacities, strict=True)),
             "users": users,
             "show_selection": True,
             "sticky_users_and_activities": sticky_users_and_activities,
