@@ -107,7 +107,9 @@ class Command(BaseCommand):
         for usr in get_user_model().objects.filter(graduation_year__lt=senior_grad_year).exclude(user_type="alum"):
             if not usr.is_superuser and not usr.is_staff:
                 usr.handle_delete()
-                self.stdout.write(str(usr.delete()))
+                username = usr.username
+                delete_count, deleted_objects = usr.delete()
+                self.stdout.write(f"Deleted user {username}, {delete_count} objects deleted {deleted_objects}")
             else:
                 usr.user_type = "alum"
                 usr.save()
