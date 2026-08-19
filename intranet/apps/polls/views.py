@@ -648,6 +648,8 @@ def add_poll_view(request):
     if not request.user.has_admin_permission("polls"):
         return redirect("polls")
 
+    poll_questions = "[]"
+    poll_choices = "[]"
     if request.method == "POST":
         form = PollForm(data=request.POST)
         question_data = request.POST.get("question_data", None)
@@ -664,10 +666,18 @@ def add_poll_view(request):
 
             messages.success(request, "The poll has been created.")
             return redirect("polls")
+        poll_questions = question_data or "[]"
     else:
         form = PollForm()
 
-    context = {"action": "add", "action_title": "Add", "poll_questions": "[]", "poll_choices": "[]", "form": form, "is_polls_admin": True}
+    context = {
+        "action": "add",
+        "action_title": "Add",
+        "poll_questions": poll_questions,
+        "poll_choices": poll_choices,
+        "form": form,
+        "is_polls_admin": True,
+    }
 
     return render(request, "polls/add_modify.html", context)
 
@@ -690,8 +700,8 @@ def modify_poll_view(request, poll_id):
         if not question_data:
             messages.error(request, "No question information was sent with your request!")
             flag = False
-        question_data = json.loads(question_data)
         if flag and form.is_valid():
+            question_data = json.loads(question_data)
             instance = form.save()
 
             process_question_data(instance, question_data)
@@ -701,12 +711,19 @@ def modify_poll_view(request, poll_id):
     else:
         form = PollForm(instance=poll)
 
+    if request.method == "POST":
+        poll_questions = question_data or "[]"
+        poll_choices = "[]"
+    else:
+        poll_questions = serialize("json", poll.question_set.all())
+        poll_choices = serialize("json", Choice.objects.filter(question__in=poll.question_set.all()))
+
     context = {
         "action": "modify",
         "action_title": "Modify",
         "poll": poll,
-        "poll_questions": serialize("json", poll.question_set.all()),
-        "poll_choices": serialize("json", Choice.objects.filter(question__in=poll.question_set.all())),
+        "poll_questions": poll_questions,
+        "poll_choices": poll_choices,
         "form": form,
         "is_polls_admin": True,
     }
