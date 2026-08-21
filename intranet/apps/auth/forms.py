@@ -1,8 +1,11 @@
 import logging
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import widgets
+
+from intranet.apps.auth.widgets import TurnstileField
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +50,16 @@ class AuthenticateForm(AuthenticationForm):
 
     trust_device = forms.BooleanField(required=False, initial=True, label="Remember me", label_suffix="")
 
+    # TURNSTILE_ENABLED will override the required setting, but it must be True by default
+    turnstile = TurnstileField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["turnstile"].set_enabled(settings.TURNSTILE_ENABLED)
+        # we'll need the request for ip validation
+        if hasattr(self, "request") and self.request:
+            self.fields["turnstile"].request = self.request
+
     def is_valid(self):
         """Validates the username and password in the form."""
         form = super().is_valid()
@@ -57,6 +70,8 @@ class AuthenticateForm(AuthenticationForm):
                 errors = list(error)
                 if "This account is inactive." in errors:
                     message = "Intranet access restricted"
+                elif "Invalid turnstile response" in errors:
+                    message = "Invalid CAPTCHA. Reload the page and try again."
                 else:
                     message = "Invalid password"
                 self.fields["password"].widget.attrs.update({"class": "error", "placeholder": message})

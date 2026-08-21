@@ -21,7 +21,10 @@ body {
 .center {
     position: absolute;
     width: 100%;
-    top: 50%;
+    top: 42%;
+    @media (max-height: 680px) {
+        top: 50%;
+    }
     margin-top: -270px;
 
     &-wrapper {
@@ -35,6 +38,7 @@ body {
         min-height: 530px;
         z-index: 10;
         padding-top: 30px;
+
         @media (max-width: 200px) {
             left: 0;
             margin: 0;
@@ -116,7 +120,11 @@ h2 {
 
     .center & {
         margin-left: 0;
-        padding-bottom: 25px;
+        padding-bottom: 15px;
+        /* the bottom csl bar will overlap w/ a full schedule otherwise */
+        @media (max-height: 700px) {
+            padding-bottom: 48px;
+        }
     }
 
     h2 {
@@ -398,4 +406,22 @@ a.schedule {
 
 #id_otp_token[type=number] {
     -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* provides padding for the turnstile widget and the login button */
+.cf-turnstile {
+    margin-top: 5px;
+}
+
+/* disables the login button if the turnstile is not validated */
+input[type=submit] {
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #efefef;
+        color: #aaaaaa;
+        border: 1px solid #dddddd;
+        pointer-events: none;
+    }
 }
