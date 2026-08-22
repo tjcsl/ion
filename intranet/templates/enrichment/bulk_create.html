@@ -1,0 +1,74 @@
+{% extends "page_with_nav.html" %}
+{% load static %}
+{% load dates %}
+{% load pipeline %}
+{% block title %}
+    {{ block.super }} - Bulk Create Enrichment Activities
+{% endblock %}
+{% block js %}
+    {{ block.super }}
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
+    <script>
+        $(function() {
+            $("#id_groups_allowed").selectize({
+                create: false
+            })
+            $("#id_groups_blacklisted").selectize({
+                create: false
+            });
+        });
+    </script>
+{% endblock %}
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
+    {% stylesheet 'announcements.form' %}
+    {% stylesheet 'enrichment' %}
+{% endblock %}
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+        {% stylesheet 'dark/events' %}
+    {% endif %}
+{% endblock %}
+{% block main %}
+<div class="events enrichment announcements primary-content">
+    <h2>Bulk Create Enrichment Activities</h2>
+    <p>Choose a week for your activity, and check off the days you want. One activity will be created for each checked day.</p>
+    <form method="post" id="event_form">
+    <table>
+    {% csrf_token %}
+    <tr><th><label for="id_title">Title:</label></th><td>{{ form.title }}{{ form.title.errors }}</td></tr>
+    <tr><th><label for="id_description">Description:</label></th><td>{{ form.description }}{{ form.description.errors }}</td></tr>
+    <tr><th><label for="id_capacity">Capacity:</label></th><td>{{ form.capacity }}{{ form.capacity.errors }}</td></tr>
+    <tr><th><label for="id_location">Location:</label></th><td>{{ form.location }}{{ form.location.errors }}</td></tr>
+    <tr><th><label for="id_groups_allowed">Groups allowed:</label></th><td>{{ form.groups_allowed }}{{ form.groups_allowed.errors }}</td></tr>
+    <tr><th><label for="id_groups_blacklisted">Groups blacklisted:</label></th><td>{{ form.groups_blacklisted }}{{ form.groups_blacklisted.errors }}</td></tr>
+    <tr><th><label for="id_presign">Presign:</label></th><td>{{ form.presign }}{{ form.presign.errors }}</td></tr>
+    <tr><th><label for="id_week_of">Week of:</label></th><td>{{ form.week_of }}{{ form.week_of.errors }}</td></tr>
+    <tr><th><label for="id_activity_time">Time of day:</label></th><td>{{ form.activity_time }}{{ form.activity_time.errors }}</td></tr>
+    <tr>
+        <td><b>Days of the week:</b></td>
+        <td>
+            <div class="weekday-checkboxes">
+                {# creates a day checkbox within the weekday checkboxes for each day #}
+                <label class="day-checkbox">{{ form.monday }} {{ form.monday.label }}</label>
+                <label class="day-checkbox">{{ form.tuesday }} {{ form.tuesday.label }}</label>
+                <label class="day-checkbox">{{ form.wednesday }} {{ form.wednesday.label }}</label>
+                <label class="day-checkbox">{{ form.thursday }} {{ form.thursday.label }}</label>
+                <label class="day-checkbox">{{ form.friday }} {{ form.friday.label }}</label>
+            </div>
+            {% if form.non_field_errors %}
+                <ul class="errorlist">{{ form.non_field_errors }}</ul>
+            {% endif %}
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td><td>
+        <input type="submit" style="width: 270px" value="Bulk Create Enrichment">
+        <a href="{% url 'enrichment' %}" class="button">Cancel</a>
+    </td></tr>
+    </table>
+    </form>
+</div>
+{% endblock %}
