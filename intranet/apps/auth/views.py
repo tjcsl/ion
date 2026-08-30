@@ -151,6 +151,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
         }
         schedule = schedule_context(request)
         data.update(schedule)
+
         if added_context is not None:
             data.update(added_context)
         return render(request, "auth/login.html", data)
@@ -172,12 +173,20 @@ class LoginView(View):
         if re.search(r"^(\d{4})?[a-zA-Z]+\d?$", username) is None:
             return index_view(request, added_context={"auth_message": "Your username format is incorrect."})
 
-        form = AuthenticateForm(data=request.POST)
+        form = AuthenticateForm(request, data=request.POST)
 
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()
         else:
             logger.warning("No cookie support detected! This could cause problems.")
+
+        if request.session.get("user_locked_out", "") == 1:
+            request.session.pop("user_locked_out")
+            return index_view(
+                request,
+                auth_form=form,
+                added_context={"auth_message": "You are locked out due to too many incorrect logins. Please try again later."},
+            )
 
         if form.is_valid():
             reset_user, _ = get_user_model().objects.get_or_create(username="RESET_PASSWORD", user_type="service", id=999999)
