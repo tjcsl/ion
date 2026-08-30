@@ -6,11 +6,14 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from ..auth.decorators import eighth_admin_required
 from ..bus.models import Route
+from ..notifications.tasks import email_send_task
 from ..users.models import Email
 from .forms import BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PreferredPictureForm, PrivacyOptionsForm
+from .models import UnverifiedEmail
 
 # from .forms import (BusRouteForm, DarkModeForm, EmailFormset, NotificationOptionsForm, PhoneFormset, PreferredPictureForm, PrivacyOptionsForm,
 #                    WebsiteFormset)
@@ -52,6 +55,20 @@ def get_personal_info(user):
     return personal_info, num_fields
 
 
+def send_verification_email(request, user, email):
+    email_link = UnverifiedEmail(user=user, email=email)
+    email_link.save()
+
+    verification_link = request.build_absolute_uri(reverse("verify_email", args=[email_link.verification_token]))
+    base_url = request.build_absolute_uri(reverse("index"))
+    data = {"verification_link": verification_link, "base_url": base_url}
+    headers = {"From": "Ion <no-reply@tjhsst.edu>"}
+
+    email_send_task.delay(
+        "preferences/email/verify_email.txt", "preferences/email/verify_email.html", data, "Email Verification", [email.address], headers
+    )
+
+
 def save_personal_info(request, user):
     # phone_formset = PhoneFormset(request.POST, instance=user, prefix="pf")
     phone_formset = None
@@ -68,7 +85,24 @@ def save_personal_info(request, user):
     # else:
     #     errors.append("Could not set phone numbers.")
     if email_formset.is_valid():
-        email_formset.save()
+        new_emails = email_formset.save(commit=False)
+
+        # Manually handle saving the formset so we can flag new emails as unverified.
+        for email in new_emails:
+            if email._state.adding:
+                email.verified = False
+            email.save()
+            send_verification_email(request, user, email)
+            messages.success(
+                request,
+                f"Successfully sent verification email to '{email.address}'. The link will expire in {settings.UNVERIFIED_EMAIL_EXPIRE_HOURS} hours.",
+            )
+
+        for deleted_email in email_formset.deleted_objects:
+            try:
+                deleted_email.delete()
+            except deleted_email.DoesNotExist:
+                pass
     else:
         for error in email_formset.errors:
             if isinstance(error.get("address"), list):
@@ -207,6 +241,13 @@ def save_notification_options(request, user):
                 if field in notification_options and notification_options[field] == fields[field]:
                     pass
                 else:
+                    # Users should only be able to set verified emails as their primary email.
+                    if field == "primary_email" and fields[field] is not None:
+                        email = Email.objects.filter(user=user, address=fields[field]).first()
+                        if not email.verified:
+                            messages.error(request, "You may only set verified emails as your primary email.")
+                            continue
+
                     setattr(user, field, fields[field])
                     user.save()
                     try:
@@ -291,6 +332,28 @@ def save_dark_mode_settings(request, user):
 
 
 @login_required
+def verify_email_view(request, email_uuid):
+    """ "Verify the UUID associated with the unverified email."""
+    user = request.user
+
+    unverified_email = UnverifiedEmail.objects.filter(verification_token=email_uuid, user=user).first()
+
+    # If the uuid isn't found or link is expired, return a error message.
+    if unverified_email is None or unverified_email.is_expired():
+        messages.error(request, "Could not verify email, the link was either expired or invalid.")
+        return redirect("preferences")
+
+    verified_mail = unverified_email.email
+    verified_mail.verified = True
+
+    verified_mail.save()
+    unverified_email.delete()
+
+    messages.success(request, f"Successfully verified '{verified_mail.address}'. You can add it as a primary email now.")
+    return redirect("preferences")
+
+
+@login_required
 def preferences_view(request):
     """View and process updates to the preferences page."""
     user = request.user
@@ -330,6 +393,13 @@ def preferences_view(request):
         # phone_formset = PhoneFormset(instance=user, prefix="pf")
         email_formset = EmailFormset(instance=user, prefix="ef")
         # website_formset = WebsiteFormset(instance=user, prefix="wf")
+
+        # Flag emails as verified or unverified for templating.
+        for form in email_formset:
+            if form.instance.pk:
+                form.verified = form.instance.verified
+            else:
+                form.verified = None
 
         if user.is_student:
             preferred_pic = get_preferred_pic(user)

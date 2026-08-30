@@ -161,7 +161,11 @@
                     {% for hidden in form.hidden_fields %}
                     {{ hidden }}
                     {% endfor %}
-                    <td>{% if form.instance.pk %}{{ form.DELETE }}{% endif %}{{ form.address }}</td>
+                    <td>
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                        {{ form.address }}
+                        {% if form.verified == False %}(unverified){% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
