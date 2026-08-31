@@ -1565,6 +1565,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.urls</span><span class="w"> </span><span class="kn">import</span> <span class="n">reverse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">method_decorator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">django.utils.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">url_has_allowed_host_and_scheme</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views.decorators.debug</span><span class="w"> </span><span class="kn">import</span> <span class="n">sensitive_post_parameters</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">django.views.generic.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">View</span>
 
@@ -1658,6 +1659,20 @@
         <span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span> <span class="o">=</span> <span class="n">cache_result</span>
 
     <span class="k">return</span> <span class="n">sports_events</span><span class="p">,</span> <span class="n">school_events</span></div>
+
+
+
+<div class="viewcode-block" id="get_safe_next_page">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.auth.views.html#intranet.apps.auth.views.get_safe_next_page">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_safe_next_page</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">fallback</span><span class="p">):</span>
+    <span class="n">candidate</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">candidate</span> <span class="ow">and</span> <span class="n">url_has_allowed_host_and_scheme</span><span class="p">(</span>
+        <span class="n">url</span><span class="o">=</span><span class="n">candidate</span><span class="p">,</span>
+        <span class="n">allowed_hosts</span><span class="o">=</span><span class="p">{</span><span class="n">request</span><span class="o">.</span><span class="n">get_host</span><span class="p">()},</span>
+        <span class="n">require_https</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">is_secure</span><span class="p">(),</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">candidate</span>
+    <span class="k">return</span> <span class="n">fallback</span></div>
 
 
 
@@ -1797,7 +1812,7 @@
             <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_student</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">seen_welcome</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_oauth_login</span><span class="p">:</span>  <span class="c1"># don't send oauth to welcome page</span>
                 <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s2">"welcome"</span><span class="p">)</span>
 
-            <span class="n">next_page</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">,</span> <span class="n">default_next_page</span><span class="p">))</span>
+            <span class="n">next_page</span> <span class="o">=</span> <span class="n">get_safe_next_page</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">default_next_page</span><span class="p">)</span>
 
             <span class="n">response</span> <span class="o">=</span> <span class="n">redirect</span><span class="p">(</span><span class="n">next_page</span><span class="p">)</span>
             <span class="n">response</span><span class="o">.</span><span class="n">set_cookie</span><span class="p">(</span>
@@ -1866,7 +1881,7 @@
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"POST"</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"password"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)):</span>
             <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">"reauthenticated_at"</span><span class="p">]</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">get_safe_next_page</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">context</span><span class="p">[</span><span class="s2">"login_failed"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">"auth/reauth.html"</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
@@ -1930,7 +1945,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=72a56c83"></script>
+</div><script src="../../../../_static/documentation_options.js?v=08adc3ab"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
