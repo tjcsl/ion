@@ -8,6 +8,9 @@
 
 {% block meta %}
   {{ block.super }}
+  {% if turnstile_enabled %}
+    <link rel="preconnect" href="https://challenges.cloudflare.com">
+  {% endif %}
   {% if should_not_index_page %}
     <meta name="robots" content="noindex">
   {% endif %}
@@ -36,6 +39,13 @@
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/vendor/spin.min.js' %}"></script>
     <script src="{% static 'js/features.js' %}"></script>
+    {% if turnstile_enabled %}
+        <script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            async
+            defer
+        ></script>
+    {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -105,7 +115,6 @@
                             </div>
                             {% comment %} <span class="help-text" style="font-size: 10px; color: grey;">{{ field.help_text }}</span> {% endcomment %}
                         {% endif %}
-                        <br>
                     {% endif %}
                     {% endfor %}
                     <div id="username-warning"></div>
