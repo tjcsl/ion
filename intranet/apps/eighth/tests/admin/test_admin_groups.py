@@ -367,8 +367,10 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         response = self.client.post(
             reverse("eighth_admin_distribute_unsigned"), data={"eighth_admin_distribute_group_wizard-current_step": "block", "block-block": block.id}
         )
+        test_users = [user1, user2, user3]
+        context_users = list(response.context["users"])
         self.assertEqual(200, response.status_code)
-        self.assertEqual([user1, user2, user3], list(response.context["users"]))
+        self.assertEqual(sorted(test_users, key=lambda x: x.username), sorted(context_users, key=lambda x: x.username))
 
         # Select the two activities
         response = self.client.post(
@@ -430,10 +432,11 @@ class EighthAdminGroupsTest(EighthAbstractTest):
 
         # Load the page
         response = self.client.get(reverse("eighth_admin_distribute_action"), data={"schact": [scheduled1.id, scheduled2.id], "group": group.id})
+        test_users = [user1, user2, user3]
         self.assertEqual(200, response.status_code)
         self.assertEqual(group, response.context["group"])
-        self.assertEqual([scheduled1, scheduled2], list(response.context["schacts"]))
-        self.assertEqual([user1, user2, user3], list(response.context["users"]))
+        self.assertEqual([scheduled1, scheduled2], [pair[0] for pair in response.context["schacts"]])
+        self.assertEqual(sorted(test_users, key=lambda x: x.last_name), list(response.context["users"]))
 
         # Perform a signup but manually specifying which user gets which activity
         response = self.client.post(
@@ -453,8 +456,10 @@ class EighthAdminGroupsTest(EighthAbstractTest):
         response = self.client.get(
             reverse("eighth_admin_distribute_action"), data={"schact": [scheduled1.id, scheduled2.id], "unsigned": True, "block": block.id}
         )
+        test_users = [user1, user2]
+        context_users = list(response.context["users"])
         self.assertEqual(200, response.status_code)
-        self.assertEqual([user1, user2], list(response.context["users"]))
+        self.assertEqual(sorted(test_users, key=lambda x: x.username), sorted(context_users, key=lambda x: x.username))
 
         # Actually performing the signup is redundant
 
