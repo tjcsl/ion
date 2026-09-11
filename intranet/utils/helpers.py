@@ -192,6 +192,14 @@ def get_ap_week_warning(request):
     return False
 
 
+def _get_thanksgiving(year: int) -> datetime.date:
+    """Returns the date of Thanksgiving (4th Thursday of November) for each year."""
+    nov1 = datetime.date(year, 11, 1)
+    days_until_thu = (3 - nov1.weekday()) % 7
+    first_thu = nov1 + datetime.timedelta(days=days_until_thu)
+    return first_thu + datetime.timedelta(weeks=3)
+
+
 def get_warning_html(warnings, dashboard=False, login=False):
     """
     Returns HTML for announcements.models.WarningAnnouncement objects.
@@ -224,6 +232,7 @@ GLOBAL_THEMES = {
     "piday": {"js": ["themes/piday/piday.js"], "css": "themes/piday/piday.css"},
     "halloween": {"js": ["themes/halloween/halloween.js"], "css": "themes/halloween/halloween.css"},
     "april_fools": {"js": ["themes/april_fools/april_fools.js"], "css": "themes/april_fools/april_fools.css"},
+    "thanksgiving": {"js": ["themes/thanksgiving/thanksgiving.js"], "css": "themes/thanksgiving/thanksgiving.css"},
     "new_years": {"js": ["js/vendor/fireworks.min.js", "themes/new_years/new_years.js"], "css": "themes/new_years/new_years.css"},
 }
 
@@ -254,6 +263,12 @@ def get_theme_names() -> list[str]:
     # Check for april_fools (Mar 30-31, Apr 1-7)
     if (today.month == 3 and (30 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 7)):
         active_themes.append("april_fools")
+
+    # Check for thanksgiving (1 week before to the end of Thanksgiving day)
+    thanksgiving = _get_thanksgiving(today.year)
+    thanksgiving_start = thanksgiving - datetime.timedelta(days=7)
+    if thanksgiving_start <= today <= thanksgiving:
+        active_themes.append("thanksgiving")
 
     return active_themes
 
