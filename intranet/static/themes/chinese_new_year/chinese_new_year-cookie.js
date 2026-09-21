@@ -1,9 +1,12 @@
+/* global Cookies */
+
 $(function() {
-    let enabled = Cookies.get("disable-chinese-new-year") == "1" ? "0" : "1";
+    const isEnabled = Cookies.get("disable-chinese-new-year") !== "1";
+    const label = isEnabled ? "Off" : "On";
 
     $(".header > .right > ul").prepend(
         "<a class='toggle-cny-theme btn-link' onclick='toggleChineseNewYearTheme()'><i class='fas fa-dragon'></i>&nbsp;Turn "
-        + (enabled == "1" ? "Off" : "On") + " Chinese New Year Theme</a>"
+        + label + " Chinese New Year Theme</a>"
     );
 
     if (window.innerWidth < 1000) {
@@ -13,7 +16,7 @@ $(function() {
                 <a class='toggle-cny-theme' onclick='toggleChineseNewYearTheme()'>
                     <i class='fas fa-dragon' style="font-size: 16pt; position: relative; top: 3px; left: 6px;"></i>
                     <span style="position: relative; bottom: 9px; left: 15px;">
-                        Turn` + (enabled == "1" ? " Off" : " On") + `
+                        Turn ` + label + `
                         <br>
                         CNY Theme
                     </span>
@@ -24,7 +27,7 @@ $(function() {
 });
 
 function toggleChineseNewYearTheme() {
-    let enabled = Cookies.get("disable-chinese-new-year") == "1" ? "0" : "1";
+    const enabled = Cookies.get("disable-chinese-new-year") === "1" ? "0" : "1";
     Cookies.set("disable-chinese-new-year", enabled, {expires: 7});
     location.reload();
 }
