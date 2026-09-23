@@ -26,6 +26,9 @@ class AnnouncementManager(Manager):
 
         """
 
+        if user.is_announcements_admin:
+            return Announcement.objects.all().distinct().prefetch_related("activity")
+
         if user.is_restricted:  # Restricted users are not authorized to view announcements
             return Announcement.objects.none()
 
