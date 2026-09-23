@@ -56,9 +56,8 @@ class Command(BaseCommand):
                 return
 
         if log:
-            self.stdout.write(str(next_blocks))
-            self.stdout.write(str(options))
-            self.stdout.write(str(users))
+            self.stdout.write(f"Upcoming 8th period blocks: {[str(block) for block in next_blocks]}")
+            self.stdout.write(f"Options selected: {options!s}")
 
         for user in users:
             user_signups = EighthSignup.objects.filter(user=user, scheduled_activity__block__in=next_blocks)
