@@ -1,10 +1,19 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 
 from ..users.models import Course, Section, User, UserProperties
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    @admin.action(description="Archive selected users")
+    def archive_users(self, request, queryset):
+        archived_count, already_archived_count = User.archive_users(queryset)
+
+        if archived_count:
+            self.message_user(request, f"Archived {archived_count} users.")
+        if already_archived_count:
+            self.message_user(request, f"{already_archived_count} users already archived.", level=messages.WARNING)
+
     # Render is_active using checkmarks or crosses
     def user_active(self, obj):
         return obj.is_active
@@ -44,6 +53,7 @@ class UserAdmin(admin.ModelAdmin):
         "nickname",
         "student_id",
     )
+    actions = ("archive_users",)
 
 
 admin.site.register(UserProperties)

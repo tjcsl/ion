@@ -11,6 +11,7 @@ users
    api
    courses_urls
    forms
+   management.commands.archive_users
    management.commands.import_groups
    management.commands.lock
    models
