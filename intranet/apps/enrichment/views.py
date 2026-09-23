@@ -36,11 +36,29 @@ def is_weekday(date):
     return date.isoweekday() in range(1, 6)
 
 
-def enrichment_context(request, date=None):
+def get_default_enrichment_date(request):
+    """Returns next week's date on weekends unless enrichments is still happening that weekend."""
     local_time = timezone.localtime()
 
+    if is_weekday(local_time):
+        return local_time
+
+    days_until_next_week = timedelta(days=8 - local_time.isoweekday())
+    next_week_date = local_time + days_until_next_week
+
+    weekend_enrichments = EnrichmentActivity.objects.visible_to_user(request.user).filter(
+        time__range=[local_time, next_week_date],
+    )
+
+    if weekend_enrichments.exists():
+        return local_time
+
+    return next_week_date
+
+
+def enrichment_context(request, date=None):
     if date is None:
-        date = local_time
+        date = get_default_enrichment_date(request)
 
     date_today = date.replace(hour=0, minute=0, second=0, microsecond=0)
 
