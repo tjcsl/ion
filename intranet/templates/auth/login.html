@@ -117,6 +117,9 @@
                         {% endif %}
                     {% endif %}
                     {% endfor %}
+                    {% if auth_form.turnstile.errors %}
+                        <div class="message" role="alert">Invalid CAPTCHA. Please try again.</div>
+                    {% endif %}
                     <div id="username-warning"></div>
                     <input type="submit" value="Login">
                     <div class='spinner-container'></div>

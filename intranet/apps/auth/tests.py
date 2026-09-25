@@ -1,6 +1,8 @@
 import datetime
 from io import StringIO
+from unittest.mock import Mock, patch
 
+import requests
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -112,6 +114,68 @@ class AuthenticateFormTest(IonTestCase):
             self.assertTrue(field.required)
             self.assertIsInstance(field.widget, TurnstileWidget)
 
+    def test_missing_turnstile_does_not_authenticate(self):
+        with self.settings(TURNSTILE_ENABLED=True), patch("django.contrib.auth.forms.authenticate") as authenticate:
+            for token in (None, ""):
+                with self.subTest(token=token):
+                    data = {"username": "awilliam", "password": "guess"}
+                    if token is not None:
+                        data["cf-turnstile-response"] = token
+                    form = AuthenticateForm(data=data)
+                    self.assertFalse(form.is_valid())
+                    self.assertTrue(form.has_error("turnstile"))
+                    self.assertFalse(form.non_field_errors())
+                    self.assertNotIn("Invalid password", str(form["password"]))
+            authenticate.assert_not_called()
+
+    def test_rejected_turnstile_does_not_authenticate(self):
+        with (
+            self.settings(TURNSTILE_ENABLED=True, TESTING=False, IN_CI=False, TURNSTILE_EXPECTED_HOSTNAME="ion.tjhsst.edu"),
+            patch("django.contrib.auth.forms.authenticate") as authenticate,
+            patch("intranet.apps.auth.widgets.requests.post") as verify,
+        ):
+            for response in (
+                {"success": False, "error-codes": ["invalid-input-response"]},
+                {"success": False, "error-codes": ["timeout-or-duplicate"]},
+                {"success": True, "hostname": "other.example"},
+            ):
+                with self.subTest(response=response):
+                    verify.return_value = Mock(ok=True)
+                    verify.return_value.json.return_value = response
+                    form = AuthenticateForm(data={"username": "awilliam", "password": "guess", "cf-turnstile-response": "token"})
+                    self.assertFalse(form.is_valid())
+                    self.assertTrue(form.has_error("turnstile"))
+                    self.assertFalse(form.non_field_errors())
+            verify.side_effect = requests.exceptions.Timeout
+            form = AuthenticateForm(data={"username": "awilliam", "password": "guess", "cf-turnstile-response": "token"})
+            self.assertFalse(form.is_valid())
+            self.assertTrue(form.has_error("turnstile"))
+            authenticate.assert_not_called()
+
+    def test_valid_or_disabled_turnstile_preserves_authentication_and_otp(self):
+        for enabled in (True, False):
+            with (
+                self.subTest(enabled=enabled),
+                self.settings(TURNSTILE_ENABLED=enabled, TESTING=False, IN_CI=False, TURNSTILE_EXPECTED_HOSTNAME="ion.tjhsst.edu"),
+                patch("django.contrib.auth.forms.authenticate") as authenticate,
+                patch("intranet.apps.auth.widgets.requests.post") as verify,
+            ):
+                user = Mock(is_active=True)
+                authenticate.return_value = user
+                verify.return_value = Mock(ok=True)
+                verify.return_value.json.return_value = {"success": True, "hostname": "ion.tjhsst.edu"}
+                data = {"username": "awilliam", "password": "password", "otp_token": "123456"}
+                if enabled:
+                    data["cf-turnstile-response"] = "token"
+                form = AuthenticateForm(data=data)
+                self.assertTrue(form.is_valid())
+                authenticate.assert_called_once_with(None, username="awilliam", password="password123456")
+                self.assertIs(form.get_user(), user)
+                if enabled:
+                    verify.assert_called_once()
+                else:
+                    verify.assert_not_called()
+
 
 class GrantAdminTest(IonTestCase):
     """Tests granting admin to an user."""
@@ -190,6 +254,7 @@ class LoginViewTest(IonTestCase):
         self.assertEqual(200, response.status_code)
         # Check that we're still on the login page
         self.assertContains(response, "login", status_code=200)
+        self.assertContains(response, '<div class="message" role="alert">Invalid CAPTCHA. Please try again.</div>', html=True)
 
     def test_login(self):
         """Just test PAM login, but not really because PAM isn't accessible from here..."""

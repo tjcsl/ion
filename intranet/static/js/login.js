@@ -117,8 +117,8 @@ $(function() {
     function doneTyping () {
         // stop warnings from showing if the username is empty
 
-        // already populated
-        if ($("#username-warning").text().indexOf("CAPTCHA") === -1) {
+        // Preserve CAPTCHA warnings while validating the username.
+        if ($("#username-warning").text().indexOf("CAPTCHA") !== -1) {
             return;
         }
 

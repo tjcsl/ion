@@ -70,8 +70,6 @@ class AuthenticateForm(AuthenticationForm):
                 errors = list(error)
                 if "This account is inactive." in errors:
                     message = "Intranet access restricted"
-                elif "Invalid turnstile response" in errors:
-                    message = "Invalid CAPTCHA. Reload the page and try again."
                 else:
                     message = "Invalid password"
                 self.fields["password"].widget.attrs.update({"class": "error", "placeholder": message})
@@ -79,5 +77,9 @@ class AuthenticateForm(AuthenticationForm):
         return form
 
     def clean(self):
+        # Django runs form cleaning even after field validation fails. Do not
+        # check credentials (or reveal their validity) without a valid CAPTCHA.
+        if self.has_error("turnstile"):
+            return self.cleaned_data
         self.cleaned_data["password"] = self.cleaned_data.get("password", "") + self.cleaned_data.get("otp_token", "")
         return super().clean()
