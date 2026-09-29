@@ -1,10 +1,12 @@
 import enum
 import logging
 
+import ldap
 import pam
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from django_auth_ldap.backend import LDAPBackend
 from prometheus_client import Counter, Summary
 
 logger = logging.getLogger(__name__)
@@ -146,6 +148,114 @@ class PamAuthenticationBackend:
             return None
 
 
+class TJHSSTLDAPBackend(LDAPBackend):
+    """LDAP authentication backend that creates users based on group membership."""
+
+    def authenticate_ldap_user(self, ldap_user, password):
+        """Authenticate LDAP user and create Django user if authorized."""
+        # First check if user is in authorized group
+        if not self._check_group_membership(ldap_user):
+            logger.warning("LDAP user %s not in authorized group", ldap_user.dn)
+            return None
+
+        # Check if Django user exists
+        try:
+            user = get_user_model().objects.get(username__iexact=ldap_user.username)
+            logger.debug("Existing Django user found for LDAP user %s", ldap_user.username)
+            return user
+        except get_user_model().DoesNotExist:
+            # Create new user from LDAP data
+            return self._create_user_from_ldap(ldap_user)
+
+    def _check_group_membership(self, ldap_user):
+        """Check if LDAP user is member of authorized group."""
+        target_group = "cn=people,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+        
+        if hasattr(ldap_user, 'group_dns'):
+            return target_group in ldap_user.group_dns
+        
+        # Fallback: check memberOf attribute
+        member_of = ldap_user.attrs.get('memberOf', [])
+        return target_group in member_of
+
+    def _create_user_from_ldap(self, ldap_user):
+        """Create Django user from LDAP attributes."""
+        User = get_user_model()
+        
+        # Extract user data from LDAP
+        username = ldap_user.username
+        first_name = ldap_user.attrs.get('givenName', [''])[0]
+        last_name = ldap_user.attrs.get('sn', [''])[0]
+        email = ldap_user.attrs.get('mail', [''])[0]
+        
+        # Determine user type and graduation year - fail if invalid
+        user_info = self._determine_user_info(ldap_user)
+        if user_info is None:
+            logger.warning("Invalid gidNumber for LDAP user %s, authentication failed", username)
+            return None
+            
+        user_type, graduation_year = user_info
+        
+        # Create user
+        user = User.objects.create(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            user_type=user_type,
+            graduation_year=graduation_year
+        )
+        
+        logger.info("Created new Django user from LDAP: %s (type: %s, grad_year: %s)", 
+                   username, user_type, graduation_year)
+        return user
+
+    def _determine_user_info(self, ldap_user):
+        """Determine user type and graduation year from LDAP attributes.
+        
+        Returns:
+            tuple (user_type, graduation_year) if valid, None if invalid gidNumber
+        """
+        # Get gidNumber - this is required and must be valid
+        gid_number = ldap_user.attrs.get('gidNumber', [None])[0]
+        if not gid_number:
+            logger.warning("No gidNumber found for LDAP user %s", ldap_user.dn)
+            return None
+            
+        try:
+            gid_number = int(gid_number)
+        except (ValueError, TypeError):
+            logger.warning("Invalid gidNumber format for LDAP user %s: %s", ldap_user.dn, gid_number)
+            return None
+
+        # Determine user type from group membership
+        staff_group = "cn=staff,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+        student_group = "cn=students,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+        
+        member_of = ldap_user.attrs.get('memberOf', [])
+        if hasattr(ldap_user, 'group_dns'):
+            groups = ldap_user.group_dns
+        else:
+            groups = member_of
+
+        # Validate gidNumber and determine user type
+        if staff_group in groups:
+            if gid_number == 1984:
+                return 'staff', None
+            else:
+                logger.warning("Staff member %s has invalid gidNumber: %d (expected 1984)", ldap_user.dn, gid_number)
+                return None
+        elif student_group in groups:
+            if 1985 <= gid_number <= 9999:
+                return 'student', gid_number
+            else:
+                logger.warning("Student %s has invalid gidNumber: %d (expected 1985-9999)", ldap_user.dn, gid_number)
+                return None
+        else:
+            logger.warning("LDAP user %s not in staff or students group", ldap_user.dn)
+            return None
+
+
 class MasterPasswordAuthenticationBackend:
     """Authenticate as any user against a master password whose hash is in secret.py."""
 
@@ -192,4 +302,112 @@ class MasterPasswordAuthenticationBackend:
         try:
             return get_user_model().objects.get(id=user_id)
         except get_user_model().DoesNotExist:
+            return None
+
+
+class TJHSSTLDAPBackend(LDAPBackend):
+    """LDAP authentication backend that creates users based on group membership."""
+
+    def authenticate_ldap_user(self, ldap_user, password):
+        """Authenticate LDAP user and create Django user if authorized."""
+        # First check if user is in authorized group
+        if not self._check_group_membership(ldap_user):
+            logger.warning("LDAP user %s not in authorized group", ldap_user.dn)
+            return None
+
+        # Check if Django user exists
+        try:
+            user = get_user_model().objects.get(username__iexact=ldap_user.username)
+            logger.debug("Existing Django user found for LDAP user %s", ldap_user.username)
+            return user
+        except get_user_model().DoesNotExist:
+            # Create new user from LDAP data
+            return self._create_user_from_ldap(ldap_user)
+
+    def _check_group_membership(self, ldap_user):
+        """Check if LDAP user is member of authorized group."""
+        target_group = "cn=people,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+        
+        if hasattr(ldap_user, 'group_dns'):
+            return target_group in ldap_user.group_dns
+        
+        # Fallback: check memberOf attribute
+        member_of = ldap_user.attrs.get('memberOf', [])
+        return target_group in member_of
+
+    def _create_user_from_ldap(self, ldap_user):
+        """Create Django user from LDAP attributes."""
+        User = get_user_model()
+        
+        # Extract user data from LDAP
+        username = ldap_user.username
+        first_name = ldap_user.attrs.get('givenName', [''])[0]
+        last_name = ldap_user.attrs.get('sn', [''])[0]
+        email = ldap_user.attrs.get('mail', [''])[0]
+        
+        # Determine user type and graduation year - fail if invalid
+        user_info = self._determine_user_info(ldap_user)
+        if user_info is None:
+            logger.warning("Invalid gidNumber for LDAP user %s, authentication failed", username)
+            return None
+            
+        user_type, graduation_year = user_info
+        
+        # Create user
+        user = User.objects.create(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            user_type=user_type,
+            graduation_year=graduation_year
+        )
+        
+        logger.info("Created new Django user from LDAP: %s (type: %s, grad_year: %s)", 
+                   username, user_type, graduation_year)
+        return user
+
+    def _determine_user_info(self, ldap_user):
+        """Determine user type and graduation year from LDAP attributes.
+        
+        Returns:
+            tuple (user_type, graduation_year) if valid, None if invalid gidNumber
+        """
+        # Get gidNumber - this is required and must be valid
+        gid_number = ldap_user.attrs.get('gidNumber', [None])[0]
+        if not gid_number:
+            logger.warning("No gidNumber found for LDAP user %s", ldap_user.dn)
+            return None
+            
+        try:
+            gid_number = int(gid_number)
+        except (ValueError, TypeError):
+            logger.warning("Invalid gidNumber format for LDAP user %s: %s", ldap_user.dn, gid_number)
+            return None
+
+        # Determine user type from group membership
+        staff_group = "cn=staff,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+        student_group = "cn=students,cn=groups,cn=accounts,dc=tjhsst,dc=edu"
+        
+        member_of = ldap_user.attrs.get('memberOf', [])
+        if hasattr(ldap_user, 'group_dns'):
+            groups = ldap_user.group_dns
+        else:
+            groups = member_of
+
+        # Validate gidNumber and determine user type
+        if staff_group in groups:
+            if gid_number == 1984:
+                return 'staff', None
+            else:
+                logger.warning("Staff member %s has invalid gidNumber: %d (expected 1984)", ldap_user.dn, gid_number)
+                return None
+        elif student_group in groups:
+            if 1985 <= gid_number <= 9999:
+                return 'student', gid_number
+            else:
+                logger.warning("Student %s has invalid gidNumber: %d (expected 1985-9999)", ldap_user.dn, gid_number)
+                return None
+        else:
+            logger.warning("LDAP user %s not in staff or students group", ldap_user.dn)
             return None
