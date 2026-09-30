@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 "description": "Autograder for CS classes",
                 "url": "https://tin.tjhsst.edu/",
                 "oauth_application": CSLApplication.objects.get_or_create(name="Turn-in", sanctioned=True)[0],
-                "auth_url": "https://tin.tjhsst.edu/login/ion/",
+                "auth_url": "https://tin.tjhsst.edu/login",
                 "image_url": "/static/img/cslapps/tin.svg",
                 "invert_image_color_for_dark_mode": True,
             },
