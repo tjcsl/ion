@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = (
         "Given an alphabetized CSV of students from the same graduating class, add them to Ion. Required columns "
         "in the CSV include 'Student ID', 'First Name', 'Last Name', and 'Middle Name'. Optional fields include "
-        "their 'Nick Name', 'Counselor' (last name), and 'Gender'."
+        "their 'Nick Name', 'Counselor' (last name), 'Gender', and 'FCPS Email'."
     )
 
     def add_arguments(self, parser):
@@ -146,6 +146,7 @@ class Command(BaseCommand):
                             new_user_obj = get_user_model().objects.create(
                                 username=new_user["TJHSST_username"],
                                 student_id=new_user["Student ID"].strip(),
+                                fcps_email=(new_user.get("FCPS Email") or "").strip(),
                                 last_name=new_user["Last Name"].strip(),
                                 first_name=new_user["First Name"].strip(),
                                 middle_name=new_user["Middle Name"].strip(),

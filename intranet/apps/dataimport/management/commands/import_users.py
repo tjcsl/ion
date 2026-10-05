@@ -7,7 +7,7 @@ from django.db.models import Q
 
 
 class Command(BaseCommand):
-    help = "Import User Objects"
+    help = "Import User Objects from JSON. Student records may include an optional 'FCPS Email' field."
 
     def add_arguments(self, parser):
         # Positional arguments
@@ -56,6 +56,7 @@ class Command(BaseCommand):
             if not get_user_model().objects.filter(Q(username=username) | Q(student_id=sid)).exists():
                 get_user_model().objects.create(
                     student_id=sid,
+                    fcps_email=(student.get("FCPS Email") or "").strip(),
                     last_name=last_name,
                     first_name=first_name,
                     username=username,
