@@ -1564,7 +1564,7 @@
     <span class="n">help</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">"Given an alphabetized CSV of students from the same graduating class, add them to Ion. Required columns "</span>
         <span class="s2">"in the CSV include 'Student ID', 'First Name', 'Last Name', and 'Middle Name'. Optional fields include "</span>
-        <span class="s2">"their 'Nick Name', 'Counselor' (last name), and 'Gender'."</span>
+        <span class="s2">"their 'Nick Name', 'Counselor' (last name), 'Gender', and 'FCPS Email'."</span>
     <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
@@ -1702,6 +1702,7 @@
                             <span class="n">new_user_obj</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                                 <span class="n">username</span><span class="o">=</span><span class="n">new_user</span><span class="p">[</span><span class="s2">"TJHSST_username"</span><span class="p">],</span>
                                 <span class="n">student_id</span><span class="o">=</span><span class="n">new_user</span><span class="p">[</span><span class="s2">"Student ID"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                                <span class="n">fcps_email</span><span class="o">=</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"FCPS Email"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
                                 <span class="n">last_name</span><span class="o">=</span><span class="n">new_user</span><span class="p">[</span><span class="s2">"Last Name"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
                                 <span class="n">first_name</span><span class="o">=</span><span class="n">new_user</span><span class="p">[</span><span class="s2">"First Name"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
                                 <span class="n">middle_name</span><span class="o">=</span><span class="n">new_user</span><span class="p">[</span><span class="s2">"Middle Name"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
@@ -1765,7 +1766,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../../_static/documentation_options.js?v=d892ec22"></script>
+</div><script src="../../../../../../_static/documentation_options.js?v=de9d1967"></script>
     <script src="../../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../../_static/scripts/furo.js?v=46bd48cc"></script>
