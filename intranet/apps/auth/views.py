@@ -160,6 +160,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "school_events": school_events,
             "should_not_index_page": has_next_page,
             "show_tjstar": settings.TJSTAR_BANNER_START_DATE <= timezone.now().date() <= settings.TJSTAR_DATE,
+            "turnstile_enabled": settings.TURNSTILE_ENABLED,
         }
         schedule = schedule_context(request)
         data.update(schedule)
@@ -184,7 +185,7 @@ class LoginView(View):
         if re.search(r"^(\d{4})?[a-zA-Z]+\d?$", username) is None:
             return index_view(request, added_context={"auth_message": "Your username format is incorrect."})
 
-        form = AuthenticateForm(data=request.POST)
+        form = AuthenticateForm(request, data=request.POST)
 
         if request.session.test_cookie_worked():
             request.session.delete_test_cookie()

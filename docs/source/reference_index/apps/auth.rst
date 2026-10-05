@@ -18,3 +18,4 @@ auth
    tests
    urls
    views
+   widgets
