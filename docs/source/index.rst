@@ -23,7 +23,7 @@ Setup
 -----
 
 - :doc:`Setting up the server<setup/server>`
-- :doc:`Setting up a Vagrant development environment<setup/vagrant>`
+- :doc:`Setting up a development environment with Docker or Vagrant<setup/setup>`
 
 Architecture
 ------------
@@ -57,4 +57,3 @@ Indices
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
