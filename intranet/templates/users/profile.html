@@ -179,6 +179,14 @@
                                 </a></td>
                             </tr>
                         {% endif %}
+                        {% if profile_user.is_student %}
+                        {% if request.user == profile_user or request.user.is_teacher or request.user.is_eighth_admin %}
+                            <tr>
+                                <th>FCPS Email</th>
+                                <td>{% if profile_user.fcps_email %}<a href="mailto:{{ profile_user.fcps_email }}">{{ profile_user.fcps_email }}</a>{% endif %}</td>
+                            </tr>
+                        {% endif %}
+                        {% endif %}
                         {% comment "Removing for privacy reasons" %}
                         {% if profile_user.birthday %}
                         <tr>
