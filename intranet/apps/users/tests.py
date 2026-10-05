@@ -700,6 +700,44 @@ class ProfileTest(IonTestCase):
         self.assertEqual(302, response.status_code)
         self.assertIn("/login", response["Location"])
 
+    def test_profile_view_fcps_email(self) -> None:
+        """Only teacher viewers see a student's derived FCPS email."""
+        student = get_user_model().objects.create(username="fcpsstudent", user_type="student", student_id="0123456")
+        url = reverse("user_profile", kwargs={"user_id": student.id})
+        address = "0123456@fcpsschools.net"
+        self.assertFalse(student.emails.exists())
+
+        # No profile setup is needed, and Ion's teacher role includes counselors.
+        viewer = self.login()
+        for user_type in ("teacher", "counselor"):
+            with self.subTest(user_type=user_type):
+                viewer.user_type = user_type
+                viewer.save(update_fields=["user_type"])
+                response = self.client.get(url)
+                self.assertContains(response, "<th>FCPS Email</th>")
+                self.assertContains(response, f'<a href="mailto:{address}">{address}</a>', html=True)
+
+        # Students cannot see the address, even on their own profile or as admins.
+        self.login(username=student.username)
+        response = self.client.get(url)
+        self.assertNotContains(response, "FCPS Email")
+        self.assertNotContains(response, address)
+        self.make_admin(username=student.username)
+        response = self.client.get(url)
+        self.assertNotContains(response, "FCPS Email")
+        self.assertNotContains(response, address)
+
+        # Teacher viewers see no FCPS row for missing IDs or non-student profiles.
+        self.login(username=viewer.username)
+        for user_type, student_id in (("student", None), ("student", ""), ("teacher", "0123456")):
+            with self.subTest(user_type=user_type, student_id=student_id):
+                student.user_type = user_type
+                student.student_id = student_id
+                student.save(update_fields=["user_type", "student_id"])
+                response = self.client.get(url)
+                self.assertNotContains(response, "FCPS Email")
+                self.assertNotContains(response, address)
+
     def test_profile_view_administrator_row(self) -> None:
         """The Administrator row always shows for staff viewers, blank when the user has none."""
         admin_user = self.make_admin()
