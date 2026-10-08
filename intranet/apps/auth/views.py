@@ -131,6 +131,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             login_warning = settings.LOGIN_WARNING
         except AttributeError:
             login_warning = None
+        login_warning_is_html = False
 
         if fcps_emerg and not login_warning:
             login_warning = fcps_emerg
@@ -139,6 +140,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
 
         if ap_week and not login_warning:
             login_warning = ap_week
+            login_warning_is_html = True
 
         warnings = WarningAnnouncement.objects.filter(active=True)
         html = get_warning_html(warnings, login=True)
@@ -154,6 +156,7 @@ def index_view(request, auth_form=None, force_login=False, added_context=None, h
             "bg_pattern": get_bg_pattern(request),
             "theme": get_theme(),
             "login_warning": login_warning,
+            "login_warning_is_html": login_warning_is_html,
             "senior_graduation": get_senior_graduation_date().strftime("%B %d %Y %H:%M:%S"),
             "senior_graduation_year": get_senior_graduation_year(),
             "sports_events": sports_events,

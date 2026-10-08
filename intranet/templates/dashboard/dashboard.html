@@ -36,7 +36,6 @@
     <script src="{% static 'js/dashboard/common.js' %}"></script>
     <script src="{% static 'js/dashboard/announcements.js' %}"></script>
     <script src="{% static 'js/dashboard/events.js' %}"></script>
-    <script src="{% static 'js/events.js' %}"></script>
     {% if is_senior %}
         <script src="{% static 'js/dashboard/seniors.js' %}"></script>
     {% endif %}
@@ -109,7 +108,7 @@
 
 <div class="announcements primary-content{% if not show_widgets %} no-widgets{% endif %}">
     {% if dash_warning %}
-        <div class="warning-announcement">{{ dash_warning|safe|linebreaks }}</div>
+        <div class="warning-announcement">{% if dash_warning_is_html %}{{ dash_warning|safe }}{% else %}{{ dash_warning|safe|linebreaks }}{% endif %}</div>
     {% endif %}
 
     <div class="announcements-header">
