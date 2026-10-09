@@ -10,9 +10,11 @@ class CalculatorRegistration(models.Model):
         ("ti84pse", "TI-84+ Silver Edition"),
         ("ti84pcse", "TI-84+ C Silver Edition"),
         ("ti84pce", "TI-84+ CE"),
+        ("ti84evo", "TI-84 Evo"),
         ("ti89", "TI-89"),
         ("nspirecx", "TI-Nspire CX"),
         ("nspirecas", "TI-Nspire CAS"),
+        ("numworks", "NumWorks"),
         ("otherti", "Other TI"),
         ("other", "Other"),
     )
