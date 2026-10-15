@@ -421,26 +421,6 @@ It is used to connect to the PostgreSQL database from the Django application.
 
 LICENSE: GNU Lesser General Public License v 3.0+
 
-pycryptodome
---------------
-https://github.com/Legrandin/pycryptodome
-
-This package provides low-level cryptographic primitives.
-
-It is used to encrypt the password for Ion Files. The key is stored as a client-side cookie and the IV/ciphertext is stored a server-side session variable.
-
-LICENSE: 2-clause BSD
-
-pysftp
--------
-https://bitbucket.org/dundeemt/pysftp/src/default/
-
-This package provides a simple interface to the Secure File Transport Protocol (SFTP).
-
-It is used by Ion Files to access remote servers/files.
-
-LICENSE: 3-clause BSD
-
 python-dateutil
 ---------------
 https://github.com/dateutil/dateutil
