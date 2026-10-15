@@ -225,6 +225,24 @@ GLOBAL_THEMES = {
     "halloween": {"js": ["themes/halloween/halloween.js"], "css": "themes/halloween/halloween.css"},
     "april_fools": {"js": ["themes/april_fools/april_fools.js"], "css": "themes/april_fools/april_fools.css"},
     "new_years": {"js": ["js/vendor/fireworks.min.js", "themes/new_years/new_years.js"], "css": "themes/new_years/new_years.css"},
+    "chinese_new_year": {"js": ["themes/chinese_new_year/chinese_new_year.js"], "css": "themes/chinese_new_year/chinese_new_year.css"},
+}
+
+# Chinese New Year's date shifts every year w/the lunar calendar, so it can't be computed and
+# has to be looked up, add the next year's date here when it's announced.
+CHINESE_NEW_YEAR_DATES = {
+    2024: datetime.date(2024, 2, 10),
+    2025: datetime.date(2025, 1, 29),
+    2026: datetime.date(2026, 2, 17),
+    2027: datetime.date(2027, 2, 6),
+    2028: datetime.date(2028, 1, 26),
+    2029: datetime.date(2029, 2, 13),
+    2030: datetime.date(2030, 2, 3),
+    2031: datetime.date(2031, 1, 23),
+    2032: datetime.date(2032, 2, 11),
+    2033: datetime.date(2033, 1, 31),
+    2034: datetime.date(2034, 2, 19),
+    2035: datetime.date(2035, 2, 8),
 }
 
 
@@ -254,6 +272,11 @@ def get_theme_names() -> list[str]:
     # Check for april_fools (Mar 30-31, Apr 1-7)
     if (today.month == 3 and (30 <= today.day <= 31)) or (today.month == 4 and (1 <= today.day <= 7)):
         active_themes.append("april_fools")
+
+    # Check for chinese_new_year (the week leading up to and including, Chinese New Year's Day)
+    chinese_new_year_date = CHINESE_NEW_YEAR_DATES.get(today.year)
+    if chinese_new_year_date is not None and chinese_new_year_date - datetime.timedelta(days=6) <= today <= chinese_new_year_date:
+        active_themes.append("chinese_new_year")
 
     return active_themes
 
