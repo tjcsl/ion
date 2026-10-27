@@ -1,5 +1,4 @@
 $(function() {
-    $("head").first().append("<script nomodule src='/static/js/vendor/js.cookie.min.js'><\/script>");
     let collapse_tjstar_ribbon = Cookies.get("collapse_tjstar_ribbon") == "1" ? true : false;
     if(!collapse_tjstar_ribbon) {
         $(".tjstar-ribbon-content").fadeIn("slow");

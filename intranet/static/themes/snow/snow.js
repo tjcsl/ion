@@ -16,7 +16,6 @@ function decodeBase64(str) {
 }
 
 $(function () {
-    $("head").first().append("<script nomodule src='/static/js/vendor/js.cookie.min.js'></script>");
     let enabled = Cookies.get("disable-theme") == "1" ? false : true;
 
     if (enabled) {
