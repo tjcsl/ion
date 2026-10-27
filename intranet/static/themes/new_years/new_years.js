@@ -1,5 +1,5 @@
 $(function() {
-    /*global Fireworks*/
+    /*global Fireworks, Cookies*/
 
     function showFireworks() {
         const overlay = document.createElement("div");
@@ -62,10 +62,10 @@ $(function() {
     }
 
     function markAsSeen() {
-        $.cookie("new-years-fireworks-seen", "1", { expires: 31, path: "/" });
+        Cookies.set("new-years-fireworks-seen", "1", { expires: 31, path: "/" });
     }
 
-    const hasSeenFireworks = $.cookie("new-years-fireworks-seen") === "1";
+    const hasSeenFireworks = Cookies.get("new-years-fireworks-seen") === "1";
     if (!hasSeenFireworks) {
         showFireworks();
         markAsSeen();
