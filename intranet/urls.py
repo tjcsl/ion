@@ -23,7 +23,6 @@ urlpatterns = [
     path("eighth", include("intranet.apps.eighth.urls")),
     path("enrichment", include("intranet.apps.enrichment.urls")),
     path("events", include("intranet.apps.events.urls")),
-    path("files", include("intranet.apps.files.urls")),
     path("groups", include("intranet.apps.groups.urls")),
     path("polls", include("intranet.apps.polls.urls")),
     path("search", include("intranet.apps.search.urls")),

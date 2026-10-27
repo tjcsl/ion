@@ -50,7 +50,6 @@ def nav_categorizer(request):
         (r"^/schedule", "schedule"),
         (r"^/events", "events"),
         (r"^/enrichment", "enrichment"),
-        (r"^/files", "files"),
         (r"^/printing", "printing"),
         (r"^/groups", "groups"),
         (r"^/polls", "polls"),
@@ -126,6 +125,16 @@ def global_custom_theme(request) -> dict[str, dict[str, dict[str, str]] | list[s
 
         # Keep the cookie button and add its standalone styling
         theme.setdefault("css", []).append("themes/halloween/halloween-button.css")
+
+    # Handle chinese_new_year cookie to disable that specific theme
+    if "chinese_new_year" in theme_names and request.COOKIES.get("disable-chinese-new-year", None) == "1":
+        # Remove color from the theme files but add the re-enable button
+        if "js" in theme and "themes/chinese_new_year/chinese_new_year.js" in theme["js"]:
+            theme["js"].remove("themes/chinese_new_year/chinese_new_year.js")
+        if "css" in theme and "themes/chinese_new_year/chinese_new_year.css" in theme["css"]:
+            theme["css"].remove("themes/chinese_new_year/chinese_new_year.css")
+
+        theme.setdefault("js", []).append("themes/chinese_new_year/chinese_new_year-cookie.js")
 
     return {"theme": theme, "theme_names": theme_names}
 
