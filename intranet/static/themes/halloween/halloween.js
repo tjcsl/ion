@@ -19,5 +19,5 @@ $(function() {
     }
     $("body").css("background-image", "url(/static/themes/halloween/bg/" + random_bg + ".jpg)");
 
-    $("head").first().append("<script nomodule src='/static/themes/halloween/halloween-cookie.js'></script>");
+    $("head").first().append("<script src='/static/themes/halloween/halloween-cookie.js'></script>");
 });
