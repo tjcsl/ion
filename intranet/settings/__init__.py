@@ -459,7 +459,6 @@ for name in LIST_OF_INDEPENDENT_CSS:
 AUTHENTICATION_BACKENDS = [
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.PamAuthenticationBackend",
-    "oauth2_provider.backends.OAuth2Backend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
@@ -530,7 +529,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
-    "oauth2_provider.middleware.OAuth2TokenMiddleware",  # Django Oauth toolkit
     "intranet.middleware.monitoring.PrometheusAccessMiddleware",  # Restricts access to Django Prometheus metrics to ALLOWED_METRIC_IPS and superusers
     "maintenance_mode.middleware.MaintenanceModeMiddleware",  # Maintenance mode
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
@@ -653,6 +651,7 @@ FCPS_STUDENT_ID_LENGTH = 7
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "intranet.apps.auth.rest_permissions.DenyRestrictedPermission",  # require authentication and deny restricted users
+        "intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope",  # require read/write scopes for OAuth tokens
     ),
     "USE_ABSOLUTE_URLS": True,
     # Return native `Date` and `Time` objects in `serializer.data`

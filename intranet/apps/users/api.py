@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from intranet.apps.search.views import get_search_results
 
-from ..auth.rest_permissions import ApiAndOauthPermission, DenyRestrictedPermission
+from ..auth.rest_permissions import ApiAndOauthPermission, DenyRestrictedPermission, OAuthTokenHasReadWriteScope
 from .models import Grade
 from .renderers import JPEGRenderer
 from .serializers import CounselorTeacherSerializer, StudentSerializer, UserSerializer
@@ -24,7 +24,7 @@ class ProfileDetail(generics.RetrieveAPIView):
     """
 
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, OAuthTokenHasReadWriteScope)
 
     def retrieve(self, request, *args, **kwargs):
         if "pk" in kwargs:
@@ -69,7 +69,7 @@ class ProfilePictureDetail(generics.RetrieveAPIView):
     """
 
     serializer_class = UserSerializer
-    permission_classes = (DenyRestrictedPermission,)
+    permission_classes = (DenyRestrictedPermission, OAuthTokenHasReadWriteScope)
     renderer_classes = (JPEGRenderer,)
 
     def retrieve(self, request, *args, **kwargs):
@@ -106,7 +106,7 @@ class Search(generics.RetrieveAPIView):
 
     """
 
-    permission_classes = (ApiAndOauthPermission,)
+    permission_classes = (ApiAndOauthPermission, OAuthTokenHasReadWriteScope)
     queryset = get_user_model().objects.all()
 
     def retrieve(self, request, *args, **kwargs):
