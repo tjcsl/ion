@@ -32,8 +32,8 @@ class ApiTest(IonTestCase):
             data={
                 "title": "Test Poll",
                 "description": "This is a test poll!",
-                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
-                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).isoformat(),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).isoformat(),
                 "visible": True,
                 "question_data": question_data,
             },
@@ -224,8 +224,8 @@ class ApiTest(IonTestCase):
             data={
                 "title": "Single Select Poll",
                 "description": "This is a test poll!",
-                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
-                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).isoformat(),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).isoformat(),
                 "visible": True,
                 "question_data": question_data,
             },
@@ -303,8 +303,8 @@ class ApiTest(IonTestCase):
             data={
                 "title": "Multi Select Poll",
                 "description": "This is a test poll!",
-                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
-                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).isoformat(),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).isoformat(),
                 "visible": True,
                 "question_data": question_data,
             },
@@ -407,8 +407,8 @@ class ApiTest(IonTestCase):
             data={
                 "title": "Free Response Poll",
                 "description": "This is a test poll!",
-                "start_time": (timezone.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
-                "end_time": (timezone.now() + datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"),
+                "start_time": (timezone.now() - datetime.timedelta(days=1)).isoformat(),
+                "end_time": (timezone.now() + datetime.timedelta(days=1)).isoformat(),
                 "visible": True,
                 "question_data": question_data,
             },
