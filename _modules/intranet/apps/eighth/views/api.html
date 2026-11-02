@@ -387,6 +387,7 @@
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../../reference/intranet.apps.auth.rest_permissions.html">rest_permissions</a><input aria-label="Toggle navigation of rest_permissions" class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../reference/intranet.apps.auth.rest_permissions.ApiAndOauthPermission.html">ApiAndOauthPermission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../reference/intranet.apps.auth.rest_permissions.DenyRestrictedPermission.html">DenyRestrictedPermission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../reference/intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope.html">OAuthTokenHasReadWriteScope</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../reference/intranet.apps.auth.signals.html">signals</a></li>
@@ -1557,6 +1558,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.pagination</span><span class="w"> </span><span class="kn">import</span> <span class="n">PageNumberPagination</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.response</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">...auth.rest_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="n">OAuthTokenHasReadWriteScope</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..models</span><span class="w"> </span><span class="kn">import</span> <span class="n">EighthActivity</span><span class="p">,</span> <span class="n">EighthBlock</span><span class="p">,</span> <span class="n">EighthScheduledActivity</span><span class="p">,</span> <span class="n">EighthSignup</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..serializers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">EighthActivityDetailSerializer</span><span class="p">,</span>
@@ -1587,7 +1589,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthActivityList</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListAPIView</span><span class="p">):</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span></div>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span></div>
 
 
 
@@ -1598,7 +1600,7 @@
 
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityDetailSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span></div>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span></div>
 
 
 
@@ -1618,7 +1620,7 @@
 
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthBlockListSerializer</span>
     <span class="n">pagination_class</span> <span class="o">=</span> <span class="n">BlockPagination</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_text</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1650,7 +1652,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthBlockDetail</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""API endpoint that shows details for an eighth block."""</span>
 
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1668,7 +1670,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthUserSignupListAdd</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthAddSignupSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">"id"</span><span class="p">)</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_text</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1750,7 +1752,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthUserFavoritesListToggle</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthToggleFavoriteSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
@@ -1789,7 +1791,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthUserFavoritesAdd</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">CreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityDetailSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
@@ -1818,7 +1820,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthUserFavoritesRemove</span><span class="p">(</span><span class="n">generics</span><span class="o">.</span><span class="n">ListCreateAPIView</span><span class="p">):</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthActivityListSerializer</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthActivity</span><span class="o">.</span><span class="n">undeleted_objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">id</span>
@@ -1853,7 +1855,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">EighthScheduledActivitySignupList</span><span class="p">(</span><span class="n">views</span><span class="o">.</span><span class="n">APIView</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""API endpoint that lists all signups for a certain scheduled activity."""</span>
 
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">scheduled_activity_id</span><span class="p">):</span>
         <span class="n">scheduled_activity</span> <span class="o">=</span> <span class="n">EighthScheduledActivity</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">scheduled_activity_id</span><span class="p">)</span>
@@ -1870,7 +1872,7 @@
 
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">EighthSignup</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">EighthSignupSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,)</span></div>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticatedOrClientCredentials</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1903,7 +1905,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../../_static/documentation_options.js?v=021823f2"></script>
+</div><script src="../../../../../_static/documentation_options.js?v=7579ca84"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/scripts/furo.js?v=46bd48cc"></script>

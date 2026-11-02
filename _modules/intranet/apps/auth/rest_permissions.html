@@ -387,6 +387,7 @@
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.html">rest_permissions</a><input aria-label="Toggle navigation of rest_permissions" class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.ApiAndOauthPermission.html">ApiAndOauthPermission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.DenyRestrictedPermission.html">DenyRestrictedPermission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope.html">OAuthTokenHasReadWriteScope</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.auth.signals.html">signals</a></li>
@@ -1546,7 +1547,8 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for intranet.apps.auth.rest_permissions</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">permissions</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">oauth2_provider.contrib.rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenHasReadWriteScope</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">permissions</span>
 
 
 <div class="viewcode-block" id="DenyRestrictedPermission">
@@ -1562,6 +1564,23 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ApiAndOauthPermission</span><span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_restricted</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">oauth_and_api_access</span></div>
+
+
+
+<div class="viewcode-block" id="OAuthTokenHasReadWriteScope">
+<a class="viewcode-back" href="../../../../reference/intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope.html#intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OAuthTokenHasReadWriteScope</span><span class="p">(</span><span class="n">TokenHasReadWriteScope</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Requires the "read" scope for safe methods and the "write" scope for all other methods</span>
+<span class="sd">    when the request is authenticated with an OAuth token. Requests that are not authenticated</span>
+<span class="sd">    with an OAuth token (e.g. session authentication) are not affected.</span>
+
+<span class="sd">    This must be included in the permission_classes of every API view that is not public.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">auth</span><span class="p">,</span> <span class="s2">"scope"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">has_permission</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">view</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -1594,7 +1613,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=021823f2"></script>
+</div><script src="../../../../_static/documentation_options.js?v=7579ca84"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

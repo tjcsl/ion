@@ -387,6 +387,7 @@
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.html">rest_permissions</a><input aria-label="Toggle navigation of rest_permissions" class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.ApiAndOauthPermission.html">ApiAndOauthPermission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.DenyRestrictedPermission.html">DenyRestrictedPermission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../reference/intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope.html">OAuthTokenHasReadWriteScope</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../reference/intranet.apps.auth.signals.html">signals</a></li>
@@ -1556,7 +1557,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">intranet.apps.search.views</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_search_results</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..auth.rest_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiAndOauthPermission</span><span class="p">,</span> <span class="n">DenyRestrictedPermission</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..auth.rest_permissions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiAndOauthPermission</span><span class="p">,</span> <span class="n">DenyRestrictedPermission</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grade</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.renderers</span><span class="w"> </span><span class="kn">import</span> <span class="n">JPEGRenderer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.serializers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CounselorTeacherSerializer</span><span class="p">,</span> <span class="n">StudentSerializer</span><span class="p">,</span> <span class="n">UserSerializer</span>
@@ -1574,7 +1575,7 @@
 <span class="sd">    """</span>
 
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">"pk"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -1622,7 +1623,7 @@
 <span class="sd">    """</span>
 
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">DenyRestrictedPermission</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">DenyRestrictedPermission</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
     <span class="n">renderer_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">JPEGRenderer</span><span class="p">,)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1662,7 +1663,7 @@
 
 <span class="sd">    """</span>
 
-    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">ApiAndOauthPermission</span><span class="p">,)</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">ApiAndOauthPermission</span><span class="p">,</span> <span class="n">OAuthTokenHasReadWriteScope</span><span class="p">)</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">get_user_model</span><span class="p">()</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -1716,7 +1717,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=021823f2"></script>
+</div><script src="../../../../_static/documentation_options.js?v=7579ca84"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
