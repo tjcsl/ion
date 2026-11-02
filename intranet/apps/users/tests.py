@@ -1,8 +1,16 @@
 import datetime
 import os
+from io import StringIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from django.conf import settings
+from django.contrib import admin, messages
 from django.contrib.auth import get_user_model
+from django.core.management import CommandError, call_command
+from django.test import RequestFactory
 from django.urls import reverse
 from django.utils import timezone
 from oauth2_provider.models import AccessToken, get_application_model
@@ -11,10 +19,108 @@ from oauth2_provider.settings import oauth2_settings
 from ...test.ion_test import IonTestCase
 from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..nomination.models import Nomination, NominationPosition
+from ..oauth.validators import IonOIDCValidator
 from ..polls.models import Answer, Choice, Poll, Question
 from .models import PERMISSIONS_NAMES, Address, Course, Email, Section
 
 Application = get_application_model()
+
+
+class ArchiveUsersTest(IonTestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create(username="archive_me", admin_comments="Keep these comments")
+        self.locked = get_user_model().objects.create(username="already_locked", user_locked=True, admin_comments="Already archived")
+        self.other = get_user_model().objects.create(username="leave_me")
+        self.users = get_user_model().objects.filter(pk__in=[self.user.pk, self.locked.pk])
+
+    def run_command(self, contents, *args):
+        out = StringIO()
+        with TemporaryDirectory() as directory:
+            filename = Path(directory) / "users.csv"
+            filename.write_text(contents, encoding="utf-8")
+            call_command("archive_users", "--filename", str(filename), *args, stdout=out)
+        return out.getvalue()
+
+    def test_archive_queryset_preserves_users_and_is_repeatable(self):
+        # Lock only the selection, keep its data, and count repeat runs without changing it again.
+        self.assertEqual(self.users.archive_users(), (1, 1))
+        self.assertEqual(self.users.archive_users(), (0, 2))
+        self.user.refresh_from_db()
+        self.other.refresh_from_db()
+        self.assertFalse(self.user.is_active)
+        self.assertEqual(self.user.admin_comments, "Keep these comments")
+        self.assertFalse(self.other.user_locked)
+
+    def test_archive_with_comments(self):
+        # Add a year header once for newly archived users, preserving existing archived comments.
+        with patch("intranet.apps.users.models.timezone.localdate", return_value=datetime.date(2026, 6, 20)):
+            self.assertEqual(self.users.archive_users(update_admin_comments=True), (1, 1))
+            self.assertEqual(self.users.archive_users(update_admin_comments=True), (0, 2))
+        self.user.refresh_from_db()
+        self.locked.refresh_from_db()
+        self.assertEqual(self.user.admin_comments, "\n=== 2025-2026 comments ===\nKeep these comments")
+        self.assertEqual(self.locked.admin_comments, "Already archived")
+
+    def test_admin_action(self):
+        # Exercise the registered action and both its success and already-archived messages.
+        model_admin = admin.site._registry[get_user_model()]
+        request = RequestFactory().post("/")
+        with patch.object(model_admin, "message_user") as message_user:
+            model_admin.archive_users(request, self.users)
+        message_user.assert_any_call(request, "Archived 1 users.")
+        message_user.assert_any_call(request, "1 users already archived.", level=messages.WARNING)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.user_locked)
+
+    def test_csv_dry_run_and_run(self):
+        # Deduplicate usernames, ignore empty cells, and report missing users without touching other accounts.
+        contents = "\ufeffusername\n archive_me \nalready_locked\narchive_me\nmissing_user\n   \n"
+        output = self.run_command(contents)
+        self.assertIn("Identifiers provided: 4", output)
+        self.assertIn("Unique identifiers: 3", output)
+        self.assertIn("Duplicate identifiers: 1", output)
+        self.assertIn("Matched users: 2", output)
+        self.assertIn("Missing identifiers: 1", output)
+        self.assertIn("Dry run mode.", output)
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.user_locked)
+
+        output = self.run_command(contents, "--run", "--confirm")
+        self.assertIn("Archived users: 1", output)
+        self.assertIn("Already archived users: 1", output)
+        self.user.refresh_from_db()
+        self.other.refresh_from_db()
+        self.assertTrue(self.user.user_locked)
+        self.assertFalse(self.other.user_locked)
+
+    def test_csv_requires_username_header(self):
+        # A malformed or empty file should produce an actionable error instead of silently doing nothing.
+        for contents in ("", "student_id\n12345\n", "usernames\narchive_me\n"):
+            with self.subTest(contents=contents), self.assertRaisesRegex(CommandError, "username"):
+                self.run_command(contents, "--run", "--confirm")
+
+    def test_empty_selection(self):
+        self.assertIn("No identifiers found", self.run_command("username\n   \n"))
+
+    def test_csv_confirmation_can_abort(self):
+        # Declining the confirmation must leave the selected user active.
+        with patch("builtins.input", return_value="n"):
+            self.assertIn("Aborted.", self.run_command("username\narchive_me\n", "--run"))
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.user_locked)
+
+    def test_unreadable_csv(self):
+        with patch("intranet.apps.users.management.commands.archive_users.open", side_effect=FileNotFoundError):
+            with self.assertRaisesRegex(CommandError, "File not found"):
+                call_command("archive_users", "--filename", "missing.csv")
+
+    def test_archiving_blocks_existing_session(self):
+        # An account archived after login must lose access on its next request.
+        self.login(self.user.username)
+        self.assertEqual(self.client.get(reverse("user_profile")).status_code, 200)
+        self.users.archive_users()
+        self.assertEqual(self.client.get(reverse("user_profile")).status_code, 302)
+        self.assertNotIn("_auth_user_id", self.client.session)
 
 
 class CourseTest(IonTestCase):
@@ -528,6 +634,28 @@ class ProfileTest(IonTestCase):
             user=self.user, token="1234567890", application=self.application, scope="read write", expires=timezone.now() + datetime.timedelta(days=1)
         )
         self.auth = f"Bearer {tok.token}"  # pylint: disable=attribute-defined-outside-init
+
+    def test_archiving_blocks_existing_oauth_token(self):
+        # A token issued before archival must stop granting API access while the user is locked.
+        self.make_admin()
+        self.make_token()
+        self.client.logout()
+        url = reverse("api_user_myprofile_detail")
+        self.assertEqual(self.client.get(url, HTTP_AUTHORIZATION=self.auth).status_code, 200)
+        get_user_model().objects.filter(pk=self.user.pk).archive_users()
+        self.assertIn(self.client.get(url, HTTP_AUTHORIZATION=self.auth).status_code, (401, 403))
+
+    def test_client_credentials_token_without_user(self):
+        # The account-lock check must preserve valid application tokens that have no associated user.
+        token = AccessToken.objects.create(
+            token="application_token",
+            application=self.client_credentials_application,
+            scope="read",
+            expires=timezone.now() + datetime.timedelta(days=1),
+        )
+        request = SimpleNamespace()
+        self.assertTrue(IonOIDCValidator().validate_bearer_token(token.token, ["read"], request))
+        self.assertIsNone(request.user)
 
     def test_get_profile_api(self):
         self.make_admin()

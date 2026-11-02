@@ -33,6 +33,38 @@ GRADE_NUMBERS = ((9, "freshman"), (10, "sophomore"), (11, "junior"), (12, "senio
 EXTRA = [9996, 8888, 7011]
 
 
+class UserQuerySet(QuerySet):
+    """Custom QuerySet for bulk user state management operations."""
+
+    def archive_users(self, *, update_admin_comments: bool = False) -> tuple[int, int]:
+        """Archive users in this queryset by locking them.
+
+        Args:
+            update_admin_comments: If True, prepends archived admin comments with year header.
+
+        Returns:
+            Tuple of (archived_count, already_archived_count).
+
+        """
+        to_archive = self.filter(user_locked=False)
+        already_archived_count = self.filter(user_locked=True).count()
+
+        if update_admin_comments:
+            current_year = timezone.localdate().year
+            previous_year = current_year - 1
+            archived_count = 0
+            for user in to_archive:
+                user.user_locked = True
+                if user.admin_comments:
+                    user.admin_comments = f"\n=== {previous_year}-{current_year} comments ===\n{user.admin_comments}"
+                user.save(update_fields=["user_locked", "admin_comments"])
+                archived_count += 1
+        else:
+            archived_count = to_archive.update(user_locked=True)
+
+        return archived_count, already_archived_count
+
+
 class UserManager(DjangoUserManager):
     """User model Manager for table-level User queries.
 
@@ -177,6 +209,10 @@ class UserManager(DjangoUserManager):
             existing_queryset = self
 
         return existing_queryset.exclude(user_type="service")
+
+    def get_queryset(self) -> "UserQuerySet":
+        """Override to return custom UserQuerySet."""
+        return UserQuerySet(self.model, using=self._db)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

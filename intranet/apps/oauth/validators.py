@@ -9,6 +9,12 @@ class IonOIDCValidator(OAuth2Validator):
     oidc_claim_scope = OAuth2Validator.oidc_claim_scope.copy()
     oidc_claim_scope.update({"groups": "groups", "is_sysadmin": "groups"})  # manually add it since groups is not part of the standard OIDC spec
 
+    def validate_bearer_token(self, token, scopes, request):
+        if not super().validate_bearer_token(token, scopes, request):
+            return False
+        # Client-credentials tokens have no user; user tokens must honor account locks.
+        return request.user is None or request.user.is_active
+
     def get_additional_claims(self, request):
         claims = {}
         user = request.user
