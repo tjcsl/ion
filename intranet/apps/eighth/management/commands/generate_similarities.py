@@ -13,7 +13,8 @@ class Command(BaseCommand):
         parser.add_argument("--run", action="store_true", dest="run", default=False, help="Run.")
 
     def handle(self, *args, **options):
-        print(EighthActivitySimilarity.objects.all().delete())
+        deleted_count, deleted_objects = EighthActivitySimilarity.objects.all().delete()
+        print(f"Deleted previous similarities, deleted {deleted_count} objects from {deleted_objects}")
         start = time.time()
         acts = (
             EighthActivity.objects.all()

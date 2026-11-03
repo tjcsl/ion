@@ -55,7 +55,8 @@ def activities_without_attendance_view(request):
         if request.POST.get("take_attendance_zero", False) is not False:
             zero_students = scheduled_activities.filter(members=None)
             signups = EighthSignup.objects.filter(scheduled_activity__in=zero_students)
-            logger.debug(zero_students)
+            empty_str = "\n".join(str(a) for a in zero_students)
+            logger.debug(f"Empty activities: {empty_str}")
             if signups.count() == 0:
                 zero_students.update(attendance_taken=True)
                 messages.success(request, f"Took attendance for {zero_students.count()} empty activities.")
@@ -66,8 +67,10 @@ def activities_without_attendance_view(request):
         if request.POST.get("take_attendance_cancelled", False) is not False:
             cancelled = scheduled_activities.filter(cancelled=True)
             signups = EighthSignup.objects.filter(scheduled_activity__in=cancelled)
-            logger.debug(cancelled)
-            logger.debug(signups)
+            cancelled_str = "\n".join(str(a) for a in cancelled)
+            logger.debug(f"Cancelled activities: {cancelled_str}")
+            signup_str = "\n".join(str(a) for a in signups)
+            logger.debug(f"Marking students absent: {signup_str}")
             signups.update(was_absent=True)
             cancelled.update(attendance_taken=True)
             messages.success(request, f"Took attendance for {cancelled.count()} cancelled activities. {signups.count()} students marked absent.")

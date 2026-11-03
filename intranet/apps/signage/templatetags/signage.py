@@ -9,7 +9,7 @@ register = template.Library()
 @register.filter(name="render_page")
 def render_page(page, page_args):
     """Renders the template at page.template"""
-    print(page_args)
+    print(f"page_args: {page_args}")
     template_name = page.template if page.template else page.name
     template_fname = f"signage/pages/{template_name}.html"
     if page.function:

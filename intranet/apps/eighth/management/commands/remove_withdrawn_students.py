@@ -48,4 +48,5 @@ class Command(BaseCommand):
         for user in group.user_set.all():
             self.stdout.write(f"Deleting {user}\n")
             user.handle_delete()
-            self.stdout.write(str(user.delete()) + "\n")
+            deleted_count, deleted_objects = user.delete()
+            self.stdout.write(f"Deleted {deleted_count} objects from {deleted_objects}\n")
