@@ -7,19 +7,30 @@ Unit tests are hugely important to ensuring that Ion functions as expected. By w
 Unit Tests
 ==========
 
-For most modules, the unit tests go in ``intranet/apps/<module>/tests.py``. Currently, the sole exception is ``eighth``, where tests are broken out into several different files under ``intranet/apps/eighth/tests/``. Testing functionality that is useful for multiple tests can be found in ``intranet/test``.
+For most modules, the unit tests go in ``intranet/apps/<module>/tests.py``. Eighth period uses several files under ``intranet/apps/eighth/tests/``; standalone ``test_*.py`` modules are also discovered. Shared test helpers live in ``intranet/test``.
 
 .. _running-tests:
 
 Running Tests Locally
 =====================
 
-Tests should be run inside the Docker development environment. Make sure your Docker containers are running first:
+Run application tests inside the Docker development environment. From the repository root, start the stack and inspect first-run setup:
 
 .. code-block:: bash
 
-    cd config/docker
-    docker compose up -d
+    docker compose -f config/docker/docker-compose.yml up --build -d
+    docker compose -f config/docker/docker-compose.yml logs -f django
+
+With Python installed on the host, the development helper checks prerequisites before running tests:
+
+.. code-block:: bash
+
+    python3 scripts/dev.py doctor
+    python3 scripts/dev.py test intranet.apps.polls
+    python3 scripts/dev.py test intranet.apps.auth.tests.LoginViewTest -v 2
+    python3 scripts/dev.py test
+
+Test labels and options are forwarded to Django, and the helper returns the test runner's exit status. It does not start containers or install dependencies. It also verifies that Django mounts this checkout, since Ion's fixed container names are shared across worktrees. See :doc:`../setup/setup` if diagnostics report a setup problem.
 
 Running Tests with Django's Test Runner (Recommended)
 -----------------------------------------------------
@@ -29,16 +40,29 @@ The recommended way to run tests is using Django's built-in test runner, which i
 .. code-block:: bash
 
     # Run all tests (this may take some time!)
-    docker exec intranet_django python ./manage.py test --noinput
+    docker compose -f config/docker/docker-compose.yml exec -T django python ./manage.py test --noinput
 
     # Run tests for a specific app (in this case, polls)
-    docker exec intranet_django python ./manage.py test intranet.apps.polls --noinput
+    docker compose -f config/docker/docker-compose.yml exec -T django python ./manage.py test intranet.apps.polls --noinput
 
-    # Run a specific test file (in this case, auth)
-    docker exec intranet_django python ./manage.py test intranet.apps.auth.tests.TurnstileFieldTest --noinput
+    # Run a specific test class
+    docker compose -f config/docker/docker-compose.yml exec -T django python ./manage.py test intranet.apps.auth.tests.LoginViewTest --noinput
 
     # Run with verbose output, useful for debugging
-    docker exec intranet_django python ./manage.py test intranet.apps.polls --noinput -v 2
+    docker compose -f config/docker/docker-compose.yml exec -T django python ./manage.py test intranet.apps.polls --noinput -v 2
+
+The test settings use an in-memory SQLite database and disable migrations. Docker's local settings can still require Redis for caches and other integrations. Test schema changes separately against PostgreSQL; the unit suite does not exercise migrations. CI also checks for missing migrations and runs migrations outside test mode.
+
+Testing the Development Helper
+------------------------------
+
+The helper's command tests use the Python standard library and can run without Docker or Django:
+
+.. code-block:: bash
+
+    python3 -m unittest discover -s scripts -p test_dev.py -v
+
+These tests simulate Docker responses to check diagnosis, checkout selection, argument forwarding, and exit codes. They do not verify the application or a live Docker stack.
 
 Interactive Testing Shell
 -------------------------
@@ -47,7 +71,7 @@ If you want to run multiple test commands, you can open an interactive shell wit
 
 .. code-block:: bash
 
-    docker exec -it intranet_django sh
+    docker compose -f config/docker/docker-compose.yml exec django sh
 
     # then inside the container, run tests:
     ./manage.py test intranet.apps.polls --noinput
@@ -60,7 +84,7 @@ Coverage information is auto-generated at `Coveralls <https://coveralls.io/githu
 Writing Tests
 =============
 
-Looking at pre-existing tests can give you a good idea how to structure your tests. The ``IonTestCase`` class is a wrapper around the standard Django test class. It handles some ion-specific logic, such as mocking out ldap queries. Here is an bare-bones example of the basic layout for a test:
+Looking at pre-existing tests can give you a good idea how to structure your tests. ``IonTestCase`` extends Django's ``TestCase`` with login, reauthentication, and admin helpers. Use ``SimpleTestCase`` for code that does not query the database. Here is a basic test layout:
 
 .. code-block:: python
 

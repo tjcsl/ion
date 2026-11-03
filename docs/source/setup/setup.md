@@ -2,7 +2,7 @@
 
 You have two options when setting up a development environment for Ion: Docker or Vagrant. Docker is probably going to work better, so try it first.
 
-The Git repository on the host computer is synced with ``~/intranet`` on the virtual machine, so you can edit files within the repo on the host computer with a text editor of your choice and the changes will be immediately reflected on the virtual machine.
+Docker mounts your checkout at `/ion` inside the application container. Edit files on your host computer; the container sees those changes immediately. Vagrant uses a synced checkout at `~/intranet` instead.
 
 # Docker
 
@@ -15,31 +15,49 @@ The Git repository on the host computer is synced with ``~/intranet`` on the vir
 
 1. Create your own fork of the [``tjcsl/ion`` repository](https://github.com/tjcsl/ion.git).
 2. Clone the Ion repository from your Ion fork by running ``git clone git@github.com:<YOUR_GITHUB_USERNAME>/ion.git intranet``. Note: if your host machine is running Windows, please run ``git config core.autocrlf input`` before cloning to prevent line ending issues.
-3. Run ``cd config/docker``
-4. Run `docker compose build ` (or use `docker-compose build` if this doesn't work)
-5. Run ``docker compose up``
-6. If setting up on school wifi, add
+3. Enter the checkout with `cd intranet`.
+4. From the repository root, run `docker compose -f config/docker/docker-compose.yml up --build -d`.
+5. Watch initial setup with `docker compose -f config/docker/docker-compose.yml logs -f django`.
 
-```
-https://mirror.math.princeton.edu/pub/alpinelinux/v3.16/main
-https://mirror.math.princeton.edu/pub/alpinelinux/v3.16/community
-```
-
-or another Alpine mirror to `/etc/apk/repositories` because `alpinelinux.org` may be blocked.
+If package downloads are blocked on school Wi-Fi, use an allowed Alpine mirror matching the Alpine release in `config/docker/Dockerfile`. Do not mix repositories from different Alpine releases.
 
 ## Docker Post Set-Up
 
-Navigate to http://localhost:8080 in the web browser of your choice. You might have to wait up to 60 seconds the first time that you create the container. When presented with the login page, log in with the username "admin" or a [generated username](https://github.com/tjcsl/ion/blob/dev/docs/source/developing/usernames.md) and the password "notfish" (without the quotes).
+Navigate to http://localhost:8080 in the web browser of your choice after initial setup finishes. The first build and sample-data generation can take several minutes. When presented with the login page, log in with the username "admin" or a [generated username](../developing/usernames.md) and the password "notfish" (without the quotes).
+
+If Python is installed on your host, run `python3 scripts/dev.py doctor` from the repository root. It checks Docker, Compose, the running core services, the checkout mounted in Django, and whether local settings exist. It does not start services, change settings, or certify that application initialization succeeded.
+
+### First-run troubleshooting
+
+The entrypoint writes `config/docker/first-run.log` before running setup. A log file can therefore exist even after setup fails. Inspect both that file and `docker compose -f config/docker/docker-compose.yml logs django` before retrying. Fix the reported problem first; rerunning `initial_setup.sh` creates additional sample data. Preserve existing local settings in `intranet/settings/secret.py`.
+
+Compose uses fixed container names and the shared `ion-pgdata` database volume. Running from another Git worktree does not create a separate development environment. Stop the previous stack before switching checkouts, and avoid `down -v` unless you intend to delete the development database.
 
 ## Useful Commands
 
 ### Interacting with the application:
 
-If you need to run a Django command like ``makemigrations``, ``collectstatic`` or ``shell_plus``, run ``docker exec -it intranet bash`` in your terminal. That will give you a shell into the application container. You can also use this to run scripts like ``build_sources.sh``. If you need to view the output from or restart ``runserver``, run ``docker attach application``.
+Run these commands from the repository root:
+
+```sh
+# Open a shell in the application container.
+docker compose -f config/docker/docker-compose.yml exec django sh
+
+# Run a Django command without opening a shell.
+docker compose -f config/docker/docker-compose.yml exec -T django python manage.py check
+
+# Diagnose prerequisites and run the polls tests.
+python3 scripts/dev.py test intranet.apps.polls
+
+# Stop the stack while retaining the development database.
+docker compose -f config/docker/docker-compose.yml down
+```
+
+See [the testing guide](../developing/testing.rst) for test labels and options. If Python is unavailable on the host, use the direct Compose commands in that guide.
 
 ### Attaching to logs
 
-To view logs of a container, run `docker logs [CONTAINER NAME] -f`. For example, to view the logs of the web server, run `docker logs intranet -f`.
+To follow application logs, run `docker compose -f config/docker/docker-compose.yml logs -f django`. Replace `django` with `postgres`, `redis`, `celery`, or `celerybeat` to inspect another service.
 
 # Vagrant
 
