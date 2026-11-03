@@ -190,7 +190,11 @@ class ApiTest(IonTestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_no_credentials_read(self):
-        if "intranet.apps.api.authentication.ApiBasicAuthentication" in settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"]:
+        first_auth = settings.REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"][0]
+        if first_auth in (
+            "intranet.apps.api.authentication.ApiBasicAuthentication",
+            "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
+        ):
             status_code = 401
         else:
             status_code = 403
