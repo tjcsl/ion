@@ -59,12 +59,6 @@ $(function() {
     }
 });
 
-function ytwin(id) {
-    // $("body").click(function() {
-    //     $("iframe#ytwin").remove();
-    // }).append('<iframe id="ytwin" style="position:fixed;top:50%;left:50%;width:640px;height:480px;margin:-240px -320px" width="640" height="480" src="https://www.youtube.com/embed/' + id + '?autoplay=1&loop=0" frameborder="0" allowfullscreen></iframe>');
-};
-
 try {
     new(function(callback) {
         var udlr = {
@@ -166,13 +160,11 @@ try {
 runEgg = function(q) {
     switch (q) {
         case "do a barrel roll":
-            setTimeout(function() { ytwin("mv5qzMtLE60") }, 1);
             setTimeout(function() {
                 $("body").append("<style>@-webkit-keyframes roll { from { -webkit-transform: rotate(0deg) } to { -webkit-transform: rotate(360deg) } } @-moz-keyframes roll { from { -moz-transform: rotate(0deg) } to { -moz-transform: rotate(360deg) } } @keyframes roll { from { transform: rotate(0deg) } to { transform: rotate(360deg) } } body {-moz-animation-duration: 4s;-moz-animation-iteration-count: 4;-moz-animation-name: roll;-webkit-animation-name: roll; -webkit-animation-duration: 4s; -webkit-animation-iteration-count: 4;animation-name: animation-duration: 4s; animation-iteration-count: 4;}</style>");
             }, 2000);
             break;
         case "asteroids":
-            var KICKASSVERSION = '2.0';
             var s = document.createElement('script');
             s.type = 'text/javascript';
             document.body.appendChild(s);

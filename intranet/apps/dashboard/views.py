@@ -634,6 +634,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
         dash_warning = settings.DASH_WARNING
     except Exception:
         dash_warning = None
+    dash_warning_is_html = False
 
     fcps_emerg = get_fcps_emerg(request)
     ap_week = get_ap_week_warning(request)
@@ -641,6 +642,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
         dash_warning = fcps_emerg
     elif ap_week:
         dash_warning = ap_week
+        dash_warning_is_html = True
 
     warnings = WarningAnnouncement.objects.filter(active=True)
     html = get_warning_html(warnings, dashboard=True)
@@ -650,6 +652,7 @@ def dashboard_view(request, show_widgets=True, show_expired=False, show_hidden_c
     context.update(
         {
             "dash_warning": dash_warning,
+            "dash_warning_is_html": dash_warning_is_html,
             "show_widgets": show_widgets,
             "show_expired": show_expired,
             "show_near_graduation_message": is_senior

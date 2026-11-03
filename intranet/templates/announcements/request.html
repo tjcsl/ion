@@ -9,11 +9,7 @@
 
 {% block js %}
     {{ block.super }}
-    <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
-    <script src="{% static 'js/vendor/chrono.min.js' %}"></script>
-    <script src="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.js' %}"></script>
-    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
-    <script src="{% static 'js/announcement.form.js' %}"></script>
+    {% include "announcements/form_js.html" %}
     <script src="{% static 'js/announcement.request.js' %}"></script>
     <script>
         $(function() {
@@ -27,9 +23,7 @@
 
 {% block css %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'vendor/datetimepicker-2.4.5/jquery.datetimepicker.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
-    {% stylesheet 'announcements.form' %}
+    {% include "announcements/form_css.html" %}
     {% stylesheet 'announcements.request' %}
 {% endblock %}
 

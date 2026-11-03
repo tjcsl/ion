@@ -7,6 +7,7 @@ from typing import Collection, Set  # noqa
 from urllib import parse
 
 from django.conf import settings
+#from django.template.loader import get_template
 from django.utils import timezone
 
 from ..apps.emerg.views import get_emerg
@@ -185,7 +186,7 @@ def get_ap_week_warning(request):
         ap_day += datetime.timedelta(days=1)
 
     data = {"day": ap_day.day, "date": request.GET.get("date", None)}
-    if ap_day.month == 5 and 4 <= ap_day.day <= 17:
+    if ap_day.month == 9 and 4 <= ap_day.day <= 17:
         return get_template("auth/ap_week_schedule.html").render(data)
     """
 

@@ -1,7 +1,11 @@
 <style scoped>
 
 .ap-schedule-container {
+    position: relative;
     width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+    box-sizing: border-box;
     transition: margin-left 0.2s ease-in-out;
     overflow: hidden;
 }
@@ -51,59 +55,40 @@
     list-style: none;
 }
 
-.ap-right-arrow.button {
-    display: none;
-    position: absolute;
-    /*right: -1px;*/
-    left: calc(100% - 32px);
-    width: 10px;
-    height: calc(100% - 14px);
-    top: -3px;
-    z-index: 10;
-    border-radius: 0 3px 3px 0;
-    transition: left 0.2s ease-in-out;
-}
-
-.ap-right-arrow span {
-    vertical-align: middle;
-    top: 50%;
-    position: absolute;
-    height: 20px;
-    margin-top: -10px;
-    margin-left: -5px;
-}
-
-.ap-right-arrow .left {
-    display: none;
-}
-
-.ap-right-arrow.left {
-    left: 0;
-
-}
-
-.ap-right-arrow.left .left {
+.ap-day-control.button {
     display: block;
-    margin-left: 0;
+    position: absolute;
+    top: 50%;
+    width: 28px;
+    height: 36px;
+    margin-top: -18px;
+    padding: 0;
+    z-index: 10;
+    transform: none;
 }
 
-.ap-right-arrow.left .right {
-    display: none;
+.ap-day-control.prev {
+    left: 0;
+}
+
+.ap-day-control.next {
+    right: 0;
 }
 
 @media (max-width: 600px) {
     .ap-schedule-container {
-        width: 1500px;
+        width: 100%;
     }
 
-    .login-warning .ap-schedule-container {
-        height: 130px;
-        overflow-y: scroll;
+    .warning-announcement .ap-schedule-container {
+        height: auto;
+        overflow-y: visible;
     }
 
     .ap-schedule-day {
         margin: 0;
-        width: 550px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .ap-schedule-day h2 {
@@ -124,13 +109,10 @@
         width: 50px;
     }
 
-    .ap-right-arrow.button {
-        display: block;
-    }
 }
 
 @media (min-width: 600px) {
-    .login-warning .ap-schedule-container {
+    .warning-announcement .ap-schedule-container {
         margin-left: 0 !important;
     }
 }
@@ -142,12 +124,23 @@
 </style>
 <script>
 $(function() {
+    var apDays = $(".ap-schedule-day");
+    var apDayIndex = 0;
+
+    var showApDay = function(index) {
+        if(apDays.length === 0) {
+            return;
+        }
+        apDayIndex = (index + apDays.length) % apDays.length;
+        apDays.css("display", "none");
+        apDays.eq(apDayIndex).css("display", "table");
+    };
+
     apDate = function(date) {
         var d = parseInt(date.split("-")[2]);
         var e = $(".ap-schedule-day.day-"+d);
         if(e.length > 0) {
-            $(".ap-schedule-day").hide();
-            e.show();
+            showApDay(apDays.index(e));
         }
     }
     oscheduleBind = scheduleBind;
@@ -158,21 +151,18 @@ $(function() {
     {% if date %}
     apDate("{{ date|escape }}");
     {% endif %}
-    $(".ap-right-arrow").on("click", function(e) {
+    $(".ap-day-control.prev").on("click", function(e) {
         e.stopPropagation();
-        var l = $(this).hasClass("left");
-        if(l) {
-            $(".ap-schedule-container").css('margin-left', 0);
-            $(this).removeClass("left");
-        } else {
-            $(".ap-schedule-container").css('margin-left', '-240px');
-            $(this).addClass("left");
-        }
-    })
+        showApDay(apDayIndex - 1);
+    });
+    $(".ap-day-control.next").on("click", function(e) {
+        e.stopPropagation();
+        showApDay(apDayIndex + 1);
+    });
 });
 </script>
 <div class="ap-schedule-container">
-<table class="ap-schedule-day day-6">
+<table class="ap-schedule-day day-6" style="{% if day == 6 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Monday, May 6<span class="dty"> - Blue Day</span></h2>
@@ -192,7 +182,7 @@ $(function() {
 </tr>
 
 </table>
-<table class="ap-schedule-day day-7">
+<table class="ap-schedule-day day-7" style="{% if day == 7 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Tuesday, May 7<span class="dty"> - Red Day</span></h2>
@@ -211,7 +201,7 @@ $(function() {
     </td>
 </tr>
 </table>
-<table class="ap-schedule-day day-8">
+<table class="ap-schedule-day day-8" style="{% if day == 8 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Wednesday, May 8<span class="dty"> - Blue Day</span></h2>
@@ -230,7 +220,7 @@ $(function() {
     </td>
 </tr>
 </table>
-<table class="ap-schedule-day day-9">
+<table class="ap-schedule-day day-9" style="{% if day == 9 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Thursday, May 9<span class="dty"> - Red Day</span></h2>
@@ -253,7 +243,7 @@ $(function() {
     </td>
 </tr>
 </table>
-<table class="ap-schedule-day day-10">
+<table class="ap-schedule-day day-10" style="{% if day == 10 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Friday, May 10<span class="dty"> - Blue Day</span></h2>
@@ -273,7 +263,7 @@ $(function() {
 </tr>
 </table>
 
-<table class="ap-schedule-day day-13">
+<table class="ap-schedule-day day-13" style="{% if day == 13 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Monday, May 13<span class="dty"> - Red Day</span></h2>
@@ -293,7 +283,7 @@ $(function() {
 </tr>
 </table>
 
-<table class="ap-schedule-day day-14">
+<table class="ap-schedule-day day-14" style="{% if day == 14 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Tuesday, May 14<span class="dty"> - Blue Day</span></h2>
@@ -315,7 +305,7 @@ $(function() {
 </tr>
 </table>
 
-<table class="ap-schedule-day day-15">
+<table class="ap-schedule-day day-15" style="{% if day == 15 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Wednesday, May 15<span class="dty"> - Red Day</span></h2>
@@ -335,7 +325,7 @@ $(function() {
 </tr>
 </table>
 
-<table class="ap-schedule-day day-16">
+<table class="ap-schedule-day day-16" style="{% if day == 16 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Thursday, May 16<span class="dty"> - Blue Day</span></h2>
@@ -355,7 +345,7 @@ $(function() {
 </tr>
 </table>
 
-<table class="ap-schedule-day day-17">
+<table class="ap-schedule-day day-17" style="{% if day == 17 %}display: table;{% else %}display: none;{% endif %}">
 <tr>
     <td colspan=3>
         <h2>Friday, May 17<span class="dty"> - Red Day</span></h2>
@@ -380,11 +370,9 @@ $(function() {
 </table>
 </div>
 
-<a class="ap-right-arrow button">
-    <span class='right'>
-        <i class="fas fa-arrow-right"></i>
-    </span>
-    <span class='left'>
-        <i class="fas fa-arrow-left"></i>
-    </span>
-</a>
+<button type="button" class="ap-day-control prev button" aria-label="Previous AP exam">
+    <i class="fas fa-arrow-left"></i>
+</button>
+<button type="button" class="ap-day-control next button" aria-label="Next AP exam">
+    <i class="fas fa-arrow-right"></i>
+</button>
