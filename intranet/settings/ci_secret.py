@@ -58,3 +58,6 @@ ss1Vdd9PI3UDP+N/xNbT/ej05q5vzTH/6cCxKElf7UDLsdHfN5DbLTRIHVounfBI
 0JmEiAMwVCk6GIsTsve9YjxfqKHDS7Sz33KtrNSfeB1GFDIvkXhF/LP7SYw=
 -----END RSA PRIVATE KEY-----
 """  # Change this in production!!
+
+# Set depending on the test case (pass, fail, invalid key, etc.)
+TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA"
