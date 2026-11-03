@@ -53,6 +53,8 @@ class Poll(models.Model):
             user responses for secret polls.
         is_election
             Whether the poll is an election.
+        is_randomized
+            Whether the order of choices is randomized.
         groups
             The Groups that can view and vote in the poll. Like Announcements,
             if there are none set, then it is public to all.
@@ -70,6 +72,7 @@ class Poll(models.Model):
     visible = models.BooleanField(default=False)
     is_secret = models.BooleanField(default=False)
     is_election = models.BooleanField(default=False)
+    is_randomized = models.BooleanField(default=False)
     groups = models.ManyToManyField(DjangoGroup, blank=True)
 
     # Access questions through .question_set
