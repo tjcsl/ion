@@ -36,6 +36,17 @@ class EighthAddSignupSerializerOrderingTest(IonTestCase):
         options = list(EighthAddSignupSerializer().fields["block"].choices)
         self.assertEqual(options, [block.pk for block in (today_block, in_two, in_ten)])
 
+    def test_the_order_is_built_when_the_field_is_read(self):
+        """A server that stays up past midnight must count today from the current day, not from the day it started."""
+        today = timezone.localdate()
+        today_block = EighthBlock.objects.create(date=today, block_letter="A")
+        tomorrow_block = EighthBlock.objects.create(date=today + datetime.timedelta(days=1), block_letter="A")
+
+        self.assertEqual(self._ordered("block"), [today_block, tomorrow_block])
+
+        with mock.patch("intranet.apps.eighth.serializers.timezone.localdate", return_value=today + datetime.timedelta(days=1)):
+            self.assertEqual(self._ordered("block"), [tomorrow_block, today_block])
+
     def test_past_blocks_follow_the_upcoming_ones(self):
         yesterday, last_month, in_ten = self._blocks([-1, -30, 10])
 
