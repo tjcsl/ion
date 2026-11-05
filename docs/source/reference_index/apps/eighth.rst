@@ -54,6 +54,7 @@ eighth
    tests.test_profile
    tests.test_routers
    tests.test_signup
+   tests.test_signup_serializer_ordering
    urls
    utils
    views.activities

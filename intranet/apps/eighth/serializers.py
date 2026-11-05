@@ -5,7 +5,8 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Case, Count, DateField, F, When
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
@@ -449,11 +450,58 @@ def add_signup_validator(value):
     )
 
 
+def closest_to_today(queryset, date_field, tiebreakers=()):
+    """Order ``queryset`` with the dates nearest today first.
+
+    The browsable API renders the querysets of :class:`EighthAddSignupSerializer` as the
+    dropdowns of the POST form at ``/api/signups/user``, in queryset order. Both fields
+    used to fall back on the model ordering, oldest first, so the eighth periods a student
+    can still sign up for sat underneath a year of blocks that had already happened
+    (#1954). Today's block now comes first, the upcoming blocks follow in date order, and
+    the past — which cannot be changed anyway — trails behind them, most recent first.
+
+    The order is built from two annotations instead of a distance in days because
+    subtracting one date from another returns a ``timedelta`` on PostgreSQL but is not
+    supported on the SQLite database the tests run against, and both databases have to
+    agree on the order. Sorting the upcoming dates up and the past dates down gives the
+    same answer without any arithmetic.
+
+    The order is applied when the queryset is read, so callers that hold on to a queryset
+    across days keep counting today from the day they read it; use
+    :class:`ClosestToTodayPrimaryKeyRelatedField` if the queryset outlives a request.
+    """
+    today = timezone.localdate()
+    date = F(date_field)
+    return queryset.annotate(
+        _upcoming=Case(When(**{f"{date_field}__gte": today}, then=date), default=None, output_field=DateField()),
+        _past=Case(When(**{f"{date_field}__lt": today}, then=date), default=None, output_field=DateField()),
+    ).order_by(F("_upcoming").asc(nulls_last=True), F("_past").desc(nulls_last=True), *tiebreakers)
+
+
+class ClosestToTodayPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    """A related field whose dropdown lists the dates nearest today first.
+
+    The order is built each time the field is read instead of once at import, so a server
+    that stays up for weeks keeps counting today from the current day.
+    """
+
+    def __init__(self, date_field, tiebreakers=(), **kwargs):
+        self.date_field = date_field
+        self.tiebreakers = tiebreakers
+        super().__init__(**kwargs)
+
+    def get_queryset(self):
+        return closest_to_today(super().get_queryset(), self.date_field, self.tiebreakers)
+
+
 class EighthAddSignupSerializer(serializers.Serializer):
-    block = serializers.PrimaryKeyRelatedField(queryset=EighthBlock.objects.all(), required=False)
+    block = ClosestToTodayPrimaryKeyRelatedField(date_field="date", tiebreakers=("block_letter",), queryset=EighthBlock.objects.all(), required=False)
     activity = serializers.PrimaryKeyRelatedField(queryset=EighthActivity.objects.all(), required=False)
-    scheduled_activity = serializers.PrimaryKeyRelatedField(
-        queryset=EighthScheduledActivity.objects.select_related("activity").select_related("block"), required=False
+    scheduled_activity = ClosestToTodayPrimaryKeyRelatedField(
+        date_field="block__date",
+        tiebreakers=("block__block_letter", "id"),
+        queryset=EighthScheduledActivity.objects.select_related("activity").select_related("block"),
+        required=False,
     )
     use_scheduled_activity = serializers.BooleanField(required=False)
     force = serializers.BooleanField(required=False)
