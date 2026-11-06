@@ -133,7 +133,7 @@ $(function() {
                         show = true;
                     }
                     // favorite
-                    if (cmd[1].substring(0, 2) === "fa" && activity.favorited === fl) {
+                    if (cmd[1].substring(0, 2) === "fav" && activity.favorited === fl) {
                         show = true;
                     }
                     // special
@@ -154,7 +154,7 @@ $(function() {
                         show = true;
                     }
                     // full
-                    if (cmd[1].substring(0, 2) === "fu" && (activity.roster.count >= activity.roster.capacity) === fl) {
+                    if (cmd[1].substring(0, 2) === "ful" && (activity.roster.count >= activity.roster.capacity) === fl) {
                         show = true;
                     }
                     // open
