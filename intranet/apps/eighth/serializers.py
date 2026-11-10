@@ -100,19 +100,17 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         subscribed_activities=None,
         recommended_activities=None,
         available_restricted_acts=None,
+        is_non_student_admin=False,
     ):
         activity = scheduled_activity.activity
-        if user:
-            is_non_student_admin = user.is_eighth_admin and not user.is_student
-        else:
-            is_non_student_admin = False
         restricted_for_user = scheduled_activity.get_restricted() and not is_non_student_admin and (activity.id not in available_restricted_acts)
         prefix = "Special: " if activity.special else ""
         prefix += activity.name
         if scheduled_activity.title:
             prefix += " - " + scheduled_activity.title
         middle = " (R)" if restricted_for_user else ""
-        if user is not None and scheduled_activity.is_user_stickied(user):
+        user_sticky = scheduled_activity.is_user_stickied(user) if user is not None else False
+        if user_sticky:
             suffix = " (S)"
         else:
             suffix = ""
@@ -158,7 +156,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             "presign": activity.presign,
             "presign_time": scheduled_activity.is_too_early_to_signup()[1].strftime("%A, %B %-d at %-I:%M %p"),
             "sticky": is_activity_sticky,
-            "user_sticky": scheduled_activity.is_user_stickied(user) and not is_activity_sticky,
+            "user_sticky": user_sticky and not is_activity_sticky,
             "finance": "",  # TODO: refactor JS to remove this
             "title": scheduled_activity.title,
             "comments": scheduled_activity.comments,  # TODO: refactor JS to remove this
@@ -186,6 +184,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         block_id,
         activity_id,
         scheduled_activity=None,
+        is_non_student_admin=False,
     ):
         if scheduled_activity is None:
             scheduled_activity = EighthScheduledActivity.objects.get(block_id=block_id, activity_id=activity_id)
@@ -197,6 +196,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
             subscribed_activities,
             recommended_activities,
             available_restricted_acts,
+            is_non_student_admin,
         )
 
     def get_scheduled_activity(self, scheduled_activity_id):
@@ -205,6 +205,7 @@ class EighthBlockDetailSerializer(serializers.Serializer):
     @transaction.atomic
     def fetch_activity_list_with_metadata(self, block):
         user = self.context.get("user", self.context["request"].user)
+        is_non_student_admin = user.is_eighth_admin and not user.is_student if user else False
 
         if user:
             favorited_activities = set(user.favorited_activity_set.values_list("id", flat=True))
@@ -218,8 +219,9 @@ class EighthBlockDetailSerializer(serializers.Serializer):
         available_restricted_acts = EighthActivity.restricted_activities_available_to_user(user)
 
         activity_list = FallbackDict(
-            functools.partial(self.get_activity, user, favorited_activities, recommended_activities, available_restricted_acts, block.id)
-        )
+            functools.partial(self.get_activity, user, favorited_activities,
+                subscribed_activities, recommended_activities, available_restricted_acts, block.id, is_non_student_admin=is_non_student_admin,)
+            )
         scheduled_activity_to_activity_map = FallbackDict(self.get_scheduled_activity)
 
         # Find all scheduled activities that don't correspond to deleted activities.
@@ -233,9 +235,8 @@ class EighthBlockDetailSerializer(serializers.Serializer):
 
         for scheduled_activity in scheduled_activities:
             # Avoid re-fetching scheduled_activity.
-            activity_info = self.get_activity(
-                user, favorited_activities, subscribed_activities, recommended_activities, available_restricted_acts, None, None, scheduled_activity
-            )
+            activity_info = self.get_activity(user,favorited_activities,subscribed_activities,recommended_activities,
+            available_restricted_acts,None,None,scheduled_activity,is_non_student_admin)
             activity = scheduled_activity.activity
             scheduled_activity_to_activity_map[scheduled_activity.id] = activity.id
             activity_list[activity.id] = activity_info
