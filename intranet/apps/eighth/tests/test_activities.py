@@ -56,6 +56,37 @@ class EighthActivitiesTestCase(EighthAbstractTest):
             response.context["scheduled_activities"], [repr(schact_past), repr(schact_today), repr(schact_future)], transform=repr
         )
 
+    def test_activity_view_roster_links_for_non_students(self):
+        self.make_admin()
+        activity = self.add_activity(name="Test Club")
+        today = timezone.localtime(timezone.now()).date().strftime("%Y-%m-%d")
+        block = self.add_block(date=today, block_letter="A")
+        schact = self.schedule_activity(block.id, activity.id)
+
+        signup_url = reverse("eighth_signup", args=[block.id])
+        roster_url = reverse("eighth_roster", args=[schact.id])
+        attendance_url = reverse("eighth_take_attendance", args=[schact.id])
+
+        # A non-student, non-teacher user must get links they can open, not
+        # links that bounce them to the login page.
+        other = get_user_model().objects.get_or_create(username="otheruser", user_type="other")[0]
+        self.login(other.username)
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]))
+        self.assertEqual(200, response.status_code)
+        self.assertContains(response, f'href="{roster_url}"', count=2)
+        self.assertNotContains(response, f'href="{signup_url}"')
+        self.assertNotContains(response, f'href="{attendance_url}"')
+        self.assertEqual(200, self.client.get(roster_url).status_code)
+
+        # A teacher can take attendance, but the block link still goes to the roster
+        # (the signup page would redirect them to the eighth admin dashboard).
+        teacher = get_user_model().objects.get_or_create(username="teacheruser", user_type="teacher")[0]
+        self.login(teacher.username)
+        response = self.client.get(reverse("eighth_activity", args=[activity.id]))
+        self.assertContains(response, f'href="{roster_url}"', count=1)
+        self.assertContains(response, f'href="{attendance_url}"', count=1)
+        self.assertNotContains(response, f'href="{signup_url}"')
+
     def test_stats_global_view(self):
         # I am unauthorized; this should 403
         self.login("awilliam")
