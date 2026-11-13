@@ -162,7 +162,7 @@
         {% for sch in scheduled_activities %}
             <tr{% if sch.cancelled %} class="cancelled"{% endif %} data-scheduled-id="{{ sch.id }}">
                 <th>
-                    <a href="{% url 'eighth_signup' sch.block.id %}">
+                    <a href="{% if request.user.is_student or request.user.is_eighth_admin %}{% url 'eighth_signup' sch.block.id %}{% else %}{% url 'eighth_roster' sch.id %}{% endif %}">
                         {{ sch.block }}
                     </a>
                 </th>
@@ -193,8 +193,12 @@
                                 View Info/Sign Up
                             {% endif %}
                         </a>
-                    {% else %}
+                    {% elif request.user.is_attendance_taker %}
                         <a class="button" href="{% url 'eighth_take_attendance' sch.id %}">
+                            View Roster
+                        </a>
+                    {% else %}
+                        <a class="button" href="{% url 'eighth_roster' sch.id %}">
                             View Roster
                         </a>
                     {% endif %}
