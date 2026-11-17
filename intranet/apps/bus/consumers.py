@@ -47,6 +47,10 @@ class BusConsumer(JsonWebsocketConsumer):
                     else:
                         route = Route.objects.get(id=content["id"])
                         route.status = content["status"]
+                        route.reason = ""
+                        route.estimated_time_delay = ""
+                        route.fcps_delay = False
+                        route.admin_override = True
                         if content["time"] == "afternoon" and route.status == "a":
                             route.space = content["space"]
                         else:
@@ -77,6 +81,8 @@ class BusConsumer(JsonWebsocketConsumer):
                 "space": route.space,
                 "route_name": route.route_name,
                 "status": route.status,
+                "reason": route.reason,
+                "estimated_time_delay": route.estimated_time_delay,
             }
             route_list.append(serialized)
             if user and user in route.user_set.all():

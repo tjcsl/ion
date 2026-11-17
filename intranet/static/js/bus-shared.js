@@ -41,6 +41,37 @@ if(now.getDay() === 0 || now.getDay() === 6) {
     o.color = "blue";
 }
 
+export function updateDelayAnnouncements(routes, document) {
+    const delayed = routes.filter((route) => route.status === "d");
+    document.querySelectorAll(".delay-announcements .delay-list").forEach((list) => {
+        list.replaceChildren();
+        if (delayed.length === 0) {
+            const message = document.createElement("p");
+            message.className = "no-delays";
+            message.textContent = "No current delays reported.";
+            list.appendChild(message);
+            return;
+        }
+        delayed.forEach((route) => {
+            const card = document.createElement("div");
+            card.className = "delay-card";
+            const icon = document.createElement("i");
+            icon.className = "fas fa-exclamation-triangle";
+            const description = document.createElement("span");
+            const name = document.createElement("strong");
+            name.textContent = `Bus ${route.route_name}`;
+            description.appendChild(name);
+            description.appendChild(document.createTextNode(route.reason ? ` delayed due to: ${route.reason.toLowerCase()}` : " is delayed."));
+            if (route.estimated_time_delay) {
+                description.appendChild(document.createElement("br"));
+                description.appendChild(document.createTextNode(`ETA: ${route.estimated_time_delay} minutes.`));
+            }
+            card.append(icon, document.createTextNode(" "), description);
+            list.appendChild(card);
+        });
+    });
+}
+
 export function getSocket(base_url, location, document, window, time) {
     const protocol = (location.protocol.indexOf('s') > -1) ? 'wss' : 'ws';
     let socket;
@@ -89,6 +120,14 @@ export function getSocket(base_url, location, document, window, time) {
             return;
         }
 
+        if (data.error) {
+            const messenger = window.Messenger;
+            if (messenger) {
+                messenger().error(data.error);
+            }
+            return;
+        }
+
         if(data.userRouteName) {
             userRouteName = processBusString(data.userRouteName);
         }
@@ -101,6 +140,8 @@ export function getSocket(base_url, location, document, window, time) {
             }
         }
 
+        updateDelayAnnouncements(data.allRoutes, document);
+
         if (time === 'afternoon') {
             window.appView.trigger('wss:receive', data);
         } else if (time === 'morning') {
@@ -112,14 +153,14 @@ export function getSocket(base_url, location, document, window, time) {
             delayed.innerHTML = "";
             for (let i = 0; i < data.allRoutes.length; i++) {
                 let val = data.allRoutes[i];
-                let new_p = document.createElement('p');
-                new_p.innerHTML = data.allRoutes[i].route_name;
+                const routeName = document.createElement("p");
+                routeName.textContent = val.route_name;
                 if (val.status == 'a') {
-                    arrived.appendChild(new_p);
+                    arrived.appendChild(routeName);
                 } else if (val.status == 'o') {
-                    ontime.appendChild(new_p);
+                    ontime.appendChild(routeName);
                 } else {
-                    delayed.appendChild(new_p);
+                    delayed.appendChild(routeName);
                 }
             }
         }
