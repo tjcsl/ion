@@ -160,13 +160,6 @@ The master password for development environments is `notfish`. Login with your u
 
 To authenticate using Kerberos, connect to CSL VPN and then login using your CSL Kerberos credentials (same username and password as on production Ion).
 
-## Setting up Files
-
-You can find a list of file systems at ``intranet/apps/files/models.py``. To add these systems so that they appear on the Files page, run the statements found in the file. A sample is shown below:
-
-    $ ./manage.py shell_plus
-    >>> Host.objects.create(name="Computer Systems Lab", code="csl", address="remote.tjhsst.edu", linux=True)
-
 # Advanced
 
 ## Backup or export database from Docker
