@@ -17,6 +17,9 @@ from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.text import slugify
+from pypdf import PdfReader, PdfWriter, Transformation
+from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfgen import canvas
 from sentry_sdk import add_breadcrumb, capture_exception
 from xhtml2pdf import pisa
 
@@ -211,22 +214,11 @@ def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> str | None:
 
 def get_numpages(tmpfile_name: str) -> int:
     try:
-        output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as e:
-        logger.error("Could not run pdfinfo command (returned %d): %s", e.returncode, e.output)
+        reader = PdfReader(tmpfile_name)
+        return len(reader.pages)
+    except Exception as e:
+        logger.error("Could not read PDF with pypdf: %s", e)
         return -1
-
-    lines = output.splitlines()
-    num_pages = -1
-    pages_prefix = "Pages:"
-    for line in lines:
-        if line.startswith(pages_prefix):
-            try:
-                num_pages = int(line[len(pages_prefix) :].strip())
-            except ValueError:
-                num_pages = -1
-
-    return num_pages
 
 
 # If a file is identified as a mimetype that is a key in this dictionary, the magic files (in the "magic_files"
@@ -474,21 +466,94 @@ def print_job(obj: PrintJob, do_print: bool = True):
             if obj.fit:
                 args.extend(["-o", "fit-to-page"])
 
-            title_page = html_to_pdf(
-                "printing/title_page.html",
-                final_filename,
-                {
-                    "obj": obj,
-                    "filename": filebase,
-                    "time": timezone.now(),
-                    "pages": num_pages,
-                },
-            )
+            # Merge watermark onto every page if the file is a PDF.
+            # For non-PDF files, fall back to printing a separate
+            # title page.
+            is_pdf = get_mimetype(final_filename) == "application/pdf"
+            merged = False
 
-            delete_filenames.add(title_page)
+            if is_pdf:
+                try:
+                    target_reader = PdfReader(final_filename)
+                    writer = PdfWriter()
+
+                    selected_pages = set()
+                    if obj.page_range:
+                        for part in obj.page_range.split(","):
+                            bounds = [int(number) for number in part.split("-")]
+                            selected_pages.update(range(bounds[0], bounds[-1] + 1))
+                    for page_number, source_page in enumerate(target_reader.pages, start=1):
+                        page = writer.add_page(source_page)
+                        if selected_pages and page_number not in selected_pages:
+                            continue
+                        packet = BytesIO()
+                        if page.rotation:
+                            page.transfer_rotation_to_content()
+                        box = page.cropbox
+                        page_width = float(box.width)
+                        page_height = float(box.height)
+
+                        c = canvas.Canvas(
+                            packet,
+                            pagesize=(page_width, page_height),
+                        )
+                        c.setFont("Helvetica", 8)
+                        c.setFillColorRGB(0.5, 0.5, 0.5)
+
+                        watermark_text = f"Ion Printing | {obj.user.username} | {timezone.localtime().strftime('%Y-%m-%d %H:%M')}"
+                        text_width = stringWidth(
+                            watermark_text,
+                            "Helvetica",
+                            8,
+                        )
+
+                        margin = min(15, page_width / 4)
+                        font_size = min(8, 8 * (page_width - 2 * margin) / max(1, text_width))
+                        c.setFont("Helvetica", font_size)
+                        x = page_width - stringWidth(watermark_text, "Helvetica", font_size) - margin
+                        y = min(15, page_height / 4)
+                        c.drawString(x, y, watermark_text)
+                        c.save()
+
+                        packet.seek(0)
+                        watermark_pdf = PdfReader(packet)
+                        page.merge_transformed_page(
+                            watermark_pdf.pages[0],
+                            Transformation().translate(float(box.left), float(box.bottom)),
+                        )
+
+                    merged_fd, merged_filename = tempfile.mkstemp(
+                        prefix=f"ion_print_merged_{obj.user.username}_{filebase_escaped}",
+                    )
+                    os.close(merged_fd)
+                    delete_filenames.add(merged_filename)
+
+                    with open(merged_filename, "wb") as f:
+                        writer.write(f)
+
+                    # Print the merged file instead.
+                    args[3] = merged_filename
+                    merged = True
+                except Exception as e:
+                    logger.error(
+                        "Failed to watermark PDF: %s",
+                        e,
+                    )
+                    # Fall back to printing the title page.
+
+            if not merged:
+                title_page = html_to_pdf(
+                    "printing/title_page.html",
+                    final_filename,
+                    {"obj": obj, "time": timezone.now(), "pages": num_pages},
+                )
+                if title_page is None:
+                    raise Exception("Could not generate the print job cover sheet")
+                delete_filenames.add(title_page)
 
             try:
-                subprocess.check_output(["lpr", "-P", printer, title_page], stderr=subprocess.STDOUT, universal_newlines=True)
+                if not merged:
+                    subprocess.check_output(["lpr", "-P", printer, title_page], stderr=subprocess.STDOUT, universal_newlines=True)
                 subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
             except subprocess.CalledProcessError as e:
                 if "is not accepting jobs" in e.output:
@@ -502,7 +567,10 @@ def print_job(obj: PrintJob, do_print: bool = True):
         obj.save()
     finally:
         for filename in delete_filenames:
-            os.remove(filename)
+            try:
+                os.remove(filename)
+            except FileNotFoundError:
+                pass
 
 
 @login_required
