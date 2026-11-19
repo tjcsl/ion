@@ -100,6 +100,10 @@ jobs:
       # We need the full history so we can validate commit messages.
       - *repo_setup_fetch_all
       - *python_setup
+
+      - name: Test development helper
+        run: python3 -m unittest discover -s scripts -p test_dev.py -v
+
       - *setup_pip_cache
       - *setup_packages
       - *copy_secret

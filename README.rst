@@ -22,6 +22,16 @@ Documentation (in RestructuredText format) is available inside the "docs" folder
 
 **How can I create a testing environment?** Read the section on `Setting up a Dev Environment <https://tjcsl.github.io/ion/setup/setup.html>`_ in the documentation.
 
+From the repository root, diagnose an existing Docker setup and run focused tests with:
+
+.. code-block:: bash
+
+    python3 scripts/dev.py doctor
+    python3 scripts/dev.py test intranet.apps.polls
+
+The helper reports missing prerequisites and does not start services automatically.
+Contributors using coding agents can start with `AGENTS.md <AGENTS.md>`_ for a code map, test commands, and repository conventions.
+
 **How can I contribute to Ion? How can I report a bug? How can I report a security issue/vulnerability?**
 
 Please read our `contributing guide <https://tjcsl.github.io/ion/developing/contributing.html>`_ for more information.

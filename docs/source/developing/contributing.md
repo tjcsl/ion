@@ -12,7 +12,7 @@ Please see [our security policy](#security-policy). Do not report security vulne
 
 ## Pull Requests
 - All PRs should target `dev`, not `master`.
-- If the change is anything more than a simple typo or a fairly obvious fix, please [set up a development environment](docs/setup/vagrant.rst) and test the change there before submitting a PR.
+- If the change is anything more than a simple typo or a fairly obvious fix, please [set up a development environment](../setup/setup.md) and test the change there before submitting a PR.
 - It is strongly recommended that you [run `pre-commit`](#pre_commit), and [the test suite](#running-tests) to ensure that the build will pass. Please also read the entire [style guide](styleguide.rst).
 - Please read [Formatting commit messages](#formatting_commits).
 - If your PR closes an issue, include "Closes #XXX" or similar in the messages of the commits that close each issue so the issues will be [automatically closed](https://help.github.com/en/articles/closing-issues-using-keywords) when the commits are merged into `master`.
