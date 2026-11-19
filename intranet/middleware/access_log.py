@@ -38,7 +38,7 @@ class AccessLogMiddleWare:
                 any(path.startswith(path_beginning) for path_beginning in settings.NONLOGGABLE_PATH_BEGINNINGS)
                 or any(path.endswith(path_ending) for path_ending in settings.NONLOGGABLE_PATH_ENDINGS)
         ):
-            log_line = f'{ip} - {username} - [{timezone.localtime()}] "{path}" "{user_agent}"'
+            log_line = f'IP: {ip} - User: {username} - Time: [{timezone.localtime()}] - Path: "{path}" - User agent: "{user_agent}"'
             logger.info(log_line)
 
             request._read_started = False

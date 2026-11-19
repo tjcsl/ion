@@ -22,7 +22,7 @@ class Command(BaseCommand):
         notify = options["notify"]
         pd_data = period_start_end_data(None)
         if pd_data:
-            self.stdout.write(json.dumps(pd_data))
+            self.stdout.write(f"Periods: {json.dumps(pd_data)}")
 
         if pd_data and notify:
             self.do_notify(pd_data)

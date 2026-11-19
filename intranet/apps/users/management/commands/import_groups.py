@@ -23,7 +23,8 @@ class Command(BaseCommand):
                     self.stdout.write(f"Created group {gname} with new id {ngrp.id}, old id {gid}")
                     mappings[gid] = ngrp
 
-        self.stdout.write(str(mappings))
+        for gid, grp in mappings.items():
+            self.stdout.write(f"New Group: {grp}, Old ID: {gid}, New ID: {grp.id}")
         with open("groups_static.csv", encoding="utf-8") as staticopen:
             static = csv.reader(staticopen)
             for uid, gid in static:
