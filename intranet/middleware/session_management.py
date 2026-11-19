@@ -15,6 +15,10 @@ class SessionManagementMiddleware:
 
     def __call__(self, request):
         if request.user is not None and request.user.is_authenticated:
+            if not request.user.is_active:
+                logout(request)
+                return self.get_response(request)
+
             if isinstance(request.session.get("login_time", None), float):
                 if (
                     request.user.last_global_logout_time is not None

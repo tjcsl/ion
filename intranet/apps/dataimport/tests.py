@@ -11,6 +11,7 @@ from intranet.utils.date import get_senior_graduation_year
 
 from ...test.ion_test import IonTestCase
 from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ..groups.models import Group
 from ..users.models import User
 from .management.commands.import_students import Command as import_students
 
@@ -18,11 +19,59 @@ from .management.commands.import_students import Command as import_students
 class YearCleanupTest(IonTestCase):
     """Tests end of year cleanup."""
 
+    def test_requires_one_user_mode(self):
+        # Cleanup must explicitly choose exactly one user policy before it can change any data.
+        for args in ((), ("--delete-users", "--archive-users"), ("--archive-users", "--no-user-changes")):
+            with self.subTest(args=args), self.assertRaises(CommandError):
+                call_command("year_cleanup", *args)
+
+    def test_archive_users(self):
+        graduate = User.objects.create(username="graduate", graduation_year=2020, admin_comments="Keep history")
+        locked = User.objects.create(username="locked_graduate", graduation_year=2020, user_locked=True)
+        superuser = User.objects.create(username="graduate_admin", graduation_year=2020, is_superuser=True)
+        staff = User.objects.create(username="graduate_staff", graduation_year=2020)
+        staff.groups.add(Group.objects.create(name="admin_staff"))
+        alumnus = User.objects.create(username="alumnus", graduation_year=2020, user_type="alum")
+        current = User.objects.create(username="current_student", graduation_year=2021)
+        teacher = User.objects.create(username="current_teacher", user_type="teacher")
+        out = StringIO()
+
+        with patch("intranet.apps.dataimport.management.commands.year_cleanup.timezone.now", return_value=timezone.make_aware(datetime(2020, 6, 20))):
+            call_command("year_cleanup", "--archive-users", "--run", "--confirm", senior_grad_year=2021, stdout=out)
+
+        # Keep graduate records and comments while locking them; retain administrators as active alumni.
+        for user in (graduate, locked, superuser, staff, alumnus, current, teacher):
+            user.refresh_from_db()
+        self.assertTrue(graduate.user_locked)
+        self.assertTrue(locked.user_locked)
+        self.assertEqual(graduate.admin_comments, "Keep history")
+        for user in (superuser, staff):
+            self.assertFalse(user.user_locked)
+            self.assertEqual(user.user_type, "alum")
+        for user in (alumnus, current, teacher):
+            self.assertFalse(user.user_locked)
+        self.assertIn("Archived users: 1", out.getvalue())
+        self.assertIn("Already archived users: 1", out.getvalue())
+
+    def test_archive_dry_run_and_no_user_changes(self):
+        graduate = User.objects.create(username="graduate", graduation_year=2020, seen_welcome=True)
+        for args in (("--archive-users",), ("--no-user-changes", "--run", "--confirm")):
+            with self.subTest(args=args):
+                with patch(
+                    "intranet.apps.dataimport.management.commands.year_cleanup.timezone.now", return_value=timezone.make_aware(datetime(2020, 6, 20))
+                ):
+                    call_command("year_cleanup", *args, senior_grad_year=2021, stdout=StringIO())
+                graduate.refresh_from_db()
+                self.assertFalse(graduate.user_locked)
+                self.assertEqual(graduate.user_type, "student")
+                if "--run" not in args:
+                    self.assertTrue(graduate.seen_welcome)
+
     def test_year_cleanup(self):
         out = StringIO()
         year = timezone.now().year
         turnover_date = datetime(year, 7, 1)
-        call_command("year_cleanup", stdout=out, senior_grad_year=year + 1)
+        call_command("year_cleanup", stdout=out, senior_grad_year=year + 1, delete_users=True)
         output = [
             "In pretend mode.",
             "Turnover date set to: {}".format(turnover_date.strftime("%c")),
@@ -55,7 +104,7 @@ class YearCleanupTest(IonTestCase):
             "intranet.apps.dataimport.management.commands.year_cleanup.timezone.now",
             return_value=datetime(2020, 6, 20, tzinfo=pytz.timezone("America/New_York")),
         ) as m:
-            call_command("year_cleanup", senior_grad_year=2021, run=True, confirm=True)
+            call_command("year_cleanup", senior_grad_year=2021, run=True, confirm=True, delete_users=True)
 
         m.assert_called()
 
