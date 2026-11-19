@@ -3,17 +3,10 @@
 {% load pipeline %}
 
 {% block js %}
-    <script src="{% static 'vendor/sorttable.js' %}"></script>
     {{ block.super }}
-    <script>
-        $(function() {
-            Sortable.init();
-        });
-    </script>
 {% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'vendor/sortable-0.8.0/css/sortable-theme-minimal.css' %}">
     {{ block.super }}
 {% endblock %}
 
@@ -52,14 +45,14 @@
     <br>
     <br>
     {% if delinquents != None %}
-        Click on column titles to sort. Showing {{ delinquents|length }} result{{ delinquents|length|pluralize }}.
-        <table data-sortable class="sortable fancy-table">
+        Showing page {{ delinquents.number }} of {{ delinquents.paginator.num_pages }}, {{ delinquents.paginator.count }} total result{{ delinquents.paginator.count|pluralize }}.
+        <table class="fancy-table">
             <thead>
                 <tr>
-                    <th>Student</th>
+                    <th><a href="?lower={{ lower_absence_limit }}&upper={{ upper_absence_limit }}&start={{ start_date|date:'Y-m-d' }}&end={{ end_date|date:'Y-m-d' }}&sort=last_name">Student {% if sort == 'last_name' %}▲{% endif %}</a></th>
                     <th>ID</th>
-                    <th>Absences</th>
-                    <th>Grade</th>
+                    <th><a href="?lower={{ lower_absence_limit }}&upper={{ upper_absence_limit }}&start={{ start_date|date:'Y-m-d' }}&end={{ end_date|date:'Y-m-d' }}&sort=absences">Absences {% if sort == 'absences' %}▲{% endif %}</a></th>
+                    <th><a href="?lower={{ lower_absence_limit }}&upper={{ upper_absence_limit }}&start={{ start_date|date:'Y-m-d' }}&end={{ end_date|date:'Y-m-d' }}&sort=grade">Grade {% if sort == 'grade' %}▲{% endif %}</a></th>
                     <th>Counselor</th>
                     <th>TJ Email</th>
                     <th>Personal Email</th>
@@ -107,6 +100,12 @@
             </tbody>
         </table>
         <br>
+        {% if delinquents.has_previous %}
+            <a class="button" href = "?{{ request.GET.urlencode }}&page={{ delinquents.previous_page_number }}">Previous</a>
+        {% endif %}
+        {% if delinquents.has_next %}
+            <a class="button" href = "?{{ request.GET.urlencode }}&page={{ delinquents.next_page_number }}">Next</a>
+        {% endif %}
         <a class="button" href="{% url 'eighth_admin_download_delinquent_students_csv' %}?{{ request.META.QUERY_STRING }}">Download as CSV</a>
     {% endif %}
 
