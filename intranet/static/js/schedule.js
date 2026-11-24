@@ -188,11 +188,11 @@ $(function() {
                 var end = current.prev.end.str;
                 var start = current.next.start.str;
                 var times =
-                    (Number(end.slice(0, 2)) % 12 || 12) +
-                    end.slice(2) +
+                    (Number(end.split(":")[0]) % 12 || 12) + ":" +
+                    end.split(":")[1] +
                     " - " +
-                    (Number(start.slice(0, 2)) % 12 || 12) +
-                    start.slice(2);
+                    (Number(start.split(":")[0]) % 12 || 12) + ":" +
+                    start.split(":")[1];
                 prev.after("<tr class='schedule-block schedule-block-between current'><th>Passing:</th><td>" + times + "</td></tr>");
             }
         }
