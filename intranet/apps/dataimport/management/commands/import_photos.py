@@ -24,7 +24,7 @@ class Command(BaseCommand):
         PHOTO_ROOT_PATH = Path(PHOTO_ROOT_DIRECTORY)
         sys.stdout.write(f"Preparing to import photos from directory {PHOTO_ROOT_DIRECTORY}\n")
         messages = []
-        all_photos = list(PHOTO_ROOT_PATH.glob("*.jpg"))
+        all_photos = [*PHOTO_ROOT_PATH.glob("*.jpg"), *PHOTO_ROOT_PATH.glob("*.jpeg"), *PHOTO_ROOT_PATH.glob("*.png")]
         for path in all_photos:
             user = None
             if IS_STAFF:
