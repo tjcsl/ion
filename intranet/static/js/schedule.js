@@ -135,7 +135,6 @@ $(function() {
         $sch = $(".schedule");
         var schDate = $sch.attr("data-date");
         if (!schDate) return;
-        var curDate = formatDate(schDate);
         var periods = getPeriods();
         if (!now) now = new Date();
 
@@ -167,33 +166,52 @@ $(function() {
         // if (current !== window.prevPeriod) console.debug(now.getHours() + ":" + now.getMinutes(), "current:", current);
         window.prevPeriod = current;
         $(".schedule-block").removeClass("current");
-        $(".schedule-block-between").remove()
+        $(".schedule-block-between").remove();
 
         // If the date has changed -- the <td> with the 'today' class is not actually today -- update the classes
         var today_td = $sch.find("td.today");
-        var dateString = new Date().toISOString().slice(0, 10);;
+        var dateString = [
+            now.getFullYear(),
+            String(now.getMonth() + 1).padStart(2, "0"),
+            String(now.getDate()).padStart(2, "0")
+        ].join("-");
         if(today_td.find("table.bellschedule-table").attr("data-date") != dateString) {
             today_td.removeClass("today");
             $("table.bellschedule-table[data-date='" + dateString + "']").closest("td").addClass("today");
         }
-
         if (current) {
             if (current.status === "in") {
                 var p = getPeriodElem(current.period);
                 p.addClass("current");
             } else if (current.status === "between") {
-                var prev = getPeriodElem(current.prev),
-                    next = getPeriodElem(current.next);
-                var times = current.prev.end.str + " - " + current.next.start.str;
+                var prev = getPeriodElem(current.prev);
+                var end = current.prev.end.str;
+                var start = current.next.start.str;
+                var times =
+                    (Number(end.slice(0, 2)) % 12 || 12) +
+                    end.slice(2) +
+                    " - " +
+                    (Number(start.slice(0, 2)) % 12 || 12) +
+                    start.slice(2);
                 prev.after("<tr class='schedule-block schedule-block-between current'><th>Passing:</th><td>" + times + "</td></tr>");
             }
         }
     }
 
+    refresh = function() {
+        requestAnimationFrame(() => {
+            displayPeriod();
+        })
+    }
+
     scheduleBind();
 
-    displayPeriod();
-    setInterval(displayPeriod, 10000);
+    refresh();
+
+    setInterval(refresh, 10000);
+
+    $("#month-button").on("click", refresh);
+    $("#week-button").on("click", refresh);
 });
 
 function toggleTouchEvents(view_name) {
