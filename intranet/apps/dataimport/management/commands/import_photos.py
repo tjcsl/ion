@@ -42,15 +42,24 @@ class Command(BaseCommand):
                 print(f"IGNORING {path.name}")
                 continue
 
-            grade_number = user.grade.number
             img = Image.open(path)
             img_arr = io.BytesIO()
             img.save(img_arr, format="JPEG")
             value = img_arr.getvalue()
-            message = f"Creating photo for {user} grade {grade_number}"
+            grade_number = user.grade.number
+            photos = Photo.objects.filter(user=user, grade_number=grade_number).only("pk")
+            photo = photos.filter(pk=user.preferred_photo_id).first() or photos.last()
+            if photo is None:
+                Photo.objects.create(user=user, grade_number=grade_number, _binary=value)
+                action = "Creating"
+            else:
+                photo._binary = value
+                photo.save(update_fields=["_binary"])
+                action = "Updating"
+
+            message = f"{action} photo for {user} grade {grade_number}"
             print(message)
             messages.append(message)
-            Photo.objects.create(user=user, grade_number=grade_number, _binary=value)
         with open("photos_created.txt", "w", encoding="utf-8") as f:
             f.write("\n".join(messages))
 
