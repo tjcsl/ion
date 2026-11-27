@@ -50,7 +50,6 @@ def nav_categorizer(request):
         (r"^/schedule", "schedule"),
         (r"^/events", "events"),
         (r"^/enrichment", "enrichment"),
-        (r"^/files", "files"),
         (r"^/printing", "printing"),
         (r"^/groups", "groups"),
         (r"^/polls", "polls"),

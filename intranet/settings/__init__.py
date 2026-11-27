@@ -293,9 +293,8 @@ PRINTING_PAGES_LIMIT_TEACHERS = 50
 PRINT_RATELIMIT_FREQUENCY = 2
 PRINT_RATELIMIT_MINUTES = 5
 
-# The maximum file upload and download size for files
+# The maximum file upload size
 FILES_MAX_UPLOAD_SIZE = 200 * 1024 * 1024
-FILES_MAX_DOWNLOAD_SIZE = 200 * 1024 * 1024
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = FILES_MAX_UPLOAD_SIZE
 
@@ -397,7 +396,6 @@ LIST_OF_INDEPENDENT_CSS = [
     "base",
     "login",
     "emerg",
-    "files",
     "schedule",
     "themes",
     "theme.blue",
@@ -455,7 +453,6 @@ LIST_OF_INDEPENDENT_CSS = [
     "dark/cke",
     "dark/polls",
     "dark/bus",
-    "dark/files",
     "dark/welcome",
     "dark/preferences",
     "dark/printing",
@@ -772,7 +769,6 @@ INSTALLED_APPS = [
     "intranet.apps.feedback",
     "intranet.apps.users",
     "intranet.apps.preferences",
-    "intranet.apps.files",
     "intranet.apps.printing",
     "intranet.apps.polls",
     "intranet.apps.signage",
