@@ -304,6 +304,9 @@ def stats_global_view(request):
     if request.method == "POST" and request.POST.get("year", False):
         year = int(request.POST.get("year"))
         do_csv = request.POST.get("generate", "csv") == "csv"
+        activities = EighthActivity.objects.all()
+        if not request.user.is_eighth_admin:
+            activities = activities.exclude(administrative=True)
         if do_csv:
             response = HttpResponse(content_type="text/csv")
             response["Content-Disposition"] = 'attachment; filename="eighth.csv"'
