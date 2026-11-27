@@ -72,7 +72,7 @@ class PamAuthenticationBackend:
         realm = settings.CSL_REALM
         pam_authenticator = pam.pam()
         full_username = f"{username}@{realm}"
-        result = pam_authenticator.authenticate(full_username, password)
+        result = pam_authenticator.authenticate(full_username, password, service=settings.PAM_SERVICE)
 
         if result:
             result = PamAuthenticationResult.SUCCESS
