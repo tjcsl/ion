@@ -5,18 +5,19 @@ from dateutil.relativedelta import relativedelta
 from django import http
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError, transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from ...utils.html import safe_html
 from ..auth.decorators import deny_restricted
-from .forms import EnrichmentActivityForm
+from .forms import EnrichmentActivityBulkForm, EnrichmentActivityForm
 from .models import EnrichmentActivity
 
 logger = logging.getLogger(__name__)
 
 
-def date_format(date):
+def date_format(date: datetime) -> str | None:
     try:
         d = date.strftime("%Y-%m-%d")
     except ValueError:
@@ -24,7 +25,7 @@ def date_format(date):
     return d
 
 
-def decode_date(date):
+def decode_date(date: str) -> datetime | None:
     try:
         d = datetime.strptime(date, "%Y-%m-%d")
     except ValueError:
@@ -32,11 +33,11 @@ def decode_date(date):
     return d
 
 
-def is_weekday(date):
+def is_weekday(date: datetime) -> bool:
     return date.isoweekday() in range(1, 6)
 
 
-def enrichment_context(request, date=None):
+def enrichment_context(request: http.HttpRequest, date: datetime | None = None) -> dict:
     local_time = timezone.localtime()
 
     if date is None:
@@ -72,7 +73,7 @@ def enrichment_context(request, date=None):
     return data
 
 
-def week_data(request, date=None):
+def week_data(request: http.HttpRequest, date: datetime | None = None) -> dict:
     if date:
         start_date = date
     elif "date" in request.GET:
@@ -101,7 +102,7 @@ def week_data(request, date=None):
     return data
 
 
-def month_data(request):
+def month_data(request: http.HttpRequest) -> dict:
     if "date" in request.GET:
         start_date = decode_date(request.GET["date"])
     else:
@@ -127,7 +128,7 @@ def month_data(request):
 
 @login_required
 @deny_restricted
-def enrichment_view(request):
+def enrichment_view(request: http.HttpRequest) -> http.HttpResponse:
     """Enrichment homepage.
 
     Shows a list of enrichments occurring in the next week, month, and
@@ -203,7 +204,7 @@ def enrichment_view(request):
 
 @login_required
 @deny_restricted
-def enrichment_signup_view(request, enrichment_id):
+def enrichment_signup_view(request: http.HttpRequest, enrichment_id: int) -> http.HttpResponse:
     if request.method == "POST":
         enrichment = get_object_or_404(EnrichmentActivity, id=enrichment_id)
 
@@ -240,7 +241,7 @@ def enrichment_signup_view(request, enrichment_id):
 
 @login_required
 @deny_restricted
-def enrichment_roster_view(request, enrichment_id):
+def enrichment_roster_view(request: http.HttpRequest, enrichment_id: int) -> http.HttpResponse:
     is_enrichment_admin = request.user.has_admin_permission("enrichment")
     enrichment = get_object_or_404(EnrichmentActivity, id=enrichment_id)
 
@@ -281,7 +282,7 @@ def enrichment_roster_view(request, enrichment_id):
 
 @login_required
 @deny_restricted
-def add_enrichment_view(request):
+def add_enrichment_view(request: http.HttpRequest) -> http.HttpResponse:
     """Add enrichment activity page."""
 
     is_enrichment_admin = request.user.has_admin_permission("enrichment")
@@ -311,11 +312,55 @@ def add_enrichment_view(request):
 
 @login_required
 @deny_restricted
-def modify_enrichment_view(request, enrichment_id):
-    """Modify enrichment activity page.
+def enrichment_bulk_create_view(request: http.HttpRequest) -> http.HttpResponse:
+    """View for creating multiple enrichments.
+
+    Get requests will render bulk-create form with Mon-Fri checkboxes.
+    Post requests create one EnrichmentActivity for each checked day and then redirect.
+    """
+    is_enrichment_admin = request.user.has_admin_permission("enrichment")
+    if not is_enrichment_admin:
+        messages.error(request, "You are not authorized to access the requested app.")
+        return redirect("/")
+
+    if request.method == "POST":
+        form = EnrichmentActivityBulkForm(data=request.POST)
+        if form.is_valid():
+            current_dt = None
+            try:
+                with transaction.atomic():
+                    created = []
+                    for dt in form.get_selected_dates():
+                        current_dt = dt
+                        activity = form.create_for_date(dt, request.user)
+                        created.append(activity.time.strftime("%A, %b %-d"))
+            except IntegrityError:
+                messages.error(
+                    request,
+                    f"Could not create activities: {current_dt.strftime('%A, %b %-d')} conflicts with an existing "
+                    "activity or another error occurred.",
+                )
+            else:
+                messages.success(
+                    request,
+                    f"Created {len(created)} enrichment activities: " + ", ".join(created),
+                )
+                return redirect("enrichment")
+    else:
+        form = EnrichmentActivityBulkForm()
+
+    return render(request, "enrichment/bulk_create.html", {"form": form})
+
+
+@login_required
+@deny_restricted
+def modify_enrichment_view(request: http.HttpRequest, enrichment_id: int) -> http.HttpResponse:
+    """
+    Modify enrichment activity page.
 
     Args:
-        enrichment_id (int): enrichment activity id
+        request (HttpRequest): The HTTP request object.
+        enrichment_id (int): The unique identifier of the enrichment activity.
     """
 
     enrichment = get_object_or_404(EnrichmentActivity, id=enrichment_id)
@@ -344,7 +389,7 @@ def modify_enrichment_view(request, enrichment_id):
 
 @login_required
 @deny_restricted
-def delete_enrichment_view(request, enrichment_id):
+def delete_enrichment_view(request: http.HttpRequest, enrichment_id: int) -> http.HttpResponse:
     """Delete enrichment activity page.
 
     Args:
