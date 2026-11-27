@@ -1,0 +1,144 @@
+/* Ion Thanksgiving Theme */
+
+/* colors for UI */
+body, input[type="text"], ::placeholder, a, a:active, a:visited,
+.git-version, .schedule .chevron i {
+    color: #5a3e1b !important;
+}
+
+.header {
+    background-color: #c0622a !important;
+    opacity: 0.95;
+    z-index: 1050;
+}
+
+ul.nav .selected {
+    background-color: #c0622a !important;
+    opacity: 0.85;
+}
+
+ul.nav .selected a {
+    color: #fff7ed !important;
+}
+
+.widget, .widget-title, .widget-content,
+.announcement, .event {
+    background-color: rgba(255, 247, 230, 0.92) !important;
+    border-left: none !important;
+    border-radius: 6px !important;
+    box-shadow: 0 2px 8px rgba(120, 60, 10, 0.13), 0 0 0 1px rgba(192, 98, 42, 0.18) !important;
+}
+
+.widget-title {
+    color: #7a3b10 !important;
+    border-radius: 6px 6px 0 0 !important;
+}
+
+/* gradient */
+html {
+    min-height: 100%;
+    background-color: #f5e6c8;
+    background-image:
+        radial-gradient(ellipse at 15% 80%, rgba(192, 98, 42, 0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(160, 120, 40, 0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(192, 98, 42, 0.05) 0%, transparent 70%);
+}
+
+body {
+    min-height: 100%;
+    background: transparent !important;
+}
+
+/* footer */
+.footer {
+    background: rgba(245, 230, 200, 0.85);
+}
+
+.footer a {
+    color: #7a3b10;
+}
+
+/* leaf animations */
+@keyframes leaf-fall {
+    0%   { transform: translateY(-60px) rotate(0deg)    translateX(0px);   opacity: 0; }
+    10%  { opacity: 0.75; }
+    85%  { opacity: 0.6; }
+    100% { transform: translateY(var(--leaf-floor)) rotate(340deg)  translateX(-15px); opacity: 0.7; }
+}
+
+@keyframes leaf-fall-2 {
+    0%   { transform: translateY(-60px) rotate(20deg)   translateX(0px);   opacity: 0; }
+    10%  { opacity: 0.65; }
+    85%  { opacity: 0.55; }
+    100% { transform: translateY(var(--leaf-floor)) rotate(-300deg) translateX(20px);  opacity: 0.6; }
+}
+
+/* leaf elements */
+.tg-leaf {
+    position: fixed;
+    top: -80px;
+    font-size: 1.6em;
+    opacity: 0;
+    z-index: -1000;
+    pointer-events: none;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    user-select: none;
+    /* leaves don't stack; left this to make implementation easier */
+    --leaf-floor: 92vh;
+}
+
+/* turkey */
+@keyframes turkey-waddle {
+    0%   { left: -120px; }
+    100% { left: calc(100vw + 120px); }
+}
+
+.tg-turkey {
+    position: fixed;
+    bottom: 8px;
+    left: -120px;
+    font-size: 2.8em;
+    z-index: -999;
+    opacity: 0.55;
+    pointer-events: none;
+    animation: turkey-waddle 40s linear infinite;
+    animation-delay: 5s;
+    user-select: none;
+    transform: scaleX(-1);
+    display: inline-block;
+}
+
+.toggle-thanksgiving-theme {
+    color: #ffffff !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    font-family: inherit !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+    margin-right: 10px !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    line-height: inherit !important;
+}
+
+.toggle-thanksgiving-theme:hover {
+    text-decoration: underline !important;
+    color: #ffffff !important;
+}
+
+@media (max-width: 550px) {
+    .toggle-thanksgiving-theme {
+        position: fixed;
+        bottom: 5px;
+        right: 15px;
+        font-size: inherit;
+        padding: 10px !important;
+    }
+}
