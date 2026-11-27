@@ -22,6 +22,10 @@ class Command(BaseCommand):
             default=get_senior_graduation_year(),
             help="The senior graduation year",
         )
+        user_mode = parser.add_mutually_exclusive_group(required=True)
+        user_mode.add_argument("--delete-users", action="store_true", dest="delete_users", help="Delete graduated users.")
+        user_mode.add_argument("--archive-users", action="store_true", dest="archive_users", help="Archive graduated users instead of deleting.")
+        user_mode.add_argument("--no-user-changes", action="store_true", dest="no_user_changes", help="Skip graduated-user deletion and archiving.")
 
     def ask(self, q):
         if input(f"{q} [Yy]: ").lower() != "y":
@@ -70,7 +74,7 @@ class Command(BaseCommand):
             AnnouncementRequest: filtered
 
         USERS:
-            User: graduated students deleted
+            User: graduated students deleted, archived, or kept according to the selected mode
         """
 
         self.stdout.write("Resolving absences")
@@ -81,9 +85,16 @@ class Command(BaseCommand):
         if do_run:
             self.update_welcome()
 
-        self.stdout.write("Deleting graduated users")
-        if do_run:
-            self.handle_delete(senior_grad_year=senior_grad_year)
+        if options["delete_users"]:
+            self.stdout.write("Deleting graduated users")
+            if do_run:
+                self.handle_delete(senior_grad_year=senior_grad_year)
+        elif options["archive_users"]:
+            self.stdout.write("Archiving graduated users")
+            if do_run:
+                self.handle_archive(senior_grad_year=senior_grad_year)
+        else:
+            self.stdout.write("Skipping user delete/archive")
 
         self.stdout.write("Archiving admin comments")
         if do_run:
@@ -112,3 +123,19 @@ class Command(BaseCommand):
                 usr.user_type = "alum"
                 usr.save()
                 self.stdout.write(f"User {usr.username} KEEP")
+
+    def handle_archive(self, *, senior_grad_year: int):
+        users = get_user_model().objects.filter(graduation_year__lt=senior_grad_year).exclude(user_type="alum")
+        archive_ids = []
+        for user in users:
+            # Preserve administrator access, matching the deletion policy.
+            if user.is_staff:
+                user.user_type = "alum"
+                user.save(update_fields=["user_type"])
+                self.stdout.write(f"User {user.username} KEEP")
+            else:
+                archive_ids.append(user.pk)
+        archived_count, already_archived_count = users.filter(pk__in=archive_ids).archive_users()
+        self.stdout.write(f"Archived users: {archived_count}")
+        if already_archived_count:
+            self.stdout.write(f"Already archived users: {already_archived_count}")
