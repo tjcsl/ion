@@ -660,6 +660,7 @@ else:
     }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
+PAM_SERVICE = "ion-login"
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 FCPS_STUDENT_ID_LENGTH = 7
