@@ -102,19 +102,23 @@
 
             <input type="hidden" name="users" value="true">
             <input type="submit" value="Register Users" onclick="if(confirm('Are you sure you want to sign these users up for these activities?')){showWaitScreen();return true;}else return false;">
-            <button onclick="distribute(); return false">Evenly Distribute</button>
+            <button onclick="distribute(); return false">Evenly Distribute</button><br>
+            <label class="allow-exceed">
+                <input type="checkbox" name="allow-exceed" style="margin: 0" /> Allow exceeding capacity when evenly distributing
+            </label>
             <br>
             Click on column titles to sort.
-            <table data-sortable class="sortable distribute-group-grid fancy-table">
+            <table data-sortable class="distribute-group-grid fancy-table">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Student ID</th>
                         <th>Grade</th>
-                        {% for sch in schacts %}
+                        {% for sch, capacity in schacts %}
                         <th>
                             {{ sch.activity }}<br>
                             {{ sch.block }}<br>
+                            Available: <span class="remaining-capacity" data-name="schact{{ sch.id }}">{{ capacity }}</span>/{{ sch.capacity }}<br>
                             <input type="checkbox" name="select-all-{{ sch.id }}" class="select-all" data-name="schact{{ sch.id }}">
                         </th>
                         {% empty %}
@@ -128,7 +132,7 @@
                     <td>{{ user.last_name }}, {{ user.first_name }}{% if user.nickname %} ({{ user.nickname }}){% endif %}</td>
                     <td>{{ user.student_id }}</td>
                     <td>{{ user.grade_number }}</td>
-                    {% for sch in schacts %}
+                    {% for sch, capacity in schacts %}
                     <td>
                         <input type="checkbox" class="user-item" name="schact{{ sch.id }}" value="{{ user.id }}">
                     </td>
