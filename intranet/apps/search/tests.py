@@ -181,7 +181,7 @@ class SearchTestCase(IonTestCase):
         self.assertIn(announcement, response.context["announcements"])
 
     def test_events_search(self):
-        event = Event.objects.create(title="Sysadmins Conscription", description="haha", location="200D", time=timezone.localtime())
+        event = Event.objects.create(title="Sysadmins Conscription", description="haha", location="200D", time=timezone.localtime(), approved=True)
 
         self.login()
         response = self.client.get(reverse("search"), data={"q": "Conscription"}, follow=True)
