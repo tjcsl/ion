@@ -8,7 +8,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         u = get_user_model().objects.get(username=args[0])
-        self.stdout.write(f"{u} - {u.user_locked} - {u.last_login}")
+        self.stdout.write(f"Username: {u} - Locked status: {u.user_locked} - Last login: {u.last_login}")
         u.user_locked = True
         u.save()
-        self.stdout.write(f"{u} - {u.user_locked}")
+        self.stdout.write(f"Locked user {u}")
