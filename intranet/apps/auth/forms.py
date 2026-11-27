@@ -1,8 +1,11 @@
 import logging
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.forms import widgets
+
+from intranet.apps.auth.widgets import TurnstileField
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +50,16 @@ class AuthenticateForm(AuthenticationForm):
 
     trust_device = forms.BooleanField(required=False, initial=True, label="Remember me", label_suffix="")
 
+    # TURNSTILE_ENABLED will override the required setting, but it must be True by default
+    turnstile = TurnstileField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["turnstile"].set_enabled(settings.TURNSTILE_ENABLED)
+        # we'll need the request for ip validation
+        if hasattr(self, "request") and self.request:
+            self.fields["turnstile"].request = self.request
+
     def is_valid(self):
         """Validates the username and password in the form."""
         form = super().is_valid()
@@ -64,5 +77,9 @@ class AuthenticateForm(AuthenticationForm):
         return form
 
     def clean(self):
+        # Django runs form cleaning even after field validation fails. Do not
+        # check credentials (or reveal their validity) without a valid CAPTCHA.
+        if self.has_error("turnstile"):
+            return self.cleaned_data
         self.cleaned_data["password"] = self.cleaned_data.get("password", "") + self.cleaned_data.get("otp_token", "")
         return super().clean()
