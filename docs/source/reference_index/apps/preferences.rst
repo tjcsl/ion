@@ -9,6 +9,8 @@ preferences
 
    fields
    forms
+   models
+   tasks
    tests
    urls
    views
