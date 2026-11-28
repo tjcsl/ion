@@ -17,7 +17,6 @@ $(function() {
         var osearch = "";
         var searchparts = qs.split("&");
         for (var i in searchparts) {
-            // console.debug(searchparts[i]);
             if (searchparts[i].length > 0 && searchparts[i].substring(0, part_exclude.length + 1) !== (part_exclude + "=")) {
                 osearch += searchparts[i] + "&";
             }
@@ -26,7 +25,6 @@ $(function() {
     };
 
     window.osearch = genOrigSearch("date");
-    // console.info("osearch:", window.osearch);
 
     scheduleView = function(reldate) {
         $sch = $(".schedule");
@@ -57,19 +55,8 @@ $(function() {
     };
 
     formatDate = function(date) {
-        // console.log("date: " + date);
         var parts = date.split("-");
         return new Date(parts[0], parts[1] - 1, parts[2]);
-    }
-
-    formatTime = function(time, date) {
-        var d = new Date(date);
-        var tm = time.split(":");
-        var hr = parseInt(tm[0], 10);
-        var mn = parseInt(tm[1], 10);
-        d.setHours(hr < 7 ? hr + 12 : hr);
-        d.setMinutes(mn)
-        return d;
     }
 
     getPeriods = function() {
@@ -85,10 +72,14 @@ $(function() {
             }
 
             var start = $(this).attr("data-block-start");
-            var startDate = formatTime(start, date);
+            var startDate = new Date(date);
+            startDate.setHours(Number(start.split(":")[0]));
+            startDate.setMinutes(Number(start.split(":")[1]));
 
             var end = $(this).attr("data-block-end");
-            var endDate = formatTime(end, date);
+            var endDate = new Date(date);
+            endDate.setHours(Number(end.split(":")[0]));
+            endDate.setMinutes(Number(end.split(":")[1]));
 
             return {
                 "name": $(this).attr("data-block-name"),
@@ -163,7 +154,6 @@ $(function() {
         $sch = $(".schedule");
         if (!now) now = new Date();
         var current = getCurrentPeriod(now);
-        // if (current !== window.prevPeriod) console.debug(now.getHours() + ":" + now.getMinutes(), "current:", current);
         window.prevPeriod = current;
         $(".schedule-block").removeClass("current");
         $(".schedule-block-between").remove();
@@ -205,7 +195,7 @@ $(function() {
     }
 
     scheduleBind();
-
+    
     refresh();
 
     setInterval(refresh, 10000);
