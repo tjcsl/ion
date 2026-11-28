@@ -10,12 +10,20 @@ class Route(models.Model):
     space = models.CharField(max_length=4, blank=True)
     bus_number = models.CharField(max_length=5, blank=True)
     status = models.CharField("arrival status", choices=ARRIVAL_STATUSES, max_length=1, default="o")
+    reason = models.CharField(max_length=50, blank=True)
+    estimated_time_delay = models.CharField(max_length=5, blank=True)
+    fcps_delay = models.BooleanField(default=False)
+    admin_override = models.BooleanField(default=False)
 
     def reset_status(self):
         """Reset status to (on time)"""
         self.status = "o"
         self.space = ""
-        self.save(update_fields=["status", "space"])
+        self.reason = ""
+        self.estimated_time_delay = ""
+        self.fcps_delay = False
+        self.admin_override = False
+        self.save(update_fields=["status", "space", "reason", "estimated_time_delay", "fcps_delay", "admin_override"])
 
     def __str__(self):
         return self.route_name

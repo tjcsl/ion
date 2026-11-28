@@ -7,8 +7,11 @@ from django.contrib.auth import get_user_model
 from django.core.management import CommandError, call_command
 from django.utils import timezone
 
+from intranet.utils.date import get_senior_graduation_year
+
 from ...test.ion_test import IonTestCase
 from ..eighth.models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
+from ..users.models import User
 from .management.commands.import_students import Command as import_students
 
 
@@ -151,13 +154,16 @@ class ImportStudentsTest(IonTestCase):
         self.assertEqual("2021ttest8", import_students.find_next_available_username(None, "2021ttest", s))
 
     def test_command(self):
-        # Create a counselor user
-        get_user_model().objects.get_or_create(username="abcounselor", user_type="counselor")
+        # Create an administrator user, and a counselor who reports to them
+        administrator = get_user_model().objects.get_or_create(username="abadmin", user_type="teacher")[0]
+        get_user_model().objects.get_or_create(username="abadmin2", user_type="teacher")
+        get_user_model().objects.get_or_create(username="abcounselor", user_type="counselor", administrator=administrator)
 
+        # Jane's administrator is named explicitly; John's is blank, so it comes from his counselor
         csv_contents = (
-            "Last Name,First Name,Middle Name,Student ID,Grade,Gender,Nick Name,Counselor\n"
-            "Doe,Jane,Test,2222222,09,F,,abcounselor\n"
-            "Doe,John,,1111111,09,M,,abcounselor"
+            "Last Name,First Name,Middle Name,Student ID,Grade,Gender,Nick Name,Counselor,Administrator\n"
+            "Doe,Jane,Test,2222222,09,F,,abcounselor,abadmin2\n"
+            "Doe,John,,1111111,09,M,,abcounselor,"
         )
 
         with patch("intranet.apps.dataimport.management.commands.import_students.open", mock_open(read_data=csv_contents)) as m:
@@ -175,6 +181,179 @@ class ImportStudentsTest(IonTestCase):
 
         self.assertEqual(1, get_user_model().objects.filter(username="2021jdoe", first_name="Jane").count())
         self.assertEqual(1, get_user_model().objects.filter(username="2021jdoe1", first_name="John").count())
+
+        self.assertEqual("abadmin2", get_user_model().objects.get(username="2021jdoe").administrator.username)
+        self.assertEqual("abadmin", get_user_model().objects.get(username="2021jdoe1").administrator.username)
+
+
+class UpdateAdministratorsTest(IonTestCase):
+    def setUp(self) -> None:
+        # Two subschool administrators, and a counselor assigned to each
+        self.adminone = get_user_model().objects.get_or_create(username="adminone", last_name="AdminOne", user_type="teacher")[0]
+        self.admintwo = get_user_model().objects.get_or_create(username="admintwo", last_name="AdminTwo", user_type="teacher")[0]
+
+        self.counselorone = get_user_model().objects.get_or_create(
+            username="counselorone", last_name="CounselorOne", user_type="counselor", administrator=self.adminone
+        )[0]
+        self.counselortwo = get_user_model().objects.get_or_create(
+            username="counselortwo", last_name="CounselorTwo", user_type="counselor", administrator=self.admintwo
+        )[0]
+        # A counselor nobody has assigned an administrator to yet
+        self.counselorthree = get_user_model().objects.get_or_create(username="counselorthree", last_name="CounselorThree", user_type="counselor")[0]
+
+    def run_command(self, file_contents: str, *args: str) -> None:
+        with patch("intranet.apps.dataimport.management.commands.update_administrators.open", mock_open(read_data=file_contents)):
+            call_command("update_administrators", "foo.csv", *args)
+
+    def administrator_of(self, username: str) -> User | None:
+        return get_user_model().objects.get(username=username).administrator
+
+    def test_inherits_from_counselor(self) -> None:
+        """With no Administrator column at all, every student takes their counselor's administrator."""
+        file_contents = "Student ID\n1111111\n2222222\n3333333"
+
+        get_user_model().objects.get_or_create(username="2021atest", student_id=1111111, user_type="student", counselor=self.counselorone)
+        get_user_model().objects.get_or_create(username="2021atest2", student_id=2222222, user_type="student", counselor=self.counselortwo)
+        # Already correct, so this one should simply be left alone
+        get_user_model().objects.get_or_create(
+            username="2021atest3", student_id=3333333, user_type="student", counselor=self.counselortwo, administrator=self.admintwo
+        )
+
+        # Pretend mode should not change anything
+        self.run_command(file_contents)
+        self.assertIsNone(self.administrator_of("2021atest"))
+
+        self.run_command(file_contents, "--run")
+
+        self.assertEqual("adminone", self.administrator_of("2021atest").username)
+        self.assertEqual("admintwo", self.administrator_of("2021atest2").username)
+        self.assertEqual("admintwo", self.administrator_of("2021atest3").username)
+
+    def test_reassigns_when_counselor_changes(self) -> None:
+        """A student whose counselor moved subschools follows their counselor's administrator."""
+        file_contents = "Student ID,Administrator\n1111111,"
+
+        get_user_model().objects.get_or_create(
+            username="2021atest", student_id=1111111, user_type="student", counselor=self.counselorone, administrator=self.admintwo
+        )
+
+        self.run_command(file_contents, "--run")
+
+        self.assertEqual("adminone", self.administrator_of("2021atest").username)
+
+    def test_explicit_administrator_wins(self) -> None:
+        """An Administrator named in the CSV overrides what the counselor would imply."""
+        file_contents = 'Student ID,Administrator\n1111111,AdminTwo\n2222222,"AdminTwo, Alice"'
+
+        get_user_model().objects.get_or_create(username="2021atest", student_id=1111111, user_type="student", counselor=self.counselorone)
+        get_user_model().objects.get_or_create(username="2021atest2", student_id=2222222, user_type="student", counselor=self.counselorone)
+
+        self.run_command(file_contents, "--run")
+
+        # Both the bare last name and the SIS "Last, First" form should resolve
+        self.assertEqual("admintwo", self.administrator_of("2021atest").username)
+        self.assertEqual("admintwo", self.administrator_of("2021atest2").username)
+
+    def test_unresolvable_rows_are_skipped(self) -> None:
+        """Rows that cannot be resolved are reported and skipped rather than aborting the run."""
+        file_contents = (
+            "Student ID,Administrator\n"
+            "1111111,NoSuchAdmin\n"  # no staff account by that name
+            "2222222,\n"  # counselor has no administrator to inherit
+            "3333333,\n"  # no counselor at all
+            "4444444,\n"  # no Ion account for this SID
+        )
+
+        get_user_model().objects.get_or_create(username="2021atest", student_id=1111111, user_type="student", counselor=self.counselorone)
+        get_user_model().objects.get_or_create(username="2021atest2", student_id=2222222, user_type="student", counselor=self.counselorthree)
+        get_user_model().objects.get_or_create(username="2021atest3", student_id=3333333, user_type="student")
+
+        self.run_command(file_contents, "--run")
+
+        self.assertIsNone(self.administrator_of("2021atest"))
+        self.assertIsNone(self.administrator_of("2021atest2"))
+        self.assertIsNone(self.administrator_of("2021atest3"))
+
+    def test_only_teachers_match_a_surname(self) -> None:
+        """Administrators are teachers, so no other user type may be matched by surname."""
+        for user_type in ("counselor", "user", "alum", "service", "simple_user", "tjstar_presenter", "student"):
+            with self.subTest(user_type=user_type):
+                get_user_model().objects.filter(last_name="Uniquesurname").delete()
+                get_user_model().objects.create(username=f"n{user_type}", last_name="Uniquesurname", user_type=user_type)
+
+                student = get_user_model().objects.update_or_create(
+                    username="2021anonstaff", defaults={"student_id": 7777777, "user_type": "student", "administrator": None}
+                )[0]
+
+                self.run_command("Student ID,Administrator\n7777777,Uniquesurname", "--run")
+
+                student.refresh_from_db()
+                self.assertIsNone(student.administrator)
+
+        # ...while a teacher with that surname does match
+        get_user_model().objects.filter(last_name="Uniquesurname").delete()
+        teacher = get_user_model().objects.create(username="realteacher", last_name="Uniquesurname", user_type="teacher")
+
+        self.run_command("Student ID,Administrator\n7777777,Uniquesurname", "--run")
+
+        self.assertEqual(teacher, self.administrator_of("2021anonstaff"))
+
+    def test_all_students_from_db(self) -> None:
+        """--all runs the counselor chain over every student who has not graduated, with no CSV."""
+        senior_year = get_senior_graduation_year()
+
+        get_user_model().objects.get_or_create(
+            username="atest", student_id=1111111, user_type="student", counselor=self.counselorone, graduation_year=senior_year
+        )
+        get_user_model().objects.get_or_create(
+            username="atest2", student_id=2222222, user_type="student", counselor=self.counselortwo, graduation_year=senior_year + 1
+        )
+        # Already graduated, so left alone
+        get_user_model().objects.get_or_create(
+            username="atest3", student_id=3333333, user_type="student", counselor=self.counselorone, graduation_year=senior_year - 1
+        )
+
+        # Pretend mode should not change anything
+        call_command("update_administrators", "--all")
+        self.assertIsNone(self.administrator_of("atest"))
+
+        call_command("update_administrators", "--all", "--run")
+
+        self.assertEqual("adminone", self.administrator_of("atest").username)
+        self.assertEqual("admintwo", self.administrator_of("atest2").username)
+        self.assertIsNone(self.administrator_of("atest3"))
+
+    def test_graduation_years_from_db(self) -> None:
+        """--graduation-years narrows the run to the given classes."""
+        get_user_model().objects.get_or_create(
+            username="2027atest", student_id=1111111, user_type="student", counselor=self.counselorone, graduation_year=2027
+        )
+        get_user_model().objects.get_or_create(
+            username="2028atest", student_id=2222222, user_type="student", counselor=self.counselortwo, graduation_year=2028
+        )
+        get_user_model().objects.get_or_create(
+            username="2029atest", student_id=3333333, user_type="student", counselor=self.counselorone, graduation_year=2029
+        )
+
+        call_command("update_administrators", "--graduation-years", "2027", "2028", "--run")
+
+        self.assertEqual("adminone", self.administrator_of("2027atest").username)
+        self.assertEqual("admintwo", self.administrator_of("2028atest").username)
+        self.assertIsNone(self.administrator_of("2029atest"))
+
+    def test_requires_exactly_one_selection(self) -> None:
+        """A CSV and a database selection are mutually exclusive, and one of them is required."""
+        # Nothing selected
+        with self.assertRaises(CommandError):
+            call_command("update_administrators", "--run")
+
+        # Both database selections
+        with self.assertRaises(CommandError):
+            call_command("update_administrators", "--all", "--graduation-years", "2027")
+
+        # A CSV and a database selection
+        with self.assertRaises(CommandError):
+            call_command("update_administrators", "foo.csv", "--all")
 
 
 class ImportStaffTest(IonTestCase):

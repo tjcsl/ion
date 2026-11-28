@@ -124,8 +124,7 @@ def global_custom_theme(request) -> dict[str, dict[str, dict[str, str]] | list[s
         if "css" in theme and "themes/halloween/halloween.css" in theme["css"]:
             theme["css"].remove("themes/halloween/halloween.css")
 
-        # Add the cookie button
-        theme.setdefault("js", []).append("themes/halloween/halloween-cookie.js")
+        # Keep the cookie button and add its standalone styling
         theme.setdefault("css", []).append("themes/halloween/halloween-button.css")
 
     return {"theme": theme, "theme_names": theme_names}

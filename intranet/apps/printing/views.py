@@ -6,6 +6,7 @@ import re
 import subprocess
 import tempfile
 from io import BytesIO
+from typing import Literal
 
 import magic
 from django.conf import settings
@@ -16,9 +17,14 @@ from django.shortcuts import redirect, render
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.text import slugify
+from pypdf import PdfReader, PdfWriter, Transformation
+from reportlab.pdfbase.pdfmetrics import stringWidth
+from reportlab.pdfgen import canvas
 from sentry_sdk import add_breadcrumb, capture_exception
 from xhtml2pdf import pisa
 
+from ...utils.helpers import get_warning_html
+from ..announcements.models import WarningAnnouncement
 from ..auth.decorators import deny_restricted
 from ..context_processors import _get_current_ip
 from .forms import PrintJobForm
@@ -62,7 +68,15 @@ def set_user_ratelimit_status(username: str) -> None:
         cache.incr(cache_key)
 
 
-def parse_alerts(alerts: str) -> tuple[str, str]:
+def parse_alerts(alerts: list[str]) -> tuple[str, Literal["working", "error", "broken"]]:
+    """
+    Parse known alerts into readable text
+    Args:
+        alerts: A list  of known alerts from :func:`~intranet.apps.printing.views.get_printers`
+    Returns:
+        A tuple where the first element is the parsed string and the 2nd element is a css class
+
+    """
     known_alerts = {
         "paused": "unavailable",
         "media-empty-error": "out of paper",
@@ -75,8 +89,8 @@ def parse_alerts(alerts: str) -> tuple[str, str]:
         "door-open-report": "door open",
         "none": "working",
     }
-    alerts = alerts.split()
     alerts_text = ", ".join(known_alerts.get(alert, "error") for alert in alerts)
+
     error_alerts = ["paused"]
     broken_alerts = ["media-empty-error", "media-empty-warning", "media-jam-error", "media-jam-warning", "toner-empty-warning", "toner-empty-error"]
     printer_class = "working"
@@ -89,7 +103,7 @@ def parse_alerts(alerts: str) -> tuple[str, str]:
     return alerts_text, printer_class
 
 
-def get_printers() -> dict[str, list[str]]:
+def get_printers() -> dict[str, tuple[str, list[str]]]:
     """Returns a dictionary mapping name:description for available printers.
 
     This requires that a CUPS client be configured on the server.
@@ -108,16 +122,16 @@ def get_printers() -> dict[str, list[str]]:
             output = subprocess.check_output(["lpstat", "-l", "-p"], universal_newlines=True, timeout=10)
         # Don't die if cups isn't installed.
         except FileNotFoundError:
-            return []
+            return {}
         # Don't die if lpstat fails
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-            return []
+            return {}
 
         PRINTER_LINE_RE = re.compile(r"^printer\s+(\w+)", re.ASCII)
         DESCRIPTION_LINE_RE = re.compile(r"^\s+Description:\s+(.*)\s*$", re.ASCII)
         ALERTS_LINE_RE = re.compile(r"^\s+Alerts:\s+(.*)\s*$", re.ASCII)
 
-        printers = {}
+        printers: dict[str, tuple[str, list[str]]] = {}
         last_name = None
         for line in output.splitlines():
             match = PRINTER_LINE_RE.match(line)
@@ -126,25 +140,25 @@ def get_printers() -> dict[str, list[str]]:
                 name = match.group(1)
                 if name != "Please_Select_a_Printer":
                     # By default, use the name of the printer instead of the description
-                    printers[name] = [name]
+                    printers[name] = (name, [])
                     # Record the name of the printer so when we parse the rest of the
                     # extended description we know which printer it's referring to.
                     last_name = name
             elif last_name is not None:
                 if line.strip() == "The printer is not responding.":
-                    printers[last_name].append("not-responding")
+                    printers[last_name][1].append("not-responding")
                 description_match = DESCRIPTION_LINE_RE.match(line)
                 if description_match is not None:
                     # Pull out the description
                     description = description_match.group(1)
                     # And make sure we don't set an empty description
                     if description:
-                        printers[last_name][0] = description
+                        printers[last_name] = (description, printers.get(last_name)[1] if last_name in printers else [])
                 alerts_match = ALERTS_LINE_RE.match(line)
                 if alerts_match is not None:
                     alerts = alerts_match.group(1)
-                    if len(printers[last_name]) == 1:  # If already marked as not responding, ignore alerts
-                        printers[last_name].append(alerts)
+                    if "not-responding" not in printers[last_name][1]:  # If already marked as not responding, ignore alerts
+                        printers[last_name] = (printers[last_name][0], printers[last_name][1] + alerts.split())
                     last_name = None
 
         cache.set(key, printers, timeout=settings.CACHE_AGE["printers_list"])
@@ -200,22 +214,11 @@ def convert_pdf(tmpfile_name: str, cmdname: str = "ps2pdf") -> str | None:
 
 def get_numpages(tmpfile_name: str) -> int:
     try:
-        output = subprocess.check_output(["pdfinfo", tmpfile_name], stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as e:
-        logger.error("Could not run pdfinfo command (returned %d): %s", e.returncode, e.output)
+        reader = PdfReader(tmpfile_name)
+        return len(reader.pages)
+    except Exception as e:
+        logger.error("Could not read PDF with pypdf: %s", e)
         return -1
-
-    lines = output.splitlines()
-    num_pages = -1
-    pages_prefix = "Pages:"
-    for line in lines:
-        if line.startswith(pages_prefix):
-            try:
-                num_pages = int(line[len(pages_prefix) :].strip())
-            except ValueError:
-                num_pages = -1
-
-    return num_pages
 
 
 # If a file is identified as a mimetype that is a key in this dictionary, the magic files (in the "magic_files"
@@ -463,21 +466,94 @@ def print_job(obj: PrintJob, do_print: bool = True):
             if obj.fit:
                 args.extend(["-o", "fit-to-page"])
 
-            title_page = html_to_pdf(
-                "printing/title_page.html",
-                final_filename,
-                {
-                    "obj": obj,
-                    "filename": filebase,
-                    "time": timezone.now(),
-                    "pages": num_pages,
-                },
-            )
+            # Merge watermark onto every page if the file is a PDF.
+            # For non-PDF files, fall back to printing a separate
+            # title page.
+            is_pdf = get_mimetype(final_filename) == "application/pdf"
+            merged = False
 
-            delete_filenames.add(title_page)
+            if is_pdf:
+                try:
+                    target_reader = PdfReader(final_filename)
+                    writer = PdfWriter()
+
+                    selected_pages = set()
+                    if obj.page_range:
+                        for part in obj.page_range.split(","):
+                            bounds = [int(number) for number in part.split("-")]
+                            selected_pages.update(range(bounds[0], bounds[-1] + 1))
+                    for page_number, source_page in enumerate(target_reader.pages, start=1):
+                        page = writer.add_page(source_page)
+                        if selected_pages and page_number not in selected_pages:
+                            continue
+                        packet = BytesIO()
+                        if page.rotation:
+                            page.transfer_rotation_to_content()
+                        box = page.cropbox
+                        page_width = float(box.width)
+                        page_height = float(box.height)
+
+                        c = canvas.Canvas(
+                            packet,
+                            pagesize=(page_width, page_height),
+                        )
+                        c.setFont("Helvetica", 8)
+                        c.setFillColorRGB(0.5, 0.5, 0.5)
+
+                        watermark_text = f"Ion Printing | {obj.user.username} | {timezone.localtime().strftime('%Y-%m-%d %H:%M')}"
+                        text_width = stringWidth(
+                            watermark_text,
+                            "Helvetica",
+                            8,
+                        )
+
+                        margin = min(15, page_width / 4)
+                        font_size = min(8, 8 * (page_width - 2 * margin) / max(1, text_width))
+                        c.setFont("Helvetica", font_size)
+                        x = page_width - stringWidth(watermark_text, "Helvetica", font_size) - margin
+                        y = min(15, page_height / 4)
+                        c.drawString(x, y, watermark_text)
+                        c.save()
+
+                        packet.seek(0)
+                        watermark_pdf = PdfReader(packet)
+                        page.merge_transformed_page(
+                            watermark_pdf.pages[0],
+                            Transformation().translate(float(box.left), float(box.bottom)),
+                        )
+
+                    merged_fd, merged_filename = tempfile.mkstemp(
+                        prefix=f"ion_print_merged_{obj.user.username}_{filebase_escaped}",
+                    )
+                    os.close(merged_fd)
+                    delete_filenames.add(merged_filename)
+
+                    with open(merged_filename, "wb") as f:
+                        writer.write(f)
+
+                    # Print the merged file instead.
+                    args[3] = merged_filename
+                    merged = True
+                except Exception as e:
+                    logger.error(
+                        "Failed to watermark PDF: %s",
+                        e,
+                    )
+                    # Fall back to printing the title page.
+
+            if not merged:
+                title_page = html_to_pdf(
+                    "printing/title_page.html",
+                    final_filename,
+                    {"obj": obj, "time": timezone.now(), "pages": num_pages},
+                )
+                if title_page is None:
+                    raise Exception("Could not generate the print job cover sheet")
+                delete_filenames.add(title_page)
 
             try:
-                subprocess.check_output(["lpr", "-P", printer, title_page], stderr=subprocess.STDOUT, universal_newlines=True)
+                if not merged:
+                    subprocess.check_output(["lpr", "-P", printer, title_page], stderr=subprocess.STDOUT, universal_newlines=True)
                 subprocess.check_output(args, stderr=subprocess.STDOUT, universal_newlines=True)
             except subprocess.CalledProcessError as e:
                 if "is not accepting jobs" in e.output:
@@ -491,17 +567,21 @@ def print_job(obj: PrintJob, do_print: bool = True):
         obj.save()
     finally:
         for filename in delete_filenames:
-            os.remove(filename)
+            try:
+                os.remove(filename)
+            except FileNotFoundError:
+                pass
 
 
 @login_required
 @deny_restricted
 def print_view(request):
-    if _get_current_ip(request) not in settings.TJ_IPS and not request.user.has_admin_permission("printing"):
+    if _get_current_ip(request) not in settings.TJ_IPS and not request.user.is_printing_admin:
         messages.error(request, "You don't have printer access outside of the TJ network.")
         return redirect("index")
 
     if request.method == "GET" and "refresh" in request.GET and request.user.is_printing_admin:
+        messages.success(request, "Refreshing printer status cache")
         cache.delete("printing:printers")
 
     printers = get_printers()
@@ -525,19 +605,20 @@ def print_view(request):
                     "Your file was submitted to the printer. "
                     "Do not re-print this job if it does not come out of the printer - "
                     "in nearly all cases, the job has been received and re-printing "
-                    "will cause multiple copies to be printed. "
-                    "Ask for help instead by contacting the "
-                    "Student Systems Administrators by filling out the feedback form.",
+                    "will cause multiple copies to be printed.",
                 )
     else:
         form = PrintJobForm(printers=printers)
-    alerts = {}
-    for printer in printers:
-        alerts[printer] = parse_alerts(printers[printer][1])
+
+    alerts = {printer: parse_alerts(printers[printer][1]) for printer in printers}
+    context = {"form": form, "alerts": alerts, "printers": printers}
+
     if hasattr(cache, "ttl"):
         elapsed_seconds = settings.CACHE_AGE["printers_list"] - cache.ttl("printing:printers")
         start_time = datetime.datetime.now() - datetime.timedelta(seconds=elapsed_seconds)
-        context = {"form": form, "alerts": alerts, "updated_time": start_time.strftime("%-I:%M:%S %p")}
-    else:
-        context = {"form": form, "alerts": alerts}
+        context["updated_time"] = start_time.strftime("%-I:%M:%S %p")
+
+    if printing_warning_objs := WarningAnnouncement.objects.filter(type="printing", active=True):
+        context["printing_warning"] = get_warning_html(printing_warning_objs)
+
     return render(request, "printing/print.html", context)

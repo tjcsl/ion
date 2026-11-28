@@ -15,5 +15,6 @@ dataimport
    management.commands.import_students
    management.commands.import_tj_star
    management.commands.import_users
+   management.commands.update_administrators
    management.commands.year_cleanup
    tests

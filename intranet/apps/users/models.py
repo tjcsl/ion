@@ -225,9 +225,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     receive_schedule_notifications = models.BooleanField(default=False)
 
     student_id = models.CharField(max_length=settings.FCPS_STUDENT_ID_LENGTH, unique=True, null=True, blank=True)
+    fcps_email = models.EmailField(blank=True, default="")
     user_type = models.CharField(max_length=30, choices=USER_TYPES, default="student")
     admin_comments = models.TextField(blank=True, null=True)
     counselor = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="students", null=True, blank=True)
+    administrator = models.ForeignKey("self", on_delete=models.SET_NULL, related_name="administered_students", null=True, blank=True)
     graduation_year = models.IntegerField(null=True, blank=True)
     title = models.CharField(max_length=5, choices=TITLES, null=True, blank=True)
     first_name = models.CharField(max_length=35, null=True)

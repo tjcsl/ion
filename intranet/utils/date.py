@@ -28,6 +28,12 @@ def get_date_range_this_year(now=None):
     return timezone.make_aware(date_start), timezone.make_aware(date_end)
 
 
+def get_school_year_label(now=None):
+    """Return the current school year as a display label, such as 2025-2026."""
+    start, end = get_date_range_this_year(now=now)
+    return f"{start.year}-{end.year}"
+
+
 def get_senior_graduation_year(*, now=None):
     return get_date_range_this_year(now=now)[1].year
 

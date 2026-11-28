@@ -1,5 +1,4 @@
 $(function() {
-    $("head").first().append("<script nomodule src='/static/js/vendor/js.cookie.min.js'></script>");
     let enabled = Cookies.get("disable-halloween") == "1" ? "0" : "1";
     if(enabled == 1){
         $(".header > .right > ul").prepend(

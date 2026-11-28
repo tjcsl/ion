@@ -25,12 +25,12 @@ $(function() {
         $membersCheckboxes.prop("checked", $(this).prop("checked"));
     }
 
-    $selectAllMembersCheckbox.click(updateBlockCheckboxes);
-    $membersCheckboxes.click(updateSelectAllCheckbox);
+    $selectAllMembersCheckbox.on("click", updateBlockCheckboxes);
+    $membersCheckboxes.on("click", updateSelectAllCheckbox);
     updateSelectAllCheckbox();
 
     // Set up accept pass links
-    $(".pass-form-submit-link").click(function() {
+    $(".pass-form-submit-link").on("click", function() {
         var form = document.forms[$(this).data("form")];
         form.status.value = $(this).data("status");
 

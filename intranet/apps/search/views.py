@@ -47,6 +47,7 @@ def query(q, admin=False):
             "id": ("id",),
             "username": ("username",),
             "counselor": ("counselor__last_name",),
+            "administrator": ("administrator__last_name",),
             "type": ("user_type",),
         }
 
@@ -236,14 +237,9 @@ def do_announcements_search(q, user) -> tuple[list[Announcement], list[Announcem
     return (announcements, club_announcements)
 
 
-def do_events_search(q):
+def do_events_search(q, user):
     filter_query = get_query(q, ["title", "description"])
-    entries = Event.objects.filter(filter_query).order_by("title")
-    final_entries = []
-    for e in entries:
-        if e.is_this_year:
-            final_entries.append(e)
-    return final_entries
+    return list(Event.objects.visible_to_user(user).this_year().filter(filter_query).order_by("title").distinct())
 
 
 def do_enrichment_search(q):
@@ -279,7 +275,7 @@ def search_view(request):
 
         activities = do_activities_search(q)
         announcements, club_announcements = do_announcements_search(q, request.user)
-        events = do_events_search(q)
+        events = do_events_search(q, request.user)
         enrichments = do_enrichment_search(q) if settings.ENABLE_ENRICHMENT_APP else []
         classes = do_courses_search(q)
 

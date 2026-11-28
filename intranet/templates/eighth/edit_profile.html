@@ -8,6 +8,7 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/selectize.js-0.12.4/dist/css/selectize.default.css' %}">
     {% stylesheet 'eighth.admin' %}
     {% stylesheet 'profile' %}
     {% stylesheet 'eighth.profile' %}
@@ -16,8 +17,18 @@
 {% block js %}
     {{ block.super }}
     <script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'vendor/selectize.js-0.12.4/dist/js/standalone/selectize.min.js' %}"></script>
     <script src="{% static 'js/eighth/admin.js' %}"></script>
+    <script>
+        $(function() {
+            $("select#id_counselor, select#id_administrator").selectize();
+        });
+    </script>
     <style>
+    .selectize-control {
+        width: 400px;
+    }
+
     #cke_1_contents {
         height: 100px !important;
     }

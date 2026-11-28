@@ -1,11 +1,11 @@
 /* global $ */
 $(function() {
-    $(".eighth-widget .block-header").click(function() {
+    $(".eighth-widget .block-header").on("click", function() {
         var link = $("a", $(this));
         if (link.length > 0) location.href = link.attr("href");
     });
 
-    $(".sponsor-widget .block-header").click(function() {
+    $(".sponsor-widget .block-header").on("click", function() {
         var link = $("a", $(this));
         if (link.length > 0) location.href = link.attr("href");
     });
@@ -32,13 +32,13 @@ $(function() {
     }
 
     sponsor_schedule_bind = function() {
-        $(".sponsor-widget #eighth-sponsor-left").click(function() {
+        $(".sponsor-widget #eighth-sponsor-left").on("click", function() {
             var date = $(".sponsor-widget").attr("data-prev-date");
             sponsor_schedule_jump(date);
             sponsor_schedule_pushstate(date);
         });
 
-        $(".sponsor-widget #eighth-sponsor-right").click(function() {
+        $(".sponsor-widget #eighth-sponsor-right").on("click", function() {
             var date = $(".sponsor-widget").attr("data-next-date");
             sponsor_schedule_jump(date);
             sponsor_schedule_pushstate(date);

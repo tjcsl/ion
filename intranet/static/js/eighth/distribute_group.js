@@ -1,6 +1,6 @@
 /* global $ */
 $(function() {
-    $(".select-all").change(function() {
+    $(".select-all").on("change", function() {
         var chk = $(this).prop("checked");
         var name = $(this).attr("data-name");
         console.debug(chk, name);
@@ -12,7 +12,7 @@ $(function() {
         });
     });
 
-    $(".user-item").change(function() {
+    $(".user-item").on("change", function() {
         var chk = $(this).prop("checked");
         var name = $(this).attr("name");
         var num_checked = 0;

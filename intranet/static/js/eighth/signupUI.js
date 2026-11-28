@@ -40,18 +40,18 @@ var updateDayNavButtonStatus = function() {
 
     var $earlierDays = $(".earlier-days");
     var $laterDays = $(".later-days");
-    $earlierDays.removeAttr("disabled");
-    $laterDays.removeAttr("disabled");
+    $earlierDays.prop("disabled", false);
+    $laterDays.prop("disabled", false);
 
     if (scrollLeft === 0) {
-        $earlierDays.attr("disabled", true);
+        $earlierDays.prop("disabled", true);
     }
 
     if (Math.abs(scrollLeft - maxScrollLeft) <= 1) {
         // Weird stuff sometimes happens when resizing/zooming window
         // so sometimes these scrollLeft and maxScrollLeft get off by a pixel
         // when they are supposed to be equal
-        $laterDays.attr("disabled", "disabled");
+        $laterDays.prop("disabled", true);
     }
 }
 
@@ -97,13 +97,13 @@ $(function() {
     centerBlocks();
     updateDayNavButtonStatus();
 
-    $(window).resize(function() {
+    $(window).on("resize", function() {
         centerCurrentDay();
         updateDayNavButtonStatus();
     });
 
-    $(".day-picker-buttons button").click(function(e) {
-        if ($(e.target).parents().andSelf().hasClass("later-days")) {
+    $(".day-picker-buttons button").on("click", function(e) {
+        if ($(e.target).parents().addBack().hasClass("later-days")) {
             // Right button clicked
             scrollBlockChooser("next");
         } else {
@@ -113,7 +113,7 @@ $(function() {
     });
 
     // Keep blocks highlighted while loading
-    $(".block").click(function() {
+    $(".block").on("click", function() {
         $(".active-block").removeClass("active-block");
         $(this).addClass("active-block");
     });
@@ -215,8 +215,8 @@ $(function() {
             var diffX = nowX - initX;
 
             if (Math.abs(diffX) > 30) {
-                if (diffX > 0) $(".earlier-days").click();
-                else $(".later-days").click();
+                if (diffX > 0) $(".earlier-days").trigger("click");
+                else $(".later-days").trigger("click");
 
                 listening = false;
             }
@@ -257,7 +257,7 @@ $(function() {
                 var diffX = nowX - initX;
 
                 if (Math.abs(diffX) > 30) {
-                    if (diffX > 0) back.click();
+                    if (diffX > 0) back.trigger("click");
 
                     listening = false;
                 }
@@ -265,7 +265,7 @@ $(function() {
         }
     });
 
-    $(window).keydown(function(e) {
+    $(window).on("keydown", function(e) {
         var selected = $("#activity-list li.selected:not(.search-hide)");
 
         if (selected.length > 0) {
@@ -273,12 +273,12 @@ $(function() {
 
             if (e.which === 38) {
                 // up arrow key
-                selected.prevAll("li:not(.search-hide)").first().click();
+                selected.prevAll("li:not(.search-hide)").first().trigger("click");
                 e.preventDefault();
                 flag = true;
             } else if (e.which === 40) {
                 // down arrow key
-                selected.nextAll("li:not(.search-hide)").first().click();
+                selected.nextAll("li:not(.search-hide)").first().trigger("click");
                 e.preventDefault();
                 flag = true;
             }

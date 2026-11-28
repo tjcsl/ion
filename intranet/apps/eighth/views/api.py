@@ -9,6 +9,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from ...auth.rest_permissions import OAuthTokenHasReadWriteScope
 from ..models import EighthActivity, EighthBlock, EighthScheduledActivity, EighthSignup
 from ..serializers import (
     EighthActivityDetailSerializer,
@@ -34,7 +35,7 @@ class IsAuthenticatedOrClientCredentials(permissions.BasePermission):
 class EighthActivityList(generics.ListAPIView):
     queryset = EighthActivity.undeleted_objects.all().order_by("id")
     serializer_class = EighthActivityListSerializer
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
 
 class EighthActivityDetail(generics.RetrieveAPIView):
@@ -42,7 +43,7 @@ class EighthActivityDetail(generics.RetrieveAPIView):
 
     queryset = EighthActivity.undeleted_objects.all().order_by("id")
     serializer_class = EighthActivityDetailSerializer
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
 
 class BlockPagination(PageNumberPagination):
@@ -56,7 +57,7 @@ class EighthBlockList(generics.ListAPIView):
 
     serializer_class = EighthBlockListSerializer
     pagination_class = BlockPagination
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def is_valid_date(self, date_text):
         try:
@@ -85,7 +86,7 @@ class EighthBlockList(generics.ListAPIView):
 class EighthBlockDetail(views.APIView):
     """API endpoint that shows details for an eighth block."""
 
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def get(self, request, pk):
         try:
@@ -100,7 +101,7 @@ class EighthBlockDetail(views.APIView):
 class EighthUserSignupListAdd(generics.ListCreateAPIView):
     serializer_class = EighthAddSignupSerializer
     queryset = EighthSignup.objects.all().order_by("id")
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def is_valid_date(self, date_text):
         try:
@@ -179,7 +180,7 @@ class EighthUserSignupListAdd(generics.ListCreateAPIView):
 class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
     serializer_class = EighthToggleFavoriteSerializer
     queryset = EighthActivity.undeleted_objects.all()
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -215,7 +216,7 @@ class EighthUserFavoritesListToggle(generics.ListCreateAPIView):
 class EighthUserFavoritesAdd(generics.CreateAPIView):
     serializer_class = EighthActivityDetailSerializer
     queryset = EighthActivity.undeleted_objects.all()
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -241,7 +242,7 @@ class EighthUserFavoritesAdd(generics.CreateAPIView):
 class EighthUserFavoritesRemove(generics.ListCreateAPIView):
     serializer_class = EighthActivityListSerializer
     queryset = EighthActivity.undeleted_objects.all()
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def get_queryset(self):
         user_id = self.request.user.id
@@ -273,7 +274,7 @@ class EighthUserFavoritesRemove(generics.ListCreateAPIView):
 class EighthScheduledActivitySignupList(views.APIView):
     """API endpoint that lists all signups for a certain scheduled activity."""
 
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)
 
     def get(self, request, scheduled_activity_id):
         scheduled_activity = EighthScheduledActivity.objects.get(id=scheduled_activity_id)
@@ -287,4 +288,4 @@ class EighthSignupDetail(generics.RetrieveAPIView):
 
     queryset = EighthSignup.objects.all()
     serializer_class = EighthSignupSerializer
-    permission_classes = (IsAuthenticatedOrClientCredentials,)
+    permission_classes = (IsAuthenticatedOrClientCredentials, OAuthTokenHasReadWriteScope)

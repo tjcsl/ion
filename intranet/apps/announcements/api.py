@@ -2,6 +2,7 @@ import logging
 
 from rest_framework import generics, permissions
 
+from ..auth.rest_permissions import OAuthTokenHasReadWriteScope
 from .models import Announcement
 from .serializers import AnnouncementSerializer
 
@@ -17,7 +18,7 @@ class IsAnnouncementAdminOrReadOnly(permissions.BasePermission):
 
 class ListCreateAnnouncement(generics.ListCreateAPIView):
     serializer_class = AnnouncementSerializer
-    permission_classes = (IsAnnouncementAdminOrReadOnly,)
+    permission_classes = (IsAnnouncementAdminOrReadOnly, OAuthTokenHasReadWriteScope)
 
     def get_queryset(self):
         user = self.request.user
@@ -28,7 +29,7 @@ class ListCreateAnnouncement(generics.ListCreateAPIView):
 
 class RetrieveUpdateDestroyAnnouncement(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AnnouncementSerializer
-    permission_classes = (IsAnnouncementAdminOrReadOnly,)
+    permission_classes = (IsAnnouncementAdminOrReadOnly, OAuthTokenHasReadWriteScope)
 
     def get_queryset(self):
         user = self.request.user

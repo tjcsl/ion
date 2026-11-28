@@ -58,6 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
     grade = GradeSerializer()
     address = AddressSerializer()
     counselor = CounselorTeacherSerializer()
+    administrator = CounselorTeacherSerializer()
     ion_username = serializers.CharField(max_length=500)
     display_name = serializers.CharField(max_length=400)
     nickname = serializers.CharField(max_length=200)
@@ -100,6 +101,7 @@ class UserSerializer(serializers.ModelSerializer):
             "phones",
             "websites",
             "counselor",
+            "administrator",
             "address",
             "picture",
             "is_eighth_admin",

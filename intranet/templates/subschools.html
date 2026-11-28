@@ -1,0 +1,95 @@
+{% extends "page_with_nav.html" %}
+{% load pipeline %}
+
+{% block title %}
+    {{ block.super }} - Subschools
+{% endblock %}
+
+{% block head %}
+    {% if dark_mode_enabled %}
+        {% stylesheet 'dark/base' %}
+        {% stylesheet 'dark/nav' %}
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <style>
+    .subschools h2 {
+        font-size: 1.8em;
+        margin-bottom: 0.8em;
+    }
+
+    /* Two per row; any extra subschools wrap onto further rows on their own */
+    .subschools .subschool-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 3em;
+        row-gap: 2.5em;
+    }
+
+    .subschools .subschool h3 {
+        font-size: 1.55em;
+        margin: 0 0 0.5em;
+    }
+
+    .subschools .subschool ul {
+        margin: 0;
+        padding-left: 2.2em;
+    }
+
+    .subschools .subschool li {
+        font-size: 1.15em;
+        line-height: 2.1;
+    }
+
+    .subschools .last-updated {
+        margin-top: 2.5em;
+        font-style: italic;
+        opacity: 0.75;
+    }
+
+    /* Stack into one column when there is not room for two */
+    @media (max-width: 700px) {
+        .subschools .subschool-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="primary-content subschools">
+        <h2>Subschools</h2>
+
+        <div class="subschool-grid">
+            {% for subschool in subschools %}
+                <div class="subschool">
+                    <h3>{{ subschool.name }}</h3>
+                    <ul>
+                        <li>
+                            <b>Administrator:</b>
+                            {% include "subschool_person.html" with person=subschool.administrator %}
+                        </li>
+                        <li>
+                            <b>Administrative Assistant:</b>
+                            {% include "subschool_person.html" with person=subschool.administrative_assistant %}
+                        </li>
+                        <li>
+                            <b>Counselors:</b>
+                            {% for counselor in subschool.counselors %}
+                                {% include "subschool_person.html" with person=counselor %}{% if not forloop.last %} and {% endif %}
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </div>
+            {% empty %}
+                <p>No subschools have been configured.</p>
+            {% endfor %}
+        </div>
+
+        {% if last_updated %}
+            <p class="last-updated">Last updated {{ last_updated|date:"F j, Y" }}.</p>
+        {% endif %}
+    </div>
+{% endblock %}

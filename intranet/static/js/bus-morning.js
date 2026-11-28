@@ -4,9 +4,9 @@ $(function() {
     let base_url = window.location.host;
     let socket = getSocket(base_url, location, document, window, "morning");
 
-    $("#a-button").click(function() {sendMorningUpdate({"status":"a"}, socket); });
-    $("#o-button").click(function() {sendMorningUpdate({"status":"o"}, socket); });
-    $("#d-button").click(function() {sendMorningUpdate({"status":"d"}, socket); });
+    $("#a-button").on("click", function() {sendMorningUpdate({"status":"a"}, socket); });
+    $("#o-button").on("click", function() {sendMorningUpdate({"status":"o"}, socket); });
+    $("#d-button").on("click", function() {sendMorningUpdate({"status":"d"}, socket); });
 
     $("select").selectize({
         create: false,
@@ -14,7 +14,7 @@ $(function() {
     });
 
     if(isAdmin) {
-        $(".bus-announcement-save").click(function() {
+        $(".bus-announcement-save").on("click", function() {
             sendMorningUpdate({
                 announcement: $(".bus-announcement").text()
             }, socket);
@@ -23,7 +23,7 @@ $(function() {
                 $(".bus-announcement-save").text("Save").css("color", "");
             }, 1500);
         });
-        $(".bus-announcement-clear").click(function() {
+        $(".bus-announcement-clear").on("click", function() {
             $(".bus-announcement").text("");
             sendMorningUpdate({
                 announcement: "",

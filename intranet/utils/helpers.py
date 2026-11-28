@@ -222,7 +222,10 @@ def get_warning_html(warnings, dashboard=False, login=False):
 GLOBAL_THEMES = {
     "snow": {"js": ["themes/snow/snow.js"], "css": "themes/snow/snow.css"},
     "piday": {"js": ["themes/piday/piday.js"], "css": "themes/piday/piday.css"},
-    "halloween": {"js": ["themes/halloween/halloween.js"], "css": "themes/halloween/halloween.css"},
+    "halloween": {
+        "js": ["themes/halloween/halloween.js", "themes/halloween/halloween-cookie.js"],
+        "css": "themes/halloween/halloween.css",
+    },
     "april_fools": {"js": ["themes/april_fools/april_fools.js"], "css": "themes/april_fools/april_fools.css"},
     "new_years": {"js": ["js/vendor/fireworks.min.js", "themes/new_years/new_years.js"], "css": "themes/new_years/new_years.css"},
 }

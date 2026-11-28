@@ -18,9 +18,9 @@ $(function() {
     }
 
     var clickOutside = function(e) {
-        if ($(e.target).parents().andSelf().hasClass("dropdown-allow")) return;
+        if ($(e.target).parents().addBack().hasClass("dropdown-allow")) return;
 
-        if (!$(e.target).parents().andSelf().hasClass("dropdown-item-wrapper")) {
+        if (!$(e.target).parents().addBack().hasClass("dropdown-item-wrapper")) {
             closeMenu($(".dropdown-open .dropdown-menu"), true);
             $(".has-dropdown").removeClass("dropdown-open");
         }
@@ -33,8 +33,8 @@ $(function() {
             opacity: 1
         }, time, "easeInQuart", function() {
             if (bindEvents) {
-                $(document).bind("click tap", clickOutside);
-                $(".dropdown-menu").bind("click", clickInside);
+                $(document).on("click tap", clickOutside);
+                $(".dropdown-menu").on("click", clickInside);
             }
         });
     }
@@ -47,13 +47,13 @@ $(function() {
             menu.hide();
 
             if (unbindEvents) {
-                $(".dropdown-menu").unbind("click", clickInside);
-                $(document).unbind("click tap", clickOutside);
+                $(".dropdown-menu").off("click", clickInside);
+                $(document).off("click tap", clickOutside);
             }
         });
     }
 
-    $(".has-dropdown").click(function(event) {
+    $(".has-dropdown").on("click", function(event) {
         var menu_clicked = $(this).children(".dropdown-menu");
         var already_open = $(".dropdown-open .dropdown-menu")
         var clicked_subgroups = menu_clicked.children(".has-dropdown-subgroup");
@@ -65,8 +65,8 @@ $(function() {
             clicked_subgroups.children("a.subgroup-arrow-parent").children("i.subgroup-arrow").addClass("fa-caret-down");
             clicked_subgroups.children("a.subgroup-arrow-parent").children("i.subgroup-arrow").removeClass("fa-caret-left");
 
-            $(document).unbind("click tap", clickOutside);
-            $(".dropdown-menu").unbind("click", clickInside);
+            $(document).off("click tap", clickOutside);
+            $(".dropdown-menu").off("click", clickInside);
             $(".has-dropdown").removeClass("dropdown-open");
         } else if (already_open.length === 0) {
             // All menus closed, opening one of them
@@ -81,7 +81,7 @@ $(function() {
         }
     });
 
-    $(".has-dropdown-subgroup").click(function(event) {
+    $(".has-dropdown-subgroup").on("click", function(event) {
         var subgroup = $(this).children(".dropdown-subgroup");
         var arrow = $(this).children("a.subgroup-arrow-parent").children("i.subgroup-arrow");
         subgroup.toggle();

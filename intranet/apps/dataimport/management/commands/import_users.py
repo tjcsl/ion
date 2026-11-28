@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
@@ -6,13 +7,13 @@ from django.db.models import Q
 
 
 class Command(BaseCommand):
-    help = "Import User Objects"
+    help = "Import User Objects from JSON. Student records may include an optional 'FCPS Email' field."
 
     def add_arguments(self, parser):
         # Positional arguments
         parser.add_argument("data_fname")
 
-    def handle(self, *args, **kwargs):
+    def handle(self, *args: str, **kwargs: Any) -> None:
         try:
             with open(kwargs["data_fname"], encoding="utf-8") as f_obj:
                 data = json.load(f_obj)
@@ -55,10 +56,13 @@ class Command(BaseCommand):
             if not get_user_model().objects.filter(Q(username=username) | Q(student_id=sid)).exists():
                 get_user_model().objects.create(
                     student_id=sid,
+                    fcps_email=(student.get("FCPS Email") or "").strip(),
                     last_name=last_name,
                     first_name=first_name,
                     username=username,
                     counselor=counselor,
+                    # Students are assigned administrators through their counselor
+                    administrator=counselor.administrator,
                     gender=(gender == "M"),
                     graduation_year=graduation_year,
                     middle_name=middle_name,

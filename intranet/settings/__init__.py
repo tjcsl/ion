@@ -31,30 +31,30 @@ end_school_year = start_school_year + 1
 # fmt: off
 """ !! -------- UPDATE ANNUALLY -------- !!
 Update this section annually after summer school ends and before school starts.
-School year last updated:  2025-08-18
-Hoco last updated:         2025-09-06
-tjSTAR last updated:       2024-05-03
+School year last updated:  2026-08-12
+Hoco last updated:         2026-09-10
+tjSTAR last updated:       2026-05-20
 """
 
 # When school is scheduled to start and end
 SCHOOL_START_DATE = datetime.date(start_school_year,
-    8, 18  # UPDATE THIS! Value when last updated: August 18, 2025      # noqa: E128
+    8, 24  # UPDATE THIS! Value when last updated: August 24, 2026      # noqa: E128
 )                                                                       # noqa: E124
 SCHOOL_END_DATE = datetime.date(end_school_year,
-    6, 17  # UPDATE THIS! Value when last updated: June 17, 2026        # noqa: E128
+    6, 16  # UPDATE THIS! Value when last updated: June 16, 2027      # noqa: E128
 )                                                                       # noqa: E124
 
 # Dates when hoco starts and ends
 HOCO_START_DATE = datetime.date(start_school_year,
-    9, 19  # UPDATE THIS! Value when last updated: September 18, 2025   # noqa: E128
+    9, 10  # UPDATE THIS! Value when last updated: September 10, 2026   # noqa: E128
 )                                                                       # noqa: E124
 HOCO_END_DATE = datetime.date(start_school_year,
-    9, 28  # UPDATE THIS! Value when last updated: September 28, 2025   # noqa: E128
+    9, 20  # UPDATE THIS! Value when last updated: September 20, 2026   # noqa: E128
 )                                                                       # noqa: E124
 
 # Date of tjSTAR
 TJSTAR_DATE = datetime.date(end_school_year,
-    5, 21  # UPDATE THIS! Value when last updated: May 21, 2025         # noqa: E128
+    5, 20  # UPDATE THIS! Value when last updated: May 20, 2026         # noqa: E128
 )                                                                       # noqa: E124
 
 # When to start showing the tjSTAR banner
@@ -64,9 +64,26 @@ TJSTAR_BANNER_START_DATE = TJSTAR_DATE - datetime.timedelta(days=4)
 ENABLE_SENIOR_DESTS_BANNER = False
 SENIOR_DESTS_BANNER_TEXT = "Congratulations seniors! The tjTODAY Senior Issue form is out! Please submit your " \
     "senior destinations, quotes, and superlatives to the form attached below by May 2"
-SENIOR_DESTS_BANNER_LINK = "https://tinyurl.com/tjseniors2025"
+SENIOR_DESTS_BANNER_LINK = "https://example.com/tjseniors2025"
 
 """  -------- END UPDATE ANNUALLY --------  """
+
+# Bus Delays
+# Buffers determine when bus delay fetches run every 15 seconds or every minute.
+BUS_DELAY_URL = "https://busdelay.fcps.edu/"
+# First Window Buffer: 2.5 hours before start of school to 1 hour after start of school (for 1 minute task)
+FIRST_WINDOW_START_BUFFER = 2.5
+FIRST_WINDOW_END_BUFFER = 1
+# Second Window Buffer: 20 minutes before end of school to 5 minutes before end of school (for 1 minute task)
+SECOND_WINDOW_START_BUFFER = 20
+SECOND_WINDOW_END_BUFFER = 5
+# Third Window Buffer: 20 minutes after end of school to 2 hours after end of school (for 1 minute task)
+THIRD_WINDOW_START_BUFFER = 20
+THIRD_WINDOW_END_BUFFER = 2
+# Active Window Buffer: 5 minutes before end of school to 20 minutes after end of school (for 15 second task)
+ACTIVE_WINDOW_START_BUFFER = 5
+ACTIVE_WINDOW_END_BUFFER = 20
+
 # fmt: on
 
 # Default fallback time for start and end of school if no schedule is available
@@ -106,6 +123,52 @@ PARKING_MAX_ABSENCES = 5
 NOMINATIONS_ACTIVE = False
 NOMINATION_POSITION = ""
 
+# Subschool staff, listed at /subschools. Override these in production.
+# Give each person a "username", spelled exactly as the account is, and their tj_email is looked up
+# so that no addresses are committed here. Only use "email" for someone with no Ion account. A
+# username matching no account is logged and shown without a mailto link.
+SUBSCHOOLS = [
+    {
+        "name": "Subschool 1",
+        "administrator": {"name": "Mr. Alpha", "username": "2027admin"},
+        "administrative_assistant": {"name": "Ms. Bravo", "username": "2027admin1"},
+        "counselors": [
+            {"name": "Ms. Charlie", "username": "2027student"},
+            {"name": "Mr. Delta", "username": "2027student1"},
+        ],
+    },
+    {
+        "name": "Subschool 2",
+        "administrator": {"name": "Ms. Echo", "username": "2028admin"},
+        "administrative_assistant": {"name": "Ms. Foxtrot", "username": "2028admin1"},
+        "counselors": [
+            {"name": "Ms. Golf", "username": "2028student"},
+            {"name": "Ms. Hotel", "username": "2028student1"},
+        ],
+    },
+    {
+        "name": "Subschool 3",
+        "administrator": {"name": "Ms. India", "username": "2029admin"},
+        "administrative_assistant": {"name": "Ms. Juliett", "username": "2029admin1"},
+        "counselors": [
+            {"name": "Ms. Kilo", "username": "2029student"},
+            {"name": "Ms. Lima", "username": "2029student1"},
+        ],
+    },
+    {
+        "name": "Subschool 4",
+        # Nobody to look up, so the address is given directly
+        "administrator": {"name": "Mr. Mike", "email": "mmike@fcps.edu"},
+        "administrative_assistant": {"name": "Ms. November", "username": "2030admin1"},
+        "counselors": [
+            {"name": "Ms. Oscar", "username": "2030student"},
+            {"name": "Dr. Papa", "username": "2030student1"},
+        ],
+    },
+]
+
+SUBSCHOOLS_LAST_UPDATED = datetime.date(2026, 8, 7)
+
 # App and functionality availability toggles
 ENABLE_WAITLIST = False  # Eighth waitlist. WARNING: Enabling the waitlist causes severe performance issues
 
@@ -121,6 +184,8 @@ ENABLE_HYBRID_EIGHTH = None  # Enable hybrid eighth period code
 ENABLE_ENRICHMENT_APP = True
 
 ENABLE_SENIOR_DESTINATIONS = False  # Disabled per school policy, October 2023
+
+ENABLE_ION_WRAPPED = False # Should be enabled close to EOY and through summer
 # End toggles
 
 NOTIFY_ADMIN_EMAILS = None
@@ -349,6 +414,7 @@ LIST_OF_INDEPENDENT_CSS = [
     "printing",
     "polls",
     "groups",
+    "wrapped",
     "board",
     "announcements.form",
     "announcements.request",
@@ -410,7 +476,6 @@ for name in LIST_OF_INDEPENDENT_CSS:
 AUTHENTICATION_BACKENDS = [
     "intranet.apps.auth.backends.MasterPasswordAuthenticationBackend",
     "intranet.apps.auth.backends.PamAuthenticationBackend",
-    "oauth2_provider.backends.OAuth2Backend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
@@ -481,7 +546,6 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",  # Django CSRF
     "django.middleware.clickjacking.XFrameOptionsMiddleware",  # Django X-Frame-Options
     "django.contrib.auth.middleware.AuthenticationMiddleware",  # Django auth
-    "oauth2_provider.middleware.OAuth2TokenMiddleware",  # Django Oauth toolkit
     "intranet.middleware.monitoring.PrometheusAccessMiddleware",  # Restricts access to Django Prometheus metrics to ALLOWED_METRIC_IPS and superusers
     "maintenance_mode.middleware.MaintenanceModeMiddleware",  # Maintenance mode
     "intranet.middleware.threadlocals.ThreadLocalsMiddleware",  # Thread locals
@@ -596,6 +660,7 @@ else:
     }
 
 CSL_REALM = "CSL.TJHSST.EDU"  # CSL Realm
+PAM_SERVICE = "ion-login"
 KINIT_TIMEOUT = 15  # seconds before pexpect timeouts
 
 FCPS_STUDENT_ID_LENGTH = 7
@@ -604,6 +669,7 @@ FCPS_STUDENT_ID_LENGTH = 7
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "intranet.apps.auth.rest_permissions.DenyRestrictedPermission",  # require authentication and deny restricted users
+        "intranet.apps.auth.rest_permissions.OAuthTokenHasReadWriteScope",  # require read/write scopes for OAuth tokens
     ),
     "USE_ABSOLUTE_URLS": True,
     # Return native `Date` and `Time` objects in `serializer.data`
@@ -665,6 +731,10 @@ OAUTH2_PROVIDER = {
     # "REQUEST_APPROVAL_PROMPT": "auto",
 }
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth.CSLApplication"
+OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = "oauth2_provider.AccessToken"
+OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = "oauth2_provider.RefreshToken"
+OAUTH2_PROVIDER_ID_TOKEN_MODEL = "oauth2_provider.IDToken"
+OAUTH2_PROVIDER_GRANT_MODEL = "oauth2_provider.Grant"
 
 
 INSTALLED_APPS = [
@@ -719,6 +789,7 @@ INSTALLED_APPS = [
     "intranet.apps.features",
     "intranet.apps.oauth",
     "intranet.apps.logs",
+    "intranet.apps.wrapped",
     # Django plugins
     "widget_tweaks",
     "oauth2_provider",  # django-oauth-toolkit
@@ -842,7 +913,6 @@ if SHOW_DEBUG_TOOLBAR:
         ("debug_toolbar.panels.templates.TemplatesPanel", False),
         ("debug_toolbar.panels.cache.CachePanel", False),
         ("debug_toolbar.panels.signals.SignalsPanel", False),
-        ("debug_toolbar.panels.logging.LoggingPanel", True),
         ("debug_toolbar.panels.redirects.RedirectsPanel", False),
         ("debug_toolbar.panels.profiling.ProfilingPanel", False),
     ]
@@ -942,7 +1012,7 @@ if TJSTAR_MAP is None:
 SIMILAR_THRESHOLD = 5
 
 # Time that the bus page should change from morning to afternoon display
-BUS_PAGE_CHANGEOVER_HOUR = 12
+BUS_PAGE_CHANGEOVER_HOUR = 10
 
 # Age (in days) of a lost and found entry until it is hidden
 LOSTFOUND_EXPIRATION = 180
@@ -987,6 +1057,12 @@ CELERY_BEAT_SCHEDULE = {
         "task": "intranet.apps.eighth.tasks.follow_up_absence_emails",
         "schedule": celery.schedules.crontab(day_of_month=3, hour=1),
         "args": (),
+    },
+    "schedule-bus-delay-fetches": {
+        "task": "intranet.apps.bus.tasks.schedule_all_bus_delay_fetches",
+        "schedule": celery.schedules.crontab(minute="*"),
+        "args": (),
+        "options": {"expires": 60},
     },
     "remove-old-lostfound-entries": {
         "task": "intranet.apps.lostfound.tasks.remove_old_lostfound",

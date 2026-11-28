@@ -60,7 +60,9 @@ if [[ -x "$(which gem)" ]]; then
     gem uninstall sass
     apt-get -y remove ruby-dev
 fi
-apt-get -y install npm nodejs
+# Use the active Node.js LTS release for Sass tooling instead of the distro default.
+curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+apt-get -y install nodejs
 npm -g install sass
 
 # PostsgreSQL

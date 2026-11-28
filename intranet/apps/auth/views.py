@@ -17,6 +17,7 @@ from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic.base import View
 
@@ -102,6 +103,17 @@ def get_week_sports_school_events() -> tuple[Container[Event], Container[Event]]
         sports_events, school_events = cache_result
 
     return sports_events, school_events
+
+
+def get_safe_next_page(request, fallback):
+    candidate = request.POST.get("next") or request.GET.get("next")
+    if candidate and url_has_allowed_host_and_scheme(
+        url=candidate,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return candidate
+    return fallback
 
 
 @sensitive_post_parameters("password")
@@ -233,7 +245,7 @@ class LoginView(View):
             if request.user.is_student and not request.user.seen_welcome and not is_oauth_login:  # don't send oauth to welcome page
                 return redirect("welcome")
 
-            next_page = request.POST.get("next", request.GET.get("next", default_next_page))
+            next_page = get_safe_next_page(request, default_next_page)
 
             response = redirect(next_page)
             response.set_cookie(
@@ -286,7 +298,7 @@ def reauthentication_view(request):
     if request.method == "POST":
         if authenticate(username=request.user.username, password=request.POST.get("password", "")):
             request.session["reauthenticated_at"] = time.time()
-            return redirect(request.POST.get("next", request.GET.get("next", "/")))
+            return redirect(get_safe_next_page(request, "/"))
         else:
             context["login_failed"] = True
     return render(request, "auth/reauth.html", context)
