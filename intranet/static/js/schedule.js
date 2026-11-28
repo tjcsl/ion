@@ -195,7 +195,7 @@ $(function() {
     }
 
     scheduleBind();
-    
+
     refresh();
 
     setInterval(refresh, 10000);
