@@ -19,8 +19,7 @@
 <br />
 <div class="schedule-container">
     {% for week in month_data.weeks %}
-    <div class="schedule" data-endpoint="{% url 'calendar' %}" data-prev-date="{{ month_data.last_month }}"
-        data-next-date="{{ month_data.next_month }}" data-date="{{ week.today }}">
+    <div class="schedule" data-date="{{ week.today }}">
         <table class="month-table">
             <tr>
                 {% for day in week.days %}
@@ -36,8 +35,8 @@
                     <table class="bellschedule-table" data-date="{{ day.sched_ctx.date|date:'Y-m-d' }}">
                         {% for block in day.sched_ctx.blocks %}
                         <tr class="schedule-block" data-block-name="{{ block.name|safe }}"
-                            data-block-start="{{ block.start.str_12_hr }}"
-                            data-block-end="{{ block.end.str_12_hr }}"
+                            data-block-start="{{ block.start }}"
+                            data-block-end="{{ block.end }}"
                             data-block-order="{{ block.order }}">
 
                             <th class="block">{{ block.name|safe }}:</th>
